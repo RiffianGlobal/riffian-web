@@ -17,6 +17,7 @@ export const AllNetworks = {
     title: 'Fantom Testnet',
     name: 'FantomTestnet',
     symbol: 'FTM',
+    native: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
     provider: 'https://rpc.testnet.fantom.network',
     providerWs: 'wss://rpc.testnet.fantom.network/ws',
     scan: 'https://testnet.ftmscan.com',

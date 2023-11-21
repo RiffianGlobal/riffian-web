@@ -30,8 +30,13 @@ export class AppMain extends TailwindElement('') {
 
   render() {
     return html`<network-warning></network-warning>
-      <ui-header>
+      <ui-header menuable>
         <div slot="logo"><a class="text-base lg_text-lg font-semibold" href="/">Riffian</a></div>
+        <ui-nav slot="center" menuable>
+          <ui-link href="/" nav alias="/">Home</ui-link>
+          <ui-link href="/settings" nav>Settings</ui-link>
+          <ui-link href="/docs" nav>Docs</ui-link>
+        </ui-nav>
       </ui-header>
       <main class="ui-app-main pt-6">
         <slot></slot>

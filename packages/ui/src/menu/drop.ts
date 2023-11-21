@@ -130,13 +130,13 @@ export class UIDrop extends TailwindElement(style) implements TAILWINDELEMENT {
           this.$c([
             this.align.left ? 'left-0' : 'right-0',
             this.align.top ? 'bottom-full' : 'top-full',
-            this.model ? 'mt-auto opacity-100 visible' : '-mt-4 opacity-0 invisible',
+            this.model ? 'mt-auto opacity-100 visible' : '-mt-4 opacity-0 invisible hidden',
             this.dropClass
           ])
         )}"
         ${animate({
           guard: () => this.model,
-          properties: ['opacity', 'visibility', 'margin'],
+          properties: ['opacity', 'visibility', 'margin', 'display'],
           keyframeOptions: { duration }
         })}
       >

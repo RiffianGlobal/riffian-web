@@ -2,23 +2,25 @@ import { customElement, TailwindElement, html, when, state, property } from '@ri
 // Components
 import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/dialog'
+import '@riffian-web/ui/src/progress/ring'
+import '@riffian-web/ui/src/progress/bar'
+import '@riffian-web/ui/src/tip'
 
 import style from './index.css?inline'
 @customElement('ui-components')
 export class UIComponents extends TailwindElement(style) {
   @property({ type: String }) class = ''
   @state() dialog = false
-  open() {
-    this.dialog = true
-  }
-  close() {
-    this.dialog = false
+  @state() menu = false
+
+  closeMenu = () => {
+    this.menu = false
   }
 
   override render() {
     return html`<div class="border m-4 p-4 rounded-md ${this.class}">
-      <p class="my-2 font-bold">UI Buttons</p>
-      <!--  -->
+      <!-- Button -->
+      <p class="my-2 font-bold">Buttons</p>
       <ui-button>Normal</ui-button>
       <ui-button disabled>Disabled</ui-button>
       <ui-button pending>Pending</ui-button>
@@ -30,9 +32,40 @@ export class UIComponents extends TailwindElement(style) {
       <ui-button href="">link href</ui-button><ui-button text>Text</ui-button>
       <br />
       <ui-button sm>Small</ui-button>
-      <p class="my-2 font-bold">UI Dialog</p>
-      <ui-button sm @click=${this.open}>Open Dialog</ui-button>
-      ${when(this.dialog, () => html`<ui-dialog @close=${this.close}></ui-dialog>`)}
+      <!-- Dialog -->
+      <p class="my-2 font-bold">Dialog</p>
+      <ui-button sm @click=${() => (this.dialog = true)}>Open Dialog</ui-button>
+      ${when(this.dialog, () => html`<ui-dialog @close=${() => (this.dialog = false)}></ui-dialog>`)}
+      <!-- Progress -->
+      <p class="my-2 font-bold">Progress</p>
+      <div class="flex gap-8 items-center">
+        <p class="w-8 h-8">
+          <ui-progress-ring state .percent=${50} .randomTo="100"><span class="text-xs">50%</span></ui-progress-ring>
+        </p>
+        <p class="w-12 h-4"><ui-progress-bar state .percent=${50} .randomTo="100">2</ui-progress-bar></p>
+      </div>
+      <!-- Tip -->
+      <p class="my-2 font-bold">Tip</p>
+      <ui-tip>Hello world</ui-tip>
+      <!-- Menu -->
+      <div>
+        <ui-drop
+          .show=${this.menu}
+          @change=${(e: CustomEvent) => (this.menu = e.detail)}
+          btnText
+          btnDense
+          icon
+          dropClass="w-72"
+        >
+          <span slot="button">Settings</span>
+          <!-- Content -->
+
+          <ul class="ui-select">
+            <li @click="${this.closeMenu}">Option A</li>
+            <li @click="${this.closeMenu}">Option B</li>
+          </ul>
+        </ui-drop>
+      </div>
     </div>`
   }
 }

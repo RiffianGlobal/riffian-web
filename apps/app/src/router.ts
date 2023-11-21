@@ -24,7 +24,7 @@ export const routes = [
     path: '/docs',
     render: () => html`<view-docs></view-docs>`,
     enter: async () => {
-      await import('~/views/settings')
+      await import('~/views/docs')
       return true
     }
   }

@@ -8,9 +8,6 @@ import logo from '~/assets/logo.svg'
 export class ViewSettings extends TailwindElement(style) {
   render() {
     return html`<div class="settings">
-      <div class="ui-container my-4">
-        <img class="w-24 object-contain select-none pointer-events-none" src="${logo}" />
-      </div>
       <div class="ui-container">
         <p>Settings</p>
       </div>
