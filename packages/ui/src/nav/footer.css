@@ -1,0 +1,11 @@
+.ui-footer {
+  @apply float-left w-full;
+  color: var(--txt2);
+  background: var(--bg3);
+  & .ui-container {
+    min-height: var(--footerH);
+  }
+  & .ui-link {
+    @apply !text-current;
+  }
+}

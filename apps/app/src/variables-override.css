@@ -1,0 +1,8 @@
+/* Override @riffian-web/ui/src/c/variables.css */
+:root {
+}
+
+@media (max-width: 1024px) {
+  :root {
+  }
+}

@@ -1,0 +1,8 @@
+:host {
+}
+.ui-drop {
+  @apply absolute bg-white drop-shadow-lg rounded-lg max-w-xs;
+  min-width: 11rem;
+  min-height: 9rem;
+  border: 1px solid #ccc;
+}

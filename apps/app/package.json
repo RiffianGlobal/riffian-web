@@ -1,0 +1,18 @@
+{
+  "name": "@riffian-web/app",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "vite --host --mode development",
+    "build": "vite build",
+    "preinstall": "npx only-allow pnpm"
+  },
+  "keywords": [],
+  "dependencies": {
+    "@riffian-web/ui": "workspace:latest",
+    "@riffian-web/core": "workspace:latest",
+    "@riffian-web/ethers": "workspace:latest",
+    "@riffian-web/ui-docs": "workspace:latest"
+  },
+  "license": "MIT"
+}

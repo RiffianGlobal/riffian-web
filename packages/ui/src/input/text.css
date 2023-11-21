@@ -1,0 +1,84 @@
+.ui-input-text {
+  @apply flex w-full mx-auto relative py-5;
+  & input[type] {
+    font-family: var(--fontFamily);
+    @apply h-8 relative inline-flex w-full p-5 sm_p-6 px-3 rounded-md text-sm sm_text-base bg-white;
+    border: 1px solid #ccc;
+  }
+  &[disabled] {
+    @apply opacity-60;
+  }
+  &.dense {
+    @apply py-0;
+  }
+  &.sm {
+    @apply py-0;
+    & input[type] {
+      @apply h-5 sm_h-6 text-sm py-4;
+    }
+    & .ui-input-right,
+    & .ui-input-left {
+      @apply leading-4 py-4;
+    }
+  }
+  & .ui-input-msg,
+  & .ui-input-tip,
+  & label {
+    @apply absolute flex items-center flex-wrap !leading-none text-sm h-4 px-3;
+    margin-left: 1px;
+    top: 0.15rem;
+  }
+  & .ui-input-msg {
+    @apply top-auto;
+    bottom: 0.15rem;
+  }
+  & .ui-input-tip {
+    @apply left-auto right-0;
+  }
+  & .ui-input-right,
+  & .ui-input-left {
+    @apply h-5 sm_h-6 absolute flex justify-center items-center p-5 sm_p-6 pr-1 sm_pr-2 pl-2 rounded-r-md pointer-events-none;
+    min-width: 1.5rem;
+    z-index: 1;
+    right: 1px;
+    margin-top: 1px;
+    font-size: 1em;
+    line-height: 1em;
+    &:empty {
+      @apply bg-black;
+    }
+    & > * {
+      @apply pointer-events-auto;
+    }
+  }
+  & .ui-input-left {
+    @apply right-auto;
+    left: 1px;
+  }
+  &[required] {
+    & label {
+      &::after {
+        @apply inline-flex justify-center items-center align-middle leading-none text-red-500 font-semibold;
+        content: '*';
+        height: 1em;
+        margin-left: 0.25em;
+      }
+    }
+  }
+  &[rightSlotted] {
+    & input[type] {
+      @apply pr-20;
+    }
+    &.sm input[type] {
+      @apply pr-10;
+    }
+  }
+  &[leftSlotted] {
+    & input[type] {
+      @apply pl-11;
+    }
+    &.sm input[type] {
+      @apply pl-8;
+    }
+  }
+}
