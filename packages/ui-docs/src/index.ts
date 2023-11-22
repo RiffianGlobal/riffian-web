@@ -21,6 +21,7 @@ export class UIComponents extends TailwindElement(style) {
   @property({ type: String }) class = ''
   @state() dialog = false
   @state() menu = false
+  @state() address = '0x82487df5b4cf19db597a092c8103759466be9e5a'
   // Pagination
   @state() pagePending = false
   pageLoad = () => {
@@ -88,13 +89,9 @@ export class UIComponents extends TailwindElement(style) {
       <!-- Address -->
       <div name="Address" class="doc-intro">
         <p class="flex w-full gap-8">
-          <ui-address
-            address="0x82487df5b4cf19db597a092c8103759466be9e5a"
-            short
-            href="https://riffian.web"
-          ></ui-address>
-          <ui-address address="0x82487df5b4cf19db597a092c8103759466be9e5a" short avatar></ui-address>
-          <ui-address address="0x82487df5b4cf19db597a092c8103759466be9e5a" short avatar copy></ui-address>
+          <ui-address :address="${this.address}" short href="https://riffian.web"></ui-address>
+          <ui-address :address="${this.address}" short avatar></ui-address>
+          <ui-address :address="${this.address}" short avatar copy></ui-address>
         </p>
       </div>
       <!-- Dialog -->
