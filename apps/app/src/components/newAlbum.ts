@@ -68,10 +68,14 @@ export class NewAlbum extends TailwindElement('') {
         !this.submit,
         () =>
           html` <div>
-              <ui-input-text id="name" name="name" type="text" placeholder="Input Name" required />
+              <ui-input-text id="name" name="name" type="text" placeholder="Input Name" required>
+                <span slot="label">Album Name</span>
+              </<ui-input-text>
             </div>
             <div>
-              <ui-input-text type="text" id="symbol" name="symbol" placeholder="Input Symbol" required />
+              <ui-input-text type="text" id="symbol" name="symbol" placeholder="Input Symbol" required>
+                <span slot="label">Album Symbol</span>
+              </ui-input-text>
             </div>
             <ui-button class="m-1" @click=${this.createAlbum}> SUBMIT </ui-button>`
       )}
