@@ -25,7 +25,7 @@ const emitter: EventEmitter = {
 }
 
 export const emitErr = (err: any) => {
-  if (err.code === 4001) return
+  if (err.code === 'ACTION_REJECTED') return
   emitter.emit('error', err)
 }
 

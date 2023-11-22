@@ -33,7 +33,7 @@ export class TxState extends TailwindElement(style) {
   get state() {
     let [icon, txt, css] = ['', '', '']
     const { state } = this.opts
-    switch (this.tx.status) {
+    switch (this.tx?.status) {
       case -1:
         ;[icon, txt, css] = [this.icons.wait, state?.wait || `Waiting for confirmation` + '...', 'wait']
         break
@@ -66,10 +66,11 @@ export class TxState extends TailwindElement(style) {
     >
       <div class="tx-state-icon mx-auto ${classMap(this.$c([this.inline ? 'mr-2' : 'text-3xl my-3', this.state.css]))}">
         ${when(
-          this.tx.pending && !this.hashOk,
-          () => html`<slot name="pending">
-            <i class="mdi mdi-loading"></i>
-          </slot>`,
+          this.tx?.pending && !this.hashOk,
+          () =>
+            html`<slot name="pending">
+              <i class="mdi mdi-loading"></i>
+            </slot>`,
           () => html`<span>${unsafeHTML(this.state.icon)}</span>`
         )}
       </div>
@@ -78,10 +79,10 @@ export class TxState extends TailwindElement(style) {
       </div>
       <div class="flex gap-4">
         ${when(
-          this.tx.hash,
+          this.tx?.hash,
           () =>
             html`${when(
-              this.tx.success || this.tx.almostSuccess,
+              this.tx?.success || this.tx?.almostSuccess,
               () => html`<slot name="view"><tx-view .tx=${this.tx}></tx-view></slot>`,
               () => html`<tx-view .tx=${this.tx}></tx-view>`
             )}`

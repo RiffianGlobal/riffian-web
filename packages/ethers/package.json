@@ -11,7 +11,7 @@
     "tr46": "^4.1.1"
   },
   "devDependencies": {
-    "@types/tr46": "^3.0.0"
+    "@types/tr46": "^3.0.3"
   },
   "peerDependencies": {
     "ethers": "^6",

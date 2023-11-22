@@ -3,6 +3,7 @@ import { goto } from '@riffian-web/ui/src/shared/router'
 // Components
 import '@riffian-web/ui/src/connect-wallet/btn'
 import '~/components/newAlbum'
+import '~/components/createAlbum/btn'
 
 // Style
 import style from './index.css?inline'
@@ -18,6 +19,7 @@ export class ViewHome extends TailwindElement(style) {
       <div class="ui-container">
         <p class="text-center">Home</p>
         <new-album></new-album>
+        <create-album-btn></create-album-btn>
       </div>
     </div>`
   }

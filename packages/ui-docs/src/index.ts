@@ -115,7 +115,8 @@ export class UIComponents extends TailwindElement(style) {
       <!-- Switch -->
       <div name="Switch" class="doc-intro">
         <p class="flex gap-1 items-center">
-          <ui-input-switch :checked="inputSwitch"></ui-input-switch> ${this.inputSwitch}
+          <ui-input-switch :checked="inputSwitch" @change="${(e) => (this.inputSwitch = e.detail)}"></ui-input-switch>
+          ${this.inputSwitch}
         </p>
       </div>
       <!-- Text -->

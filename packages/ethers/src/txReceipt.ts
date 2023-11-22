@@ -118,7 +118,7 @@ export class txReceipt {
         this.onSuccess(tx)
       } catch (err: any) {
         await normalizeTxErr(err)
-        if (err.code === 4001) this.status = 3
+        if (err.code === 'ACTION_REJECTED') this.status = 3
         else if (this.status !== 4) this.status = 0
         this.err = err
         this.onError(err)
