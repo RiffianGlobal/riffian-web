@@ -9,6 +9,7 @@ import {
 } from '@riffian-web/ui/src/shared/TailwindElement'
 import { getContract } from '@riffian-web/ethers/src/useBridge'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { parseRevertReason } from '@riffian-web/ethers/src/parseErr'
 import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/dialog'
 import '@riffian-web/ui/src/input/text'
@@ -17,10 +18,8 @@ import '@riffian-web/ui/src/input/text'
 export class NewAlbum extends TailwindElement('') {
   @property({ type: Boolean }) submit = false
   @property({ type: String }) result = ''
-  @property({ type: Boolean }) err = false
+  @property({ type: Boolean }) err = true
   @property({ type: String }) type = 'inline'
-  @property({ type: String }) name = null
-  @property({ type: String }) symbol = null
   @state() dialog = false
   @queryAll('ui-input-text')
   _inputs!: HTMLInputElement
@@ -28,17 +27,17 @@ export class NewAlbum extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
 
   async createAlbum() {
+    var name, symbol
     Array.prototype.forEach.call(this._inputs, (node) => {
       if (node.id == 'name') {
-        this.name = node.value
+        name = node.value
       }
       if (node.id == 'symbol') {
-        this.symbol = node.value
+        symbol = node.value
       }
     })
-    console.log(this.name + ',' + this.symbol)
     this.submit = true
-    if (!this.name || !this.symbol) {
+    if (!name || !symbol) {
       this.result = 'Name or Symbol should not be blank!'
       this.err = true
       console.log(this.result)
@@ -52,13 +51,12 @@ export class NewAlbum extends TailwindElement('') {
     try {
       // const overrides = {} as any
       const contract = await getContract('MediaBoard', { abiName: 'MediaBoard' })
-      const txn = await contract.newAlbum(this.name, this.symbol)
+      const txn = await contract.newAlbum(name, symbol)
       await txn.wait()
       this.result = 'Create Success, please visit scan for details. txn hash: ' + txn.hash
       this.err = false
     } catch (e) {
-      alert(e)
-      this.result = e.message
+      this.result = await parseRevertReason(e)
       this.err = true
     }
   }
@@ -86,7 +84,7 @@ export class NewAlbum extends TailwindElement('') {
       ${when(
         this.submit && this.result,
         () =>
-          html` ${when(this.err, () => html`<p style="color:red">${this.result}</p>`)}
+          html` ${when(this.err, () => html`<div><p style="color:red;max-width: 200px">${this.result}</p></div>`)}
             ${when(!this.err, () => html`<p>${this.result}</p>`)}
             <ui-button
               class="mt-2"
