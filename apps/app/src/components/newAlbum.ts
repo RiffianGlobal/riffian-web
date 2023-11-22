@@ -1,9 +1,17 @@
-import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import {
+  TailwindElement,
+  customElement,
+  html,
+  property,
+  state,
+  when,
+  queryAll
+} from '@riffian-web/ui/src/shared/TailwindElement'
 import { getContract } from '@riffian-web/ethers/src/useBridge'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/dialog'
-import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
+import '@riffian-web/ui/src/input/text'
 
 @customElement('new-album')
 export class NewAlbum extends TailwindElement('') {
@@ -14,14 +22,21 @@ export class NewAlbum extends TailwindElement('') {
   @property({ type: String }) name = null
   @property({ type: String }) symbol = null
   @state() dialog = false
+  @queryAll('ui-input-text')
+  _inputs!: HTMLInputElement
+
   bindBridge: any = new StateController(this, bridgeStore)
 
-  handleInput(event: Event) {
-    let { id, value } = event.target
-    this[id] = value
-  }
-
   async createAlbum() {
+    Array.prototype.forEach.call(this._inputs, (node) => {
+      if (node.id == 'name') {
+        this.name = node.value
+      }
+      if (node.id == 'symbol') {
+        this.symbol = node.value
+      }
+    })
+    console.log(this.name + ',' + this.symbol)
     this.submit = true
     if (!this.name || !this.symbol) {
       this.result = 'Name or Symbol should not be blank!'
@@ -35,7 +50,7 @@ export class NewAlbum extends TailwindElement('') {
       return
     }
     try {
-      const overrides = {} as any
+      // const overrides = {} as any
       const contract = await getContract('MediaBoard', { abiName: 'MediaBoard' })
       const txn = await contract.newAlbum(this.name, this.symbol)
       await txn.wait()
@@ -54,25 +69,13 @@ export class NewAlbum extends TailwindElement('') {
       ${when(
         !this.submit,
         () =>
-          html` <input
-              id="name"
-              name="name"
-              type="text"
-              class="bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-              placeholder="Input Name"
-              @change=${this.handleInput}
-              required
-            />
-            <input
-              type="text"
-              id="symbol"
-              name="symbol"
-              class="bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500 mt-2"
-              placeholder="Input Symbol"
-              @change=${this.handleInput}
-              required
-            />
-            <ui-button class="m-1" sm @click=${this.createAlbum}> SUBMIT </ui-button>`
+          html` <div>
+              <ui-input-text id="name" name="name" type="text" placeholder="Input Name" required />
+            </div>
+            <div>
+              <ui-input-text type="text" id="symbol" name="symbol" placeholder="Input Symbol" required />
+            </div>
+            <ui-button class="m-1" @click=${this.createAlbum}> SUBMIT </ui-button>`
       )}
       ${when(
         this.submit && !this.result,
@@ -87,7 +90,6 @@ export class NewAlbum extends TailwindElement('') {
             ${when(!this.err, () => html`<p>${this.result}</p>`)}
             <ui-button
               class="mt-2"
-              sm
               @click=${() => {
                 this.submit = false
                 this.err = false
