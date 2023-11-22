@@ -62,7 +62,7 @@ export class NewAlbum extends TailwindElement('') {
   }
 
   render() {
-    return html` <div class="grid place-items-center b-1">
+    return html` <div class="grid place-items-center b-1 border m-4 p-4 rounded-md">
       <p class="my-2 font-bold">New Album</p>
       ${when(
         !this.submit,

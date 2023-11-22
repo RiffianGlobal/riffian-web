@@ -34,7 +34,7 @@ export class AppMain extends TailwindElement('') {
         <div slot="logo"><a class="text-base lg_text-lg font-semibold" href="/">Riffian</a></div>
         <ui-nav slot="center" menuable>
           <ui-link href="/" nav alias="/">Home</ui-link>
-          <ui-link href="/settings" nav>Settings</ui-link>
+          <ui-link href="/top" nav>Top Music</ui-link>
           <ui-link href="/docs" nav>Docs</ui-link>
         </ui-nav>
       </ui-header>
