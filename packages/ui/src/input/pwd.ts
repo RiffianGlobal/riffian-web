@@ -20,7 +20,7 @@ export class UIInputPwd extends EditableElement(TailwindElement(style)) {
 
   renderDefRight = () => {
     if (!this.toggle) return ``
-    return html`<ui-button tabindex="-1" sm icon @click=${this.toggleSwitch}
+    return html`<ui-button tabindex="-1" sm icon @click=${this.toggleSwitch} class="-mr-1"
       ><i class="mdi ${classMap(this.$c([this.hide ? 'mdi-eye-off-outline' : 'mdi-eye']))}"></i
     ></ui-button>`
   }

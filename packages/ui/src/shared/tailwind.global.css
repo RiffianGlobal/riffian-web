@@ -47,6 +47,20 @@
   .mdi-loading {
     @apply inline-flex animate-spin;
   }
+  .bgBlur {
+    @apply fixed w-screen;
+    &::before {
+      content: '';
+      @apply absolute block left-0 top-0 bottom-0 right-0 w-screen h-full;
+      transition: background 0.2s;
+      will-change: background;
+    }
+    &.active::before {
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.65) 100%);
+      transform: translateZ(0);
+      backdrop-filter: blur(12px);
+    }
+  }
   .canScroll {
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.24) rgba(0, 0, 0, 0.01);

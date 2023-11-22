@@ -43,7 +43,7 @@ export class AppMain extends TailwindElement('') {
       </main>
       <ui-footer>
         <div slot="center" class="text-xs">
-          Powered by <ui-link class="ml-0.5 underline underline-offset-2" href="">Riffian</ui-link>
+          Powered by <ui-link class="ml-0.5 underline underline-offset-2 !text-inherit" href="">Riffian</ui-link>
         </div>
         <div slot="right"></div>
       </ui-footer>`

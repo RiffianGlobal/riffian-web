@@ -8,7 +8,7 @@
 }
 
 .ui-button {
-  @apply gap-1 text-white py-2 leading-tight text-sm sm_text-base rounded;
+  @apply inline-flex gap-1 text-white py-2 leading-tight text-sm sm_text-base rounded;
   background: var(--btnBg);
   &:not([dense]) {
     @apply px-3.5;

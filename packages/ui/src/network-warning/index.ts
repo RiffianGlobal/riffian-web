@@ -1,4 +1,4 @@
-import { customElement, TailwindElement, html, when, state, classMap } from '../shared/TailwindElement'
+import { customElement, TailwindElement, html, when, state, classMap, unsafeHTML } from '../shared/TailwindElement'
 import { animate } from '@lit-labs/motion'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { screenStore } from '@riffian-web/core/src/screen'
@@ -21,7 +21,8 @@ export class NetworkWarning extends TailwindElement(style) {
   get txt() {
     if (this.network.unSupported) `Please connect to the Mainnet.`
     if (this.network.mainnetOffline) return `Mainnet is not supported yet`
-    if (!this.network.isMainnet) return `You are currently connected to the ${this.bridge.network.title}`
+    if (!this.network.isMainnet)
+      return unsafeHTML(`You are currently connected to the <b>${this.bridge.network.title}</b>`)
     return ''
   }
   get shown() {

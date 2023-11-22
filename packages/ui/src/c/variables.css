@@ -1,7 +1,7 @@
 :root {
   --txt2: #c8c8c8;
   --txt3: #f9d3a3;
-  --bg2: #fffbf6;
+  --bg2: linear-gradient(180deg, rgba(0, 0, 0, 0.001) 99%, rgba(0, 0, 0, 0.25) 100%);
   --bg3: #373737;
 
   --radius: 1rem;
