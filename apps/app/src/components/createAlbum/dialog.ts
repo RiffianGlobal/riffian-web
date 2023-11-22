@@ -76,7 +76,7 @@ export class CreateAlbumDialog extends TailwindElement('') {
           this.pending,
           () =>
             html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your album has been created.' } }}
-              ><dui-button slot="view" href="/">Close</dui-button></tx-state
+              ><ui-button slot="view" href="/">Close</ui-button></tx-state
             >`
         )}
         <!-- Form -->
@@ -90,6 +90,7 @@ export class CreateAlbumDialog extends TailwindElement('') {
               @input=${(e: CustomEvent) => this.onInput(e, 'album')}
               placeholder="Your album name"
               required
+              autofocus
             >
               <span slot="label">Album Name</span>
             </ui-input-text>
