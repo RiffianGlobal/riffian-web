@@ -1,4 +1,4 @@
-import { TailwindElement, html, customElement, property, state, when, styleMap } from '../shared/TailwindElement'
+import { TailwindElement, html, customElement, property, state, classMap, styleMap } from '../shared/TailwindElement'
 // Components
 
 import style from './bar.css?inline'
@@ -42,7 +42,7 @@ export class UIProgressBar extends TailwindElement(style) {
     return html`<div class="relative flex grow w-full items-center">
       <div class="bar bg-gray-300 relative block w-full h-1.5 overflow-hidden rounded-full">
         <p
-          class="per pr-1 absolute top-0 h-full rounded-full transition-all bg-green-600"
+          class="per pr-1 absolute top-0 h-full rounded-full transition-all ${classMap({ state: this.state })}"
           style=${styleMap({ width: `${this.per}%` })}
         ></p>
       </div>

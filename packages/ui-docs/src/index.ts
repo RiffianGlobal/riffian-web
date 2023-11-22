@@ -42,7 +42,8 @@ export class UIComponents extends TailwindElement(style) {
         <p class="w-8 h-8">
           <ui-progress-ring state .percent=${50} .randomTo="100"><span class="text-xs">50%</span></ui-progress-ring>
         </p>
-        <p class="w-12 h-4"><ui-progress-bar state .percent=${50} .randomTo="100">2</ui-progress-bar></p>
+        <p class="w-12 h-4"><ui-progress-bar state .percent=${80} .randomTo="100">2</ui-progress-bar></p>
+        <p class="w-12 h-4"><ui-progress-bar .percent=${40}></ui-progress-bar></p>
       </div>
       <!-- Tip -->
       <p class="my-2 font-bold">Tip</p>
@@ -55,6 +56,7 @@ export class UIComponents extends TailwindElement(style) {
           btnText
           btnDense
           icon
+          align="left"
           dropClass="w-72"
         >
           <span slot="button">Settings</span>

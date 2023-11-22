@@ -16,6 +16,7 @@ export class UIDrop extends TailwindElement(style) implements TAILWINDELEMENT {
   @property({ type: Boolean }) lg = false
   @property({ type: Boolean }) icon = false
   @property({ type: String }) dropClass = ''
+  @property({ type: String }) align = ''
   // Button props
   // TODO: Is there any way to inherit all?
   @property({ type: Boolean, attribute: true }) btnSm = false
@@ -26,17 +27,17 @@ export class UIDrop extends TailwindElement(style) implements TAILWINDELEMENT {
   @property({ type: String }) btnClass = ''
 
   @state() model = false
-  @state() align = { left: false, top: false }
+  @state() _align = { left: this.align === 'left', top: this.align === 'top' }
   @state() delayedModel = false
 
   calcPos = () => {
     const pos = this.getBoundingClientRect() ?? {}
-    Object.assign(this.align, {
+    this._align = {
       // Left edge ~= width * 1.2
-      left: pos.left < 200,
+      left: this.align === 'left' || pos.left < 200,
       // Bottom edge ~= min-height * 1.5
       top: document.documentElement.scrollHeight - pos.y < 16 * 9 * 1.5
-    })
+    }
   }
 
   close = async () => {
@@ -128,8 +129,8 @@ export class UIDrop extends TailwindElement(style) implements TAILWINDELEMENT {
         part="ui-drop"
         class="ui-drop z-10 ${classMap(
           this.$c([
-            this.align.left ? 'left-0' : 'right-0',
-            this.align.top ? 'bottom-full' : 'top-full',
+            this._align.left ? 'left-0' : 'right-0',
+            this._align.top ? 'bottom-full' : 'top-full',
             this.model ? 'mt-auto opacity-100 visible' : '-mt-4 opacity-0 invisible hidden',
             this.dropClass
           ])

@@ -8,12 +8,16 @@
 }
 
 .ui-button {
-  @apply gap-1 text-white py-2 leading-tight text-sm sm_text-base rounded-md;
+  @apply gap-1 text-white py-2 leading-tight text-sm sm_text-base rounded;
   background: var(--btnBg);
   &:not([dense]) {
     @apply px-3.5;
   }
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
   &:not([disabled]) {
     &:hover {
       background: var(--btnBgHover);
@@ -40,12 +44,12 @@
     border: 1px solid;
     &:not([disabled]) {
       &:hover {
-        background: #fff;
+        background: #f6f9fd;
         color: var(--btnBg);
         border: 1px solid;
       }
       &:active {
-        background: #f6f6f6;
+        background: #e3ecf7;
         color: var(--btnBg);
         border: 1px solid;
       }

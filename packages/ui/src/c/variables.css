@@ -7,7 +7,7 @@
   --radius: 1rem;
   --btn_radius: 0.25rem;
 
-  --a_color: #ff920f;
+  --a_color: #1867c0;
   --a_hover_color: rgba(59, 130, 246, 0.88);
   /* Overridable */
   --textBase: var(--text-base, 14px);
@@ -23,9 +23,9 @@
   --colorSuccess: var(--color-success, #4caf50);
   --colorDark: var(--color-dark, #373737);
   /* Buttons */
-  --btnBg: var(--btn-bg, #ff920f);
-  --btnBgHover: var(--btn-bg-hover, #ffb65f);
-  --btnBgActive: var(--btn-bg-active, #e08417);
+  --btnBg: var(--btn-bg, #1867c0);
+  --btnBgHover: var(--btn-bg-hover, #2a73c5);
+  --btnBgActive: var(--btn-bg-active, #a7c5e7);
   --btnBgSecondary: var(--btn-bg-secondary, #1867c0);
   --btnBgSecondaryHover: var(--btn-bg-secondary-hover, #2a73c5);
   --btnBgSecondaryActive: var(--btn-bg-secondary-active, #4182cb);

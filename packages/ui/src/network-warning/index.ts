@@ -21,7 +21,7 @@ export class NetworkWarning extends TailwindElement(style) {
   get txt() {
     if (this.network.unSupported) `Please connect to the Mainnet.`
     if (this.network.mainnetOffline) return `Mainnet is not supported yet`
-    if (!this.network.isMainnet) return `Note: You are currently connected to the ${this.bridge.network.title}`
+    if (!this.network.isMainnet) return `You are currently connected to the ${this.bridge.network.title}`
     return ''
   }
   get shown() {
@@ -57,12 +57,14 @@ export class NetworkWarning extends TailwindElement(style) {
   override render() {
     if (!this.shown) return
     return html`<span
-      class="network-warning overflow-hidden w-full flex text-red-600 items-center px-2 justify-center text-center bg-orange-200 ${classMap(
+      class="network-warning overflow-hidden w-full flex text-red-600 items-center px-2 justify-center text-center bg-gray-200 ${classMap(
         { shown: this.shown }
       )}"
       ${animate({ guard: () => this.shown, properties: ['opacity', 'height', 'visibility'] })}
     >
-      <span>${this.txt}</span>
+      <span class="flex justify-center items-center gap-1"
+        ><i class="i mdi mdi-alert-outline font-bold"></i>${this.txt}</span
+      >
       ${when(
         !this.network.isDefaultNet,
         () =>
