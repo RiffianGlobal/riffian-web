@@ -20,6 +20,15 @@ export const routes = [
     }
   },
   {
+    name: 'top',
+    path: '/top',
+    render: () => html`<view-top></view-top>`,
+    enter: async () => {
+      await import('~/views/top')
+      return true
+    }
+  },
+  {
     name: 'docs',
     path: '/docs',
     render: () => html`<view-docs></view-docs>`,
