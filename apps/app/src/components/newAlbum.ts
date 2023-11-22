@@ -7,6 +7,9 @@ import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 
 @customElement('new-album')
 export class NewAlbum extends TailwindElement('') {
+  @property({ type: Boolean }) submit = false
+  @property({ type: String }) result = ''
+  @property({ type: Boolean }) err = false
   @property({ type: String }) type = 'inline'
   @property({ type: String }) name = null
   @property({ type: String }) symbol = null
@@ -19,12 +22,16 @@ export class NewAlbum extends TailwindElement('') {
   }
 
   async createAlbum() {
+    this.submit = true
     if (!this.name || !this.symbol) {
-      alert('Name or Symbol should not be blank!')
+      this.result = 'Name or Symbol should not be blank!'
+      this.err = true
+      console.log(this.result)
       return
     }
     if (!bridgeStore.bridge.account) {
-      alert('Connect wallet first!')
+      this.result = 'Connect wallet first!'
+      this.err = true
       return
     }
     try {
@@ -32,26 +39,22 @@ export class NewAlbum extends TailwindElement('') {
       const contract = await getContract('MediaBoard', { abiName: 'MediaBoard' })
       const txn = await contract.newAlbum(this.name, this.symbol)
       await txn.wait()
-      alert('Create Success, please visit scan for details. txn hash: ' + txn.hash)
-    } catch (err) {
-      alert(err)
+      this.result = 'Create Success, please visit scan for details. txn hash: ' + txn.hash
+      this.err = false
+    } catch (e) {
+      alert(e)
+      this.result = e.message
+      this.err = true
     }
-    // return new txReceipt(txn, {
-    //   seq: {
-    //     type: 'approve',
-    //     title: `NewAlbum`,
-    //     ts: new Date().getTime(),
-    //     overrides
-    //   }
-    // })
   }
 
   render() {
-    return html`<ui-button sm @click=${() => (this.dialog = true)}>New Album</ui-button> ${when(
-        this.dialog,
+    return html` <div class="grid place-items-center b-1">
+      <p class="my-2 font-bold">New Album</p>
+      ${when(
+        !this.submit,
         () =>
-          html`<ui-dialog @close=${() => (this.dialog = false)}>
-            <input
+          html` <input
               id="name"
               name="name"
               type="text"
@@ -69,8 +72,30 @@ export class NewAlbum extends TailwindElement('') {
               @change=${this.handleInput}
               required
             />
-            <ui-button sm @click=${this.createAlbum}> SUBMIT </ui-button>
-          </ui-dialog>`
-      )}`
+            <ui-button class="m-1" sm @click=${this.createAlbum}> SUBMIT </ui-button>`
+      )}
+      ${when(
+        this.submit && !this.result,
+        () =>
+          html` <i class="text-5xl mdi mdi-loading"></i>
+            <p>Submiting txn to Fantom Network...</p>`
+      )}
+      ${when(
+        this.submit && this.result,
+        () =>
+          html` ${when(this.err, () => html`<p style="color:red">${this.result}</p>`)}
+            ${when(!this.err, () => html`<p>${this.result}</p>`)}
+            <ui-button
+              class="mt-2"
+              sm
+              @click=${() => {
+                this.submit = false
+                this.err = false
+              }}
+            >
+              Return
+            </ui-button>`
+      )}
+    </div>`
   }
 }
