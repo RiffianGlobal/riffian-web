@@ -73,7 +73,7 @@ export class CreateAlbumDialog extends TailwindElement('') {
       <div class="flex flex-col w-full m-4 gap-4 mx-auto">
         <!-- Tx pending -->
         ${when(
-          this.pending,
+          this.txPending,
           () =>
             html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your album has been created.' } }}
               ><ui-button slot="view" href="/">Close</ui-button></tx-state
@@ -81,7 +81,7 @@ export class CreateAlbumDialog extends TailwindElement('') {
         )}
         <!-- Form -->
         ${when(
-          !this.pending,
+          !this.txPending,
           () => html`
             <p class="my-2 font-bold text-center">New Album</p>
             <!-- Album -->
@@ -105,7 +105,7 @@ export class CreateAlbumDialog extends TailwindElement('') {
             </ui-input-text>
             <!-- Preview -->
             <p class="text-center">${this.form.album || '-'}<span class="mx-1">/</span>${this.form.symbol || '-'}</p>
-            <ui-button class="mx-auto" @click=${this.create} ?disabled="${this.txPending}">Confirm</ui-button>
+            <ui-button class="mx-auto" @click=${this.create} ?disabled="${this.pending}">Confirm</ui-button>
           `
         )}
       </div>
