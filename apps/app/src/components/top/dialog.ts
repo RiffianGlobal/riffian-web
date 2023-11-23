@@ -19,21 +19,23 @@ export class VoteAlbumDialog extends TailwindElement('') {
   @state() voting = false
   @state() err = defErr()
 
+  connectedCallback() {
+    super.connectedCallback()
+    this.getPrice()
+  }
+
   async getPrice() {
-    if (this.price) {
-      return
-    }
     try {
       let result = await albumData(this.album)
-      let votes = result[1]
-      this.price = await votePrice(this.album, Number(votes) + 1)
+      this.votes = result[1]
+      this.price = await votePrice(this.album, Number(this.votes) + 1)
     } catch (err: any) {
       let msg = err.message || err.code
+      this.updateErr({ tx: msg })
     }
   }
 
   async vote() {
-    console.log('VOTE!!')
     this.voting = true
     try {
       this.tx = await vote(this.album, { value: this.price })
@@ -63,7 +65,6 @@ export class VoteAlbumDialog extends TailwindElement('') {
   updateErr = (err = {}) => (this.err = Object.assign({}, this.err, err))
 
   render() {
-    this.getPrice()
     return html`<ui-dialog
       @close=${() => {
         this.close()
@@ -90,7 +91,8 @@ export class VoteAlbumDialog extends TailwindElement('') {
           this.voting,
           () =>
             html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your vote has been submit.' } }}
-              ><ui-button slot="view" href="/">Close</ui-button></tx-state>`
+              ><ui-button slot="view" href="/">Close</ui-button></tx-state
+            >`
         )}
       </div>
     </ui-dialog>`

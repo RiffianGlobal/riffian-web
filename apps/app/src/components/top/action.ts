@@ -1,6 +1,7 @@
 import { getAccount, getContract, assignOverrides } from '@riffian-web/ethers/src/useBridge'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
+import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 
 export const getAlbumContract = async () => getContract('MediaBoard', { account: await getAccount() })
 
@@ -40,4 +41,23 @@ export const votePrice = async (album: string, votes: Number) => {
   const parameters = [album, votes]
   await assignOverrides(overrides, contract, method, parameters)
   return await contract[method](...parameters)
+}
+
+export const albumList = async (count: Number) => {
+  let queryJSON = `{
+    albums(first: `+count+`) {
+      id
+      address
+      totalVotes
+      rewardPoolAmount
+      createdAt
+      artist {
+        address
+        totalRewards
+        totalVotes
+      }
+    }
+  }`
+  let result = await graphQuery('MediaBoard', queryJSON)
+  return result
 }
