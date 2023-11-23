@@ -7,13 +7,20 @@ import {
   state,
   when
 } from '@riffian-web/ui/src/shared/TailwindElement'
+import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 
 @customElement('top-album')
 export class NewAlbum extends TailwindElement('') {
-  @property({ type: Array }) albumList = []
+  bindBridge: any = new StateController(this, bridgeStore)
+  @state() albumList = []
   @state() dialog = false
   @state() currentAlbum = { address: '', votes: 0, url: '' }
+
+  get disabled() {
+    return !bridgeStore.bridge.account
+  }
+
   init = () => {
     var list: any = []
     list.push({
@@ -63,6 +70,7 @@ export class NewAlbum extends TailwindElement('') {
                   <td>
                     <div name="Dialog" class="doc-intro">
                       <ui-button
+                        ?disabled="${this.disabled}"
                         @click=${() => {
                           this.currentAlbum = item
                           this.dialog = true
