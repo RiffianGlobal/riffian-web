@@ -1,6 +1,8 @@
 import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { vote, albumData, votePrice } from './action'
+import { calculateAlbumRewards } from '../rewards/action'
+import { formatUnits } from 'ethers'
 
 import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/input/text'
@@ -17,6 +19,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
   @state() tx: any = null
   @state() success = false
   @state() voting = false
+  @state() rewards = false
   @state() err = defErr()
 
   connectedCallback() {
@@ -27,8 +30,10 @@ export class VoteAlbumDialog extends TailwindElement('') {
   async getPrice() {
     try {
       let result = await albumData(this.album)
+      console.log('get votes:' + result)
       this.votes = result[1]
-      this.price = await votePrice(this.album, Number(this.votes) + 1)
+      this.price = await votePrice(this.album)
+      this.rewards = await calculateAlbumRewards(bridgeStore.bridge.account, this.album)
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })
@@ -78,12 +83,14 @@ export class VoteAlbumDialog extends TailwindElement('') {
           !this.price,
           () =>
             html`<i class="text-5xl mdi mdi-loading"></i>
-              <p>Loading vote price...</p>`
+              <p>Loading album data...</p>`
         )}${when(
           this.price && !this.voting,
           () => html`
-            <p>Estimated cost</p>
-            <p class="text-5xl text-sky-500">${Number(this.price) / Math.pow(10, 18)} FTM</p>
+            <p class="font-bold">accumulated rewards</p>
+            <p class="text-xl text-sky-800">${formatUnits(Number(this.rewards), 18)} FTM</p>
+            <p class="font-bold">Estimated cost</p>
+            <p class="text-xl text-sky-500">${formatUnits(Number(this.price), 18)} FTM</p>
             <p>Current Votes:${this.votes}</p>
             <ui-button class="m-1" @click=${this.vote}> VOTE THIS! </ui-button>
           `

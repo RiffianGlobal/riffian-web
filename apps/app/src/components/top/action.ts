@@ -34,22 +34,26 @@ export const albumData = async (album: string) => {
   return await contract[method](...parameters)
 }
 
-export const votePrice = async (album: string, votes: Number) => {
+export const votePrice = async (album: string) => {
   const contract = await getAlbumContract()
-  const method = 'currentVotePrice'
+  const method = 'calculateAlbumVotePrice'
   const overrides = {}
-  const parameters = [album, votes]
+  const parameters = [album]
   await assignOverrides(overrides, contract, method, parameters)
   return await contract[method](...parameters)
 }
 
 export const albumList = async (count: Number) => {
-  let queryJSON = `{
-    albums(first: `+count+`) {
+  let queryJSON =
+    `{
+    albums(first: ` +
+    count +
+    `, orderBy: rewardPoolAmount, orderDirection: asc) {
       id
       address
       totalVotes
       rewardPoolAmount
+      fansNumber
       createdAt
       artist {
         address

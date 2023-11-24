@@ -8,7 +8,7 @@ import '@riffian-web/ui/src/loading/skeleton'
 @customElement('top-album')
 export class NewAlbum extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
-  @state() albumList = []
+  @state() albumList:any = []
   @state() dialog = false
   @state() currentAlbum = { address: '', votes: 0, url: '' }
   @state() pending = false
@@ -22,29 +22,27 @@ export class NewAlbum extends TailwindElement('') {
     this.init()
   }
 
+  getRandomInt(max: number) {
+    return Math.floor(Math.random() * max)
+  }
+
   init = async () => {
     this.pending = true
-    this.albumList = await albumList(10)
-    this.pending = false
+    let result = await albumList(10)
+    this.albumList = result.albums
     console.log(this.albumList)
-    var list: any = []
-    list.push({
-      address: '0xD9bDD17b3a77a24A8d40934e537a4B1e0f9235A8',
-      url: 'https://i1.sndcdn.com/artworks-000329038545-d554xk-t500x500.jpg',
-      price: 0.1,
-      votes: 'loading...',
-      desc: '"Beat It" is a song by American singer Michael Jackson from his sixth studio album, Thriller (1982)',
-      name: 'Beat it'
-    })
-    list.push({
-      address: '0x17C4f43e5A65d4bfE3f54E6FBd19aA2fAA7686Be',
-      url: 'https://upload.wikimedia.org/wikipedia/en/thumb/1/1e/You_Are_Not_Alone.jpg/220px-You_Are_Not_Alone.jpg',
-      price: 0.2,
-      votes: 'loading...',
-      desc: '"You Are Not Alone" is a pop and R&B ballad about love and isolation',
-      name: 'You Are Not Alone'
-    })
-    this.albumList = list
+    this.pending = false
+
+    let names = ['Beat it', 'You are not alone']
+    let urls = [
+      'https://i1.sndcdn.com/artworks-000329038545-d554xk-t500x500.jpg',
+      'https://upload.wikimedia.org/wikipedia/en/thumb/1/1e/You_Are_Not_Alone.jpg/220px-You_Are_Not_Alone.jpg'
+    ]
+    console.log(JSON.stringify(this.albumList))
+    for (var i = 0; i < this.albumList.length; i++) {
+      this.albumList[i].url = urls[this.getRandomInt(2)]
+      this.albumList[i].name = names[this.getRandomInt(2)]
+    }
   }
 
   close = () => (this.dialog = false)
@@ -81,8 +79,8 @@ export class NewAlbum extends TailwindElement('') {
                     <tr>
                       <td>
                         <span>
-                          <p class="text-sm text-gray-500">price</p>
-                          <p class="text-sm font-bold text-sky-500">${item.price} FTM</p>
+                          <p class="text-sm text-gray-500">Reward Pool Amount</p>
+                          <p class="text-sm font-bold text-sky-500">${item.rewardPoolAmount} FTM</p>
                         </span>
                       </td>
                       <td>
@@ -110,7 +108,6 @@ export class NewAlbum extends TailwindElement('') {
                       <td></td>
                     </tr>
                   </table>
-                  <!-- <i class="mdi mdi-arrow-right"></i> -->
                 </li>`
             )}
           </ul>`
