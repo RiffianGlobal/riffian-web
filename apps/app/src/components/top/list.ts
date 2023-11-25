@@ -36,11 +36,14 @@ export class NewAlbum extends TailwindElement('') {
     let names = ['Beat it', 'You are not alone']
     let urls = [
       'https://i1.sndcdn.com/artworks-000329038545-d554xk-t500x500.jpg',
-      'https://upload.wikimedia.org/wikipedia/en/thumb/1/1e/You_Are_Not_Alone.jpg/220px-You_Are_Not_Alone.jpg'
+      'https://upload.wikimedia.org/wikipedia/en/thumb/1/1e/You_Are_Not_Alone.jpg/220px-You_Are_Not_Alone.jpg',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLE1c3OU9GZU5Ev_eXLBzyesTY8JOkUulBUw&usqp=CAU',
+      'https://upload.wikimedia.org/wikipedia/zh/5/5e/21_Adele_Album.jpg',
+      'https://i.kfs.io/album/global/25572377,4v1/fit/500x500.jpg'
     ]
     console.log(JSON.stringify(this.albumList))
     for (var i = 0; i < this.albumList.length; i++) {
-      this.albumList[i].url = urls[this.getRandomInt(2)]
+      this.albumList[i].url = urls[this.getRandomInt(4)]
       this.albumList[i].name = names[this.getRandomInt(2)]
     }
   }
