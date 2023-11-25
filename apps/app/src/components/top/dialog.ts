@@ -41,7 +41,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
   }
 
   async claim() {
-    this.pending=true;
+    this.pending = true
     try {
       this.tx = await claimAlbumRewards(this.album)
       this.success = await this.tx.wait()
@@ -105,7 +105,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
           () => html`
             <p class="font-bold">accumulated rewards</p>
             <p class="text-xl text-sky-800">${formatUnits(Number(this.rewards), 18)} FTM</p>
-            <ui-button class="sm m-1" ?disabled=${(Number(this.rewards) > 0)} @click=${this.claim}> Claim </ui-button>
+            <ui-button class="sm m-1" ?disabled=${Number(this.rewards) <= 0} @click=${this.claim}> Claim </ui-button>
             <p class="font-bold">Estimated cost</p>
             <p class="text-xl text-sky-500">${formatUnits(Number(this.price), 18)} FTM</p>
             <p>Current Votes:${this.votes}</p>

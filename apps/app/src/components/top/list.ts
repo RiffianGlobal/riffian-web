@@ -52,7 +52,7 @@ export class NewAlbum extends TailwindElement('') {
   close = () => (this.dialog = false)
 
   render() {
-    return html` <div class="grid place-items-center b-1 border m-4 p-4 rounded-md">
+    return html` <div class="grid place-items-center b-1 border m-4 p-4 rounded-md ">
       ${when(
         this.pending,
         () =>
@@ -67,7 +67,7 @@ export class NewAlbum extends TailwindElement('') {
       ${when(
         !this.pending,
         () =>
-          html`<table class="w-1/2 text-left border-collapse">
+          html`<table class="w-2/5 text-left border-collapse">
             <thead>
               <th>Rank</th>
               <th>Collection</th>
