@@ -8,7 +8,7 @@ import '@riffian-web/ui/src/loading/skeleton'
 @customElement('top-album')
 export class NewAlbum extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
-  @state() albumList:any = []
+  @state() albumList: any = []
   @state() dialog = false
   @state() currentAlbum = { address: '', votes: 0, url: '' }
   @state() pending = false
@@ -63,54 +63,55 @@ export class NewAlbum extends TailwindElement('') {
       ${when(
         !this.pending,
         () =>
-          html` <ul class="connect-wallet-list">
+          html`<table class="w-1/2 text-left border-collapse">
+            <thead>
+              <th>Rank</th>
+              <th>Collection</th>
+              <th>Album</th>
+              <th>Vote Amount</th>
+              <th>Reward Pool Amount</th>
+              <th>Operation</th>
+            </thead>
             ${repeat(
               this.albumList,
               (item: any, i) =>
-                html`<li>
-                  <table>
-                    <tr>
-                      <p class="my-2 font-bold text-lg">${i + 1}.${item.name}</p>
-                    </tr>
-                    <tr>
-                      <td colspan="2"><img class="w-36 h-36" src=${item.url} /></td>
-                      <td>${item.desc}</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <span>
-                          <p class="text-sm text-gray-500">Reward Pool Amount</p>
-                          <p class="text-sm font-bold text-sky-500">${item.rewardPoolAmount} FTM</p>
-                        </span>
-                      </td>
-                      <td>
-                        <div name="Dialog" class="doc-intro">
-                          <ui-button
-                            ?disabled="${this.disabled}"
-                            @click=${() => {
-                              this.currentAlbum = item
-                              this.dialog = true
-                            }}
-                            >VOTE</ui-button
-                          >
-                          ${when(
-                            this.dialog && item.address == this.currentAlbum.address,
-                            () =>
-                              html`<vote-album-dialog
-                                album=${item.address}
-                                url=${item.url}
-                                votes=${item.votes}
-                                @close=${this.close}
-                              ></vote-album-dialog>`
-                          )}
-                        </div>
-                      </td>
-                      <td></td>
-                    </tr>
-                  </table>
-                </li>`
+                html`<tr>
+                  <td
+                    class="py-2 pr-2 font-mono font-medium text-lg leading-6 text-sky-500 whitespace-nowrap dark:text-sky-400"
+                  >
+                    ${i + 1}
+                  </td>
+                  <td><img class="w-24 h-24 rounded-md" src=${item.url} /></td>
+                  <td class="py-2 pl-2 font-mono text-sm leading-6 text-indigo-600 whitespace-pre dark:text-indigo-300">
+                    ${item.name}
+                  </td>
+                  <td><p class="text-sm font-bold text-sky-500">${item.rewardPoolAmount} FTM</p></td>
+                  <td><p class="text-sm font-bold text-sky-500">${item.rewardPoolAmount} FTM</p></td>
+                  <td>
+                    <div name="Dialog" class="doc-intro">
+                      <ui-button
+                        ?disabled="${this.disabled}"
+                        @click=${() => {
+                          this.currentAlbum = item
+                          this.dialog = true
+                        }}
+                        >VOTE</ui-button
+                      >
+                      ${when(
+                        this.dialog && item.address == this.currentAlbum.address,
+                        () =>
+                          html`<vote-album-dialog
+                            album=${item.address}
+                            url=${item.url}
+                            votes=${item.votes}
+                            @close=${this.close}
+                          ></vote-album-dialog>`
+                      )}
+                    </div>
+                  </td>
+                </tr> `
             )}
-          </ul>`
+          </table>`
       )}
     </div>`
   }
