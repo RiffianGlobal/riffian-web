@@ -4,6 +4,7 @@ import '~/components/top/dialog'
 import { albumList } from './action'
 import '@riffian-web/ui/src/loading/icon'
 import '@riffian-web/ui/src/loading/skeleton'
+import '~/components/rewards/claim'
 
 @customElement('top-album')
 export class NewAlbum extends TailwindElement('') {
