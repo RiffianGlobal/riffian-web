@@ -1,16 +1,4 @@
 [
-  { "inputs": [], "name": "InvalidInitialization", "type": "error" },
-  { "inputs": [], "name": "NotInitializing", "type": "error" },
-  {
-    "inputs": [{ "internalType": "address", "name": "owner", "type": "address" }],
-    "name": "OwnableInvalidOwner",
-    "type": "error"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "account", "type": "address" }],
-    "name": "OwnableUnauthorizedAccount",
-    "type": "error"
-  },
   {
     "anonymous": false,
     "inputs": [
@@ -32,7 +20,7 @@
   },
   {
     "anonymous": false,
-    "inputs": [{ "indexed": false, "internalType": "uint64", "name": "version", "type": "uint64" }],
+    "inputs": [{ "indexed": false, "internalType": "uint8", "name": "version", "type": "uint8" }],
     "name": "Initialized",
     "type": "event"
   },
@@ -48,9 +36,25 @@
   {
     "anonymous": false,
     "inputs": [
+      { "indexed": false, "internalType": "uint256", "name": "_team", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "_artist", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "_daily", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "_album", "type": "uint256" }
+    ],
+    "name": "NewRewardDistribution",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
       { "indexed": false, "internalType": "address", "name": "from", "type": "address" },
       { "indexed": false, "internalType": "address", "name": "to", "type": "address" },
-      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }
+      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "dailyRewardAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "albumPoolRewardAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "teamRewardAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "artistRewardAmount", "type": "uint256" },
+      { "indexed": false, "internalType": "uint256", "name": "seq", "type": "uint256" }
     ],
     "name": "NewVote",
     "type": "event"
@@ -63,6 +67,13 @@
     ],
     "name": "OwnershipTransferred",
     "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "albumPoolRewardPercents",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
   },
   {
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
@@ -82,9 +93,24 @@
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "albumToData",
     "outputs": [
-      { "internalType": "address", "name": "creator", "type": "address" },
+      { "internalType": "address", "name": "artist", "type": "address" },
+      { "internalType": "uint256", "name": "rewardIndex", "type": "uint256" },
       { "internalType": "uint256", "name": "votes", "type": "uint256" }
     ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "albumsList",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "artistRewardPercents",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -99,10 +125,24 @@
     "type": "function"
   },
   {
+    "inputs": [{ "internalType": "address", "name": "_album", "type": "address" }],
+    "name": "calculateAlbumVotePrice",
+    "outputs": [{ "internalType": "uint256", "name": "price", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [{ "internalType": "address", "name": "_account", "type": "address" }],
     "name": "calculateDailyRewards",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "_counter", "type": "uint256" }],
+    "name": "calculateVotePrice",
+    "outputs": [{ "internalType": "uint256", "name": "price", "type": "uint256" }],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -113,41 +153,49 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [{ "internalType": "uint256", "name": "_seq", "type": "uint256" }],
     "name": "claimDailyRewards",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "currentSeqNumber",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "dailyRewardPercents",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "guardian",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
-      { "internalType": "address", "name": "_album", "type": "address" },
-      { "internalType": "uint256", "name": "_counter", "type": "uint256" }
+      { "internalType": "address", "name": "_team", "type": "address" },
+      { "internalType": "uint256", "name": "_startTimeStamp", "type": "uint256" },
+      { "internalType": "uint256", "name": "_interval", "type": "uint256" }
     ],
-    "name": "currentVotePrice",
-    "outputs": [{ "internalType": "uint256", "name": "price", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "dailyRewardBalance",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "dailyRewardIndex",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "_team", "type": "address" }],
     "name": "initialize",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "interval",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -167,11 +215,78 @@
     "stateMutability": "view",
     "type": "function"
   },
+  { "inputs": [], "name": "pauseVote", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
   { "inputs": [], "name": "renounceOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+  {
+    "inputs": [],
+    "name": "rewardIntervalMin",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "seqToRewardData",
+    "outputs": [
+      { "internalType": "uint256", "name": "starts", "type": "uint256" },
+      { "internalType": "uint256", "name": "interval", "type": "uint256" },
+      { "internalType": "uint256", "name": "rewardIndex", "type": "uint256" },
+      { "internalType": "uint256", "name": "votes", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "_interval", "type": "uint256" }],
+    "name": "setInterval",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_team", "type": "uint256" },
+      { "internalType": "uint256", "name": "_artist", "type": "uint256" },
+      { "internalType": "uint256", "name": "_daily", "type": "uint256" },
+      { "internalType": "uint256", "name": "_album", "type": "uint256" }
+    ],
+    "name": "setRewardDistribution",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "_startTimeStamp", "type": "uint256" }],
+    "name": "setStartTimeStamp",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "_team", "type": "address" }],
+    "name": "setTeamAddress",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "startTimeStamp",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
   {
     "inputs": [],
     "name": "teamAddress",
     "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "teamRewardPercents",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -208,27 +323,6 @@
       { "internalType": "address", "name": "", "type": "address" }
     ],
     "name": "userAlbumVotes",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "userDailyBalance",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "userDailyEarned",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "userDailyRewardIndex",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"

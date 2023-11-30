@@ -1,6 +1,8 @@
 import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { vote, albumData, votePrice } from './action'
+import { calculateAlbumRewards, claimAlbumRewards } from '../rewards/action'
+import { formatUnits } from 'ethers'
 
 import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/input/text'
@@ -16,7 +18,8 @@ export class VoteAlbumDialog extends TailwindElement('') {
   @state() price = 0
   @state() tx: any = null
   @state() success = false
-  @state() voting = false
+  @state() pending = false
+  @state() rewards = false
   @state() err = defErr()
 
   connectedCallback() {
@@ -27,16 +30,34 @@ export class VoteAlbumDialog extends TailwindElement('') {
   async getPrice() {
     try {
       let result = await albumData(this.album)
+      console.log('get votes:' + result)
       this.votes = result[1]
-      this.price = await votePrice(this.album, Number(this.votes) + 1)
+      this.price = await votePrice(this.album)
+      this.rewards = await calculateAlbumRewards(bridgeStore.bridge.account, this.album)
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })
     }
   }
 
+  async claim() {
+    this.pending = true
+    try {
+      this.tx = await claimAlbumRewards(this.album)
+      this.success = await this.tx.wait()
+    } catch (err: any) {
+      let msg = err.message || err.code
+      if (err.code === 'ACTION_REJECTED') {
+        this.updateErr({ tx: msg })
+        return this.close()
+      }
+    } finally {
+      // this.pending = false
+    }
+  }
+
   async vote() {
-    this.voting = true
+    this.pending = true
     try {
       this.tx = await vote(this.album, { value: this.price })
       this.success = await this.tx.wait()
@@ -47,12 +68,12 @@ export class VoteAlbumDialog extends TailwindElement('') {
         return this.close()
       }
     } finally {
-      // this.voting = false
+      // this.pending = false
     }
   }
   resetState = () => {
     this.err = defErr()
-    this.voting = false
+    this.pending = false
     this.success = false
     this.price = 0
   }
@@ -78,17 +99,20 @@ export class VoteAlbumDialog extends TailwindElement('') {
           !this.price,
           () =>
             html`<i class="text-5xl mdi mdi-loading"></i>
-              <p>Loading vote price...</p>`
+              <p>Loading album data...</p>`
         )}${when(
-          this.price && !this.voting,
+          this.price && !this.pending,
           () => html`
-            <p>Estimated cost</p>
-            <p class="text-5xl text-sky-500">${Number(this.price) / Math.pow(10, 18)} FTM</p>
+            <p class="font-bold">accumulated rewards</p>
+            <p class="text-xl text-sky-800">${formatUnits(Number(this.rewards), 18)} FTM</p>
+            <ui-button class="sm m-1" ?disabled=${Number(this.rewards) <= 0} @click=${this.claim}> Claim </ui-button>
+            <p class="font-bold">Estimated cost</p>
+            <p class="text-xl text-sky-500">${formatUnits(Number(this.price), 18)} FTM</p>
             <p>Current Votes:${this.votes}</p>
             <ui-button class="m-1" @click=${this.vote}> VOTE THIS! </ui-button>
           `
         )}${when(
-          this.voting,
+          this.pending,
           () =>
             html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your vote has been submit.' } }}
               ><ui-button slot="view" href="/">Close</ui-button></tx-state

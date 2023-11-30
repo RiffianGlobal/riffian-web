@@ -1,26 +1,25 @@
 import { TailwindElement, html, customElement } from '@riffian-web/ui/src/shared/TailwindElement'
-import { goto } from '@riffian-web/ui/src/shared/router'
-// Components
-import '@riffian-web/ui/src/connect-wallet/btn'
-import '~/components/newAlbum'
+import '~/components/top/list'
 import '~/components/createAlbum/btn'
+import '~/components/rewards/claim'
 
 // Style
 import style from './index.css?inline'
-import logo from '~/assets/logo.svg'
 
 @customElement('view-home')
 export class ViewHome extends TailwindElement(style) {
   render() {
-    return html`<div class="home">
-      <div class="ui-container my-4">
-        <img class="w-24 mx-auto object-contain select-none pointer-events-none" src="${logo}" />
+    return html`<div class="top">
+      <div class="ui-container relative flex justify-between items-center">
+        <div class="flex items-center gap-3 lg_gap-4 lg_w-40">
+          <p class="font-bold text-xl">Weekly</p>
+        </div>
+        <div><claim-rewards></claim-rewards></div>
+        <div class="flex justify-end items-center lg_w-40">
+          <create-album-btn></create-album-btn>
+        </div>
       </div>
-      <div class="ui-container">
-        <p class="text-center">Home</p>
-        <new-album></new-album>
-        <create-album-btn></create-album-btn>
-      </div>
+      <top-album></top-album>
     </div>`
   }
 }

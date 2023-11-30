@@ -9,7 +9,7 @@ export const SubGraph: ChainConf = {
     '0x5': 'https://api.studio.thegraph.com/query/'
   },
   MediaBoard: {
-    '0xfa2': 'https://api.thegraph.com/subgraphs/name/pho360360/test123' //fantom testnet
+    '0xfa2': 'https://api.thegraph.com/subgraphs/name/pho360360/riffian' //fantom testnet
   }
 }
 
