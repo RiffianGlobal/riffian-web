@@ -36,6 +36,6 @@ export class UIAddress extends TailwindElement(style) {
       this.isLink,
       () => html`<ui-link href=${this.href}>${this.showAddr}</ui-link>`,
       () => html`${this.showAddr}`
-    )}${when(this.copy, () => html`<ui-copy-icon .value=${this.address}></ui-copy-icon>`)}`
+    )}${when(this.copy, () => html`<ui-copy-icon .value=${this.addr}></ui-copy-icon>`)}`
   }
 }
