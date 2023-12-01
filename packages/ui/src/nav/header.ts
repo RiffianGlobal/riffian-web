@@ -59,7 +59,7 @@ export class UIHeader extends TailwindElement(style) {
           <div class="flex justify-center items-center">
             ${when(!this.asMenu, () => html`<slot name="center"></slot>`)}
           </div>
-          <div class="flex justify-end items-center lg_w-40">
+          <div class="flex justify-end items-center gap-2 lg_w-60">
             <slot name="right"></slot>
             <slot name="wallet"
               ><connect-wallet-btn dropable>

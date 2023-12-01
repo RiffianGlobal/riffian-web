@@ -1,0 +1,11 @@
+.ui-token {
+  &.ETH {
+    background-image: url('../i/symbol/ETH.svg');
+  }
+  &.FTM {
+    background-image: url('../i/symbol/FTM.svg');
+  }
+  &.unknown {
+    background-image: url('../i/symbol/unknown.svg');
+  }
+}

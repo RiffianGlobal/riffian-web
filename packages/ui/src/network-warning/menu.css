@@ -1,0 +1,17 @@
+:host {
+}
+.ui-network-icon {
+  @apply inline-flex justify-center items-center leading-none origin-center;
+  width: 1em;
+  height: 1em;
+  transform: scale(1.2);
+  background: url('../i/symbol/unknown.svg') no-repeat center;
+  &.ETH {
+    background-image: url('../i/symbol/ETH.svg');
+  }
+  &.FTM {
+    background-image: url('../i/symbol/FTM.svg');
+  }
+  &.unknown {
+  }
+}

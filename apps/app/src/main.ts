@@ -4,7 +4,7 @@ import { routerPathroot } from '@riffian-web/ui/src/shared/router'
 import { routes } from '~/router'
 import { TailwindElement, html, customElement, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
 // Components
-import '@riffian-web/ui/src/network-warning'
+import '@riffian-web/ui/src/network-warning/menu'
 import '@riffian-web/ui/src/nav/header'
 import '@riffian-web/ui/src/nav/footer'
 import '@riffian-web/ui/src/nav/nav'
@@ -30,14 +30,18 @@ export class AppMain extends TailwindElement('') {
   }
 
   render() {
-    return html`<network-warning></network-warning>
-      <ui-header menuable full>
-        <div slot="logo"><a class="text-base mr-4 lg_text-lg font-semibold" href="/">Riffian</a></div>
+    return html` <ui-header menuable full>
+        <div slot="logo" class="inline-flex justify-center items-center mr-4">
+          <a class="inline-flex justify-center items-center font-bold" href="/"
+            ><i class="ui-logo mr-1 -mt-0.5"></i>Riffian</a
+          >
+        </div>
         <ui-nav slot="left" menuable>
           <ui-link href="/" nav alias="/">Top Hits</ui-link>
           <!-- <ui-link href="/top" nav>Top Music</ui-link> -->
           <ui-link href="/docs" nav>Docs</ui-link>
         </ui-nav>
+        <div slot="right"><network-menu></network-menu></div>
       </ui-header>
       <main class="ui-app-main pt-6">
         <slot></slot>

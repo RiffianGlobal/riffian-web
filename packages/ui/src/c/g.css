@@ -25,3 +25,8 @@ select,
 button {
   font-family: var(--fontFamily);
 }
+
+.logo {
+  @apply inline-flex w-24 h-24;
+  background: red;
+}
