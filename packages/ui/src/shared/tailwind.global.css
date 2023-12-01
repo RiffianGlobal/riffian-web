@@ -6,7 +6,6 @@
   .ui-app-main {
     @apply float-left w-full pb-4;
     min-height: var(--appMainH);
-    background: var(--appMainBg);
   }
   .ui-container {
     @apply clear-both lg_max-w-5xl min-h-full mx-auto px-3 lg_px-4;
