@@ -9,6 +9,7 @@ import '@riffian-web/ui/src/nav/header'
 import '@riffian-web/ui/src/nav/footer'
 import '@riffian-web/ui/src/nav/nav'
 import '@riffian-web/ui/src/link'
+import '@riffian-web/ui/src/block-number'
 
 @customElement('app-main')
 export class AppMain extends TailwindElement('') {
@@ -30,10 +31,10 @@ export class AppMain extends TailwindElement('') {
 
   render() {
     return html`<network-warning></network-warning>
-      <ui-header menuable>
-        <div slot="logo"><a class="text-base lg_text-lg font-semibold" href="/">Riffian</a></div>
-        <ui-nav slot="center" menuable>
-          <ui-link href="/" nav alias="/">Home</ui-link>
+      <ui-header menuable full>
+        <div slot="logo"><a class="text-base mr-4 lg_text-lg font-semibold" href="/">Riffian</a></div>
+        <ui-nav slot="left" menuable>
+          <ui-link href="/" nav alias="/">Top Hits</ui-link>
           <!-- <ui-link href="/top" nav>Top Music</ui-link> -->
           <ui-link href="/docs" nav>Docs</ui-link>
         </ui-nav>
@@ -41,11 +42,9 @@ export class AppMain extends TailwindElement('') {
       <main class="ui-app-main pt-6">
         <slot></slot>
       </main>
-      <ui-footer>
-        <div slot="center" class="text-xs">
-          Powered by <ui-link class="ml-0.5 underline underline-offset-2 !text-inherit" href="">Riffian</ui-link>
-        </div>
-        <div slot="right"></div>
+      <ui-footer full>
+        <div slot="block"></div>
+        <div slot="right"><block-number></block-number></div>
       </ui-footer>`
   }
 }

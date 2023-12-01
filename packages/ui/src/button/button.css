@@ -8,7 +8,7 @@
 }
 
 .ui-button {
-  @apply inline-flex gap-1 text-white py-2 leading-tight text-sm sm_text-base rounded;
+  @apply inline-flex gap-1 text-white py-2 leading-tight text-sm sm_text-base rounded-md;
   background: var(--btnBg);
   &:not([dense]) {
     @apply px-3.5;
@@ -33,7 +33,7 @@
   &[pending],
   &.pending {
     @apply !cursor-not-allowed !pointer-events-none;
-    background: #aaa !important;
+    background: var(--bgDisabled) !important;
     &.outlined {
       opacity: 0.75;
     }
@@ -44,7 +44,7 @@
     border: 1px solid;
     &:not([disabled]) {
       &:hover {
-        background: #f6f9fd;
+        background: #111;
         color: var(--btnBg);
         border: 1px solid;
       }

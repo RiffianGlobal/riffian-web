@@ -55,9 +55,9 @@ export class ConnectWalletBtn extends TailwindElement(style) {
         ?icon=${this.dropable}
         btnSm
         dropClass="w-72"
-        btnTheme="dark"
+        btnClass="outlined"
       >
-        <ui-address slot="button" avatar short></ui-address>
+        <ui-address slot="button" short></ui-address>
         <!-- Content -->
         <div class="flex w-full justify-between items-center py-3 pl-4 pr-2">
           <div class="flex items-center space-x-2">

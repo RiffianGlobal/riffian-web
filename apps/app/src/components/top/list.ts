@@ -4,6 +4,7 @@ import '~/components/top/dialog'
 import { albumList } from './action'
 import '@riffian-web/ui/src/loading/icon'
 import '@riffian-web/ui/src/loading/skeleton'
+import '@riffian-web/ui/src/img/loader'
 import '~/components/rewards/claim'
 
 @customElement('top-album')
@@ -52,22 +53,22 @@ export class NewAlbum extends TailwindElement('') {
   close = () => (this.dialog = false)
 
   render() {
-    return html` <div class="grid place-items-center b-1 border m-4 p-4 rounded-md ">
+    return html` <div class="grid place-items-center b-1 m-4 p-4 rounded-md">
       ${when(
         this.pending,
         () =>
           html`<div name="Loading" class="doc-intro">
-            <div class="flex gap-4">
-              <loading-skeleton num="4"></loading-skeleton>
-              <loading-skeleton num="4"></loading-skeleton>
-              <loading-skeleton num="4"></loading-skeleton>
+            <div class="flex flex-col gap-8 m-8">
+              <loading-skeleton num="3"></loading-skeleton>
+              <loading-skeleton num="3"></loading-skeleton>
+              <loading-skeleton num="3"></loading-skeleton>
             </div>
           </div>`
       )}
       ${when(
         !this.pending,
         () =>
-          html`<table class="w-2/5 text-left border-collapse">
+          html`<table class="w-full text-left border-collapse">
             <thead>
               <th>Rank</th>
               <th>Collection</th>
@@ -85,7 +86,11 @@ export class NewAlbum extends TailwindElement('') {
                   >
                     ${i + 1}
                   </td>
-                  <td><img class="w-24 h-24 rounded-md" src=${item.url} /></td>
+                  <td>
+                    <p class="w-24 h-24 rounded-md">
+                      <img-loader src=${item.url}></img-loader>
+                    </p>
+                  </td>
                   <td class="py-2 pl-2 font-mono text-sm leading-6 text-indigo-600 whitespace-pre dark:text-indigo-300">
                     ${item.name}
                   </td>

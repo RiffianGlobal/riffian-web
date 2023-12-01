@@ -45,7 +45,7 @@ export const routes = [
           ?.shadowRoot?.querySelector(`[name="${anchor}"]`)
         let top = target?.offsetTop ?? 0
         if (top && top < 200) top = 0
-        if (target) window.scrollTo(0, top)
+        window.scrollTo(0, top)
       }
       setTimeout(scroll2)
       emitter.on('docs-loaded', scroll2)

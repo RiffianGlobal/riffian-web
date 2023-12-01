@@ -4,7 +4,7 @@
 
 @layer components {
   .ui-app-main {
-    @apply float-left w-full pb-4 lg_pb-12;
+    @apply float-left w-full pb-4;
     min-height: var(--appMainH);
     background: var(--appMainBg);
   }
@@ -13,13 +13,20 @@
     &.sparse {
       @apply px-4;
     }
+    &.full {
+      @apply max-w-none;
+    }
   }
   .ui-select {
     @apply whitespace-nowrap;
     & > li {
       @apply flex items-center gap-2 py-2 px-4 hover_bg-gray-50 cursor-pointer;
+
+      &:hover {
+        background: #e9ecef;
+      }
       &.active {
-        @apply bg-gray-100;
+        background: #dee2e6;
       }
       & > .mdi:first-child {
         @apply text-gray-600;

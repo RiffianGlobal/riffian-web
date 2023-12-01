@@ -17,9 +17,12 @@ export class DocButton extends TailwindElement('') {
         <ui-button icon><i class="mdi mdi-check"></i></ui-button>
       </p>
       <p class="flex w-full gap-2 my-2">
+        <ui-button class="secondary">Secondary</ui-button>
+        <ui-button class="minor">Minor</ui-button>
+        <ui-button class="success">Success</ui-button>
         <ui-button class="outlined">Outlined</ui-button>
         <ui-button text>Text</ui-button>
-        <ui-button href="">link href</ui-button>
+        <ui-button href="">link with href</ui-button>
       </p>
       <p class="flex w-full gap-2 my-2">
         <ui-button><i class="mdi mdi-check -ml-1 mr-1"></i>Icon Left</ui-button>

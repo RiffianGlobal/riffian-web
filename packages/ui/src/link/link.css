@@ -29,7 +29,7 @@
   &.router-active {
   }
   &[nav] {
-    @apply inline-flex border-y-2 border-transparent leading-4;
+    @apply inline-flex border-y-2 border-transparent leading-4 whitespace-nowrap;
     padding: 3px 0;
     color: inherit;
 

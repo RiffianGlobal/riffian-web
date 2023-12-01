@@ -1,37 +1,36 @@
 :root {
-  --txt2: #c8c8c8;
-  --txt3: #f9d3a3;
   --bg2: linear-gradient(180deg, rgba(0, 0, 0, 0.001) 99%, rgba(0, 0, 0, 0.25) 100%);
-  --bg3: #373737;
+  --bgDisabled: #a1a3f7;
 
   --radius: 1rem;
   --btn_radius: 0.25rem;
 
-  --a_color: #1867c0;
+  --a_color: #2196f3;
   --a_hover_color: rgba(59, 130, 246, 0.88);
   /* Overridable */
   --textBase: var(--text-base, 14px);
   --fontFamily: var(--font-family, 'Helvetica Neue', Arial, sans-serif);
-  --textColor: var(--text-color, rgb(55, 55, 55));
+  --textColor: var(--text-color, rgb(73, 80, 87));
+  --textColorInverse: var(--text-color-inverse, rgb(182, 175, 168));
   --headerH: var(--header-height, 60px);
   --footerH: var(--footer-height, 60px);
   --appMainH: calc(100vh - var(--headerH) - var(--footerH) - var(--networkWarnH, 0px));
   --appMainBg: var(--app-main-bg, #fff);
   /* Named colors */
-  --colorSecondary: var(--color-secondary, #1867c0);
+  --colorSecondary: var(--color-secondary, #2196f3);
   --colorError: var(--color-error, #b00020);
   --colorSuccess: var(--color-success, #4caf50);
   --colorDark: var(--color-dark, #373737);
   /* Buttons */
-  --btnBg: var(--btn-bg, #1867c0);
-  --btnBgHover: var(--btn-bg-hover, #2a73c5);
-  --btnBgActive: var(--btn-bg-active, #a7c5e7);
-  --btnBgSecondary: var(--btn-bg-secondary, #1867c0);
-  --btnBgSecondaryHover: var(--btn-bg-secondary-hover, #2a73c5);
-  --btnBgSecondaryActive: var(--btn-bg-secondary-active, #4182cb);
-  --btnBgSuccess: var(--btn-bg-success, #4caf50);
-  --btnBgSuccessHover: var(--btn-bg-success-hover, #53b257);
-  --btnBgSuccessActive: var(--btn-bg-success-active, #60b864);
+  --btnBg: var(--btn-bg, #6366f1);
+  --btnBgHover: var(--btn-bg-hover, #4f46e5);
+  --btnBgActive: var(--btn-bg-active, #4338ca);
+  --btnBgSecondary: var(--btn-bg-secondary, #64748b);
+  --btnBgSecondaryHover: var(--btn-bg-secondary-hover, #5a687d);
+  --btnBgSecondaryActive: var(--btn-bg-secondary-active, #505d6f);
+  --btnBgSuccess: var(--btn-bg-success, #22c55e);
+  --btnBgSuccessHover: var(--btn-bg-success-hover, #1fb155);
+  --btnBgSuccessActive: var(--btn-bg-success-active, #1b9e4b);
   /* UIs */
   --uiLogoW: var(--ui-logo-w, 120px);
   --uiLogoH: var(--ui-logo-h, 36px);
