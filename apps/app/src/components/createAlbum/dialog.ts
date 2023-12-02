@@ -6,9 +6,9 @@ import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/input/text'
 import '@riffian-web/ui/src/tx-state'
 
-type formKeys = 'album' | 'symbol'
+type formKeys = 'album' | 'symbol' | 'url'
 
-const defFrom = () => ({ album: '', symbol: '' })
+const defFrom = () => ({ album: '', symbol: '', url: '' })
 const defErr = () => ({ album: '', symbol: '', tx: '' })
 
 @customElement('create-album-dialog')
@@ -55,7 +55,7 @@ export class CreateAlbumDialog extends TailwindElement('') {
   async create() {
     this.pending = true
     try {
-      this.tx = await createAlbum(this.form.album, this.form.symbol)
+      this.tx = await createAlbum(this.form.album, this.form.symbol, this.form.url)
       this.success = await this.tx.wait()
     } catch (err: any) {
       let msg = err.message || err.code
@@ -102,6 +102,14 @@ export class CreateAlbumDialog extends TailwindElement('') {
               required
             >
               <span slot="label">Symbol</span>
+            </ui-input-text>
+            <ui-input-text
+              value=${this.form.url}
+              @input=${(e: CustomEvent) => this.onInput(e, 'url')}
+              placeholder="Your resource URL"
+              required
+            >
+              <span slot="label">URL</span>
             </ui-input-text>
             <!-- Preview -->
             <p class="text-center">${this.form.album || '-'}<span class="mx-1">/</span>${this.form.symbol || '-'}</p>

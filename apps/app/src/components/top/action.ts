@@ -27,7 +27,7 @@ export const vote = async (album: string, price: object) => {
 
 export const albumData = async (album: string) => {
   const contract = await getAlbumContract()
-  const method = 'albumToData'
+  const method = 'subjectToData'
   const overrides = {}
   const parameters = [album]
   await assignOverrides(overrides, contract, method, parameters)
@@ -36,7 +36,7 @@ export const albumData = async (album: string) => {
 
 export const votePrice = async (album: string) => {
   const contract = await getAlbumContract()
-  const method = 'calculateAlbumVotePrice'
+  const method = 'calculateSubjectVotePrice'
   const overrides = {}
   const parameters = [album]
   await assignOverrides(overrides, contract, method, parameters)

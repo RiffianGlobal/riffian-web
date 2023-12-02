@@ -1,7 +1,7 @@
 import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { vote, albumData, votePrice } from './action'
-import { calculateAlbumRewards, claimAlbumRewards } from '../rewards/action'
+import { claimAlbumRewards } from '../rewards/action'
 import { formatUnits } from 'ethers'
 
 import '@riffian-web/ui/src/button'
@@ -33,7 +33,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
       console.log('get votes:' + result)
       this.votes = result[1]
       this.price = await votePrice(this.album)
-      this.rewards = await calculateAlbumRewards(bridgeStore.bridge.account, this.album)
+      // this.rewards = await calculateAlbumRewards(bridgeStore.bridge.account, this.album)
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })

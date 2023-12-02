@@ -1,6 +1,6 @@
 import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { calculateDailyRewards } from './action'
+import { weeklyReward } from './action'
 import { formatUnits } from 'ethers'
 // Components
 import '@riffian-web/ui/src/button'
@@ -25,7 +25,7 @@ export class ClaimRewards extends TailwindElement('') {
   async weeklyRewards() {
     try {
       this.pending = true
-      let result = await calculateDailyRewards(bridgeStore.bridge.account)
+      let result = await weeklyReward(bridgeStore.bridge.account)
       // this.pending = false
       console.log('get rewards:' + result)
       this.rewards = result
