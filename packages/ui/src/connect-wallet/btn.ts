@@ -54,10 +54,12 @@ export class ConnectWalletBtn extends TailwindElement(style) {
         @change=${(e: CustomEvent) => (this.menu = e.detail)}
         ?icon=${this.dropable}
         btnSm
+        text
         dropClass="w-72"
-        btnTheme="dark"
+        btnClass="text"
       >
         <ui-address slot="button" avatar short></ui-address>
+        <span slot="icon"></span>
         <!-- Content -->
         <div class="flex w-full justify-between items-center py-3 pl-4 pr-2">
           <div class="flex items-center space-x-2">
@@ -79,7 +81,7 @@ export class ConnectWalletBtn extends TailwindElement(style) {
     // Dialog Button
     else
       return html`
-        <ui-button sm @click=${() => (this.dialog = true)} theme="dark">Connect Wallet</ui-button>
+        <ui-button class="outlined" sm @click=${() => (this.dialog = true)}>Connect Wallet</ui-button>
         <!-- Dialog -->
         ${when(this.dialog, () => html`<connect-wallet-dialog @close=${this.close}></connect-wallet-dialog>`)}
       `

@@ -9,7 +9,7 @@
   }
 }
 .ui-header,
-.ui-header-placehodler {
+.ui-header-placeholder {
   @apply float-left w-full;
   height: var(--headerH);
   &::part(connect-wallet-btn) {
@@ -17,7 +17,6 @@
   }
 }
 .ui-header {
-  background: var(--bg2);
 }
 .ui-header.fixed {
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);

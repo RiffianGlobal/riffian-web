@@ -14,7 +14,7 @@ export class UIDialog extends TailwindElement(style) implements TAILWINDELEMENT 
   close = async () => {
     this.model = false
     this.unlisten()
-    await sleep(200) // Anamition timeout
+    await sleep(160) // Anamition timeout
     this.emit('close')
     this.remove()
   }
@@ -48,13 +48,13 @@ export class UIDialog extends TailwindElement(style) implements TAILWINDELEMENT 
     return html`
       <div
         part="dialog-container"
-        class="relative !origin-center z-10 bg-white rounded-xl drop-shadow-lg ${classMap(
-          this.$c([this.model ? '-mt-8 opacity-100 visible' : '-mt-80 opacity-0 invisible'])
+        class="relative !origin-center z-10 bg-white rounded-md ${classMap(
+          this.$c([this.model ? 'scale-100 opacity-100 visible' : 'scale-75 opacity-0 invisible'])
         )}"
         ${animate({
           guard: () => this.model,
           properties: ['opacity', 'visibility', 'margin', 'transform'],
-          keyframeOptions: { duration: 233 }
+          keyframeOptions: { duration: 200 }
         })}
       >
         <slot name="top">
@@ -79,9 +79,7 @@ export class UIDialog extends TailwindElement(style) implements TAILWINDELEMENT 
       <div
         @click="${() => !this.persistent && this.close()}"
         part="dialog-overlay"
-        class="z-0 absolute left-0 top-0 w-full h-full visible bg-black bg-opacity-75 ${this.model
-          ? 'opacity-75'
-          : 'opacity-0'}"
+        class="z-0 absolute left-0 top-0 w-full h-full visible bg-black ${this.model ? 'opacity-40' : 'opacity-0'}"
         ${animate({ guard: () => this.model })}
       ></div>
     `

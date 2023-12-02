@@ -9,7 +9,7 @@
     content: '';
   }
   &.checked {
-    @apply bg-blue-600;
+    background: var(--btnBg);
     &::before {
       @apply left-4;
     }
@@ -17,7 +17,7 @@
   &[disabled] {
     @apply cursor-default bg-gray-200;
     &.checked {
-      @apply !bg-blue-300;
+      background: var(--bgDisabled) !important;
     }
   }
   &.sm {

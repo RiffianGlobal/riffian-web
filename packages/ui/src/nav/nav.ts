@@ -12,7 +12,7 @@ export class UINav extends TailwindElement(style) {
 
   render() {
     return html`
-      <nav class="flex gap-3 lg_gap-6 justify-center items-center ${classMap({ 'flex-col': this.asMenu })}">
+      <nav class="flex gap-2 justify-center items-center ${classMap({ 'flex-col': this.asMenu })}">
         <slot></slot>
       </nav>
     `

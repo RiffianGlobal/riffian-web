@@ -8,7 +8,7 @@
 }
 
 .ui-button {
-  @apply inline-flex gap-1 text-white py-2 leading-tight text-sm sm_text-base rounded;
+  @apply inline-flex gap-1 text-white py-2 leading-tight text-sm sm_text-base rounded-md whitespace-nowrap;
   background: var(--btnBg);
   &:not([dense]) {
     @apply px-3.5;
@@ -33,7 +33,7 @@
   &[pending],
   &.pending {
     @apply !cursor-not-allowed !pointer-events-none;
-    background: #aaa !important;
+    background: var(--bgDisabled) !important;
     &.outlined {
       opacity: 0.75;
     }
@@ -44,12 +44,12 @@
     border: 1px solid;
     &:not([disabled]) {
       &:hover {
-        background: #f6f9fd;
+        background: #f9f9fe !important;
         color: var(--btnBg);
         border: 1px solid;
       }
       &:active {
-        background: #e3ecf7;
+        background: #e3ecf7 !important;
         color: var(--btnBg);
         border: 1px solid;
       }
@@ -108,13 +108,17 @@
       }
     }
   }
+  &.text,
   &[text] {
     color: var(--btnBg);
     @apply bg-transparent border-transparent;
-    &:hover,
+    &:hover {
+      color: var(--btnBg);
+      background: #f9f9fe !important;
+    }
     &:active {
       color: var(--btnBg);
-      @apply bg-transparent;
+      background: #e3ecf7 !important;
     }
   }
   &[icon] {

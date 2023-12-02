@@ -19,7 +19,9 @@ export class ViewHome extends TailwindElement(style) {
           <create-album-btn></create-album-btn>
         </div>
       </div>
-      <top-album></top-album>
+      <div class="ui-container">
+        <top-album></top-album>
+      </div>
     </div>`
   }
 }

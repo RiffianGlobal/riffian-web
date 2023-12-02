@@ -1,12 +1,7 @@
-.doc-intro {
-  &:not(:first-of-type) {
-    @apply my-2;
-  }
-  &::before {
-    content: attr(name);
-    @apply block font-bold mb-2;
-  }
-  &:not(:first-of-type) {
-    @apply pt-1 border-t border-dashed;
+.doc-nav {
+  & > li {
+    &:not(:first-of-type) {
+      @apply my-2 pt-2 border-t border-dashed;
+    }
   }
 }

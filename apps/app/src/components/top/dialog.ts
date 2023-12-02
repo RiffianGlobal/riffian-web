@@ -6,6 +6,8 @@ import { formatUnits } from 'ethers'
 
 import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/input/text'
+import '@riffian-web/ui/src/loading/skeleton'
+import '@riffian-web/ui/src/img/loader'
 import '@riffian-web/ui/src/tx-state'
 
 const defErr = () => ({ tx: '' })
@@ -91,16 +93,19 @@ export class VoteAlbumDialog extends TailwindElement('') {
         this.close()
       }}
     >
-      <p class="my-2 font-bold">VOTE Album</p>
+      <p slot="header" class="my-2 font-bold">VOTE Album</p>
       <div class="grid place-items-center b-1 border m-4 p-4 rounded-md">
-        <img class="w-36 h-36" src=${this.url} />
+        <p class="w-36 h-36"><img-loader src=${this.url}></img-loader></p>
 
         ${when(
           !this.price,
           () =>
-            html`<i class="text-5xl mdi mdi-loading"></i>
-              <p>Loading album data...</p>`
-        )}${when(
+            html`<div class="my-4">
+              <loading-skeleton num="3"></loading-skeleton>
+              <p class="my-4">Loading album data...</p>
+            </div>`
+        )}
+        ${when(
           this.price && !this.pending,
           () => html`
             <p class="font-bold">accumulated rewards</p>

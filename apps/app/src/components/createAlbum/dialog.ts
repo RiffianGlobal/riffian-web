@@ -70,6 +70,7 @@ export class CreateAlbumDialog extends TailwindElement('') {
 
   render() {
     return html`<ui-dialog @close=${this.close}>
+      <p slot="header" class="my-2 font-bold">New Album</p>
       <div class="flex flex-col w-full m-4 gap-4 mx-auto">
         <!-- Tx pending -->
         ${when(
@@ -83,7 +84,6 @@ export class CreateAlbumDialog extends TailwindElement('') {
         ${when(
           !this.txPending,
           () => html`
-            <p class="my-2 font-bold text-center">New Album</p>
             <!-- Album -->
             <ui-input-text
               value=${this.form.album}

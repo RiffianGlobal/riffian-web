@@ -29,20 +29,19 @@
   &.router-active {
   }
   &[nav] {
-    @apply inline-flex border-y-2 border-transparent leading-4;
-    padding: 3px 0;
+    @apply inline-flex px-4 py-1.5 border-transparent rounded-full whitespace-nowrap leading-none;
     color: inherit;
 
     &:hover {
-      color: var(--a_color);
+      color: currentColor;
     }
     &:hover {
       @apply no-underline;
     }
     &[active],
     &[exact-active] {
-      color: var(--a_color);
-      @apply border-b-current;
+      color: currentColor;
+      background: #e3ecf7 !important;
     }
   }
   &[link] {
