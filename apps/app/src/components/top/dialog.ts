@@ -34,7 +34,6 @@ export class VoteAlbumDialog extends TailwindElement('') {
       let result = await albumData(this.album)
       this.votes = result[1]
       this.price = await votePrice(this.album)
-      // this.rewards = await calculateAlbumRewards(bridgeStore.bridge.account, this.album)
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })
@@ -63,8 +62,9 @@ export class VoteAlbumDialog extends TailwindElement('') {
       this.tx = await vote(this.album, { value: Number(this.price) })
       this.success = await this.tx.wait()
     } catch (err: any) {
+      console.log(err)
       let msg = err.message || err.code
-      if (err.code === 'ACTION_REJECTED') {
+      if (err.code === 'ACTION_REJECTED' || err.code === 'INVALID_ARGUMENT') {
         this.updateErr({ tx: msg })
         return this.close()
       }

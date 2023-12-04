@@ -48,7 +48,7 @@ export class NewAlbum extends TailwindElement('') {
     console.log(JSON.stringify(this.albumList))
     for (var i = 0; i < this.albumList.length; i++) {
       this.albumList[i].url = urls[this.getRandomInt(4)]
-      this.albumList[i].name = names[this.getRandomInt(2)]
+      // this.albumList[i].name = names[this.getRandomInt(2)]
     }
   }
 
