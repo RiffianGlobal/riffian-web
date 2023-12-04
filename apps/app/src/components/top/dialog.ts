@@ -32,7 +32,6 @@ export class VoteAlbumDialog extends TailwindElement('') {
   async getPrice() {
     try {
       let result = await albumData(this.album)
-      console.log('get votes:' + result)
       this.votes = result[1]
       this.price = await votePrice(this.album)
       // this.rewards = await calculateAlbumRewards(bridgeStore.bridge.account, this.album)
@@ -61,7 +60,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
   async vote() {
     this.pending = true
     try {
-      this.tx = await vote(this.album, { value: this.price })
+      this.tx = await vote(this.album, { value: Number(this.price) })
       this.success = await this.tx.wait()
     } catch (err: any) {
       let msg = err.message || err.code
@@ -108,11 +107,8 @@ export class VoteAlbumDialog extends TailwindElement('') {
         ${when(
           this.price && !this.pending,
           () => html`
-            <p class="font-bold">accumulated rewards</p>
-            <p class="text-xl text-sky-800">${formatUnits(Number(this.rewards), 18)} FTM</p>
-            <ui-button class="sm m-1" ?disabled=${Number(this.rewards) <= 0} @click=${this.claim}> Claim </ui-button>
             <p class="font-bold">Estimated cost</p>
-            <p class="text-xl text-sky-500">${formatUnits(Number(this.price), 18)} FTM</p>
+            <p class="text-xl text-sky-500">${formatUnits(this.price, 18)} FTM</p>
             <p>Current Votes:${this.votes}</p>
             <ui-button class="m-1" @click=${this.vote}> VOTE THIS! </ui-button>
           `

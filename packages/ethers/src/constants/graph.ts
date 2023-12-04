@@ -9,11 +9,11 @@ export const SubGraph: ChainConf = {
     '0x5': 'https://api.studio.thegraph.com/query/'
   },
   MediaBoard: {
-    '0xfa2': 'https://api.thegraph.com/subgraphs/name/pho360360/riffian' //fantom testnet
+    '0xfa2': 'https://api.thegraph.com/subgraphs/name/pho360360/riffianboard' //fantom testnet
   }
 }
 
-export const getGraphUri = (name: string) => SubGraph[name][Network.chainId]
+export const getGraphUri = (name: string) =>  SubGraph[name][Network.chainId]
 
 export const graphQuery = async (name = 'main', query: string, variables?: {}, operationName?: string) =>
   http.post(getGraphUri(name), { query, variables, operationName })

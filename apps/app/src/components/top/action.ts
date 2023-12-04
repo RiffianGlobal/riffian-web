@@ -10,9 +10,9 @@ export const vote = async (album: string, price: object) => {
   const method = 'vote'
   const overrides = {}
   const parameters = [album, price]
+
   await assignOverrides(overrides, contract, method, parameters)
   const call = contract[method](...parameters)
-
   return new txReceipt(call, {
     errorCodes: 'MediaBoard',
     allowAlmostSuccess: true,
@@ -46,22 +46,27 @@ export const votePrice = async (album: string) => {
 export const albumList = async (count: Number) => {
   let queryJSON =
     `{
-    albums(first: ` +
+      subjects(first: ` +
     count +
-    `, orderBy: rewardPoolAmount, orderDirection: asc) {
-      id
-      address
-      totalVotes
-      rewardPoolAmount
-      fansNumber
-      createdAt
-      artist {
-        address
-        totalRewards
+    `) {
+        id
+        image
+        name
+        owner {
+          account
+          socials {
+            platform
+            uri
+          }
+          totalVotes
+        }
+        subject
         totalVotes
+        updatedTimestamp
+        uri
       }
-    }
-  }`
+    }`
   let result = await graphQuery('MediaBoard', queryJSON)
+  console.log(result)
   return result
 }
