@@ -32,8 +32,9 @@ export class VoteAlbumDialog extends TailwindElement('') {
   async getPrice() {
     try {
       let result = await albumData(this.album)
-      this.votes = result[1]
-      this.price = await votePrice(this.album)
+      this.votes = result[4]
+      let prices = await votePrice(this.album)
+      this.price = prices[0]
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })
@@ -59,7 +60,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
   async vote() {
     this.pending = true
     try {
-      this.tx = await vote(this.album, { value: Number(this.price) })
+      this.tx = await vote(this.album, 1, { value: this.price })
       this.success = await this.tx.wait()
     } catch (err: any) {
       console.log(err)

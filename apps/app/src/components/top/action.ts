@@ -5,11 +5,11 @@ import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 
 export const getAlbumContract = async () => getContract('MediaBoard', { account: await getAccount() })
 
-export const vote = async (album: string, price: object) => {
+export const vote = async (album: string, amount: number, price: object) => {
   const contract = await getAlbumContract()
   const method = 'vote'
   const overrides = {}
-  const parameters = [album, price]
+  const parameters = [album, amount, price]
 
   await assignOverrides(overrides, contract, method, parameters)
   const call = contract[method](...parameters)
@@ -17,8 +17,8 @@ export const vote = async (album: string, price: object) => {
     errorCodes: 'MediaBoard',
     allowAlmostSuccess: true,
     seq: {
-      type: 'VoteAlbum',
-      title: `Vote Album`,
+      type: 'VoteSubject',
+      title: `Vote Subject`,
       ts: nowTs(),
       overrides
     }
@@ -36,9 +36,9 @@ export const albumData = async (album: string) => {
 
 export const votePrice = async (album: string) => {
   const contract = await getAlbumContract()
-  const method = 'calculateSubjectVotePrice'
+  const method = 'getVotePriceWithFee'
   const overrides = {}
-  const parameters = [album]
+  const parameters = [album, 1]
   await assignOverrides(overrides, contract, method, parameters)
   return await contract[method](...parameters)
 }
