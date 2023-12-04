@@ -6,16 +6,16 @@ import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/input/text'
 import '@riffian-web/ui/src/tx-state'
 
-type formKeys = 'album' | 'symbol' | 'url'
+type formKeys = 'album' | 'image' | 'url'
 
-const defFrom = () => ({ album: '', symbol: '', url: '' })
-const defErr = () => ({ album: '', symbol: '', tx: '' })
+const defFrom = () => ({ album: '', image: '', url: '' })
+const defErr = () => ({ album: '', image: '', tx: '' })
 
 @customElement('create-album-dialog')
 export class CreateAlbumDialog extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() album = ''
-  @state() symbol = ''
+  @state() image = ''
   @state() form = defFrom()
   @state() err = defErr()
   @state() pending = false
@@ -23,7 +23,7 @@ export class CreateAlbumDialog extends TailwindElement('') {
   @state() tx: any = null
 
   get invalid() {
-    return !this.form.album || !this.form.symbol
+    return !this.form.album || !this.form.image
   }
   get txPending() {
     return this.tx && !this.tx.ignored
@@ -55,7 +55,7 @@ export class CreateAlbumDialog extends TailwindElement('') {
   async create() {
     this.pending = true
     try {
-      this.tx = await createAlbum(this.form.album, this.form.symbol, this.form.url)
+      this.tx = await createAlbum(this.form.album, this.form.image, this.form.url)
       this.success = await this.tx.wait()
     } catch (err: any) {
       let msg = err.message || err.code
@@ -96,12 +96,12 @@ export class CreateAlbumDialog extends TailwindElement('') {
             </ui-input-text>
             <!-- Symbol -->
             <ui-input-text
-              value=${this.form.symbol}
-              @input=${(e: CustomEvent) => this.onInput(e, 'symbol')}
-              placeholder="Your symbol"
+              value=${this.form.image}
+              @input=${(e: CustomEvent) => this.onInput(e, 'image')}
+              placeholder="Your image URL"
               required
             >
-              <span slot="label">Symbol</span>
+              <span slot="label">Image</span>
             </ui-input-text>
             <ui-input-text
               value=${this.form.url}
@@ -112,7 +112,7 @@ export class CreateAlbumDialog extends TailwindElement('') {
               <span slot="label">URL</span>
             </ui-input-text>
             <!-- Preview -->
-            <p class="text-center">${this.form.album || '-'}<span class="mx-1">/</span>${this.form.symbol || '-'}</p>
+            <p class="text-center">${this.form.album || '-'}<span class="mx-1">/</span>${this.form.image || '-'}</p>
             <ui-button class="mx-auto" @click=${this.create} ?disabled="${this.pending}">Confirm</ui-button>
           `
         )}

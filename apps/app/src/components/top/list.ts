@@ -13,7 +13,7 @@ export class NewAlbum extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() albumList: any = []
   @state() dialog = false
-  @state() currentAlbum = { address: '', votes: 0, url: '' }
+  @state() currentAlbum = { id: '', votes: 0, url: '' }
   @state() pending = false
 
   get disabled() {
@@ -109,7 +109,7 @@ export class NewAlbum extends TailwindElement('') {
                         >VOTE</ui-button
                       >
                       ${when(
-                        this.dialog && item.address == this.currentAlbum.address,
+                        this.dialog && item.id == this.currentAlbum.id,
                         () =>
                           html`<vote-album-dialog
                             album=${item.id}

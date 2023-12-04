@@ -4,11 +4,11 @@ import { nowTs } from '@riffian-web/ethers/src/utils'
 
 export const getAlbumContract = async () => getContract('MediaBoard', { account: await getAccount() })
 
-export const createAlbum = async (album: string, symbol: string, url: string) => {
+export const createAlbum = async (name: string, image: string, url: string) => {
   const contract = await getAlbumContract()
   const method = 'newSubject'
   const overrides = {}
-  const parameters = [album, symbol, url]
+  const parameters = [name, image, url]
   await assignOverrides(overrides, contract, method, parameters)
   const call = contract[method](...parameters)
 
