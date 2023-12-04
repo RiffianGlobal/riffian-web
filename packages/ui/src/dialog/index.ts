@@ -65,14 +65,14 @@ export class UIDialog extends TailwindElement(style) implements TAILWINDELEMENT 
           >
             <i class="mdi mdi-close"></i>
           </i>
-          <div part="dialog-header" class="w-full rounded-t-xl p-4 pr-8 flex justify-between items-center text-base">
+          <div part="dialog-header" class="w-full rounded-t-md p-4 pr-8 flex justify-between items-center text-base">
             <slot name="header"></slot></div
         ></slot>
         <slot name="center">
           <div part="dialog-body" class="p-4"><slot></slot></div>
         </slot>
         <slot name="bottom">
-          <div part="dialog-footer" class="w-full p-4 rounded-b-xl"><slot name="footer"></slot></div>
+          <div part="dialog-footer" class="w-full p-4 rounded-b-md"><slot name="footer"></slot></div>
         </slot>
       </div>
       <!-- Overlay -->

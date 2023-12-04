@@ -1,0 +1,53 @@
+:host {
+  &:focus {
+    background: red;
+  }
+}
+
+.checkbox {
+  @apply inline-flex relative justify-center items-center origin-center leading-none transition-all box-border;
+  border-radius: 5px;
+  width: 1.25em;
+  height: 1.25em;
+  border: 2px solid var(--formBorder);
+  &::before {
+    content: '';
+    @apply block w-full h-full invisible origin-center;
+    transform: scale(0.9);
+    background: url(./check.svg) no-repeat center;
+  }
+}
+
+label {
+  &:not([disabled]) {
+    @apply cursor-pointer;
+    &:hover {
+      & .checkbox {
+        border-color: var(--formBorderFocus);
+        &:focus {
+          background: red;
+        }
+      }
+    }
+  }
+  &.checked {
+    & .checkbox {
+      background: var(--formBorderFocus);
+      border-color: var(--formBorderFocus);
+      &::before {
+        @apply !visible;
+      }
+    }
+  }
+  &[disabled] {
+    &.checked {
+      & .checkbox {
+        background: var(--formBorder);
+        border-color: var(--formBorder);
+      }
+    }
+  }
+  &:focus {
+    background: red;
+  }
+}

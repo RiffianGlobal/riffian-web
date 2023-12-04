@@ -31,6 +31,12 @@
   --btnBgSuccess: var(--btn-bg-success, #22c55e);
   --btnBgSuccessHover: var(--btn-bg-success-hover, #1fb155);
   --btnBgSuccessActive: var(--btn-bg-success-active, #1b9e4b);
+  /* Forms */
+  --formBorder: #ced4da;
+  --formBorderFocus: var(--btnBg);
+  --formActive: var(--btnBgActive);
+  --formFocus: #c7d2fe;
+  --formGlow: 3px solid var(--formFocus);
   /* UIs */
   --uiLogoW: var(--ui-logo-w, 32px);
   --uiLogoH: var(--ui-logo-h, 32px);

@@ -1,21 +1,28 @@
 :host {
+  --dialogMinH: 18rem;
+  --dialogHeaderH: 3.5rem;
+  --dialogFooterH: 3.3125rem;
   @apply z-50 fixed flex justify-center items-center left-0 top-0 w-full h-full invisible px-4 lg_px-0;
+  @apply flex flex-col w-full;
   &::part(dialog-container) {
     @apply w-full;
-    max-width: var(--appMaxW, 480px);
-    min-height: 300px;
+    max-width: var(--appMaxW, 28rem);
+    min-height: var(--dialogMinH);
   }
   &::part(dialog-close) {
   }
   &::part(dialog-header) {
+    min-height: var(--dialogHeaderH);
   }
   &::part(dialog-body) {
-    min-height: 9rem;
+    min-height: calc(var(--dialogMinH) - var(--dialogHeaderH) - var(--dialogFooterH));
   }
   &::part(dialog-footer) {
+    min-height: var(--dialogFooterH);
   }
 }
 .dialog-container {
+  @apply flex flex-col w-full;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 .dialog-header-icons {

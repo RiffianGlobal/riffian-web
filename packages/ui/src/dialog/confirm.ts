@@ -12,7 +12,7 @@ export class UIConfirm extends TailwindElement([UIDialog.styles, style]) {
   onClose() {
     this.emit('close')
   }
-  refClose() {
+  close() {
     this.el$.value?.close()
   }
   confirm() {
@@ -21,13 +21,11 @@ export class UIConfirm extends TailwindElement([UIDialog.styles, style]) {
 
   override render() {
     return html`<ui-dialog ${ref(this.el$)} @close=${this.onClose}>
+      <slot slot="header" name="header" class="font-bold"></slot>
       <slot></slot>
-      <div slot="footer" class="w-full flex justify-between gap-4">
-        <div></div>
-        <div>
-          <ui-button @click=${this.confirm}>Confirm</ui-button>
-          <ui-button @click=${this.refClose} class="minor">Close</ui-button>
-        </div>
+      <div slot="footer" class="w-full flex justify-end gap-4">
+        <ui-button text @click=${this.close}>Dismiss</ui-button>
+        <ui-button text @click=${this.confirm}>Accept</ui-button>
       </div>
     </ui-dialog>`
   }

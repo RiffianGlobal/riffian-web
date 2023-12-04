@@ -8,6 +8,7 @@ export const cmps = [
   'doc-progress',
   'doc-switch',
   'doc-text',
+  'doc-checkbox',
   'doc-tip',
   'doc-image',
   'doc-menu',
