@@ -2,11 +2,10 @@ import { TailwindElement, customElement, html, property, state, when } from '@ri
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 // Components
 import '@riffian-web/ui/src/button'
-import './dialog'
 import './social'
 
-@customElement('create-album-btn')
-export class CreateAlbumBtn extends TailwindElement('') {
+@customElement('bind-social-btn')
+export class BindSocialBtn extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
 
   @state() dialog = false
@@ -20,9 +19,9 @@ export class CreateAlbumBtn extends TailwindElement('') {
   close = () => (this.dialog = false)
 
   render() {
-    return html`<ui-button icon class="mx-auto" @click="${this.open}" ?disabled="${this.disabled}" title="New Album"
-        ><i class="i mdi mdi-plus-circle text-4xl"></i
+    return html`<ui-button icon class="mx-auto" @click="${this.open}" ?disabled="${this.disabled}" title="Bind Social"
+        ><i class="i mdi mdi-twitter text-4xl"></i
       ></ui-button>
-      ${when(this.dialog, () => html`<create-album-dialog @close=${this.close}></create-album-dialog>`)} `
+      ${when(this.dialog, () => html`<create-social-dialog @close=${this.close}></create-social-dialog>`)} `
   }
 }

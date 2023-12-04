@@ -1,6 +1,7 @@
 import { TailwindElement, html, customElement } from '@riffian-web/ui/src/shared/TailwindElement'
 import '~/components/top/list'
 import '~/components/createAlbum/btn'
+import '~/components/createAlbum/socialbtn'
 import '~/components/rewards/claim'
 
 // Style
@@ -15,7 +16,10 @@ export class ViewHome extends TailwindElement(style) {
           <p class="font-bold text-xl">Weekly</p>
         </div>
         <div><claim-rewards></claim-rewards></div>
-        <div class="flex justify-end items-center lg_w-40">
+        <div class="flex justify-end items-center lg_w-20">
+          <div class="mr-2">
+            <bind-social-btn></bind-social-btn>
+          </div>
           <create-album-btn></create-album-btn>
         </div>
       </div>

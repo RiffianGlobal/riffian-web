@@ -1,21 +1,22 @@
-import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { TailwindElement, customElement, html, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { createAlbum } from './action'
+import { bindSocial } from './action'
 // Components
 import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/input/text'
 import '@riffian-web/ui/src/tx-state'
 
-type formKeys = 'album' | 'image' | 'url'
+type formKeys = 'platform' | 'id' | 'url'
 
-const defFrom = () => ({ album: '', image: '', url: '' })
-const defErr = () => ({ album: '', image: '', tx: '' })
+const defFrom = () => ({ platform: '', id: '', url: '' })
+const defErr = () => ({ album: '', symbol: '', tx: '' })
 
-@customElement('create-album-dialog')
-export class CreateAlbumDialog extends TailwindElement('') {
+@customElement('create-social-dialog')
+export class CreateSocailDialog extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
-  @state() album = ''
-  @state() image = ''
+  @state() url = ''
+  @state() platform = ''
+  @state() id = ''
   @state() form = defFrom()
   @state() err = defErr()
   @state() pending = false
@@ -23,7 +24,7 @@ export class CreateAlbumDialog extends TailwindElement('') {
   @state() tx: any = null
 
   get invalid() {
-    return !this.form.album || !this.form.image
+    return !this.form.url || !this.form.platform || !this.form.id
   }
   get txPending() {
     return this.tx && !this.tx.ignored
@@ -55,7 +56,7 @@ export class CreateAlbumDialog extends TailwindElement('') {
   async create() {
     this.pending = true
     try {
-      this.tx = await createAlbum(this.form.album, this.form.image, this.form.url)
+      this.tx = await bindSocial(this.form.platform, this.form.id, this.form.url)
       this.success = await this.tx.wait()
     } catch (err: any) {
       let msg = err.message || err.code
@@ -70,13 +71,13 @@ export class CreateAlbumDialog extends TailwindElement('') {
 
   render() {
     return html`<ui-dialog @close=${this.close}>
-      <p slot="header" class="my-2 font-bold">New Album</p>
+      <p slot="header" class="my-2 font-bold">Bind Social Account</p>
       <div class="flex flex-col w-full m-4 gap-4 mx-auto">
         <!-- Tx pending -->
         ${when(
           this.txPending,
           () =>
-            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your album has been created.' } }}
+            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Socail binding success.' } }}
               ><ui-button slot="view" href="/">Close</ui-button></tx-state
             >`
         )}
@@ -86,33 +87,33 @@ export class CreateAlbumDialog extends TailwindElement('') {
           () => html`
             <!-- Album -->
             <ui-input-text
-              value=${this.form.album}
-              @input=${(e: CustomEvent) => this.onInput(e, 'album')}
-              placeholder="Your album name"
+              value=${this.form.platform}
+              @input=${(e: CustomEvent) => this.onInput(e, 'platform')}
+              placeholder="Your platform name"
               required
               autofocus
             >
-              <span slot="label">Album Name</span>
+              <span slot="label">Platform</span>
             </ui-input-text>
             <!-- Symbol -->
             <ui-input-text
-              value=${this.form.image}
-              @input=${(e: CustomEvent) => this.onInput(e, 'image')}
-              placeholder="Your image URL"
+              value=${this.form.id}
+              @input=${(e: CustomEvent) => this.onInput(e, 'id')}
+              placeholder="Your social id"
               required
             >
-              <span slot="label">Image</span>
+              <span slot="label">ID</span>
             </ui-input-text>
             <ui-input-text
               value=${this.form.url}
               @input=${(e: CustomEvent) => this.onInput(e, 'url')}
-              placeholder="Your resource URL"
+              placeholder="Your social URI"
               required
             >
-              <span slot="label">URL</span>
+              <span slot="label">URI</span>
             </ui-input-text>
             <!-- Preview -->
-            <p class="text-center">${this.form.album || '-'}<span class="mx-1">/</span>${this.form.image || '-'}</p>
+            <p class="text-center">${this.form.platform || '-'}<span class="mx-1">/</span>${this.form.id || '-'}</p>
             <ui-button class="mx-auto" @click=${this.create} ?disabled="${this.pending}">Confirm</ui-button>
           `
         )}

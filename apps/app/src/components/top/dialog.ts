@@ -1,7 +1,7 @@
 import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { vote, albumData, votePrice } from './action'
-import { calculateAlbumRewards, claimAlbumRewards } from '../rewards/action'
+import { claimAlbumRewards } from '../rewards/action'
 import { formatUnits } from 'ethers'
 
 import '@riffian-web/ui/src/button'
@@ -32,10 +32,9 @@ export class VoteAlbumDialog extends TailwindElement('') {
   async getPrice() {
     try {
       let result = await albumData(this.album)
-      console.log('get votes:' + result)
-      this.votes = result[1]
-      this.price = await votePrice(this.album)
-      this.rewards = await calculateAlbumRewards(bridgeStore.bridge.account, this.album)
+      this.votes = result[4]
+      let prices = await votePrice(this.album)
+      this.price = prices[0]
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })
@@ -61,11 +60,12 @@ export class VoteAlbumDialog extends TailwindElement('') {
   async vote() {
     this.pending = true
     try {
-      this.tx = await vote(this.album, { value: this.price })
+      this.tx = await vote(this.album, 1, { value: this.price })
       this.success = await this.tx.wait()
     } catch (err: any) {
+      console.log(err)
       let msg = err.message || err.code
-      if (err.code === 'ACTION_REJECTED') {
+      if (err.code === 'ACTION_REJECTED' || err.code === 'INVALID_ARGUMENT') {
         this.updateErr({ tx: msg })
         return this.close()
       }
@@ -108,11 +108,8 @@ export class VoteAlbumDialog extends TailwindElement('') {
         ${when(
           this.price && !this.pending,
           () => html`
-            <p class="font-bold">accumulated rewards</p>
-            <p class="text-xl text-sky-800">${formatUnits(Number(this.rewards), 18)} FTM</p>
-            <ui-button class="sm m-1" ?disabled=${Number(this.rewards) <= 0} @click=${this.claim}> Claim </ui-button>
             <p class="font-bold">Estimated cost</p>
-            <p class="text-xl text-sky-500">${formatUnits(Number(this.price), 18)} FTM</p>
+            <p class="text-xl text-sky-500">${formatUnits(this.price, 18)} FTM</p>
             <p>Current Votes:${this.votes}</p>
             <ui-button class="m-1" @click=${this.vote}> VOTE THIS! </ui-button>
           `

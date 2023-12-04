@@ -25,7 +25,7 @@ export const claimDailyRewards = async () => {
 
 export const claimAlbumRewards = async (album: string) => {
   const contract = await getAlbumContract()
-  const method = 'claimAlbumRewards'
+  const method = 'claimReward'
   const overrides = {}
   const parameters = [album]
   await assignOverrides(overrides, contract, method, parameters)
@@ -43,18 +43,18 @@ export const claimAlbumRewards = async (album: string) => {
   })
 }
 
-export const calculateAlbumRewards = async (account: string, album: string) => {
-  const contract = await getAlbumContract()
-  const method = 'calculateAlbumRewards'
-  const overrides = {}
-  const parameters = [account, album]
-  await assignOverrides(overrides, contract, method, parameters)
-  return await contract[method](...parameters)
-}
+// export const calculateAlbumRewards = async (account: string, album: string) => {
+//   const contract = await getAlbumContract()
+//   const method = 'calculateAlbumRewards'
+//   const overrides = {}
+//   const parameters = [account, album]
+//   await assignOverrides(overrides, contract, method, parameters)
+//   return await contract[method](...parameters)
+// }
 
-export const calculateDailyRewards = async (account: string) => {
+export const weeklyReward = async (account: string) => {
   const contract = await getAlbumContract()
-  const method = 'calculateDailyRewards'
+  const method = 'weeklyReward'
   const overrides = {}
   const parameters = [account]
   await assignOverrides(overrides, contract, method, parameters)

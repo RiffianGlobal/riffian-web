@@ -2,6 +2,7 @@ import { TailwindElement, customElement, html, repeat, state, when } from '@riff
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { albumList } from './action'
+import { shortAddress } from '@riffian-web/ethers/src/utils'
 import '@riffian-web/ui/src/loading/icon'
 import '@riffian-web/ui/src/loading/skeleton'
 import '@riffian-web/ui/src/img/loader'
@@ -12,7 +13,7 @@ export class NewAlbum extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() albumList: any = []
   @state() dialog = false
-  @state() currentAlbum = { address: '', votes: 0, url: '' }
+  @state() currentAlbum = { id: '', votes: 0, url: '' }
   @state() pending = false
 
   get disabled() {
@@ -31,12 +32,13 @@ export class NewAlbum extends TailwindElement('') {
   init = async () => {
     this.pending = true
     let result = await albumList(10)
-    this.albumList = result.albums
+    this.albumList = result.subjects
     console.log(this.albumList)
     this.pending = false
 
     let names = ['Beat it', 'You are not alone']
     let urls = [
+      'https://m.media-amazon.com/images/M/MV5BMTA5NDBkNzMtNzY3NC00NDhiLWI2OGQtNmU2NGRmMzk3YjdiXkEyXkFqcGdeQXVyMjI0OTk0OTE@._V1_.jpg',
       'https://i1.sndcdn.com/artworks-000329038545-d554xk-t500x500.jpg',
       'https://upload.wikimedia.org/wikipedia/en/thumb/1/1e/You_Are_Not_Alone.jpg/220px-You_Are_Not_Alone.jpg',
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLE1c3OU9GZU5Ev_eXLBzyesTY8JOkUulBUw&usqp=CAU',
@@ -46,7 +48,7 @@ export class NewAlbum extends TailwindElement('') {
     console.log(JSON.stringify(this.albumList))
     for (var i = 0; i < this.albumList.length; i++) {
       this.albumList[i].url = urls[this.getRandomInt(4)]
-      this.albumList[i].name = names[this.getRandomInt(2)]
+      // this.albumList[i].name = names[this.getRandomInt(2)]
     }
   }
 
@@ -71,10 +73,10 @@ export class NewAlbum extends TailwindElement('') {
           html`<table class="w-full text-left border-collapse">
             <thead>
               <th>Rank</th>
+              <th>Author</th>
               <th>Collection</th>
               <th>Album</th>
-              <th>Vote Amount</th>
-              <th>Reward Pool Amount</th>
+              <th>Total Votes</th>
               <th>Operation</th>
             </thead>
             ${repeat(
@@ -86,6 +88,7 @@ export class NewAlbum extends TailwindElement('') {
                   >
                     ${i + 1}
                   </td>
+                  <td>${shortAddress(item.owner.account)}</td>
                   <td>
                     <p class="w-24 h-24 rounded-md">
                       <img-loader src=${item.url}></img-loader>
@@ -94,8 +97,7 @@ export class NewAlbum extends TailwindElement('') {
                   <td class="py-2 pl-2 font-mono text-sm leading-6 text-indigo-600 whitespace-pre dark:text-indigo-300">
                     ${item.name}
                   </td>
-                  <td><p class="text-sm font-bold text-sky-500">${item.rewardPoolAmount} FTM</p></td>
-                  <td><p class="text-sm font-bold text-sky-500">${item.rewardPoolAmount} FTM</p></td>
+                  <td><p class="text-sm font-bold text-sky-500">${item.totalVotes}</p></td>
                   <td>
                     <div name="Dialog" class="doc-intro">
                       <ui-button
@@ -107,10 +109,10 @@ export class NewAlbum extends TailwindElement('') {
                         >VOTE</ui-button
                       >
                       ${when(
-                        this.dialog && item.address == this.currentAlbum.address,
+                        this.dialog && item.id == this.currentAlbum.id,
                         () =>
                           html`<vote-album-dialog
-                            album=${item.address}
+                            album=${item.id}
                             url=${item.url}
                             votes=${item.votes}
                             @close=${this.close}
