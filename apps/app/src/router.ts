@@ -30,6 +30,15 @@ export const routes = [
     }
   },
   {
+    name: 'uservotes',
+    path: '/uservotes',
+    render: () => html`<user-votes></user-votes>`,
+    enter: async () => {
+      await import('~/views/uservotes')
+      return true
+    }
+  },
+  {
     name: 'docs',
     path: '/docs/:anchor?',
     render: ({ anchor = '' }) => html`<view-docs :anchor="${anchor}"></view-docs>`,

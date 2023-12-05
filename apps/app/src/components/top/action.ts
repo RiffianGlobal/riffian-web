@@ -67,6 +67,5 @@ export const albumList = async (count: Number) => {
       }
     }`
   let result = await graphQuery('MediaBoard', queryJSON)
-  console.log(result)
   return result
 }

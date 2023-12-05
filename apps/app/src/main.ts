@@ -38,7 +38,7 @@ export class AppMain extends TailwindElement('') {
         </div>
         <ui-nav slot="left" menuable>
           <ui-link href="/" nav alias="/">Top Hits</ui-link>
-          <!-- <ui-link href="/top" nav>Top Music</ui-link> -->
+          <ui-link href="/uservotes" nav>My Votes</ui-link>
           <ui-link href="/docs" nav>Docs</ui-link>
         </ui-nav>
         <div slot="right"><network-menu></network-menu></div>
