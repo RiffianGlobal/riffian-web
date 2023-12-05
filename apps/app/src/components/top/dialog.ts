@@ -1,7 +1,6 @@
 import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { vote, albumData, votePrice } from './action'
-import { claimAlbumRewards } from '../rewards/action'
 import { formatUnits } from 'ethers'
 
 import '@riffian-web/ui/src/button'
@@ -38,22 +37,6 @@ export class VoteAlbumDialog extends TailwindElement('') {
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })
-    }
-  }
-
-  async claim() {
-    this.pending = true
-    try {
-      this.tx = await claimAlbumRewards(this.album)
-      this.success = await this.tx.wait()
-    } catch (err: any) {
-      let msg = err.message || err.code
-      if (err.code === 'ACTION_REJECTED') {
-        this.updateErr({ tx: msg })
-        return this.close()
-      }
-    } finally {
-      // this.pending = false
     }
   }
 

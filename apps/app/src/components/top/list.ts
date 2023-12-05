@@ -84,23 +84,24 @@ export class NewAlbum extends TailwindElement('') {
               (item: any, i) =>
                 html`<tr>
                   <td
-                    class="py-2 pr-2 font-mono font-medium text-lg leading-6 text-sky-500 whitespace-nowrap dark:text-sky-400"
+                    class="py-2 pr-2 font-sans	font-medium text-lg leading-6 text-sky-500 whitespace-nowrap dark:text-sky-400"
                   >
                     ${i + 1}
                   </td>
-                  <td>${shortAddress(item.owner.account)}</td>
+                  <td><ui-address .address="${item.owner.account}" short avatar></ui-address></td>
                   <td>
                     <p class="w-24 h-24 rounded-md">
                       <img-loader src=${item.url}></img-loader>
                     </p>
                   </td>
-                  <td class="py-2 pl-2 font-mono text-sm leading-6 text-indigo-600 whitespace-pre dark:text-indigo-300">
+                  <td class="py-2 pl-2 text-lg leading-6 whitespace-pre dark:text-indigo-300 font-sans	">
                     ${item.name}
                   </td>
-                  <td><p class="text-sm font-bold text-sky-500">${item.totalVotes}</p></td>
+                  <td><p class="text-lg font-bold text-sky-500 font-sans">${item.totalVotes}</p></td>
                   <td>
                     <div name="Dialog" class="doc-intro">
                       <ui-button
+                        class="outlined"
                         ?disabled="${this.disabled}"
                         @click=${() => {
                           this.currentAlbum = item

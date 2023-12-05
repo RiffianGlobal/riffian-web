@@ -2,7 +2,6 @@ import { TailwindElement, customElement, html, repeat, state, when } from '@riff
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import './dialog'
 import { userVotes } from './action'
-import { shortAddress } from '@riffian-web/ethers/src/utils'
 import '@riffian-web/ui/src/loading/icon'
 import '@riffian-web/ui/src/loading/skeleton'
 import '@riffian-web/ui/src/img/loader'
@@ -65,22 +64,23 @@ export class UserVotesList extends TailwindElement('') {
             </thead>
             ${repeat(
               this.userVotes,
-              (item: any, i) =>
+              (item: any) =>
                 html`<tr>
                   <td>
                     <p class="w-24 h-24 rounded-md">
-                      <img-loader src=${item.subject.image}></img-loader>
+                      <img-loader src=${item.subject.image} loading="lazy"></img-loader>
                     </p>
                   </td>
-                  <td class="py-2 pl-2 font-mono text-sm leading-6 text-indigo-600 whitespace-pre dark:text-indigo-300">
+                  <td class="py-2 pl-2 text-lg leading-6 whitespace-pre dark:text-indigo-300 font-sans">
                     ${item.subject.name}
                   </td>
-                  <td>${shortAddress(item.subject.owner.account)}</td>
-                  <td><p class="text-sm font-bold text-sky-500">${formatUnits(item.value, 18)} FTM</p></td>
-                  <td><p class="text-sm font-bold text-sky-500">${item.supply}</p></td>
+                  <td><ui-address .address="${item.subject.owner.account}" short avatar></ui-address></td>
+                  <td><p class="text-sm font-bold font-sans">${formatUnits(item.value, 18)} FTM</p></td>
+                  <td><p class="text-lg font-bold text-sky-500 font-sans">${item.supply}</p></td>
                   <td>
                     <div name="Dialog" class="doc-intro">
                       <ui-button
+                        class="outlined"
                         ?disabled="${this.disabled}"
                         @click=${() => {
                           this.currentAlbum = item
