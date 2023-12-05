@@ -19,8 +19,8 @@ export class BindSocialBtn extends TailwindElement('') {
   close = () => (this.dialog = false)
 
   render() {
-    return html`<ui-button icon class="mx-auto" @click="${this.open}" ?disabled="${this.disabled}" title="Bind Social"
-        ><i class="i mdi mdi-twitter text-4xl"></i
+    return html`<ui-button icon lg @click="${this.open}" ?disabled="${this.disabled}" title="Bind Social"
+        ><i class="i mdi mdi-twitter"></i
       ></ui-button>
       ${when(this.dialog, () => html`<create-social-dialog @close=${this.close}></create-social-dialog>`)} `
   }

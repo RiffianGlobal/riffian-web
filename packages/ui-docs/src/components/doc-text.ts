@@ -33,7 +33,7 @@ export class DocText extends TailwindElement('') {
             <ui-link href="/help">How to?</ui-link>
           </span>
           <span slot="right" class="-mr-1">
-            <ui-button @click="()=>{}" icon sm class="text-blue-500"><i class="mdi mdi-magnify text-lg"></i></ui-button>
+            <ui-button @click="()=>{}" icon class="text-blue-500"><i class="mdi mdi-magnify"></i></ui-button>
           </span>
           <span slot="msg">
             ${when(this.inputTextErr, () => html`<span class="text-red-500">${this.inputTextErr}</span>`)}

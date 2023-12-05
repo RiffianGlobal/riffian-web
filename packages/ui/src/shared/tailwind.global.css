@@ -16,7 +16,7 @@
       @apply max-w-none;
     }
   }
-  .ui-select {
+  .ui-option {
     @apply whitespace-nowrap;
     & > li {
       @apply flex items-center gap-2 py-2 px-4 hover_bg-gray-50 cursor-pointer;
@@ -32,12 +32,17 @@
       }
     }
   }
+  .ui-icon,
   .ui-logo {
-    @apply inline-block;
+    @apply inline-block bg-contain;
+    width: var(--uiIconW);
+    height: var(--uiIconH);
+    background: url(../i/ui-icon.svg) no-repeat center;
+  }
+  .ui-logo {
     width: var(--uiLogoW);
     height: var(--uiLogoH);
-    background: url(../i/ui-logo.svg) no-repeat center;
-    background-size: contain;
+    background-image: url(../i/ui-logo.svg);
   }
   .mdi-discord {
     @apply bg-none;

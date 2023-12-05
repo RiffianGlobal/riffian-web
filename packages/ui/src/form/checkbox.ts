@@ -29,10 +29,10 @@ export class UICheckbox extends TailwindElement(style) {
     return html`<label
       ?disabled=${this.isDisabled}
       @click=${this.toggle}
-      class="inline-flex items-center gap-1 select-none leading-none ${classMap({
+      class="ui-checkbox inline-flex items-center gap-1 select-none leading-none ${classMap({
         checked: this.model
       })}"
-      ><i class="checkbox"></i><slot></slot
+      ><i class="input"></i><slot></slot
     ></label>`
   }
 }

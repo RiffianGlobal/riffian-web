@@ -14,14 +14,13 @@ export class DocMenu extends TailwindElement('') {
         .show=${this.menu}
         @change=${(e: CustomEvent) => (this.menu = e.detail)}
         btnText
-        btnDense
         icon
         align="left"
         dropClass="w-72"
       >
         <span slot="button">Settings</span>
         <!-- Content -->
-        <ul class="ui-select">
+        <ul class="ui-option">
           <li @click="${this.closeMenu}">Option A</li>
           <li @click="${this.closeMenu}">Option B</li>
         </ul>

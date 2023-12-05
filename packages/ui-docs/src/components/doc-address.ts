@@ -8,9 +8,9 @@ export class DocAddress extends TailwindElement('') {
   override render() {
     return html`
       <p class="flex w-full space-x-8">
-        <ui-address :address="${this.address}" short href="https://riffian.web"></ui-address>
-        <ui-address :address="${this.address}" short avatar></ui-address>
-        <ui-address :address="${this.address}" short avatar copy></ui-address>
+        <ui-address .address="${this.address}" short href="https://riffian.web"></ui-address>
+        <ui-address .address="${this.address}" short avatar></ui-address>
+        <ui-address .address="${this.address}" short avatar copy></ui-address>
       </p>
     `
   }
