@@ -63,26 +63,22 @@ export const userVotes = async (addr: string) => {
         where: {voter_: {account: "` +
     addr +
     `"}}
-    orderBy: createdTimestamp
-    orderDirection: desc
       ) {
         amount
         id
         isVote
+        updatedBlock
         subject {
           id
           image
           name
-          totalVotes
-          updatedTimestamp
-          subject
           owner {
             account
+            id
           }
         }
         supply
         value
-        createdTimestamp
       }
     }`
   let result = await graphQuery('MediaBoard', queryJSON)

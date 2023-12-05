@@ -13,7 +13,9 @@ export class ViewTop extends TailwindElement(style) {
           <p class="font-bold text-xl">My Votes</p>
         </div>
       </div>
-      <user-votes-list></user-votes-list>
+      <div class="ui-container">
+        <user-votes-list></user-votes-list>
+      </div>
     </div>`
   }
 }

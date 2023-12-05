@@ -76,7 +76,7 @@ export class UserVotesList extends TailwindElement('') {
                     ${item.subject.name}
                   </td>
                   <td>${shortAddress(item.subject.owner.account)}</td>
-                  <td><p class="text-sm font-bold text-sky-500">${formatUnits(item.value, 18)}</p></td>
+                  <td><p class="text-sm font-bold text-sky-500">${formatUnits(item.value, 18)} FTM</p></td>
                   <td><p class="text-sm font-bold text-sky-500">${item.supply}</p></td>
                   <td>
                     <div name="Dialog" class="doc-intro">
