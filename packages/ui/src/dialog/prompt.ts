@@ -19,15 +19,17 @@ export class UIPrompt extends TailwindElement([UIDialog.styles, style]) {
 
   override render() {
     return html`<ui-dialog ${ref(this.el$)} @close=${this.onClose}>
+      <slot slot="header" name="header" class="font-bold"></slot>
       <slot></slot>
       ${when(
         this.button,
-        () => html`<div slot="footer" class="w-full flex justify-between gap-4">
-          <div></div>
-          <div>
-            <ui-button @click=${this.refClose} class="minor">Close</ui-button>
-          </div>
-        </div>`
+        () =>
+          html`<div slot="footer" class="w-full flex justify-between gap-4">
+            <div></div>
+            <div>
+              <ui-button text @click=${this.refClose}>Close</ui-button>
+            </div>
+          </div>`
       )}
     </ui-dialog>`
   }

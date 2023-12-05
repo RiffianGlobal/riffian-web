@@ -28,13 +28,15 @@ export const screen: Screen = {
 }
 
 class ScreenStore extends State {
-  @property({ value: screen, type: Object }) screen!: Screen
+  @property({ value: screen }) screen!: Screen
   constructor() {
     super()
     const ro = new ResizeObserver(() => {
-      this.screen.ts++
-      this.screen.isMobi = match(breakpoints.lg)
-      this.screen.md = match(breakpoints.md)
+      this.screen = Object.assign({}, this.screen, {
+        ts: this.screen.ts++,
+        isMobi: match(breakpoints.lg),
+        md: match(breakpoints.md)
+      })
       emitter.emit('force-request-update')
     })
     ro.observe(document.documentElement)

@@ -33,7 +33,7 @@ export const Wallets: WalletList = [
 ]
 
 class WalletStore extends State {
-  @property({ value: undefined, type: Object }) wallet!: any
+  @property() wallet!: any
   get account(): string {
     return this.wallet?.account ?? ''
   }

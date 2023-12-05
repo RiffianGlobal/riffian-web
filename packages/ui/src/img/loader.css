@@ -3,7 +3,7 @@ i {
   &.empty,
   &.err,
   &:not(.loaded) {
-    background: linear-gradient(-45deg, rgba(238, 201, 121) 8%, rgb(187, 131, 68) 36%, rgba(238, 201, 121) 66%) 0% 0% /
+    background: linear-gradient(-45deg, rgba(222, 226, 230) 8%, rgba(239, 241, 243) 36%, rgba(222, 226, 230) 66%) 0% 0% /
       2400px;
     animation: silk 4s linear infinite;
   }
