@@ -49,7 +49,7 @@ export class NetworkMenu extends TailwindElement(style) {
         <div slot="button" class="inline-flex justify-center items-center">
           <i class="ui-network-icon ${classMap(this.$c([this.native?.symbol]))}"></i>
         </div>
-        <ul class="ui-select">
+        <ul class="ui-option">
           ${repeat(
             networks,
             (network) =>

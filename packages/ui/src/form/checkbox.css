@@ -1,10 +1,8 @@
 :host {
-  &:focus {
-    background: red;
-  }
+  @apply inline-flex items-center;
 }
 
-.checkbox {
+.input {
   @apply inline-flex relative justify-center items-center origin-center leading-none transition-all box-border;
   border-radius: 5px;
   width: 1.25em;
@@ -12,9 +10,22 @@
   border: 2px solid var(--formBorder);
   &::before {
     content: '';
-    @apply block w-full h-full invisible origin-center;
-    transform: scale(0.9);
+    @apply block invisible origin-center;
+    width: 90%;
+    height: 90%;
     background: url(./check.svg) no-repeat center;
+  }
+}
+.ui-radio {
+  & .input {
+    @apply rounded-full;
+    &::before {
+      @apply rounded-full;
+      border: 1px solid #fff;
+      background: var(--formBorderActive);
+      width: calc(100%);
+      height: calc(100%);
+    }
   }
 }
 
@@ -22,16 +33,15 @@ label {
   &:not([disabled]) {
     @apply cursor-pointer;
     &:hover {
-      & .checkbox {
+      & .input {
         border-color: var(--formBorderFocus);
         &:focus {
-          background: red;
         }
       }
     }
   }
   &.checked {
-    & .checkbox {
+    & .input {
       background: var(--formBorderFocus);
       border-color: var(--formBorderFocus);
       &::before {
@@ -41,7 +51,7 @@ label {
   }
   &[disabled] {
     &.checked {
-      & .checkbox {
+      & .input {
         background: var(--formBorder);
         border-color: var(--formBorder);
       }

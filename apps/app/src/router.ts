@@ -41,7 +41,7 @@ export const routes = [
   {
     name: 'docs',
     path: '/docs/:anchor?',
-    render: ({ anchor = '' }) => html`<view-docs :anchor="${anchor}"></view-docs>`,
+    render: ({ anchor = '' }) => html`<view-docs .anchor="${anchor}"></view-docs>`,
     enter: async ({ anchor = '' }) => {
       await import('~/views/docs')
       const scroll2 = () => {

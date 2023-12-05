@@ -1,6 +1,6 @@
 import { TailwindElement, classMap, customElement, html, property } from './shared/TailwindElement'
 
-import icon from './i/ui-logo.svg'
+import icon from './i/ui-icon.svg'
 
 @customElement('ui-symbol')
 export class UISymbol extends TailwindElement('') {

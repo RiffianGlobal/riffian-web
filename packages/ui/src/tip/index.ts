@@ -15,13 +15,14 @@ export class UITip extends TailwindElement('') {
   }
 
   override render() {
-    return html`<ui-button @click=${this.show} sm icon
-        ><i class="text-base mdi mdi-help-circle-outline cursor-pointer"></i></ui-button
+    return html`<ui-button @click=${this.show} icon
+        ><i class="mdi mdi-help-circle-outline cursor-pointer"></i></ui-button
       >${when(
         this.model,
-        () => html`<ui-prompt @close=${this.onClose}>
-          <slot></slot>
-        </ui-prompt>`
+        () =>
+          html`<ui-prompt @close=${this.onClose}>
+            <slot></slot>
+          </ui-prompt>`
       )}`
   }
 }

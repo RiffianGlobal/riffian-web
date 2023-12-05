@@ -10,8 +10,8 @@ import {
 import { PropertyValues } from 'lit'
 import style from './checkbox.css?inline'
 
-@customElement('ui-radio')
-export class UIRadio extends TailwindElement(style) {
+@customElement('ui-select')
+export class UISelect extends TailwindElement(style) {
   @property() name!: string
   @property() value!: unknown
   @property() checked = false
@@ -29,6 +29,7 @@ export class UIRadio extends TailwindElement(style) {
 
   willUpdate(changedProps: PropertyValues<this>) {
     if (!changedProps.has('checked')) return
+    console.log(this.model, this.checked, changedProps)
   }
 
   connectedCallback(): void {

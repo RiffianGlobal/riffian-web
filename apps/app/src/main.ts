@@ -32,9 +32,7 @@ export class AppMain extends TailwindElement('') {
   render() {
     return html` <ui-header menuable full>
         <div slot="logo" class="inline-flex justify-center items-center mr-4">
-          <a class="inline-flex justify-center items-center font-bold" href="/"
-            ><i class="ui-logo mr-1 -mt-0.5"></i>Riffian</a
-          >
+          <a class="inline-flex justify-center items-center font-bold" href="/"><i class="ui-logo"></i></a>
         </div>
         <ui-nav slot="left" menuable>
           <ui-link href="/" nav alias="/">Top Hits</ui-link>

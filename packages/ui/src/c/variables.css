@@ -12,7 +12,7 @@
   --fontFamily: var(--font-family, 'Helvetica Neue', Arial, sans-serif);
   --textColor: var(--text-color, rgb(73, 80, 87));
   --textColorInverse: var(--text-color-inverse, rgb(182, 175, 168));
-  --headerH: var(--header-height, 60px);
+  --headerH: var(--header-height, 64px);
   --footerH: var(--footer-height, 60px);
   --appMainH: calc(100vh - var(--headerH) - var(--footerH) - var(--networkWarnH, 0px));
   --appMainBg: var(--app-main-bg, #fff);
@@ -38,13 +38,15 @@
   --formFocus: #c7d2fe;
   --formGlow: 3px solid var(--formFocus);
   /* UIs */
-  --uiLogoW: var(--ui-logo-w, 32px);
-  --uiLogoH: var(--ui-logo-h, 32px);
+  --uiLogoW: var(--ui-logo-w, 120px); /* 1:5.27 */
+  --uiLogoH: var(--ui-logo-h, 22px);
+  --uiIconW: var(--ui-icon-w, 32px);
+  --uiIconH: var(--ui-icon-h, 32px);
 }
 
 @media (max-width: 1024px) {
   :root {
-    --uiLogoW: var(--ui-logo-w, 60px);
+    --uiLogoW: var(--ui-logo-w, 120px);
     --uiLogoH: var(--ui-logo-h, 21px);
   }
 }

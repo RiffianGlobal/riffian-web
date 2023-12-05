@@ -20,8 +20,8 @@ export class CreateAlbumBtn extends TailwindElement('') {
   close = () => (this.dialog = false)
 
   render() {
-    return html`<ui-button icon class="mx-auto" @click="${this.open}" ?disabled="${this.disabled}" title="New Album"
-        ><i class="i mdi mdi-plus-circle text-4xl"></i
+    return html`<ui-button icon lg @click="${this.open}" ?disabled="${this.disabled}" title="New Album"
+        ><i class="i mdi mdi-plus-circle"></i
       ></ui-button>
       ${when(this.dialog, () => html`<create-album-dialog @close=${this.close}></create-album-dialog>`)} `
   }

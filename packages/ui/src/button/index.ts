@@ -16,6 +16,7 @@ export class UIButton extends TailwindElement(style) {
   @property({ type: Boolean }) icon = false
   @property({ type: Boolean }) text = false
   @property({ type: Boolean }) sm = false
+  @property({ type: Boolean }) lg = false
   @property({ type: Boolean }) dense = false
   @property({ type: String, reflect: true }) theme?: string
 
@@ -49,36 +50,40 @@ export class UIButton extends TailwindElement(style) {
     return html`
       ${when(
         this.isAnchor,
-        () => html`<a
-          part="ui-button"
-          href=${ifDefined(this.href)}
-          target=${ifDefined(this.target)}
-          rel="${ifDefined(this.rel)}"
-          class="ui-button ${this.class}"
-          ?icon=${this.icon}
-          ?dense=${this.dense}
-          ?disabled=${this.blocked}
-          ?pending=${this.pending}
-          ?text=${this.text}
-          ?sm=${this.sm}
-          theme=${this.theme}
-        >
-          <slot></slot>
-        </a>`,
-        () => html`<button
-          part="ui-button"
-          type="button"
-          class="ui-button ${this.class}"
-          ?icon=${this.icon}
-          ?dense=${this.dense}
-          ?disabled=${this.blocked}
-          ?pending=${this.pending}
-          ?text=${this.text}
-          ?sm=${this.sm}
-          theme=${this.theme}
-        >
-          <slot></slot>
-        </button>`
+        () =>
+          html`<a
+            part="ui-button"
+            href=${ifDefined(this.href)}
+            target=${ifDefined(this.target)}
+            rel="${ifDefined(this.rel)}"
+            class="ui-button ${this.class}"
+            ?icon=${this.icon}
+            ?dense=${this.dense}
+            ?disabled=${this.blocked}
+            ?pending=${this.pending}
+            ?text=${this.text}
+            ?sm=${this.sm}
+            ?lg=${this.lg}
+            theme=${this.theme}
+          >
+            <slot></slot>
+          </a>`,
+        () =>
+          html`<button
+            part="ui-button"
+            type="button"
+            class="ui-button ${this.class}"
+            ?icon=${this.icon}
+            ?dense=${this.dense}
+            ?disabled=${this.blocked}
+            ?pending=${this.pending}
+            ?text=${this.text}
+            ?sm=${this.sm}
+            ?lg=${this.lg}
+            theme=${this.theme}
+          >
+            <slot></slot>
+          </button>`
       )}
     `
   }

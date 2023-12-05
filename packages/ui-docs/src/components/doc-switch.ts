@@ -8,7 +8,7 @@ export class DocSwitch extends TailwindElement('') {
   override render() {
     return html`
       <p class="flex gap-1 items-center">
-        <ui-input-switch :checked="val" @change="${(e: CustomEvent) => (this.val = e.detail)}"></ui-input-switch>
+        <ui-input-switch .checked="val" @change="${(e: CustomEvent) => (this.val = e.detail)}"></ui-input-switch>
         ${this.val}
       </p>
     `
