@@ -1,6 +1,6 @@
 import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { retreatPrice, userSubjectVotes, retreat } from './action'
+import { claimRewards, userWeeklyReward } from './action'
 import { formatUnits } from 'ethers'
 
 import '@riffian-web/ui/src/button'
@@ -10,13 +10,10 @@ import '@riffian-web/ui/src/img/loader'
 import '@riffian-web/ui/src/tx-state'
 
 const defErr = () => ({ tx: '' })
-@customElement('retreat-vote-dialog')
-export class VoteAlbumDialog extends TailwindElement('') {
+@customElement('claim-reward-dialog')
+export class ClaimRewardDialog extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
-  @property({ type: String }) album = ''
-  @property({ type: String }) url = ''
-  @property({ type: Number }) votes = 0
-  @state() price = 0
+  @state() userWeeklyReward = 0
   @state() tx: any = null
   @state() success = false
   @state() pending = false
@@ -30,38 +27,36 @@ export class VoteAlbumDialog extends TailwindElement('') {
 
   async getPrice() {
     try {
-      let result = await userSubjectVotes(this.album, bridgeStore.bridge.account)
-      this.votes = result
-      this.price = await retreatPrice(this.album, this.votes)
+      this.userWeeklyReward = await userWeeklyReward(bridgeStore.bridge.account)
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })
+    } finally {
     }
   }
 
-  async retreat() {
+  async claim() {
     this.pending = true
     try {
-      this.tx = await retreat(this.album, this.votes)
+      this.tx = await claimRewards()
       this.success = await this.tx.wait()
     } catch (err: any) {
+      console.log(err)
       let msg = err.message || err.code
-      if (err.code === 'ACTION_REJECTED') {
+      if (err.code === 'ACTION_REJECTED' || err.code === 'INVALID_ARGUMENT') {
         this.updateErr({ tx: msg })
         return this.close()
       }
     } finally {
-      // this.pending = false
+      this.pending = false
     }
   }
-
   resetState = () => {
     this.err = defErr()
     this.pending = false
     this.success = false
-    this.price = 0
+    this.userWeeklyReward = 0
   }
-
   close = async () => {
     this.tx = null
     this.resetState()
@@ -76,31 +71,29 @@ export class VoteAlbumDialog extends TailwindElement('') {
         this.close()
       }}
     >
-      <p slot="header" class="my-2 font-bold">Retreat Subject</p>
+      <p slot="header" class="my-2 font-bold">Claim Rewards</p>
       <div class="grid place-items-center b-1 border m-4 p-4 rounded-md">
-        <p class="w-36 h-36"><img-loader src=${this.url}></img-loader></p>
-
         ${when(
-          !this.price,
+          !this.userWeeklyReward,
           () =>
             html`<div class="my-4">
-              <loading-skeleton num="3"></loading-skeleton>
-              <p class="my-4">Loading subject data...</p>
+              <loading-icon></loading-icon>
             </div>`
         )}
         ${when(
-          this.price && !this.pending,
+          this.userWeeklyReward && !this.pending,
           () => html`
-            <p class="font-bold">Estimated returned value</p>
-            <p class="text-xl text-sky-500">${formatUnits(this.price, 18)} FTM</p>
-            <p>Your Votes:${this.votes}</p>
-            <ui-button class="m-1" @click=${this.retreat}> RETREAT </ui-button>
+            <p class="font-bold">Reward Value</p>
+            <p class="text-xl text-sky-500">${formatUnits(this.userWeeklyReward, 18)} FTM</p>
+            <ui-button class="m-1" @click=${this.claim}> CLAIM </ui-button>
           `
         )}${when(
           this.pending,
           () =>
-            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your retreat has been submit.' } }}
-              ><ui-button slot="view" href="/"> Close </ui-button></tx-state
+            html`<tx-state
+              .tx=${this.tx}
+              .opts=${{ state: { success: 'Success. Your claim request has been submit.' } }}
+              ><ui-button slot="view" href="/">Close</ui-button></tx-state
             >`
         )}
       </div>

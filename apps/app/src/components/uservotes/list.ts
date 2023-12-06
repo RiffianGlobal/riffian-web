@@ -33,7 +33,6 @@ export class UserVotesList extends TailwindElement('') {
     this.pending = true
     let result = await userVotes(bridgeStore.bridge.account)
     this.userVotes = result.userVotes
-    console.log(this.userVotes)
     this.pending = false
   }
 

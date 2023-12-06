@@ -10,7 +10,6 @@ export const retreatPrice = async (album: string, amount: number) => {
   const method = 'getRetreatPrice'
   const overrides = {}
   const parameters = [album, amount]
-  console.log('parameters:' + parameters)
   await assignOverrides(overrides, contract, method, parameters)
   return await contract[method](...parameters)
 }
@@ -82,6 +81,5 @@ export const userVotes = async (addr: string) => {
       }
     }`
   let result = await graphQuery('MediaBoard', queryJSON)
-  console.log(result)
   return result
 }

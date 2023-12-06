@@ -4,30 +4,16 @@ import { nowTs } from '@riffian-web/ethers/src/utils'
 
 export const getAlbumContract = async () => getContract('MediaBoard', { account: await getAccount() })
 
-export const claimDailyRewards = async () => {
-  const contract = await getAlbumContract()
-  const method = 'claimDailyRewards'
-  const overrides = {}
-  await assignOverrides(overrides, contract, method)
-  const call = contract[method]()
-
-  return new txReceipt(call, {
-    errorCodes: 'MediaBoard',
-    allowAlmostSuccess: true,
-    seq: {
-      type: 'ClaimDailyRewards',
-      title: `Claim Daily Rewards`,
-      ts: nowTs(),
-      overrides
-    }
-  })
-}
-
-export const claimAlbumRewards = async (album: string) => {
+/**
+ * claim weekly rewards
+ * @param album
+ * @returns
+ */
+export const claimRewards = async () => {
   const contract = await getAlbumContract()
   const method = 'claimReward'
   const overrides = {}
-  const parameters = [album]
+  const parameters = [getWeek()]
   await assignOverrides(overrides, contract, method, parameters)
   const call = contract[method](...parameters)
 
@@ -43,20 +29,44 @@ export const claimAlbumRewards = async (album: string) => {
   })
 }
 
-// export const calculateAlbumRewards = async (account: string, album: string) => {
-//   const contract = await getAlbumContract()
-//   const method = 'calculateAlbumRewards'
-//   const overrides = {}
-//   const parameters = [account, album]
-//   await assignOverrides(overrides, contract, method, parameters)
-//   return await contract[method](...parameters)
-// }
+/**
+ * uint256 reward = (weeklyReward[week] * userWeeklyVotes[msg.sender][week]) / weeklyVotes[_week];
+ */
+export const userWeeklyReward = async(addr: string)=> {
+  const contract = await getAlbumContract()
+  const week = await getWeek();
+  const method = 'userWeeklyVotes'
+  const parameters = [addr, week]
+  let userWeeklyVotes = await contract[method](...parameters)
+  const method1 = 'weeklyVotes'
+  const para = [week]
+  let weeklyVotes = await contract[method1](...para)
+  let weeklyRewards = await weeklyReward();
+  return weeklyRewards * userWeeklyVotes / weeklyVotes;
+}
 
-export const weeklyReward = async (account: string) => {
+/**
+ * get weekly rewards
+ * @param album
+ * @returns
+ */
+export const weeklyReward = async () => {
   const contract = await getAlbumContract()
   const method = 'weeklyReward'
-  const overrides = {}
-  const parameters = [account]
-  await assignOverrides(overrides, contract, method, parameters)
+  const parameters = [getWeek()]
   return await contract[method](...parameters)
+}
+
+/**
+ * calculate week begin time
+ * @returns week begin time in seconds
+ */
+export const getWeek = async () => {
+  const contract = await getAlbumContract()
+  const method = 'startTimeStamp'
+  let tsStart = await contract[method]()
+  const weekSeconds = 7n * 24n * 60n * 60n
+  let tsNow = BigInt(new Date().getTime()) / 1000n
+  let tsWeekBegin = tsNow - ((tsNow - tsStart) % weekSeconds)
+  return tsWeekBegin
 }

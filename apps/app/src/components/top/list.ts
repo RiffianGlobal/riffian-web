@@ -2,7 +2,6 @@ import { TailwindElement, customElement, html, repeat, state, when } from '@riff
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { albumList } from './action'
-import { shortAddress } from '@riffian-web/ethers/src/utils'
 import '@riffian-web/ui/src/loading/icon'
 import '@riffian-web/ui/src/loading/skeleton'
 import '@riffian-web/ui/src/img/loader'
@@ -33,7 +32,6 @@ export class NewAlbum extends TailwindElement('') {
     this.pending = true
     let result = await albumList(10)
     this.albumList = result.subjects
-    console.log(this.albumList)
     this.pending = false
 
     let names = ['Beat it', 'You are not alone']
@@ -45,7 +43,6 @@ export class NewAlbum extends TailwindElement('') {
       'https://upload.wikimedia.org/wikipedia/zh/5/5e/21_Adele_Album.jpg',
       'https://i.kfs.io/album/global/25572377,4v1/fit/500x500.jpg'
     ]
-    console.log(JSON.stringify(this.albumList))
     for (var i = 0; i < this.albumList.length; i++) {
       this.albumList[i].url = urls[this.getRandomInt(4)]
       // this.albumList[i].name = names[this.getRandomInt(2)]
