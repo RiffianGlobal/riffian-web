@@ -85,7 +85,7 @@ export class NewAlbum extends TailwindElement('') {
                 <th>Rank</th>
                 <th>Author</th>
                 <th>Collection</th>
-                <th>Album</th>
+                <th>Track</th>
                 <th>Total Votes</th>
                 <th>Operation${when(this.pending, () => html`<i class="text-sm mdi mdi-loading"></i>`)}</th>
               </thead>

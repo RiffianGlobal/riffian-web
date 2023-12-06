@@ -70,13 +70,13 @@ export class CreateAlbumDialog extends TailwindElement('') {
 
   render() {
     return html`<ui-dialog @close=${this.close}>
-      <p slot="header" class="my-2 font-bold">New Album</p>
+      <p slot="header" class="my-2 font-bold">New Track</p>
       <div class="flex flex-col w-full m-4 gap-4 mx-auto">
         <!-- Tx pending -->
         ${when(
           this.txPending,
           () =>
-            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your album has been created.' } }}
+            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your track has been created.' } }}
               ><ui-button slot="view" href="/">Close</ui-button></tx-state
             >`
         )}
@@ -88,11 +88,11 @@ export class CreateAlbumDialog extends TailwindElement('') {
             <ui-input-text
               value=${this.form.album}
               @input=${(e: CustomEvent) => this.onInput(e, 'album')}
-              placeholder="Your album name"
+              placeholder="Your track name"
               required
               autofocus
             >
-              <span slot="label">Album Name</span>
+              <span slot="label">Track Name</span>
             </ui-input-text>
             <!-- Symbol -->
             <ui-input-text
