@@ -50,7 +50,8 @@ export class VoteAlbumDialog extends TailwindElement('') {
       let msg = err.message || err.code
       if (err.code === 'ACTION_REJECTED' || err.code === 'INVALID_ARGUMENT') {
         this.updateErr({ tx: msg })
-        return this.close()
+        this.pending = false
+        // return this.close()
       }
     } finally {
       // this.pending = false
@@ -100,7 +101,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
           this.pending,
           () =>
             html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your vote has been submit.' } }}
-              ><ui-button slot="view" href="/">Close</ui-button></tx-state
+              ><ui-button slot="view" @click=${this.close}>Close</ui-button></tx-state
             >`
         )}
       </div>
