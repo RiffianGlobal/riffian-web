@@ -91,14 +91,15 @@ export class ImgLoader extends LazyElement(TailwindElement(style)) {
       class="${classMap({ loaded: this.firstLoaded, err: this.err, empty: this.empty, stop: this.stop })}"
       >${when(
         this.isResizableSrc ? this.uriset : this.uri,
-        () => html`<img
-          class="${classMap({ invisible: !this.firstLoaded, 'opacity-0': !this.firstLoaded })}"
-          src=${ifDefined(this.uri)}
-          srcset=${ifDefined(this.uriset)}
-          sizes=${ifDefined(this.autoSizes)}
-          @load=${this.onLoad}
-          @error=${this.onError}
-        />`
+        () =>
+          html`<img
+            class="${classMap({ invisible: !this.firstLoaded, 'opacity-0': !this.firstLoaded })}"
+            src=${ifDefined(this.uri)}
+            srcset=${ifDefined(this.uriset)}
+            sizes=${ifDefined(this.autoSizes)}
+            @load=${this.onLoad}
+            @error=${this.onError}
+          />`
       )}</i
     >`
   }

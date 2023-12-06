@@ -8,7 +8,9 @@
 }
 
 .ui-drop-toggle {
-  & .mdi {
-    color: var(--textColor);
+  &.inverse {
+    & .mdi {
+      color: var(--textColor);
+    }
   }
 }

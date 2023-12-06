@@ -12,11 +12,13 @@ export class UITip extends TailwindElement('') {
   }
   onClose() {
     this.model = false
+    this.emit('close')
   }
 
   override render() {
-    return html`<ui-button @click=${this.show} icon
-        ><i class="mdi mdi-help-circle-outline cursor-pointer"></i></ui-button
+    return html`<slot name="button" @click=${this.show}
+        ><ui-button icon
+          ><slot name="icon"><i class="mdi mdi-help-circle-outline cursor-pointer"></i></slot></ui-button></slot
       >${when(
         this.model,
         () =>

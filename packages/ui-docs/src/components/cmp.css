@@ -2,16 +2,19 @@
   &:not(:first-of-type) {
     @apply my-2;
   }
-  &::before {
-    content: attr(name);
-    @apply block h-6 leading-6 font-bold mb-2 capitalize transition-all;
-  }
   &:not(:first-of-type) {
     @apply pt-1 border-t border-dashed;
   }
   &.active {
-    &::before {
+    & h6::before {
       @apply text-xl;
+    }
+  }
+  & h6 {
+    @apply flex w-full items-center h-6 leading-6 mb-2;
+    &::before {
+      content: attr(name);
+      @apply mr-4 font-bold capitalize transition-all;
     }
   }
 }

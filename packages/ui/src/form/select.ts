@@ -1,48 +1,60 @@
-import {
-  customElement,
-  TailwindElement,
-  html,
-  property,
-  state,
-  classMap,
-  TAILWINDELEMENT
-} from '../shared/TailwindElement'
-import { PropertyValues } from 'lit'
-import style from './checkbox.css?inline'
+import { customElement, TailwindElement, html, repeat, state, classMap, property } from '../shared/TailwindElement'
+// Components
+import '../menu/drop'
+
+type Option = any | Record<string, any>
 
 @customElement('ui-select')
-export class UISelect extends TailwindElement(style) {
-  @property() name!: string
-  @property() value!: unknown
-  @property() checked = false
-  @property() readonly = false
-  @property() disabled = false
+export class UISelect extends TailwindElement('') {
+  @property() options: Option[] = []
+  @property() value: Option | undefined
 
-  select(e?: Event) {
+  @state() menu = false
+
+  get isObject() {
+    return typeof this.options[0] === 'object'
+  }
+
+  select = (e: Event, option: Option) => {
     e?.preventDefault()
-    const radios = this.parentNode!.querySelectorAll(`[name="${this.name}"]`)
-    radios.forEach((radio) => {
-      radio.checked = radio === this
+    if (option.value !== this.value) {
+      this.emit('change', this.isObject ? option : option.value)
+    }
+    this.menu = false
+  }
+
+  get titledOptions() {
+    return this.options.map((option) => {
+      const { title = option, value = option } = option
+      return { title, value }
     })
-    this.emit('change', this.value)
-  }
-
-  willUpdate(changedProps: PropertyValues<this>) {
-    if (!changedProps.has('checked')) return
-    console.log(this.model, this.checked, changedProps)
-  }
-
-  connectedCallback(): void {
-    super.connectedCallback()
   }
 
   override render() {
-    return html`<label
-      @click=${this.select}
-      class="ui-radio inline-flex items-center gap-1 cursor-pointer select-none leading-none ${classMap({
-        checked: this.checked
-      })}"
-      ><i class="input"></i><slot></slot
-    ></label>`
+    return html`
+      <ui-drop
+        .show=${this.menu}
+        @change=${(e: CustomEvent) => (this.menu = e.detail)}
+        btnText
+        icon
+        align="left"
+        dropClass="w-72"
+      >
+        <slot slot="button" name="button">Select</slot>
+        <!-- Content -->
+        <ul class="ui-option">
+          ${repeat(
+            this.titledOptions,
+            (option) =>
+              html`<li
+                @click="${(e: Event) => this.select(e, option)}"
+                class="${classMap({ active: option.value === this.value })}"
+              >
+                ${option.title}
+              </li>`
+          )}
+        </ul>
+      </ui-drop>
+    `
   }
 }

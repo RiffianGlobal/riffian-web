@@ -98,7 +98,10 @@ export class UIDrop extends TailwindElement(style) implements TAILWINDELEMENT {
     // Here has a problem with shadow DOM's relatvie zIndex, maybe its a bug...
     return html`<div class="inline-block whitespace-nowrap ${classMap({ relative: this.delayedModel })}">
       <div
-        class="ui-drop-toggle z-20 inline-flex items-center ${classMap({ relative: this.delayedModel })}"
+        class="ui-drop-toggle z-20 inline-flex items-center select-none ${classMap({
+          relative: this.delayedModel,
+          inverse: this.btnText
+        })}"
         @click=${this.toggle}
       >
         <slot name="toggle">
