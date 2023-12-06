@@ -1,6 +1,6 @@
-import { TailwindElement, customElement, html, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { TailwindElement, customElement, html, repeat, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { bindSocial } from './action'
+import { bindSocial, getSocials } from './action'
 // Components
 import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/input/text'
@@ -22,6 +22,16 @@ export class CreateSocailDialog extends TailwindElement('') {
   @state() pending = false
   @state() success = false
   @state() tx: any = null
+  @state() socials: any
+
+  connectedCallback() {
+    super.connectedCallback()
+    this.getSocialUrl()
+  }
+
+  async getSocialUrl() {
+    this.socials = await getSocials(bridgeStore.bridge.account)
+  }
 
   get invalid() {
     return !this.form.url || !this.form.platform || !this.form.id
@@ -56,7 +66,7 @@ export class CreateSocailDialog extends TailwindElement('') {
   async create() {
     this.pending = true
     try {
-      this.tx = await bindSocial(this.form.platform, this.form.id, this.form.url)
+      this.tx = await bindSocial('twitter', '', this.form.url)
       this.success = await this.tx.wait()
     } catch (err: any) {
       let msg = err.message || err.code
@@ -72,38 +82,32 @@ export class CreateSocailDialog extends TailwindElement('') {
   render() {
     return html`<ui-dialog @close=${this.close}>
       <p slot="header" class="my-2 font-bold">Bind Social Account</p>
+      ${when(
+        this.socials,
+        () =>
+          html`<p class="font-bold">Current:</p>
+            <ul>
+              ${repeat(this.socials, (item: any, i) => html`<li>${item[0]}: ${item[2]}</li> `)}
+            </ul>`
+      )}
       <div class="flex flex-col w-full m-4 gap-4 mx-auto">
         <!-- Tx pending -->
         ${when(
           this.txPending,
           () =>
             html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Socail binding success.' } }}
-              ><ui-button slot="view" href="/">Close</ui-button></tx-state
+              ><ui-button slot="view" @click=${this.close}>Close</ui-button></tx-state
             >`
         )}
         <!-- Form -->
         ${when(
           !this.txPending,
           () => html`
-            <!-- Album -->
-            <ui-input-text
-              value=${this.form.platform}
-              @input=${(e: CustomEvent) => this.onInput(e, 'platform')}
-              placeholder="Your platform name"
-              required
-              autofocus
+            <ui-link
+              href="https://twitter.com/intent/tweet?text=My%20account%20on%20riffian%20is%20${bridgeStore.bridge
+                .account}"
+              >Click here to post a tweet with your account address and copy your tweet url bellow.</ui-link
             >
-              <span slot="label">Platform</span>
-            </ui-input-text>
-            <!-- Symbol -->
-            <ui-input-text
-              value=${this.form.id}
-              @input=${(e: CustomEvent) => this.onInput(e, 'id')}
-              placeholder="Your social id"
-              required
-            >
-              <span slot="label">ID</span>
-            </ui-input-text>
             <ui-input-text
               value=${this.form.url}
               @input=${(e: CustomEvent) => this.onInput(e, 'url')}
@@ -112,8 +116,6 @@ export class CreateSocailDialog extends TailwindElement('') {
             >
               <span slot="label">URI</span>
             </ui-input-text>
-            <!-- Preview -->
-            <p class="text-center">${this.form.platform || '-'}<span class="mx-1">/</span>${this.form.id || '-'}</p>
             <ui-button class="mx-auto" @click=${this.create} ?disabled="${this.pending}">Confirm</ui-button>
           `
         )}
