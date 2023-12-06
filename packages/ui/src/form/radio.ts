@@ -1,12 +1,4 @@
-import {
-  customElement,
-  TailwindElement,
-  html,
-  property,
-  state,
-  classMap,
-  TAILWINDELEMENT
-} from '../shared/TailwindElement'
+import { customElement, TailwindElement, html, property, classMap } from '../shared/TailwindElement'
 import { PropertyValues } from 'lit'
 import style from './checkbox.css?inline'
 
@@ -22,7 +14,7 @@ export class UIRadio extends TailwindElement(style) {
     e?.preventDefault()
     const radios = this.parentNode!.querySelectorAll(`[name="${this.name}"]`)
     radios.forEach((radio) => {
-      radio.checked = radio === this
+      ;(radio as HTMLInputElement).checked = radio === this
     })
     this.emit('change', this.value)
   }
@@ -30,11 +22,6 @@ export class UIRadio extends TailwindElement(style) {
   willUpdate(changedProps: PropertyValues<this>) {
     if (!changedProps.has('checked')) return
   }
-
-  connectedCallback(): void {
-    super.connectedCallback()
-  }
-
   override render() {
     return html`<label
       @click=${this.select}

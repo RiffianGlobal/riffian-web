@@ -1,13 +1,17 @@
 {
   "name": "@riffian-web/ui-docs",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "scripts": {
     "build": "tsup src/index.ts --outDir ./lib --format esm,cjs --dts --clean",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@riffian-web/core": "workspace:latest",
-    "@riffian-web/ui": "workspace:latest"
+    "@riffian-web/ui": "workspace:latest",
+    "prismjs": "^1.29.0"
+  },
+  "devDependencies": {
+    "@types/prismjs": "^1.26.3"
   },
   "peerDependencies": {
     "ethers": "^6",
