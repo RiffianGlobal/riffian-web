@@ -7,6 +7,7 @@ import '@riffian-web/ui/src/loading/icon'
 import '@riffian-web/ui/src/loading/skeleton'
 import '@riffian-web/ui/src/img/loader'
 import '~/components/rewards/claim'
+import emitter from '@riffian-web/core/src/emitter'
 
 @customElement('top-album')
 export class NewAlbum extends TailwindElement('') {
@@ -102,10 +103,13 @@ export class NewAlbum extends TailwindElement('') {
                     <div name="Dialog" class="doc-intro">
                       <ui-button
                         class="outlined"
-                        ?disabled="${this.disabled}"
                         @click=${() => {
+                            if (this.disabled) {
+                              emitter.emit('connect-wallet')
+                            } else {
                           this.currentAlbum = item
                           this.dialog = true
+                            }
                         }}
                         >VOTE</ui-button
                       >
