@@ -4,6 +4,7 @@ import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '@riffian-web/ui/src/button'
 import './dialog'
 import './social'
+import emitter from '@riffian-web/core/src/emitter'
 
 @customElement('create-album-btn')
 export class CreateAlbumBtn extends TailwindElement('') {
@@ -15,12 +16,18 @@ export class CreateAlbumBtn extends TailwindElement('') {
     return !bridgeStore.bridge.account
   }
 
-  open = () => (this.dialog = true)
+  open = () => {
+    if (this.disabled) {
+      emitter.emit('connect-wallet')
+    } else {
+      this.dialog = true
+    }
+  }
 
   close = () => (this.dialog = false)
 
   render() {
-    return html`<ui-button icon lg @click="${this.open}" ?disabled="${this.disabled}" title="New Album"
+    return html`<ui-button icon lg @click="${this.open}" title="New Album"
         ><i class="i mdi mdi-plus-circle"></i
       ></ui-button>
       ${when(this.dialog, () => html`<create-album-dialog @close=${this.close}></create-album-dialog>`)} `

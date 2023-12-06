@@ -75,6 +75,7 @@ export class Bridge {
           iconUrls: ['']
         })
       try {
+        ethereum.on('chainChanged', () => window.location.reload())
         await ethereum.request({
           method,
           params: [param]
