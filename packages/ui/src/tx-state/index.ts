@@ -5,10 +5,11 @@ import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import './tx-view'
 
 import style from './tx-state.css?inline'
+import { txReceipt } from 'packages/ethers/src/txReceipt'
 @customElement('tx-state')
 export class TxState extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
-  @property({ type: Object }) tx: any
+  @property({ type: Object }) tx: txReceipt | undefined
   @property({ type: Boolean }) txType = false
   @property({ type: Boolean, attribute: true }) inline = false
   @property({ type: Boolean }) onlyAwaitHash = false
@@ -27,7 +28,7 @@ export class TxState extends TailwindElement(style) {
     return { success, failed, wait, almostSuccess }
   }
   get hashOk() {
-    return this.onlyAwaitHash && this.tx.hash
+    return this.onlyAwaitHash && this.tx?.hash
   }
 
   get state() {
@@ -49,15 +50,20 @@ export class TxState extends TailwindElement(style) {
       case 4:
         ;[icon, txt, css] = [this.icons.almostSuccess, this.tx.err?.message || `Almost Success`, 'warn']
         break
+      default:
+        ;[icon, txt, css] = [
+          this.tx ? this.icons.failed : this.icons.wait,
+          this.tx ? `Bad transaction status ${this.tx.status}}` : 'Making transaction...',
+          'wait'
+        ]
+        break
     }
     if (this.hashOk) [icon, txt, css] = [this.icons.success, state?.success || `Success`, 'success']
     return { icon, txt, css }
   }
 
   get txScanUri() {
-    const { hash } = this.tx
-    if (!hash) return ''
-    return `${this.bridge.network.current.scan}/tx/${hash}`
+    return this.tx?.hash ? `${this.bridge.network.current.scan}/tx/${this.tx?.hash}` : ''
   }
 
   override render() {

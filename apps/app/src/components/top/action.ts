@@ -36,6 +36,15 @@ export const albumData = async (album: string) => {
 
 export const votePrice = async (album: string) => {
   const contract = await getAlbumContract()
+  const method = 'getVotePrice'
+  const overrides = {}
+  const parameters = [album, 1]
+  await assignOverrides(overrides, contract, method, parameters)
+  return await contract[method](...parameters)
+}
+
+export const votePriceWithFee = async (album: string) => {
+  const contract = await getAlbumContract()
   const method = 'getVotePriceWithFee'
   const overrides = {}
   const parameters = [album, 1]

@@ -12,9 +12,9 @@ import emitter from '@riffian-web/core/src/emitter'
 @customElement('top-album')
 export class NewAlbum extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
-  @state() albumList: any = []
-  @state() dialog = false
-  @state() currentAlbum = { id: '', votes: 0, url: '' }
+  @state() albumList: any
+  @state() showAlbumVote = false
+  @state() albumToVote = { id: '', votes: 0, url: '' }
   @state() pending = false
   @state() prompt = false
   @state() promptMessage: string = ''
@@ -34,9 +34,8 @@ export class NewAlbum extends TailwindElement('') {
 
   init = async () => {
     this.pending = true
-    let result
     try {
-      result = await albumList(10)
+      let result = await albumList(10)
       this.albumList = result.subjects
     } catch (e: any) {
       this.promptMessage = e
@@ -60,12 +59,15 @@ export class NewAlbum extends TailwindElement('') {
     }
   }
 
-  close = () => (this.dialog = false)
+  close = () => {
+    this.showAlbumVote = false
+    this.init()
+  }
 
   render() {
     return html` <div class="grid place-items-center b-1 m-4 p-4 rounded-md">
         ${when(
-          this.pending,
+          this.pending && !this.albumList,
           () =>
             html`<div name="Loading" class="doc-intro">
               <div class="flex flex-col gap-8 m-8">
@@ -76,7 +78,7 @@ export class NewAlbum extends TailwindElement('') {
             </div>`
         )}
         ${when(
-          !this.pending,
+          this.albumList,
           () =>
             html`<table class="w-full text-left border-collapse">
               <thead>
@@ -85,7 +87,7 @@ export class NewAlbum extends TailwindElement('') {
                 <th>Collection</th>
                 <th>Album</th>
                 <th>Total Votes</th>
-                <th>Operation</th>
+                <th>Operation${when(this.pending, () => html`<i class="text-sm mdi mdi-loading"></i>`)}</th>
               </thead>
               ${repeat(
                 this.albumList,
@@ -114,30 +116,30 @@ export class NewAlbum extends TailwindElement('') {
                             if (this.disabled) {
                               emitter.emit('connect-wallet')
                             } else {
-                              this.currentAlbum = item
-                              this.dialog = true
+                              this.albumToVote = item
+                              this.showAlbumVote = true
                             }
                           }}
                           >VOTE</ui-button
                         >
-                        ${when(
-                          this.dialog && item.id == this.currentAlbum.id,
-                          () =>
-                            html`<vote-album-dialog
-                              album=${item.id}
-                              url=${item.url}
-                              votes=${item.votes}
-                              @close=${this.close}
-                            ></vote-album-dialog>`
-                        )}
                       </div>
                     </td>
                   </tr> `
+              )}
+              ${when(
+                this.showAlbumVote,
+                () =>
+                  html`<vote-album-dialog
+                    album=${this.albumToVote.id}
+                    url=${this.albumToVote.url}
+                    votes=${this.albumToVote.votes}
+                    @close=${this.close}
+                  ></vote-album-dialog>`
               )}
             </table>`
         )}
       </div>
       <!-- Prompt -->
-      ${when(this.prompt, () => html` <p class="text-center text-orange-600">${this.promptMessage}</p> `)}`
+      ${when(this.prompt, () => html`<p class="text-center text-orange-600">${this.promptMessage}</p> `)}`
   }
 }
