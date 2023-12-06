@@ -84,7 +84,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
         this.close()
       }}
     >
-      <p slot="header" class="my-2 font-bold">VOTE Album</p>
+      <p slot="header" class="my-2 font-bold">VOTE Track</p>
       <div class="grid place-items-center b-1 border m-4 p-4 rounded-md">
         <p class="w-36 h-36"><img-loader src=${this.url}></img-loader></p>
         ${when(
