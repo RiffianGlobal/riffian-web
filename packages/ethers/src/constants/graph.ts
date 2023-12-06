@@ -13,7 +13,11 @@ export const SubGraph: ChainConf = {
   }
 }
 
-export const getGraphUri = (name: string) =>  SubGraph[name][Network.chainId]
+export const getGraphUri = (name: string) => {
+  let uri = SubGraph[name][Network.chainId]
+  if (!uri) throw new Error(`Not available for selected network(chain id ${Network.chainId}).`)
+  return uri
+}
 
 export const graphQuery = async (name = 'main', query: string, variables?: {}, operationName?: string) =>
   http.post(getGraphUri(name), { query, variables, operationName })
