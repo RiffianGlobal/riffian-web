@@ -13,7 +13,7 @@ const defErr = () => ({ tx: '' })
 @customElement('claim-reward-dialog')
 export class ClaimRewardDialog extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
-  @state() userWeeklyReward = 0
+  @state() userWeeklyReward = -1
   @state() tx: any = null
   @state() success = false
   @state() pending = false
@@ -74,18 +74,18 @@ export class ClaimRewardDialog extends TailwindElement('') {
       <p slot="header" class="my-2 font-bold">Claim Rewards</p>
       <div class="grid place-items-center b-1 border m-4 p-4 rounded-md">
         ${when(
-          !this.userWeeklyReward,
+          !(this.userWeeklyReward >= 0),
           () =>
             html`<div class="my-4">
               <loading-icon></loading-icon>
             </div>`
         )}
         ${when(
-          this.userWeeklyReward && !this.pending,
+          this.userWeeklyReward >= 0 && !this.pending,
           () => html`
             <p class="font-bold">Reward Value</p>
             <p class="text-xl text-sky-500">${formatUnits(this.userWeeklyReward, 18)} FTM</p>
-            <ui-button class="m-1" @click=${this.claim}> CLAIM </ui-button>
+            <ui-button ?disabled="${this.userWeeklyReward <= 0}" class="m-1" @click=${this.claim}> CLAIM </ui-button>
           `
         )}${when(
           this.pending,
