@@ -14,7 +14,7 @@ export class NewAlbum extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() albumList: any
   @state() showAlbumVote = false
-  @state() albumToVote = { id: '', votes: 0, url: '' }
+  @state() albumToVote = { id: '', votes: 0, url: '', name: '' }
   @state() pending = false
   @state() prompt = false
   @state() promptMessage: string = ''
@@ -132,6 +132,7 @@ export class NewAlbum extends TailwindElement('') {
                   html`<vote-album-dialog
                     album=${this.albumToVote.id}
                     url=${this.albumToVote.url}
+                    name=${this.albumToVote.name}
                     votes=${this.albumToVote.votes}
                     @close=${this.close}
                   ></vote-album-dialog>`

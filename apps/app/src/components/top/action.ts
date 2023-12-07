@@ -25,6 +25,26 @@ export const vote = async (album: string, amount: number, price: object) => {
   })
 }
 
+export const retreat = async (album: string, amount: number) => {
+  const contract = await getAlbumContract()
+  const method = 'retreat'
+  const overrides = {}
+  const parameters = [album, amount]
+
+  await assignOverrides(overrides, contract, method, parameters)
+  const call = contract[method](...parameters)
+  return new txReceipt(call, {
+    errorCodes: 'MediaBoard',
+    allowAlmostSuccess: true,
+    seq: {
+      type: 'RetreatSubject',
+      title: `Retreat Subject`,
+      ts: nowTs(),
+      overrides
+    }
+  })
+}
+
 export const albumData = async (album: string) => {
   const contract = await getAlbumContract()
   const method = 'subjectToData'
@@ -39,6 +59,15 @@ export const myVotes = async (album: string) => {
   const method = 'userSubjectVotes'
   const overrides = {}
   const parameters = [album, bridgeStore.bridge.account]
+  await assignOverrides(overrides, contract, method, parameters)
+  return await contract[method](...parameters)
+}
+
+export const retreatPrice = async (album: string) => {
+  const contract = await getAlbumContract()
+  const method = 'getRetreatPrice'
+  const overrides = {}
+  const parameters = [album, 1]
   await assignOverrides(overrides, contract, method, parameters)
   return await contract[method](...parameters)
 }
