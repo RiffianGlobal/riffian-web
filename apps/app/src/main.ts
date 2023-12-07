@@ -34,12 +34,12 @@ export class AppMain extends TailwindElement('') {
         <div slot="logo" class="inline-flex justify-center items-center mr-4">
           <a class="inline-flex justify-center items-center font-bold" href="/"><i class="ui-logo"></i></a>
         </div>
-        <ui-nav slot="left" menuable>
-          <ui-link href="/" nav alias="/">Top Hits</ui-link>
+        <ui-nav slot="right">
+          <ui-link href="/" nav alias="/">Home</ui-link>
           <ui-link href="/uservotes" nav>My Votes</ui-link>
-          <ui-link href="/docs" nav>Docs</ui-link>
         </ui-nav>
         <div slot="right"><network-menu></network-menu></div>
+        <div slot="center"><ui-link class="text-gray-400" href="/docs" nav>COMPONENTS</ui-link></div>
       </ui-header>
       <main class="ui-app-main pt-6">
         <slot></slot>

@@ -32,17 +32,17 @@ export const claimRewards = async () => {
 /**
  * uint256 reward = (weeklyReward[week] * userWeeklyVotes[msg.sender][week]) / weeklyVotes[_week];
  */
-export const userWeeklyReward = async(addr: string)=> {
+export const userWeeklyReward = async (addr: string) => {
   const contract = await getAlbumContract()
-  const week = await getWeek();
+  const week = await getWeek()
   const method = 'userWeeklyVotes'
   const parameters = [addr, week]
   let userWeeklyVotes = await contract[method](...parameters)
   const method1 = 'weeklyVotes'
   const para = [week]
   let weeklyVotes = await contract[method1](...para)
-  let weeklyRewards = await weeklyReward();
-  return weeklyRewards * userWeeklyVotes / weeklyVotes;
+  let weeklyRewards = await weeklyReward()
+  return (weeklyRewards * userWeeklyVotes) / weeklyVotes
 }
 
 /**

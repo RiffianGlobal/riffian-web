@@ -1,6 +1,7 @@
-import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { TailwindElement, customElement, html, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { asyncReplace } from 'lit/directives/async-replace.js'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { weeklyReward } from './action'
+import { getWeek, weeklyReward } from './action'
 import { formatUnits } from 'ethers'
 // Components
 import '@riffian-web/ui/src/button'
@@ -16,6 +17,28 @@ export class ClaimRewards extends TailwindElement('') {
 
   get disabled() {
     return !bridgeStore.bridge.account
+  }
+
+  timeCountDown = async function* () {
+    const weekSeconds = 7n * 24n * 60n * 60n
+    let weekBegin = await getWeek(),
+      timeLeft = 0n
+    do {
+      let tsNow = BigInt(new Date().getTime()) / 1000n
+      timeLeft = weekBegin + weekSeconds - tsNow
+      let days = timeLeft / 86400n,
+        hours = (timeLeft - days * 86400n) / 3600n,
+        minutes = (timeLeft - days * 86400n - hours * 3600n) / 60n,
+        seconds = timeLeft - days * 86400n - hours * 3600n - minutes * 60n
+      yield days.toString() +
+        'D ' +
+        hours.toString().padStart(2, '0') +
+        'H ' +
+        minutes.toString().padStart(2, '0') +
+        'M ' +
+        seconds.toString().padStart(2, '0')
+      await new Promise((r) => setTimeout(r, 1000))
+    } while (timeLeft > 1)
   }
 
   connectedCallback(): void {
@@ -41,19 +64,21 @@ export class ClaimRewards extends TailwindElement('') {
 
   render() {
     return html`
-      ${when(this.pending, () => html`<i class="text-lg mdi mdi-loading"></i>`)}
       ${when(
-        !this.pending,
+        this.pending,
+        () => html`<i class="text-lg mdi mdi-loading"></i>`,
         () =>
-          html`<span class="text-lg font-bold">
-            <span class="text-sm">REWARD POOL</span>
-            <span class="italic text-2xl"> ${formatUnits(this.rewards, 18)} </span>
-            <span class="text-sm text-gray-400">FTM</span>
-            <ui-button icon class="ml-1 mx-auto sm" @click="${this.open}" ?disabled="${this.disabled}" title="Claim"
-              ><i class="mdi mdi-swap-horizontal"></i
-            ></ui-button>
-            ${when(this.dialog, () => html`<claim-reward-dialog @close=${this.close}></claim-reward-dialog>`)}
-          </span> `
+          html`<div class="text-right">
+            <span class="text-lg font-bold text-right">
+              <span class="text-sm"></span>
+              <span class="italic text-2xl"> ${formatUnits(this.rewards, 18)} </span>
+              <ui-button icon class="ml-1 mx-auto sm" @click="${this.open}" ?disabled="${this.disabled}" title="Claim"
+                ><i class="mdi mdi-swap-horizontal"></i
+              ></ui-button>
+              ${when(this.dialog, () => html`<claim-reward-dialog @close=${this.close}></claim-reward-dialog>`)} </span
+            ><br />
+            <span>${asyncReplace(this.timeCountDown())}</span>
+          </div>`
       )}
     `
   }

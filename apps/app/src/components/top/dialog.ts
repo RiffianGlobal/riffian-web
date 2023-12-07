@@ -8,7 +8,7 @@ import {
   when
 } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { vote, albumData, votePrice, votePriceWithFee } from './action'
+import { vote, albumData, votePrice, votePriceWithFee, myVotes } from './action'
 import { formatUnits } from 'ethers'
 
 import '@riffian-web/ui/src/button'
@@ -25,6 +25,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
   @property({ type: String }) url = ''
   @property({ type: Promise<any> }) votes: Promise<any> | undefined
   @state() price: Promise<any> | undefined
+  @state() myVotes: Promise<any> | undefined
   @state() tx: any = null
   @state() success = false
   @state() pending = false
@@ -40,6 +41,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
     try {
       this.votes = albumData(this.album).then((result) => result[4])
       this.price = votePrice(this.album).then((price) => formatUnits(price, 18))
+      this.myVotes = myVotes(this.album)
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })
@@ -97,6 +99,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
               >
             </p>
             <p>Current Votes: ${until(this.votes, html`<i class="text-sm mdi mdi-loading"></i>`)}</p>
+            <p>My Votes: ${until(this.myVotes, html`<i class="text-sm mdi mdi-loading"></i>`)}</p>
             <ui-button class="m-1" @click=${this.vote}> VOTE THIS! </ui-button>
           `,
           () =>

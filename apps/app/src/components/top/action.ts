@@ -1,4 +1,4 @@
-import { getAccount, getContract, assignOverrides } from '@riffian-web/ethers/src/useBridge'
+import { getAccount, getContract, assignOverrides, bridgeStore } from '@riffian-web/ethers/src/useBridge'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
@@ -30,6 +30,15 @@ export const albumData = async (album: string) => {
   const method = 'subjectToData'
   const overrides = {}
   const parameters = [album]
+  await assignOverrides(overrides, contract, method, parameters)
+  return await contract[method](...parameters)
+}
+
+export const myVotes = async (album: string) => {
+  const contract = await getAlbumContract()
+  const method = 'userSubjectVotes'
+  const overrides = {}
+  const parameters = [album, bridgeStore.bridge.account]
   await assignOverrides(overrides, contract, method, parameters)
   return await contract[method](...parameters)
 }
