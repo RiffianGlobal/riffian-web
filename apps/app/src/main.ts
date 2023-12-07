@@ -10,9 +10,11 @@ import '@riffian-web/ui/src/nav/footer'
 import '@riffian-web/ui/src/nav/nav'
 import '@riffian-web/ui/src/link'
 import '@riffian-web/ui/src/block-number'
+import { StateController, screenStore } from '@riffian-web/core/src/screen'
 
 @customElement('app-main')
 export class AppMain extends TailwindElement('') {
+  bindScreen: any = new StateController(this, screenStore)
   @state() inRoot = false
 
   chkView = () => {
@@ -30,19 +32,35 @@ export class AppMain extends TailwindElement('') {
   }
 
   render() {
-    return html` <ui-header menuable full>
+    return html`<ui-header menuable full avatarOnly avatarSize="32">
         <div slot="logo" class="inline-flex justify-center items-center mr-4">
           <a class="inline-flex justify-center items-center font-bold" href="/"><i class="ui-logo"></i></a>
         </div>
-        <ui-nav slot="right">
-          <ui-link href="/" nav alias="/">Home</ui-link>
-          <ui-link href="/uservotes" nav>My Votes</ui-link>
-        </ui-nav>
-        <div slot="right"><network-menu></network-menu></div>
-        <div slot="center"><ui-link class="text-gray-400" href="/docs" nav>COMPONENTS</ui-link></div>
+        ${when(
+          !screenStore.isMobi,
+          () =>
+            html`<ui-nav slot="right" class="font-bold"
+              ><ui-link href="/" nav alias="/">HOME</ui-link>
+              <ui-link href="/uservotes" nav>MY VOTES</ui-link>
+              <ui-link href="/upload" nav>UPLOAD</ui-link>
+            </ui-nav>`
+        )}
+        <div slot="right"><network-menu avatarOnly></network-menu></div>
+        <div slot="center"><ui-link class="text-gray-600" href="/docs" nav>COMPONENTS</ui-link></div>
       </ui-header>
-      <main class="ui-app-main pt-6">
-        <slot></slot>
+      <main class="ui-app-main">
+        ${when(
+          screenStore.isMobi,
+          () =>
+            html`<ui-nav
+              class="fixed bottom-0 left-0 right-0 z-50 font-bold bg-zinc-700 rounded-t shadow-[0_-10px_15px_-3px_rgba(255,255,255,0.1)] pt-2"
+            >
+              <ui-link href="/" nav class="mx-2" alias="/"><i class="mdi mdi-home-outline"></i></ui-link>
+              <ui-link href="/upload" nav class="mx-2"><i class="mdi mdi-file-upload-outline"></i></ui-link>
+              <ui-link href="/uservotes" nav class="mx-2"><i class="mdi mdi-account-outline"></i></ui-link>
+            </ui-nav>`
+        )}
+        <slot> </slot>
       </main>
       <ui-footer full>
         <div slot="block"></div>

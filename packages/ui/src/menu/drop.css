@@ -1,7 +1,8 @@
 :host {
 }
 .ui-drop {
-  @apply absolute bg-white rounded-md max-w-xs overflow-hidden;
+  @apply absolute rounded-md max-w-xs overflow-hidden;
+  background: var(--btnBgSecondaryActive) !important;
   min-width: 11rem;
   min-height: 9rem;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);

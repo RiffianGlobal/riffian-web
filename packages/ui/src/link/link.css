@@ -29,7 +29,9 @@
   &.router-active {
   }
   &[nav] {
-    @apply inline-flex px-4 py-1.5 border-transparent rounded-full whitespace-nowrap leading-none;
+    @apply inline-flex px-1 py-1.5 border-transparent rounded-full whitespace-nowrap leading-none;
+    font-family: Roboto, var(--fontFamily);
+    font-size: 28px;
     color: inherit;
 
     &:hover {
@@ -40,8 +42,7 @@
     }
     &[active],
     &[exact-active] {
-      color: currentColor;
-      background: #e3ecf7 !important;
+      color: var(--colorHighlight);
     }
   }
   &[link] {

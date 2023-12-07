@@ -35,14 +35,14 @@ export class ViewHome extends TailwindElement(style) {
   }
 
   render() {
-    return html`<div class="top">
-      <div class="flex justify-end items-center lg_w-20 float-right">
-        <bind-social-btn></bind-social-btn>
+    return html`<div class="ui-container">
+      <div class="flex flex-row-reverse">
         <create-album-btn></create-album-btn>
+        <bind-social-btn></bind-social-btn>
       </div>
-      <div class="ui-container relative flex justify-between items-center">
+      <div class="relative flex justify-between items-center">
         <div>
-          <p class="font-bold text-xl">Weekly</p>
+          <p class="font-bold text-2xl text-highlight">Weekly</p>
           <span>${until(this.weekRange())}</span>
         </div>
         <div><claim-rewards></claim-rewards></div>

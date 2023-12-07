@@ -122,11 +122,11 @@
     }
     &:hover {
       color: var(--btnBg);
-      background: #f9f9fe !important;
+      background: var(--btnBgSecondaryHover) !important;
     }
     &:active {
       color: var(--btnBg);
-      background: #e3ecf7 !important;
+      background: var(--btnBgSecondaryActive) !important;
     }
   }
   &[icon] {
