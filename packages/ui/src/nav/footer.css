@@ -1,5 +1,8 @@
 .ui-footer {
   @apply float-left w-full;
+  @media (max-width: 768px) {
+    @apply pb-10;
+  }
   & .ui-container {
     min-height: var(--footerH);
   }

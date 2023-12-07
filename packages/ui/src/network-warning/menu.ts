@@ -53,7 +53,7 @@ export class NetworkMenu extends TailwindElement(style) {
           ${repeat(
             networks,
             (network) =>
-              html`<li @click="${() => this.switch(network)}">
+              html`<li @click="${() => this.switch(network)}" class="text-base">
                 <i class="ui-network-icon ${classMap(this.$c([network.native?.symbol]))}"></i>
                 ${network.title}
               </li>`

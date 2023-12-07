@@ -7,8 +7,9 @@ import { formatUnits } from 'ethers'
 import '@riffian-web/ui/src/button'
 import './dialog'
 
+import style from './claim.css?inline'
 @customElement('claim-rewards')
-export class ClaimRewards extends TailwindElement('') {
+export class ClaimRewards extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
 
   @state() rewards = 0
@@ -69,17 +70,16 @@ export class ClaimRewards extends TailwindElement('') {
         () => html`<i class="text-lg mdi mdi-loading"></i>`,
         () =>
           html`<div class="text-right">
-            <span class="text-lg font-bold text-right">
-              <span class="text-sm"></span>
-              <span class="italic text-2xl"> ${formatUnits(this.rewards, 18)} </span>
+            <div class="text-light text-2xl text-highlight">
               <ui-button icon class="ml-1 mx-auto sm" @click="${this.open}" ?disabled="${this.disabled}" title="Claim"
-                ><i class="mdi mdi-swap-horizontal"></i
+                ><i class="mdi mdi-hand-coin-outline"></i
               ></ui-button>
-              ${when(this.dialog, () => html`<claim-reward-dialog @close=${this.close}></claim-reward-dialog>`)} </span
-            ><br />
-            <span>${asyncReplace(this.timeCountDown())}</span>
+              ${formatUnits(this.rewards, 18)}
+            </div>
+            <div class="text-light text-green-500 mt-2">${asyncReplace(this.timeCountDown())}</div>
           </div>`
       )}
+      ${when(this.dialog, () => html`<claim-reward-dialog @close=${this.close}></claim-reward-dialog>`)}
     `
   }
 }

@@ -23,31 +23,31 @@ export class ViewHome extends TailwindElement(style) {
       console.log(weekBegin, dateBegin)
       return (
         dateBegin.toLocaleString('en-US', { month: 'short' }) +
-        (dateBegin.getFullYear() == dateEnd.getFullYear() ? '' : dateEnd.getFullYear()) +
         dateBegin.getDate() +
+        (dateBegin.getFullYear() == dateEnd.getFullYear() ? '' : ', ' + dateEnd.getFullYear()) +
         '-' +
         (dateBegin.getMonth() == dateEnd.getMonth() ? '' : dateEnd.toLocaleString('en-us', { month: 'short' })) +
         dateEnd.getDate() +
-        ' ' +
-        (dateBegin.getFullYear() == dateEnd.getFullYear() ? dateBegin.getFullYear() : dateEnd.getFullYear())
+        ', ' +
+        dateEnd.getFullYear()
       )
     })
   }
 
   render() {
     return html`<div class="ui-container">
-      <div class="flex flex-row-reverse">
-        <create-album-btn></create-album-btn>
-        <bind-social-btn></bind-social-btn>
-      </div>
-      <div class="relative flex justify-between items-center">
+      <div class="ui-container relative flex justify-between items-center">
         <div>
-          <p class="font-bold text-2xl text-highlight">Weekly</p>
-          <span>${until(this.weekRange())}</span>
+          <div class="font-bold text-2xl text-highlight">Weekly</div>
+          <div class="font-light mt-2">${until(this.weekRange())}</div>
         </div>
-        <div><claim-rewards></claim-rewards></div>
+        <div class="flex flex-row-reverse">
+          <claim-rewards></claim-rewards>
+          <bind-social-btn></bind-social-btn>
+          <create-album-btn icon></create-album-btn>
+        </div>
       </div>
-      <div class="ui-container">
+      <div class="ui-container mt-3">
         <top-album></top-album>
       </div>
     </div>`

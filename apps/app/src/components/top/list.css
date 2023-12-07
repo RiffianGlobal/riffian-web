@@ -1,0 +1,4 @@
+th {
+  @apply text-stone-50 font-light mb-2;
+  border-bottom: 1px solid var(--btnBg);
+}

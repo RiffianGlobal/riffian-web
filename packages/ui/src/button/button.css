@@ -44,12 +44,12 @@
     border: 1px solid;
     &:not([disabled]) {
       &:hover {
-        background: #f9f9fe !important;
+        background: var(--btnBgHover) !important;
         color: var(--btnBg);
         border: 1px solid;
       }
       &:active {
-        background: #e3ecf7 !important;
+        background: var(--btnBgActive) !important;
         color: var(--btnBg);
         border: 1px solid;
       }

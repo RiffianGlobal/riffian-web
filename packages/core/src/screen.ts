@@ -20,7 +20,7 @@ type Screen = {
   interacted: boolean
 }
 export const screen: Screen = {
-  isMobi: match(breakpoints.lg),
+  isMobi: match(breakpoints.md),
   md: match(breakpoints.md),
   ratio: globalThis.devicePixelRatio ?? 2,
   ts: 1,
@@ -34,7 +34,7 @@ class ScreenStore extends State {
     const ro = new ResizeObserver(() => {
       this.screen = Object.assign({}, this.screen, {
         ts: this.screen.ts++,
-        isMobi: match(breakpoints.lg),
+        isMobi: match(breakpoints.md),
         md: match(breakpoints.md)
       })
       emitter.emit('force-request-update')

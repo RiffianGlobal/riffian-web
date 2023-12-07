@@ -44,14 +44,15 @@ export class CreateAlbumBtn extends TailwindElement('') {
         ?disabled=${this.pending}
         ?icon=${this.icon}
         ?text=${!this.icon}
-        ?lg=${this.icon}
-        ?sm=${!this.icon}
         @click="${this.open}"
         title="Upload your track"
         >${when(
           this.pending,
           () => html`<i class="i mdi mdi-loading"></i>`,
-          () => (this.icon ? html`<i class="i mdi mdi-plus-circle"></i>` : html`Upload your track`)
+          () =>
+            this.icon
+              ? html`<i class="i mdi mdi-file-upload-outline"></i>`
+              : html`<i class="mdi mdi-file-upload-outline"></i>Upload Your Track`
         )}</ui-button
       >
       <!-- Prompt -->

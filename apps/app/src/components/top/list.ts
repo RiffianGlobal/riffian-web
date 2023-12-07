@@ -9,8 +9,9 @@ import '@riffian-web/ui/src/dialog/prompt'
 import '~/components/rewards/claim'
 import emitter from '@riffian-web/core/src/emitter'
 
+import style from './list.css?inline'
 @customElement('top-album')
-export class NewAlbum extends TailwindElement('') {
+export class NewAlbum extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() albumList: any
   @state() showAlbumVote = false
@@ -65,7 +66,7 @@ export class NewAlbum extends TailwindElement('') {
   }
 
   render() {
-    return html` <div class="grid place-items-center b-1 m-4 p-4 rounded-md">
+    return html`<div>
         ${when(
           this.pending && !this.albumList,
           () =>
@@ -80,7 +81,7 @@ export class NewAlbum extends TailwindElement('') {
         ${when(
           this.albumList,
           () =>
-            html`<table class="w-full text-left border-collapse">
+            html`<table class="w-full text-left border-separate border-spacing-y-2">
               <thead>
                 <th>Rank</th>
                 <th>Author</th>

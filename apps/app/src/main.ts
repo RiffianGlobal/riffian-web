@@ -17,6 +17,10 @@ export class AppMain extends TailwindElement('') {
   bindScreen: any = new StateController(this, screenStore)
   @state() inRoot = false
 
+  get isMobi() {
+    return screenStore.isMobi
+  }
+
   chkView = () => {
     this.inRoot = routerPathroot() === '/'
   }
@@ -32,12 +36,12 @@ export class AppMain extends TailwindElement('') {
   }
 
   render() {
-    return html`<ui-header menuable full avatarOnly avatarSize="32">
+    return html`<ui-header full avatarOnly avatarSize="32">
         <div slot="logo" class="inline-flex justify-center items-center mr-4">
           <a class="inline-flex justify-center items-center font-bold" href="/"><i class="ui-logo"></i></a>
         </div>
         ${when(
-          !screenStore.isMobi,
+          !this.isMobi,
           () =>
             html`<ui-nav slot="right" class="font-bold"
               ><ui-link href="/" nav alias="/">HOME</ui-link>
@@ -46,14 +50,13 @@ export class AppMain extends TailwindElement('') {
             </ui-nav>`
         )}
         <div slot="right"><network-menu avatarOnly></network-menu></div>
-        <div slot="center"><ui-link class="text-gray-600" href="/docs" nav>COMPONENTS</ui-link></div>
       </ui-header>
       <main class="ui-app-main">
         ${when(
           screenStore.isMobi,
           () =>
             html`<ui-nav
-              class="fixed bottom-0 left-0 right-0 z-50 font-bold bg-zinc-700 rounded-t shadow-[0_-10px_15px_-3px_rgba(255,255,255,0.1)] pt-2"
+              class="fixed bottom-2 left-2 right-2 z-50 border border-neutral-800 bg-neutral-900 rounded-2xl"
             >
               <ui-link href="/" nav class="mx-2" alias="/"><i class="mdi mdi-home-outline"></i></ui-link>
               <ui-link href="/upload" nav class="mx-2"><i class="mdi mdi-file-upload-outline"></i></ui-link>
@@ -64,7 +67,13 @@ export class AppMain extends TailwindElement('') {
       </main>
       <ui-footer full>
         <div slot="block"></div>
-        <div slot="right"><block-number></block-number></div>
+        <div slot="right" class="flex">
+          ${when(
+            !(import.meta.env.MODE === 'production'),
+            () => html`<ui-link class="text-sm text-gray-600 mr-2" href="/docs">COMPONENTS</ui-link>`
+          )}
+          <block-number></block-number>
+        </div>
       </ui-footer>`
   }
 }
