@@ -39,15 +39,6 @@ export const routes = [
     }
   },
   {
-    name: 'callback',
-    path: '/callback',
-    render: () => html`<social-callback></social-callback>`,
-    enter: async () => {
-      await import('~/views/callback')
-      return true
-    }
-  },
-  {
     name: 'docs',
     path: '/docs/:anchor?',
     render: ({ anchor = '' }) => html`<view-docs .anchor="${anchor}"></view-docs>`,

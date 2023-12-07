@@ -41,6 +41,9 @@ export const userWeeklyReward = async (addr: string) => {
   const method1 = 'weeklyVotes'
   const para = [week]
   let weeklyVotes = await contract[method1](...para)
+  if (weeklyVotes == 0n) {
+    return 0
+  }
   let weeklyRewards = await weeklyReward()
   return (weeklyRewards * userWeeklyVotes) / weeklyVotes
 }
