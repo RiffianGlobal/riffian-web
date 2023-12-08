@@ -6,14 +6,14 @@ import './dialog'
 import '../address'
 import '../menu/drop'
 import '../copy/icon'
+import '../button'
 
 import style from './btn.css?inline'
 @customElement('connect-wallet-btn')
 export class ConnectWalletBtn extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   @property({ type: Boolean }) dropable = false
-  @property({ type: Number }) avatarSize = 16
-  @property({ type: Boolean }) avatarOnly = false
+  @property({ type: Boolean }) hideAddr = false
 
   @state() dialog = false
   @state() menu = false
@@ -60,14 +60,7 @@ export class ConnectWalletBtn extends TailwindElement(style) {
         dropClass="w-72"
         btnClass="text"
       >
-        <ui-address
-          slot="button"
-          avatar
-          avatarSize=${this.avatarSize}
-          ?avatarOnly=${this.avatarOnly}
-          short
-        ></ui-address>
-        <span slot="icon"></span>
+        <ui-button icon slot="toggle"><ui-address avatar ?hideAddr=${this.hideAddr} short></ui-address></ui-button>
         <!-- Content -->
         <div class="flex w-full justify-between items-center py-3 pl-4 pr-2">
           <div class="flex items-center space-x-2">

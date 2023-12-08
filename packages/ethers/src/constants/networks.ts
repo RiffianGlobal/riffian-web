@@ -24,6 +24,7 @@ export const AllNetworks = {
     provider: 'https://rpc.testnet.fantom.network',
     providerWs: 'wss://rpc.testnet.fantom.network/ws',
     scan: 'https://testnet.ftmscan.com',
+    ens: { address: '', network: 4002 },
     icon: ''
   }
   // '0xaa36a7': {

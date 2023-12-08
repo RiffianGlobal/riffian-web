@@ -36,20 +36,20 @@ export class AppMain extends TailwindElement('') {
   }
 
   render() {
-    return html`<ui-header full avatarOnly avatarSize="32">
+    return html`<ui-header full>
         <div slot="logo" class="inline-flex justify-center items-center mr-4">
           <a class="inline-flex justify-center items-center font-bold" href="/"><i class="ui-logo"></i></a>
         </div>
         ${when(
           !this.isMobi,
           () =>
-            html`<ui-nav slot="right" class="font-bold"
+            html`<ui-nav slot="right" class="font-bold text-2xl"
               ><ui-link href="/" nav alias="/">HOME</ui-link>
               <ui-link href="/uservotes" nav>MY VOTES</ui-link>
               <ui-link href="/upload" nav>UPLOAD</ui-link>
             </ui-nav>`
         )}
-        <div slot="right"><network-menu avatarOnly></network-menu></div>
+        <div slot="right"><network-menu></network-menu></div>
       </ui-header>
       <main class="ui-app-main">
         ${when(

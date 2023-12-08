@@ -16,8 +16,6 @@ export class UIHeader extends TailwindElement(style) {
   @property({ type: Boolean }) full = false
   @property({ type: String }) logoHref = 'https://riffian.global'
   @property({ type: String }) class = ''
-  @property({ type: Number }) avatarSize = 32
-  @property({ type: Boolean }) avatarOnly = false
   @state() menuActive = false
 
   get asMenu() {
@@ -65,7 +63,7 @@ export class UIHeader extends TailwindElement(style) {
           <div class="flex justify-end items-center gap-2 lg_w-60">
             <slot name="right"></slot>
             <slot name="wallet"
-              ><connect-wallet-btn avatarSize=${this.avatarSize} ?avatarOnly=${this.avatarOnly} dropable>
+              ><connect-wallet-btn hideAddr dropable>
                 <div slot="submenu">
                   <slot name="submenu"></slot></div></connect-wallet-btn
             ></slot>
