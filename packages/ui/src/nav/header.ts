@@ -15,6 +15,7 @@ export class UIHeader extends TailwindElement(style) {
   @property({ type: Boolean }) fixed = false
   @property({ type: Boolean }) full = false
   @property({ type: String }) logoHref = 'https://riffian.global'
+  @property({ type: String }) class = ''
   @property({ type: Number }) avatarSize = 32
   @property({ type: Boolean }) avatarOnly = false
   @state() menuActive = false

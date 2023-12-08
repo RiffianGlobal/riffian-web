@@ -1,4 +1,12 @@
-import { TailwindElement, customElement, html, repeat, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import {
+  TailwindElement,
+  classMap,
+  customElement,
+  html,
+  repeat,
+  state,
+  when
+} from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { albumList } from './action'
@@ -81,52 +89,55 @@ export class NewAlbum extends TailwindElement(style) {
         ${when(
           this.albumList,
           () =>
-            html`<table class="w-full text-left border-separate border-spacing-y-2">
-              <thead>
-                <th>Rank</th>
-                <th>Author</th>
-                <th>Collection</th>
-                <th>Track</th>
-                <th>Total Votes</th>
-                <th>Operation${when(this.pending, () => html`<i class="text-sm mdi mdi-loading"></i>`)}</th>
-              </thead>
-              ${repeat(
-                this.albumList,
-                (item: any, i) =>
-                  html`<tr>
-                    <td
-                      class="py-2 pr-2 font-sans	font-medium text-lg leading-6 text-sky-500 whitespace-nowrap dark:text-sky-400"
+            html`<ul role="list">
+                <li class="flex header p-1">
+                  <div class="w-16">Rank</div>
+                  <div class="flex-auto">Collection</div>
+                  <div class="w-16">Volume</div>
+                  ${when(
+                    this.pending,
+                    () =>
+                      html`<div>
+                        <i class="text-sm mdi mdi-loading"></i>
+                        <div></div>
+                      </div>`
+                  )}
+                </li>
+                ${repeat(
+                  this.albumList,
+                  (item: any, i) =>
+                    html`<li
+                      class="flex py-2 item items-center cursor-pointer ${classMap({
+                        'bg-zinc-800/50': i % 2
+                      })}"
+                      @click=${() => {
+                        if (this.disabled) {
+                          emitter.emit('connect-wallet')
+                        } else {
+                          this.albumToVote = item
+                          this.showAlbumVote = true
+                        }
+                      }}
                     >
-                      ${i + 1}
-                    </td>
-                    <td><ui-address .address="${item.owner.account}" short avatar></ui-address></td>
-                    <td>
-                      <p class="w-24 h-24 rounded-md">
-                        <img-loader src=${item.url}></img-loader>
-                      </p>
-                    </td>
-                    <td class="py-2 pl-2 text-lg leading-6 whitespace-pre dark:text-indigo-300 font-sans	">
-                      ${item.name}
-                    </td>
-                    <td><p class="text-lg font-bold text-sky-500 font-sans">${item.totalVotes}</p></td>
-                    <td>
-                      <div name="Dialog" class="doc-intro">
-                        <ui-button
-                          class="outlined"
-                          @click=${() => {
-                            if (this.disabled) {
-                              emitter.emit('connect-wallet')
-                            } else {
-                              this.albumToVote = item
-                              this.showAlbumVote = true
-                            }
-                          }}
-                          >VOTE</ui-button
-                        >
+                      <div class="flex-none w-16 pl-4 text-lg font-light">${i + 1}</div>
+                      <div class="flex-initial flex">
+                        <div class="w-[4.6rem] h-[4.6rem] mr-4">
+                          <img-loader sizes="74px, 74px" src=${item.url}></img-loader>
+                        </div>
+                        <div>
+                          <p class="name truncate mt-2">${item.name}</p>
+                          <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
+                        </div>
                       </div>
-                    </td>
-                  </tr> `
-              )}
+                      <div class="flex-auto text-right pr-3">
+                        <p class="text-2xl">${item.totalVotes * 18}</p>
+                      </div>
+                      <div class="flex-none w-16">
+                        <p class="text-lg  text-green-500 font-light">${'+' + item.totalVotes + '%'}</p>
+                      </div>
+                    </li> `
+                )}
+              </ul>
               ${when(
                 this.showAlbumVote,
                 () =>
@@ -137,8 +148,7 @@ export class NewAlbum extends TailwindElement(style) {
                     votes=${this.albumToVote.votes}
                     @close=${this.close}
                   ></vote-album-dialog>`
-              )}
-            </table>`
+              )} `
         )}
       </div>
       <!-- Prompt -->

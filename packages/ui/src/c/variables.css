@@ -23,7 +23,7 @@
   --colorSuccess: var(--color-success, #4caf50);
   --colorDark: var(--color-dark, #373737);
   /* Buttons */
-  --btnBg: var(--btn-bg, #efeff4);
+  --btnBg: var(--btn-bg, #6366f1);
   --btnBgHover: var(--btn-bg-hover, #4f46e5);
   --btnBgActive: var(--btn-bg-active, #4338ca);
   --btnBgSecondary: var(--btn-bg-secondary, #64748b);

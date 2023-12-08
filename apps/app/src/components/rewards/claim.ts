@@ -70,13 +70,13 @@ export class ClaimRewards extends TailwindElement(style) {
         () => html`<i class="text-lg mdi mdi-loading"></i>`,
         () =>
           html`<div class="text-right">
-            <div class="text-light text-2xl text-highlight">
+            <div class="font-light text-2xl text-highlight">
               <ui-button icon class="ml-1 mx-auto sm" @click="${this.open}" ?disabled="${this.disabled}" title="Claim"
                 ><i class="mdi mdi-hand-coin-outline"></i
               ></ui-button>
               ${formatUnits(this.rewards, 18)}
             </div>
-            <div class="text-light text-green-500 mt-2">${asyncReplace(this.timeCountDown())}</div>
+            <div class="font-light text-green-500 mt-2">${asyncReplace(this.timeCountDown())}</div>
           </div>`
       )}
       ${when(this.dialog, () => html`<claim-reward-dialog @close=${this.close}></claim-reward-dialog>`)}

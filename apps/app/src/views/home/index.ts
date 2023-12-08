@@ -1,4 +1,4 @@
-import { TailwindElement, html, customElement, until } from '@riffian-web/ui/src/shared/TailwindElement'
+import { TailwindElement, html, customElement, until, classMap, when } from '@riffian-web/ui/src/shared/TailwindElement'
 import '~/components/top/list'
 import '~/components/createAlbum/btn'
 import '~/components/createAlbum/socialbtn'
@@ -7,9 +7,16 @@ import '~/components/rewards/claim'
 // Style
 import style from './index.css?inline'
 import { getWeek } from '~/components/rewards/action'
+import { StateController, screenStore } from '@riffian-web/core/src/screen'
 
 @customElement('view-home')
 export class ViewHome extends TailwindElement(style) {
+  bindScreen: any = new StateController(this, screenStore)
+
+  get isSmall() {
+    return screenStore.screen.lg
+  }
+
   connectedCallback() {
     super.connectedCallback()
   }
@@ -35,21 +42,35 @@ export class ViewHome extends TailwindElement(style) {
   }
 
   render() {
-    return html`<div class="ui-container">
-      <div class="ui-container relative flex justify-between items-center">
-        <div>
-          <div class="font-bold text-2xl text-highlight">Weekly</div>
-          <div class="font-light mt-2">${until(this.weekRange())}</div>
+    return html`<div class="flex px-8 space-x-8 place-content-center">
+      <div class="flex-initial w-[32rem]">
+        <div class="flex justify-between h-20">
+          <div>
+            <div class="font-bold text-2xl text-highlight">Weekly</div>
+            <div class="font-light mt-2">${until(this.weekRange())}</div>
+          </div>
+          <div class="flex flex-row-reverse">
+            <claim-rewards></claim-rewards>
+            <bind-social-btn></bind-social-btn>
+            <create-album-btn icon></create-album-btn>
+          </div>
         </div>
-        <div class="flex flex-row-reverse">
-          <claim-rewards></claim-rewards>
-          <bind-social-btn></bind-social-btn>
-          <create-album-btn icon></create-album-btn>
+        <div class="mt-3">
+          <top-album></top-album>
         </div>
       </div>
-      <div class="ui-container mt-3">
-        <top-album></top-album>
-      </div>
+      ${when(
+        !this.isSmall,
+        () =>
+          html` <div class="flex-none w-[32rem]">
+            <div class="h-20 pt-1">
+              <div class="font-bold text-xl">All</div>
+            </div>
+            <div class="mt-3">
+              <top-album></top-album>
+            </div>
+          </div>`
+      )}
     </div>`
   }
 }

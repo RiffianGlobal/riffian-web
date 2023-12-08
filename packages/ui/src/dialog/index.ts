@@ -48,7 +48,7 @@ export class UIDialog extends TailwindElement(style) implements TAILWINDELEMENT 
     return html`
       <div
         part="dialog-container"
-        class="relative !origin-center z-10 bg-white rounded-md ${classMap(
+        class="relative !origin-center z-10 bg-neutral-900 border-neutral-800 border shadow-md shadow-neutral-900 rounded-md ${classMap(
           this.$c([this.model ? 'scale-100 opacity-100 visible' : 'scale-75 opacity-0 invisible'])
         )}"
         ${animate({

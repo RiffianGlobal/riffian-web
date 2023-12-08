@@ -15,6 +15,7 @@ export const match = (v: number) => globalThis.matchMedia(`(max-width: ${v}px)`)
 type Screen = {
   isMobi: boolean
   md: boolean
+  lg: boolean
   ratio: number
   ts: number
   interacted: boolean
@@ -22,6 +23,7 @@ type Screen = {
 export const screen: Screen = {
   isMobi: match(breakpoints.md),
   md: match(breakpoints.md),
+  lg: match(breakpoints.lg),
   ratio: globalThis.devicePixelRatio ?? 2,
   ts: 1,
   interacted: false
@@ -35,7 +37,8 @@ class ScreenStore extends State {
       this.screen = Object.assign({}, this.screen, {
         ts: this.screen.ts++,
         isMobi: match(breakpoints.md),
-        md: match(breakpoints.md)
+        md: match(breakpoints.md),
+        lg: match(breakpoints.lg)
       })
       emitter.emit('force-request-update')
     })
