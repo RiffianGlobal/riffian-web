@@ -129,20 +129,22 @@ export class VoteAlbumDialog extends TailwindElement('') {
       <div slot="center" class="flex mx-4 mt-4">
         <div class="flex grow pb-4">
           <div class="w-24 mr-4"><img-loader src=${this.url}></img-loader></div>
+          <div>
+            <div class="text-lg font-bold">${this.name}</div>
             <div>
-              <div class="text-lg font-bold">${this.name}</div>
-              <div>
               <div class="text-sm font-light text-blue-300">${this.socialName}</div>
               <div class="text-sm font-light text-blue-300">
                 <a href="${this.socialURI}" target="_blank">@${this.socialID}</a>
               </div>
             </div>
             <div class="text-gray-500">
-              You own ${until(this.myVotes, html`<i class="text-sm mdi mdi-loading"></i>`)} votes
+              You own ${until(this.myVotes, html`<i class="text-sm mdi mdi-loading"></i>`)} tickets
             </div>
           </div>
         </div>
         <div class="text-right">
+          <span class="text-lg text-sky-500">${until(this.votes, html`<i class="text-sm mdi mdi-loading"></i>`)}</span>
+          <div class="text-sm text-gray-500">Tickets</div>
           <span class="text-lg text-sky-500"
             >${until(this.price, html`<i class="text-sm mdi mdi-loading"></i>`)} FTM</span
           >
