@@ -52,7 +52,6 @@ export class ViewHome extends TailwindElement(style) {
           <div class="flex flex-row-reverse">
             <claim-rewards></claim-rewards>
             <bind-social-btn></bind-social-btn>
-            <create-album-btn icon></create-album-btn>
           </div>
         </div>
         <div class="mt-3">

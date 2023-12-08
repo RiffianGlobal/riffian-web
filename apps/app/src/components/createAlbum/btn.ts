@@ -7,8 +7,9 @@ import './social'
 import emitter from '@riffian-web/core/src/emitter'
 import { getSocials } from './action'
 
+import style from './btn.css?inline'
 @customElement('create-album-btn')
-export class CreateAlbumBtn extends TailwindElement('') {
+export class CreateAlbumBtn extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   @property({ type: Boolean }) icon = false
 
@@ -40,20 +41,12 @@ export class CreateAlbumBtn extends TailwindElement('') {
   close = () => (this.dialogCreate = false)
 
   render() {
-    return html`<ui-button
-        ?disabled=${this.pending}
-        ?icon=${this.icon}
-        ?text=${!this.icon}
-        @click="${this.open}"
-        title="Upload your track"
+    return html`<span ?disabled=${this.pending} ?icon=${this.icon} @click="${this.open}" title="Upload your track"
         >${when(
           this.pending,
           () => html`<i class="i mdi mdi-loading"></i>`,
-          () =>
-            this.icon
-              ? html`<i class="i mdi mdi-file-upload-outline"></i>`
-              : html`<i class="mdi mdi-file-upload-outline"></i>Upload Your Track`
-        )}</ui-button
+          () => (this.icon ? html`<i class="mdi mdi-file-upload-outline text-3xl text-white"></i>` : html`UPLOAD`)
+        )}</span
       >
       <!-- Prompt -->
       ${when(

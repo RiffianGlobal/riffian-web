@@ -7,7 +7,7 @@
   border-radius: 5px;
   width: 1.25em;
   height: 1.25em;
-  border: 2px solid var(--formBorder);
+  border: 2px solid #424b57;
   &::before {
     content: '';
     @apply block invisible origin-center;

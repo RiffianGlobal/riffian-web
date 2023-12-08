@@ -8,9 +8,9 @@ import '@riffian-web/ui/src/network-warning/menu'
 import '@riffian-web/ui/src/nav/header'
 import '@riffian-web/ui/src/nav/footer'
 import '@riffian-web/ui/src/nav/nav'
-import '@riffian-web/ui/src/link'
 import '@riffian-web/ui/src/block-number'
 import { StateController, screenStore } from '@riffian-web/core/src/screen'
+import '~/components/createAlbum/btn'
 
 @customElement('app-main')
 export class AppMain extends TailwindElement('') {
@@ -46,7 +46,7 @@ export class AppMain extends TailwindElement('') {
             html`<ui-nav slot="right" class="font-bold text-2xl"
               ><ui-link href="/" nav alias="/">HOME</ui-link>
               <ui-link href="/uservotes" nav>MY VOTES</ui-link>
-              <ui-link href="/upload" nav>UPLOAD</ui-link>
+              <create-album-btn></create-album-btn>
             </ui-nav>`
         )}
         <div slot="right"><network-menu></network-menu></div>
@@ -58,9 +58,9 @@ export class AppMain extends TailwindElement('') {
             html`<ui-nav
               class="fixed bottom-2 left-2 right-2 z-50 border border-neutral-800 bg-neutral-900 rounded-2xl"
             >
-              <ui-link href="/" nav class="mx-2" alias="/"><i class="mdi mdi-home-outline"></i></ui-link>
-              <ui-link href="/upload" nav class="mx-2"><i class="mdi mdi-file-upload-outline"></i></ui-link>
-              <ui-link href="/uservotes" nav class="mx-2"><i class="mdi mdi-account-outline"></i></ui-link>
+              <ui-link href="/" nav class="mx-2" alias="/"><i class="mdi mdi-home-outline text-3xl"></i></ui-link>
+              <create-album-btn icon></create-album-btn>
+              <ui-link href="/uservotes" nav class="mx-2"><i class="mdi mdi-account-outline text-3xl"></i></ui-link>
             </ui-nav>`
         )}
         <slot> </slot>

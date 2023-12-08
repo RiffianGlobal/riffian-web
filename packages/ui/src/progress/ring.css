@@ -1,6 +1,6 @@
 :host {
   @apply block relative w-full h-full;
-  --bg: #d2d5db;
+  --bg: #424b57;
   --fg: #4caf50;
 }
 
