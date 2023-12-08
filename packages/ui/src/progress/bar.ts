@@ -40,7 +40,7 @@ export class UIProgressBar extends TailwindElement(style) {
 
   render() {
     return html`<div class="relative flex grow w-full items-center">
-      <div class="bar bg-gray-300 relative block w-full h-1.5 overflow-hidden rounded-full">
+      <div class="bar relative block w-full h-1.5 overflow-hidden rounded-full">
         <p
           class="per pr-1 absolute top-0 h-full rounded-full transition-all ${classMap({ state: this.state })}"
           style=${styleMap({ width: `${this.per}%` })}

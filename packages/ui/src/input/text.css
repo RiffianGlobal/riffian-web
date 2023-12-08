@@ -2,7 +2,7 @@
   @apply flex w-full mx-auto relative py-5;
   & input[type] {
     font-family: var(--fontFamily);
-    @apply h-8 relative inline-flex w-full sm_py-6 py-5 px-3 rounded-md text-sm sm_text-base bg-white transition-all;
+    @apply h-8 relative inline-flex w-full sm_py-6 py-5 px-3 rounded-md text-sm sm_text-base bg-[#424b57] transition-all;
     border: 1px solid var(--formBorder);
   }
   & input[type]:hover,
