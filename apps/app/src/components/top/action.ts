@@ -2,6 +2,7 @@ import { getAccount, getContract, assignOverrides, bridgeStore } from '@riffian-
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
+import fetchJsonP from 'fetch-jsonp'
 
 export const getAlbumContract = async () => getContract('MediaBoard', { account: await getAccount() })
 
@@ -23,6 +24,29 @@ export const vote = async (album: string, amount: number, price: object) => {
       overrides
     }
   })
+}
+
+/**
+ * read from twitter
+ */
+export const readTwitter = async (addr: string) => {
+  try {
+    const contract = await getAlbumContract()
+    console.log(addr)
+    const method = 'getSocials'
+    const parameters = [addr]
+    const socials = await contract[method](...parameters)
+    console.log(addr + ':' + socials)
+    let uri = socials[0][2]
+    console.log('URI:' + uri)
+    uri = 'https://twitter.com/archdeaconsal/status/1732505736616563171'
+    console.log('url:' + 'https://publish.twitter.com/oembed?url=' + encodeURIComponent(uri))
+    let tweet = await fetchJsonP('https://publish.twitter.com/oembed?url=' + encodeURIComponent(uri))
+    console.log(tweet.json())
+    return tweet.json()
+  } catch (err: any) {
+    console.log(err)
+  }
 }
 
 export const retreat = async (album: string, amount: number) => {

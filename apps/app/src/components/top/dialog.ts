@@ -8,7 +8,7 @@ import {
   when
 } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { vote, albumData, votePrice, votePriceWithFee, myVotes, retreatPrice, retreat } from './action'
+import { vote, albumData, votePrice, votePriceWithFee, myVotes, retreatPrice, retreat, readTwitter } from './action'
 import { formatUnits } from 'ethers'
 
 import '@riffian-web/ui/src/button'
@@ -29,6 +29,9 @@ export class VoteAlbumDialog extends TailwindElement('') {
   @state() price: Promise<any> | undefined
   @state() retreatPrice: Promise<any> | undefined
   @state() retreatDisabled = true
+  @state() socialName = null
+  @state() socialURI = null
+  @state() socialID = null
   @state() tx: any = null
   @state() success = false
   @state() pending = false
@@ -38,6 +41,16 @@ export class VoteAlbumDialog extends TailwindElement('') {
   connectedCallback() {
     super.connectedCallback()
     this.getPrice()
+    this.readFromTwitter()
+  }
+
+  async readFromTwitter() {
+    let tweet = await readTwitter(bridgeStore.bridge.account)
+    console.log(tweet)
+    this.socialName = tweet.author_name
+    this.socialURI = tweet.author_url
+    this.socialID = tweet.author_url.substring(tweet.author_url.lastIndexOf('/') + 1, tweet.author_url.length - 1)
+    console.log(this.socialID)
   }
 
   async getPrice() {
@@ -115,9 +128,15 @@ export class VoteAlbumDialog extends TailwindElement('') {
       <p slot="header" class="font-bold">VOTE Track</p>
       <div slot="center" class="flex mx-4 mt-4">
         <div class="flex grow pb-4">
-          <div class="w-16 mr-4"><img-loader src=${this.url}></img-loader></div>
-          <div>
-            <div class="text-lg font-bold">${this.name}</div>
+          <div class="w-24 mr-4"><img-loader src=${this.url}></img-loader></div>
+            <div>
+              <div class="text-lg font-bold">${this.name}</div>
+              <div>
+              <div class="text-sm font-light text-blue-300">${this.socialName}</div>
+              <div class="text-sm font-light text-blue-300">
+                <a href="${this.socialURI}" target="_blank">@${this.socialID}</a>
+              </div>
+            </div>
             <div class="text-gray-500">
               You own ${until(this.myVotes, html`<i class="text-sm mdi mdi-loading"></i>`)} votes
             </div>

@@ -4,6 +4,9 @@ const config = {
   plugins: [],
   theme: {
     extend: {}
+  },
+  fontFamily: {
+    jetb: ['JetBrains Mono', 'monospace']
   }
 }
 const relativeFile = `${process.env.PNPM_SCRIPT_SRC_DIR}/tailwind.config.js`
