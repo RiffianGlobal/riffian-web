@@ -132,6 +132,9 @@ importers:
       '@riffian-web/ui-docs':
         specifier: workspace:latest
         version: link:../../packages/ui-docs
+      fetch-jsonp:
+        specifier: ^1.3.0
+        version: 1.3.0
 
   packages/core:
     dependencies:
@@ -4052,6 +4055,10 @@ packages:
     dependencies:
       reusify: 1.0.4
     dev: true
+
+  /fetch-jsonp@1.3.0:
+    resolution: {integrity: sha512-hxCYGvmANEmpkHpeWY8Kawfa5Z1t2csTpIClIDG/0S92eALWHRU1RnGaj86Tf5Cc0QF+afSa4SQ4pFB2rFM5QA==}
+    dev: false
 
   /figures@3.2.0:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}

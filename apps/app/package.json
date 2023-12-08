@@ -12,7 +12,8 @@
     "@riffian-web/ui": "workspace:latest",
     "@riffian-web/core": "workspace:latest",
     "@riffian-web/ethers": "workspace:latest",
-    "@riffian-web/ui-docs": "workspace:latest"
+    "@riffian-web/ui-docs": "workspace:latest",
+    "fetch-jsonp": "^1.3.0"
   },
   "license": "MIT"
 }
