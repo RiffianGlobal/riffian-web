@@ -10,12 +10,12 @@
     "readable-stream": "^4.4.2",
     "utilShim": "npm:util@^0.12.5"
   },
-  "peerDependencies": {
-    "lit": "^2",
+  "devDependencies": {
+    "@types/readable-stream": "^2.3.15",
     "tsup": "^8"
   },
-  "license": "MIT",
-  "devDependencies": {
-    "@types/readable-stream": "^2.3.15"
-  }
+  "peerDependencies": {
+    "lit": "^2"
+  },
+  "license": "MIT"
 }
