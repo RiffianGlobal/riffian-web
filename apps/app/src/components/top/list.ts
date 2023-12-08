@@ -23,7 +23,7 @@ export class NewAlbum extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() albumList: any
   @state() showAlbumVote = false
-  @state() albumToVote = { id: '', votes: 0, url: '', name: '' }
+  @state() albumToVote = { id: '', votes: 0, url: '', name: '', owner: { account: '' } }
   @state() pending = false
   @state() prompt = false
   @state() promptMessage: string = ''
@@ -53,7 +53,6 @@ export class NewAlbum extends TailwindElement(style) {
     console.log(this.albumList)
     this.pending = false
 
-    let names = ['Beat it', 'You are not alone']
     let urls = [
       'https://m.media-amazon.com/images/M/MV5BMTA5NDBkNzMtNzY3NC00NDhiLWI2OGQtNmU2NGRmMzk3YjdiXkEyXkFqcGdeQXVyMjI0OTk0OTE@._V1_.jpg',
       'https://i1.sndcdn.com/artworks-000329038545-d554xk-t500x500.jpg',
@@ -64,8 +63,8 @@ export class NewAlbum extends TailwindElement(style) {
     ]
     for (var i = 0; i < this.albumList.length; i++) {
       this.albumList[i].url = urls[this.getRandomInt(4)]
-      // this.albumList[i].name = names[this.getRandomInt(2)]
     }
+    console.log(this.albumList)
   }
 
   close = () => {
@@ -146,6 +145,7 @@ export class NewAlbum extends TailwindElement(style) {
                     url=${this.albumToVote.url}
                     name=${this.albumToVote.name}
                     votes=${this.albumToVote.votes}
+                    author=${this.albumToVote.owner.account}
                     @close=${this.close}
                   ></vote-album-dialog>`
               )} `

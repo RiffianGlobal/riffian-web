@@ -32,7 +32,7 @@ export const vote = async (album: string, amount: number, price: object) => {
 export const readTwitter = async (addr: string) => {
   try {
     const contract = await getAlbumContract()
-    console.log(addr)
+    console.log('addr->' + addr)
     const method = 'getSocials'
     const parameters = [addr]
     const socials = await contract[method](...parameters)

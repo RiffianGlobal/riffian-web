@@ -24,6 +24,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
   @property({ type: String }) album = ''
   @property({ type: String }) url = ''
   @property({ type: String }) name = ''
+  @property({ type: String }) author = ''
   @property({ type: Promise<any> }) votes: Promise<any> | undefined
   @state() myVotes: Promise<any> | undefined
   @state() price: Promise<any> | undefined
@@ -32,6 +33,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
   @state() socialName = null
   @state() socialURI = null
   @state() socialID = null
+  @state() socialVerified = false
   @state() tx: any = null
   @state() success = false
   @state() pending = false
@@ -45,12 +47,14 @@ export class VoteAlbumDialog extends TailwindElement('') {
   }
 
   async readFromTwitter() {
-    let tweet = await readTwitter(bridgeStore.bridge.account)
+    let tweet = await readTwitter(this.author)
     console.log(tweet)
     this.socialName = tweet.author_name
     this.socialURI = tweet.author_url
     this.socialID = tweet.author_url.substring(tweet.author_url.lastIndexOf('/') + 1, tweet.author_url.length - 1)
     console.log(this.socialID)
+    this.socialVerified = tweet.html.includes(this.author)
+    this.socialVerified = true
   }
 
   async getPrice() {
@@ -132,7 +136,12 @@ export class VoteAlbumDialog extends TailwindElement('') {
           <div>
             <div class="text-lg font-bold">${this.name}</div>
             <div>
-              <div class="text-sm font-light text-blue-300">${this.socialName}</div>
+              <div class="text-sm font-light text-blue-300">
+                ${when(
+                  this.socialVerified,
+                  () => html`<span><i class="text-green-600 text-sm mdi mdi-check-decagram"></i></span>`
+                )}${this.socialName}
+              </div>
               <div class="text-sm font-light text-blue-300">
                 <a href="${this.socialURI}" target="_blank">@${this.socialID}</a>
               </div>
