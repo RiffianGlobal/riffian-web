@@ -60,16 +60,19 @@ export const weeklyReward = async () => {
   return await contract[method](...parameters)
 }
 
+var weekBegin = 0n
+
 /**
  * calculate week begin time
  * @returns week begin time in seconds
  */
 export const getWeek = async () => {
+  if (weekBegin != 0n) return weekBegin
   const contract = await getAlbumContract()
   const method = 'startTimeStamp'
   let tsStart = await contract[method]()
   const weekSeconds = 7n * 24n * 60n * 60n
   let tsNow = BigInt(new Date().getTime()) / 1000n
-  let tsWeekBegin = tsNow - ((tsNow - tsStart) % weekSeconds)
-  return tsWeekBegin
+  weekBegin = tsNow - ((tsNow - tsStart) % weekSeconds)
+  return weekBegin
 }

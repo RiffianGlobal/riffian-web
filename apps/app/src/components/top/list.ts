@@ -3,13 +3,14 @@ import {
   classMap,
   customElement,
   html,
+  property,
   repeat,
   state,
   when
 } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
-import { albumList } from './action'
+import { albumList, weekList } from './action'
 import '@riffian-web/ui/src/loading/icon'
 import '@riffian-web/ui/src/loading/skeleton'
 import '@riffian-web/ui/src/img/loader'
@@ -18,12 +19,15 @@ import '~/components/rewards/claim'
 import emitter from '@riffian-web/core/src/emitter'
 
 import style from './list.css?inline'
+import { getWeek } from '../rewards/action'
+import { formatUnits } from 'ethers'
 @customElement('top-album')
-export class NewAlbum extends TailwindElement(style) {
+export class TopAlbum extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
+  @property({ type: Boolean }) weekly = false
   @state() albumList: any
   @state() showAlbumVote = false
-  @state() albumToVote = { id: '', votes: 0, url: '', name: '', owner: { account: '' } }
+  @state() albumToVote = { id: '', totalVotes: 0, url: '', name: '', artist: { address: '' } }
   @state() pending = false
   @state() prompt = false
   @state() promptMessage: string = ''
@@ -44,8 +48,9 @@ export class NewAlbum extends TailwindElement(style) {
   init = async () => {
     this.pending = true
     try {
-      let result = await albumList(10)
-      this.albumList = result.subjects
+      let result = this.weekly ? await weekList(10, await getWeek()) : await albumList(10)
+      console.log(result)
+      this.albumList = this.weekly ? result.albumWeeklyVotes : result.albums
     } catch (e: any) {
       this.promptMessage = e
       this.prompt = true
@@ -62,6 +67,11 @@ export class NewAlbum extends TailwindElement(style) {
       'https://i.kfs.io/album/global/25572377,4v1/fit/500x500.jpg'
     ]
     for (var i = 0; i < this.albumList.length; i++) {
+      if (this.weekly) {
+        let weekResult = this.albumList[i]
+        this.albumList[i] = weekResult.album
+        this.albumList[i].volumeTotal = weekResult.volumeTotal
+      }
       this.albumList[i].url = urls[this.getRandomInt(4)]
     }
     console.log(this.albumList)
@@ -70,6 +80,19 @@ export class NewAlbum extends TailwindElement(style) {
   close = () => {
     this.showAlbumVote = false
     this.init()
+  }
+
+  static dayChange(item: any) {
+    if (item.votes.length == 0) {
+      return 'New'
+    } else {
+      let before = item.votes[0].supply,
+        end = item.totalVotes,
+        diff = Math.abs(before - end),
+        change = ((diff * 100.0) / before).toFixed(1)
+      if (before > end) return html`<p class="text-red-500 ">-${change}%</p>`
+      else return html`<p class="text-green-500 ">+${change}%</p>`
+    }
   }
 
   render() {
@@ -92,7 +115,8 @@ export class NewAlbum extends TailwindElement(style) {
                 <li class="flex header p-1">
                   <div class="w-16">Rank</div>
                   <div class="flex-auto">Collection</div>
-                  <div class="w-16">Volume</div>
+                  <div class="flex-auto text-right pr-3">${this.weekly ? 'Volume' : 'Price'}</div>
+                  <div class="flex-none w-16 text-right">24H</div>
                   ${when(
                     this.pending,
                     () =>
@@ -129,11 +153,11 @@ export class NewAlbum extends TailwindElement(style) {
                         </div>
                       </div>
                       <div class="flex-auto text-right pr-3">
-                        <p class="text-2xl">${item.totalVotes * 18}</p>
+                        <p class="text-2xl">
+                          ${this.weekly ? formatUnits(item.volumeTotal, 18) : item.totalVotes / 10}
+                        </p>
                       </div>
-                      <div class="flex-none w-16">
-                        <p class="text-lg  text-green-500 font-light">${'+' + item.totalVotes + '%'}</p>
-                      </div>
+                      <div class="flex-none w-16 text-lg font-light">${TopAlbum.dayChange(item)}</div>
                     </li> `
                 )}
               </ul>
@@ -144,8 +168,8 @@ export class NewAlbum extends TailwindElement(style) {
                     album=${this.albumToVote.id}
                     url=${this.albumToVote.url}
                     name=${this.albumToVote.name}
-                    votes=${this.albumToVote.votes}
-                    author=${this.albumToVote.owner.account}
+                    votes=${this.albumToVote.totalVotes}
+                    author=${this.albumToVote.artist.address}
                     @close=${this.close}
                   ></vote-album-dialog>`
               )} `

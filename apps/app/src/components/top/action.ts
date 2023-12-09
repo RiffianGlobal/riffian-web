@@ -121,27 +121,48 @@ export const votePriceWithFee = async (album: string) => {
   return await contract[method](...parameters)
 }
 
+export const weekList = async (count: Number, week: BigInt) => {
+  const daySeconds = 24n * 60n * 60n
+  let time = BigInt(new Date().getTime()) / 1000n - daySeconds
+  let queryJSON = `{
+      albumWeeklyVotes(first: ${count}, where:{week:${week}}, orderBy: volumeTotal, orderDirection:desc) {
+        id
+        volumeTotal
+        album {
+          id
+          name
+          image
+          url
+          totalVotes
+          artist {
+            address
+          }
+          votes(first:1, where:{time_lt:${time}} orderBy:time, orderDirection:desc){
+            supply
+          }
+        }
+      }
+    }`
+  let result = await graphQuery('MediaBoard', queryJSON)
+  return result
+}
+
 export const albumList = async (count: Number) => {
-  let queryJSON =
-    `{
-      subjects(first: ` +
-    count +
-    `) {
+  const daySeconds = 24n * 60n * 60n
+  let time = BigInt(new Date().getTime()) / 1000n - daySeconds
+  let queryJSON = `{
+      albums(first: ${count}, orderBy:totalVotes, orderDirection:desc) {
         id
         image
         name
-        owner {
-          account
-          socials {
-            platform
-            uri
-          }
-          totalVotes
-        }
-        subject
+        url
         totalVotes
-        updatedTimestamp
-        uri
+        artist {
+          address
+        }
+        votes(first:1, where:{time_lt:${time}} orderBy:time, orderDirection:desc){
+          supply
+        }
       }
     }`
   let result = await graphQuery('MediaBoard', queryJSON)

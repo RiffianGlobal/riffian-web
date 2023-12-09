@@ -55,7 +55,7 @@ export class ViewHome extends TailwindElement(style) {
           </div>
         </div>
         <div class="mt-3">
-          <top-album></top-album>
+          <top-album weekly></top-album>
         </div>
       </div>
       ${when(
