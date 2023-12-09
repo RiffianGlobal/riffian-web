@@ -56,28 +56,20 @@ export const retreat = async (subject: string, amount: number) => {
 }
 
 export const userVotes = async (addr: string) => {
-  let queryJSON =
-    `{
-      userVotes(
-        where: {voter_: {account: "` +
-    addr +
-    `"}}
-      ) {
-        amount
-        id
-        isVote
-        updatedBlock
-        subject {
+  let queryJSON = `{
+      userAlbumVotes(where:{holding_gt:0,user:"${addr.toLowerCase()}"}) {
+        holding
+        votes
+        album {
           id
-          image
           name
-          owner {
-            account
-            id
+          image
+          url
+          totalVotes
+          artist{
+            address
           }
         }
-        supply
-        value
       }
     }`
   let result = await graphQuery('MediaBoard', queryJSON)
