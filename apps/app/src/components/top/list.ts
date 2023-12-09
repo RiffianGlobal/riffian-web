@@ -52,8 +52,10 @@ export class TopAlbum extends TailwindElement(style) {
       console.log(result)
       this.albumList = this.weekly ? result.albumWeeklyVotes : result.albums
     } catch (e: any) {
+      console.error(e)
       this.promptMessage = e
       this.prompt = true
+      return
     }
     console.log(this.albumList)
     this.pending = false

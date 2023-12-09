@@ -1,6 +1,7 @@
 import { getAccount, getContract, assignOverrides } from '@riffian-web/ethers/src/useBridge'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
+import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 
 export const getAlbumContract = async () => getContract('MediaBoard', { account: await getAccount() })
 
@@ -62,17 +63,35 @@ export const weeklyReward = async () => {
 
 var weekBegin = 0n
 
+export const latestWeek = async () => {
+  let queryJSON = `{
+      statistic(id:"riffian") {
+        week
+      }
+    }`
+  let result = await graphQuery('MediaBoard', queryJSON)
+  return result
+}
+
 /**
  * calculate week begin time
  * @returns week begin time in seconds
  */
 export const getWeek = async () => {
   if (weekBegin != 0n) return weekBegin
-  const contract = await getAlbumContract()
-  const method = 'startTimeStamp'
-  let tsStart = await contract[method]()
   const weekSeconds = 7n * 24n * 60n * 60n
-  let tsNow = BigInt(new Date().getTime()) / 1000n
-  weekBegin = tsNow - ((tsNow - tsStart) % weekSeconds)
+  try {
+    const contract = await getAlbumContract()
+    const method = 'startTimeStamp'
+    let tsStart = await contract[method]()
+    let tsNow = BigInt(new Date().getTime()) / 1000n
+    weekBegin = tsNow - ((tsNow - tsStart) % weekSeconds)
+  } catch (e) {
+    let week = await latestWeek(),
+      tsNow = BigInt(new Date().getTime()) / 1000n
+    weekBegin = BigInt(week.statistic.week)
+    weekBegin = tsNow - ((tsNow - weekBegin) % weekSeconds)
+    console.log('weekbegin', week, weekBegin)
+  }
   return weekBegin
 }

@@ -51,12 +51,10 @@ export class ClaimRewards extends TailwindElement(style) {
     try {
       this.pending = true
       let result = await weeklyReward()
-      console.log(result)
       this.rewards = result
-    } catch (err: any) {
-      let msg = err.message || err.code
-    } finally {
       this.pending = false
+    } catch (err: any) {
+      console.error('claim', err)
     }
   }
 
@@ -65,20 +63,24 @@ export class ClaimRewards extends TailwindElement(style) {
 
   render() {
     return html`
-      ${when(
-        this.pending,
-        () => html`<i class="text-lg mdi mdi-loading"></i>`,
-        () =>
-          html`<div class="text-right">
-            <div class="font-light text-2xl text-highlight">
-              <ui-button icon class="ml-1 mx-auto sm" @click="${this.open}" ?disabled="${this.disabled}" title="Claim"
-                ><i class="mdi mdi-hand-coin-outline"></i
-              ></ui-button>
-              ${formatUnits(this.rewards, 18)}
-            </div>
-            <div class="font-light text-green-500 mt-2">${asyncReplace(this.timeCountDown())}</div>
-          </div>`
-      )}
+      <div class="text-right">
+        <div class="font-light text-2xl text-highlight">
+          ${when(
+            this.pending,
+            () => html`<i class="text-lg mdi mdi-loading"></i>`,
+            () =>
+              html`<ui-button
+                  icon
+                  class="ml-1 mx-auto sm"
+                  @click="${this.open}"
+                  ?disabled="${this.disabled}"
+                  title="Claim"
+                  ><i class="mdi mdi-hand-coin-outline"></i></ui-button
+                >${formatUnits(this.rewards, 18)}`
+          )}
+        </div>
+        <div class="font-light text-green-500 mt-2">${asyncReplace(this.timeCountDown())}</div>
+      </div>
       ${when(this.dialog, () => html`<claim-reward-dialog @close=${this.close}></claim-reward-dialog>`)}
     `
   }

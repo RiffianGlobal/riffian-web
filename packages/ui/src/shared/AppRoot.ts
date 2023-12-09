@@ -44,6 +44,12 @@ export default function ({ routes = <RouteConfig[]>[], hashMode = false } = {}) 
       if (network.unSupported) {
         bridgeStore.bridge.switchNetwork(Network.defaultChainId)
       }
+      emitter.on('wallet-changed', () => {
+        let network: Network = bridgeStore.bridge.network
+        if (network.unSupported) {
+          bridgeStore.bridge.switchNetwork(Network.defaultChainId)
+        }
+      })
     }
 
     render() {
