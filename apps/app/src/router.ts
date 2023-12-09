@@ -38,29 +38,31 @@ export const routes = [
       return true
     }
   },
-  {
-    name: 'docs',
-    path: '/docs/:anchor?',
-    render: ({ anchor = '' }) => html`<view-docs .anchor="${anchor}"></view-docs>`,
-    enter: async ({ anchor = '' }) => {
-      await import('~/views/docs')
-      const scroll2 = () => {
-        const target: HTMLElement | null | undefined = document!
-          .querySelector('app-root')
-          ?.shadowRoot?.querySelector('app-main')
-          ?.querySelector('view-docs')
-          ?.shadowRoot?.querySelector('ui-docs')
-          ?.shadowRoot?.querySelector('ui-components')
-          ?.shadowRoot?.querySelector(`[name="${anchor}"]`)
-        let top = target?.offsetTop ?? 0
-        if (top && top < 200) top = 0
-        window.scrollTo(0, top)
+  import.meta.env.MODE === 'production'
+    ? {}
+    : {
+        name: 'docs',
+        path: '/docs/:anchor?',
+        render: ({ anchor = '' }) => html`<view-docs .anchor="${anchor}"></view-docs>`,
+        enter: async ({ anchor = '' }) => {
+          await import('~/views/docs')
+          const scroll2 = () => {
+            const target: HTMLElement | null | undefined = document!
+              .querySelector('app-root')
+              ?.shadowRoot?.querySelector('app-main')
+              ?.querySelector('view-docs')
+              ?.shadowRoot?.querySelector('ui-docs')
+              ?.shadowRoot?.querySelector('ui-components')
+              ?.shadowRoot?.querySelector(`[name="${anchor}"]`)
+            let top = target?.offsetTop ?? 0
+            if (top && top < 200) top = 0
+            window.scrollTo(0, top)
+          }
+          setTimeout(scroll2)
+          emitter.on('docs-loaded', scroll2)
+          return true
+        }
       }
-      setTimeout(scroll2)
-      emitter.on('docs-loaded', scroll2)
-      return true
-    }
-  }
 ]
 
 export default routes
