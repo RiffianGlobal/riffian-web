@@ -8,8 +8,19 @@ import {
   when
 } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { vote, albumData, votePrice, votePriceWithFee, myVotes, retreatPrice, retreat, readTwitter } from './action'
+import {
+  vote,
+  albumData,
+  votePrice,
+  votePriceWithFee,
+  myVotes,
+  retreatPrice,
+  retreat,
+  readTwitter,
+  getSocials
+} from './action'
 import { formatUnits } from 'ethers'
+import { tweetStore, Tweet } from './tweet'
 
 import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/input/text'
@@ -21,6 +32,7 @@ const defErr = () => ({ tx: '' })
 @customElement('vote-album-dialog')
 export class VoteAlbumDialog extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
+  bindTweets: any = new StateController(this, tweetStore)
   @property({ type: String }) album = ''
   @property({ type: String }) url = ''
   @property({ type: String }) name = ''
@@ -30,9 +42,9 @@ export class VoteAlbumDialog extends TailwindElement('') {
   @state() price: Promise<any> | undefined
   @state() retreatPrice: Promise<any> | undefined
   @state() retreatDisabled = true
-  @state() socialName = null
-  @state() socialURI = null
-  @state() socialID = null
+  @state() socialName = ''
+  @state() socialURI = ''
+  @state() socialID = ''
   @state() socialVerified = false
   @state() tx: any = null
   @state() success = false
@@ -46,9 +58,30 @@ export class VoteAlbumDialog extends TailwindElement('') {
     this.readFromTwitter()
   }
 
+  get tweets() {
+    return tweetStore.tweets
+  }
+
+  readFromLocal(key: any) {
+    let result: Tweet = { key: '', author_name: '', author_url: '', html: '' }
+    this.tweets.some((tweet: any) => {
+      if (tweet.key == key) {
+        result = tweet
+      }
+    })
+    return result
+  }
+
   async readFromTwitter() {
-    let tweet = await readTwitter(this.author)
-    console.log(tweet)
+    let uri = await getSocials(this.author)
+    let tweet: Tweet = this.readFromLocal(uri)
+    console.log('Read from localStorage:' + JSON.stringify(tweet) + 'uri:' + uri)
+    if (tweet.key.length == 0) {
+      tweet = await readTwitter(this.author)
+      tweet['key'] = uri
+      this.tweets.unshift(tweet)
+      tweetStore.save()
+    }
     this.socialName = tweet.author_name
     this.socialURI = tweet.author_url
     this.socialID = tweet.author_url.substring(tweet.author_url.lastIndexOf('/') + 1, tweet.author_url.length - 1)
