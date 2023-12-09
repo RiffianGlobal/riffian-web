@@ -75,7 +75,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
   async readFromTwitter() {
     let uri = await getSocials(this.author)
     let tweet: Tweet = this.readFromLocal(uri)
-    console.log('Read from localStorage:' + JSON.stringify(tweet) + 'uri:' + uri)
+    console.log('Read tweet from localStorage')
     if (tweet.key.length == 0) {
       tweet = await readTwitter(this.author)
       tweet['key'] = uri
