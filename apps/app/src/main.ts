@@ -43,24 +43,25 @@ export class AppMain extends TailwindElement('') {
         ${when(
           !this.isMobi,
           () =>
-            html`<ui-nav slot="right" class="font-bold text-2xl"
-              ><ui-link href="/" nav alias="/">HOME</ui-link>
+            html`<ui-nav slot="right" class="font-bold text-2xl">
+              <ui-link href="/" nav alias="/">HOME</ui-link>
               <ui-link href="/uservotes" nav>MY VOTES</ui-link>
               <create-album-btn></create-album-btn>
             </ui-nav>`
         )}
         <div slot="right"><network-menu></network-menu></div>
+        <ui-link slot="left" href="https://faucet.fantom.network/" class="text-neutral-400">FAUCET</ui-link>
       </ui-header>
       <main class="ui-app-main">
         ${when(
           screenStore.isMobi,
           () =>
             html`<ui-nav
-              class="fixed bottom-2 left-2 right-2 z-50 border border-neutral-800 bg-neutral-900 rounded-2xl"
+              class="fixed bottom-2 left-2 right-2 z-50 border border-neutral-800 bg-neutral-900 rounded-2xl space-x-2"
             >
-              <ui-link href="/" nav class="mx-2" alias="/"><i class="mdi mdi-home-outline text-3xl"></i></ui-link>
+              <ui-link href="/" nav alias="/"><i class="mdi mdi-home-outline text-3xl"></i></ui-link>
               <create-album-btn icon></create-album-btn>
-              <ui-link href="/uservotes" nav class="mx-2"><i class="mdi mdi-account-outline text-3xl"></i></ui-link>
+              <ui-link href="/uservotes" nav><i class="mdi mdi-account-outline text-3xl"></i></ui-link>
             </ui-nav>`
         )}
         <slot> </slot>

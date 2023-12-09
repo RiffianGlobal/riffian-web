@@ -1,0 +1,10 @@
+.text-highlight {
+  color: var(--colorHighlight);
+}
+svg {
+  @apply overflow-hidden rounded-full inline-flex items-center;
+  background: rgb(200, 20, 68);
+  & svg {
+    @apply w-full h-full;
+  }
+}

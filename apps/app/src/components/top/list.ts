@@ -72,7 +72,7 @@ export class TopAlbum extends TailwindElement(style) {
         this.albumList[i] = weekResult.album
         this.albumList[i].volumeTotal = weekResult.volumeTotal
       }
-      this.albumList[i].url = urls[this.getRandomInt(4)]
+      // this.albumList[i].url = urls[this.getRandomInt(4)]
     }
     console.log(this.albumList)
   }
@@ -130,7 +130,7 @@ export class TopAlbum extends TailwindElement(style) {
                   this.albumList,
                   (item: any, i) =>
                     html`<li
-                      class="flex py-2 item items-center cursor-pointer ${classMap({
+                      class="flex py-2 items-center cursor-pointer ${classMap({
                         'bg-zinc-800/50': i % 2
                       })}"
                       @click=${() => {
@@ -154,7 +154,7 @@ export class TopAlbum extends TailwindElement(style) {
                       </div>
                       <div class="flex-auto text-right pr-3">
                         <p class="text-2xl">
-                          ${this.weekly ? formatUnits(item.volumeTotal, 18) : item.totalVotes / 10}
+                          ${this.weekly ? formatUnits(item.volumeTotal, 18) : (Number(item.totalVotes) + 1) / 10}
                         </p>
                       </div>
                       <div class="flex-none w-16 text-lg font-light">${TopAlbum.dayChange(item)}</div>
