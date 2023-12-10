@@ -125,19 +125,19 @@ export const weekList = async (count: Number, week: BigInt) => {
   const daySeconds = 24n * 60n * 60n
   let time = BigInt(new Date().getTime()) / 1000n - daySeconds
   let queryJSON = `{
-      albumWeeklyVotes(first: ${count}, where:{week:${week}}, orderBy: volumeTotal, orderDirection:desc) {
+      subjectWeeklyVotes(first: ${count}, where:{week:${week}}, orderBy: volumeTotal, orderDirection:desc) {
         id
         volumeTotal
-        album {
+        subject {
           id
           name
           image
-          url
-          totalVotes
-          artist {
+          uri
+          supply
+          creator {
             address
           }
-          votes(first:1, where:{time_lt:${time}} orderBy:time, orderDirection:desc){
+          voteLogs(first:1, where:{time_lt:${time}} orderBy:time, orderDirection:desc){
             supply
           }
         }
@@ -151,16 +151,16 @@ export const albumList = async (count: Number) => {
   const daySeconds = 24n * 60n * 60n
   let time = BigInt(new Date().getTime()) / 1000n - daySeconds
   let queryJSON = `{
-      albums(first: ${count}, orderBy:totalVotes, orderDirection:desc) {
+      subjects(first: ${count}, orderBy:supply, orderDirection:desc) {
         id
         image
         name
-        url
-        totalVotes
-        artist {
+        uri
+        supply
+        creator {
           address
         }
-        votes(first:1, where:{time_lt:${time}} orderBy:time, orderDirection:desc){
+        voteLogs(first:1, where:{time_lt:${time}} orderBy:time, orderDirection:desc){
           supply
         }
       }

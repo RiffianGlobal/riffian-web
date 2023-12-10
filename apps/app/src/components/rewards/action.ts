@@ -73,6 +73,16 @@ export const latestWeek = async () => {
   return result
 }
 
+export const weekStatistic = async (week: any) => {
+  let queryJSON = `{
+      weeklyStatistic(id:"${week}") {
+        volumeVote
+      }
+    }`
+  let result = await graphQuery('MediaBoard', queryJSON)
+  return result
+}
+
 /**
  * calculate week begin time
  * @returns week begin time in seconds
@@ -91,7 +101,6 @@ export const getWeek = async () => {
       tsNow = BigInt(new Date().getTime()) / 1000n
     weekBegin = BigInt(week.statistic.week)
     weekBegin = tsNow - ((tsNow - weekBegin) % weekSeconds)
-    console.log('weekbegin', week, weekBegin)
   }
   return weekBegin
 }

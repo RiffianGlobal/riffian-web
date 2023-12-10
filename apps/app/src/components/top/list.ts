@@ -25,9 +25,9 @@ import { formatUnits } from 'ethers'
 export class TopAlbum extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   @property({ type: Boolean }) weekly = false
-  @state() albumList: any
+  @state() subjectList: any
   @state() showAlbumVote = false
-  @state() albumToVote = { id: '', totalVotes: 0, url: '', name: '', artist: { address: '' } }
+  @state() albumToVote = { id: '', supply: 0, url: '', name: '', creator: { address: '' } }
   @state() pending = false
   @state() prompt = false
   @state() promptMessage: string = ''
@@ -49,15 +49,13 @@ export class TopAlbum extends TailwindElement(style) {
     this.pending = true
     try {
       let result = this.weekly ? await weekList(10, await getWeek()) : await albumList(10)
-      console.log(result)
-      this.albumList = this.weekly ? result.albumWeeklyVotes : result.albums
+      this.subjectList = this.weekly ? result.subjectWeeklyVotes : result.subjects
     } catch (e: any) {
       console.error(e)
       this.promptMessage = e
       this.prompt = true
       return
     }
-    console.log(this.albumList)
     this.pending = false
 
     let urls = [
@@ -68,15 +66,14 @@ export class TopAlbum extends TailwindElement(style) {
       'https://upload.wikimedia.org/wikipedia/zh/5/5e/21_Adele_Album.jpg',
       'https://i.kfs.io/album/global/25572377,4v1/fit/500x500.jpg'
     ]
-    for (var i = 0; i < this.albumList.length; i++) {
+    for (var i = 0; i < this.subjectList.length; i++) {
       if (this.weekly) {
-        let weekResult = this.albumList[i]
-        this.albumList[i] = weekResult.album
-        this.albumList[i].volumeTotal = weekResult.volumeTotal
+        let weekResult = this.subjectList[i]
+        this.subjectList[i] = weekResult.subject
+        this.subjectList[i].volumeTotal = weekResult.volumeTotal
       }
       // this.albumList[i].url = urls[this.getRandomInt(4)]
     }
-    console.log(this.albumList)
   }
 
   close = () => {
@@ -85,11 +82,11 @@ export class TopAlbum extends TailwindElement(style) {
   }
 
   static dayChange(item: any) {
-    if (item.votes.length == 0) {
+    if (item.voteLogs.length == 0) {
       return 'New'
     } else {
-      let before = item.votes[0].supply,
-        end = item.totalVotes,
+      let before = item.voteLogs[0].supply,
+        end = item.supply,
         diff = Math.abs(before - end),
         change = ((diff * 100.0) / before).toFixed(1)
       if (before > end) return html`<p class="text-red-500 ">-${change}%</p>`
@@ -100,7 +97,7 @@ export class TopAlbum extends TailwindElement(style) {
   render() {
     return html`<div>
         ${when(
-          this.pending && !this.albumList,
+          this.pending && !this.subjectList,
           () =>
             html`<div name="Loading" class="doc-intro">
               <div class="flex flex-col gap-8 m-8">
@@ -111,7 +108,7 @@ export class TopAlbum extends TailwindElement(style) {
             </div>`
         )}
         ${when(
-          this.albumList,
+          this.subjectList,
           () =>
             html`<ul role="list">
                 <li class="flex header p-1">
@@ -129,7 +126,7 @@ export class TopAlbum extends TailwindElement(style) {
                   )}
                 </li>
                 ${repeat(
-                  this.albumList,
+                  this.subjectList,
                   (item: any, i) =>
                     html`<li
                       class="flex py-2 items-center cursor-pointer ${classMap({
@@ -147,7 +144,7 @@ export class TopAlbum extends TailwindElement(style) {
                       <div class="flex-none w-16 pl-4 text-lg font-light">${i + 1}</div>
                       <div class="flex-initial flex">
                         <div class="w-[4.6rem] h-[4.6rem] mr-4">
-                          <img-loader sizes="74px, 74px" src=${item.url}></img-loader>
+                          <img-loader sizes="74px, 74px" src=${item.uri}></img-loader>
                         </div>
                         <div>
                           <p class="name truncate mt-2">${item.name}</p>
@@ -156,7 +153,7 @@ export class TopAlbum extends TailwindElement(style) {
                       </div>
                       <div class="flex-auto text-right pr-3">
                         <p class="text-2xl">
-                          ${this.weekly ? formatUnits(item.volumeTotal, 18) : (Number(item.totalVotes) + 1) / 10}
+                          ${this.weekly ? formatUnits(item.volumeTotal, 18) : (Number(item.supply) + 1) / 10}
                         </p>
                       </div>
                       <div class="flex-none w-16 text-lg font-light">${TopAlbum.dayChange(item)}</div>
@@ -168,10 +165,10 @@ export class TopAlbum extends TailwindElement(style) {
                 () =>
                   html`<vote-album-dialog
                     album=${this.albumToVote.id}
-                    url=${this.albumToVote.url}
+                    url=${this.albumToVote.uri}
                     name=${this.albumToVote.name}
-                    votes=${this.albumToVote.totalVotes}
-                    author=${this.albumToVote.artist.address}
+                    votes=${this.albumToVote.supply}
+                    author=${this.albumToVote.creator.address}
                     @close=${this.close}
                   ></vote-album-dialog>`
               )} `

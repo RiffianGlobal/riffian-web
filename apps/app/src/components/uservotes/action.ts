@@ -57,16 +57,16 @@ export const retreat = async (subject: string, amount: number) => {
 
 export const userVotes = async (addr: string) => {
   let queryJSON = `{
-      userAlbumVotes(where:{holding_gt:0,user:"${addr.toLowerCase()}"}) {
+      userSubjectVotes(where:{holding_gt:0,user:"${addr.toLowerCase()}"}) {
         holding
         votes
-        album {
+        subject {
           id
           name
           image
-          url
-          totalVotes
-          artist{
+          uri
+          supply
+          creator{
             address
           }
         }

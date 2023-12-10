@@ -32,7 +32,7 @@ export class UserVotesList extends TailwindElement('') {
   init = async () => {
     this.pending = true
     let result = await userVotes(bridgeStore.bridge.account)
-    this.userVotes = result.userAlbumVotes
+    this.userVotes = result.userSubjectVotes
     this.pending = false
   }
 
@@ -67,14 +67,14 @@ export class UserVotesList extends TailwindElement('') {
                 html`<tr>
                   <td>
                     <p class="w-24 h-24 rounded-md">
-                      <img-loader src=${item.album.image} loading="lazy"></img-loader>
+                      <img-loader src=${item.subject.image} loading="lazy"></img-loader>
                     </p>
                   </td>
                   <td class="py-2 pl-2 text-lg leading-6 whitespace-pre dark:text-indigo-300 font-sans">
-                    ${item.album.name}
+                    ${item.subject.name}
                   </td>
-                  <td><ui-address .address="${item.album.artist.address}" short avatar></ui-address></td>
-                  <td><p class="text-sm font-bold font-sans">${item.album.totalVotes / 10}</p></td>
+                  <td><ui-address .address="${item.subject.creator.address}" short avatar></ui-address></td>
+                  <td><p class="text-sm font-bold font-sans">${item.subject.supply / 10}</p></td>
                   <td><p class="text-lg font-bold text-sky-500 font-sans">${item.holding}</p></td>
                   <td>
                     <div name="Dialog" class="doc-intro">
@@ -82,18 +82,18 @@ export class UserVotesList extends TailwindElement('') {
                         class="outlined"
                         ?disabled="${this.disabled}"
                         @click=${() => {
-                          this.currentAlbum = item.album
+                          this.currentAlbum = item.subject
                           this.dialog = true
                         }}
                         >RETREAT</ui-button
                       >
                       ${when(
-                        this.dialog && item.album.id == this.currentAlbum.id,
+                        this.dialog && item.subject.id == this.currentAlbum.id,
                         () =>
                           html`<retreat-vote-dialog
-                            album=${item.album.id}
-                            url=${item.album.image}
-                            votes=${item.album.totalVotes}
+                            album=${item.subject.id}
+                            url=${item.subject.image}
+                            votes=${item.subject.supply}
                             @close=${this.close}
                           ></retreat-vote-dialog>`
                       )}

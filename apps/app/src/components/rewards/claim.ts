@@ -1,7 +1,7 @@
 import { TailwindElement, customElement, html, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
 import { asyncReplace } from 'lit/directives/async-replace.js'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { getWeek, weeklyReward } from './action'
+import { getWeek, weekStatistic, weeklyReward } from './action'
 import { formatUnits } from 'ethers'
 // Components
 import '@riffian-web/ui/src/button'
@@ -12,7 +12,7 @@ import style from './claim.css?inline'
 export class ClaimRewards extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
 
-  @state() rewards = 0
+  @state() rewards = 0n
   @state() pending = true
   @state() dialog = false
 
@@ -50,8 +50,12 @@ export class ClaimRewards extends TailwindElement(style) {
   async weeklyRewards() {
     try {
       this.pending = true
-      let result = await weeklyReward()
-      this.rewards = result
+      try {
+        this.rewards = await weeklyReward()
+      } catch (e) {
+        let week = await weekStatistic(await getWeek())
+        this.rewards = (BigInt(week.weeklyStatistic.volumeVote) * 4n) / 100n
+      }
       this.pending = false
     } catch (err: any) {
       console.error('claim', err)
