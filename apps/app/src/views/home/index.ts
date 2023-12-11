@@ -3,6 +3,7 @@ import '~/components/top/list'
 import '~/components/createAlbum/btn'
 import '~/components/createAlbum/socialbtn'
 import '~/components/rewards/claim'
+import '~/components/latest/votes'
 
 // Style
 import style from './index.css?inline'
@@ -55,20 +56,24 @@ export class ViewHome extends TailwindElement(style) {
           </div>
         </div>
         <div class="mt-3">
-          <top-album></top-album>
+          <top-album weekly></top-album>
         </div>
       </div>
       ${when(
         !this.isSmall,
-        () =>
-          html` <div class="flex-none w-[32rem]">
+        () => html`
+          <div class="flex-initial w-[32rem]">
             <div class="h-20 pt-1">
               <div class="font-bold text-xl">All</div>
             </div>
             <div class="mt-3">
               <top-album></top-album>
             </div>
-          </div>`
+          </div>
+          <div class="flex-initial w-32 pt-16">
+            <latest-votes />
+          </div>
+        `
       )}
     </div>`
   }

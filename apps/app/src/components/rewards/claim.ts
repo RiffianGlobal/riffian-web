@@ -1,7 +1,7 @@
 import { TailwindElement, customElement, html, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
 import { asyncReplace } from 'lit/directives/async-replace.js'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { getWeek, weeklyReward } from './action'
+import { getWeek, weekStatistic, weeklyReward } from './action'
 import { formatUnits } from 'ethers'
 // Components
 import '@riffian-web/ui/src/button'
@@ -12,7 +12,7 @@ import style from './claim.css?inline'
 export class ClaimRewards extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
 
-  @state() rewards = 0
+  @state() rewards = 0n
   @state() pending = true
   @state() dialog = false
 
@@ -50,13 +50,15 @@ export class ClaimRewards extends TailwindElement(style) {
   async weeklyRewards() {
     try {
       this.pending = true
-      let result = await weeklyReward()
-      console.log(result)
-      this.rewards = result
-    } catch (err: any) {
-      let msg = err.message || err.code
-    } finally {
+      try {
+        this.rewards = await weeklyReward()
+      } catch (e) {
+        let week = await weekStatistic(await getWeek())
+        this.rewards = (BigInt(week.weeklyStatistic.volumeVote) * 4n) / 100n
+      }
       this.pending = false
+    } catch (err: any) {
+      console.error('claim', err)
     }
   }
 
@@ -65,20 +67,24 @@ export class ClaimRewards extends TailwindElement(style) {
 
   render() {
     return html`
-      ${when(
-        this.pending,
-        () => html`<i class="text-lg mdi mdi-loading"></i>`,
-        () =>
-          html`<div class="text-right">
-            <div class="font-light text-2xl text-highlight">
-              <ui-button icon class="ml-1 mx-auto sm" @click="${this.open}" ?disabled="${this.disabled}" title="Claim"
-                ><i class="mdi mdi-hand-coin-outline"></i
-              ></ui-button>
-              ${formatUnits(this.rewards, 18)}
-            </div>
-            <div class="font-light text-green-500 mt-2">${asyncReplace(this.timeCountDown())}</div>
-          </div>`
-      )}
+      <div class="text-right">
+        <div class="font-light text-2xl text-highlight">
+          ${when(
+            this.pending,
+            () => html`<i class="text-lg mdi mdi-loading"></i>`,
+            () =>
+              html`<ui-button
+                  icon
+                  class="ml-1 mx-auto sm"
+                  @click="${this.open}"
+                  ?disabled="${this.disabled}"
+                  title="Claim"
+                  ><i class="mdi mdi-hand-coin-outline"></i></ui-button
+                >${formatUnits(this.rewards, 18)}`
+          )}
+        </div>
+        <div class="font-light text-green-500 mt-2">${asyncReplace(this.timeCountDown())}</div>
+      </div>
       ${when(this.dialog, () => html`<claim-reward-dialog @close=${this.close}></claim-reward-dialog>`)}
     `
   }

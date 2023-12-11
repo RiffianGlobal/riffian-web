@@ -10,9 +10,10 @@
   },
   "keywords": [],
   "dependencies": {
-    "@riffian-web/ui": "workspace:latest",
+    "@metamask/jazzicon": "^2.0.0",
     "@riffian-web/core": "workspace:latest",
     "@riffian-web/ethers": "workspace:latest",
+    "@riffian-web/ui": "workspace:latest",
     "@riffian-web/ui-docs": "workspace:latest",
     "fetch-jsonp": "^1.3.0"
   },

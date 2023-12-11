@@ -12,6 +12,7 @@ import mkcert from 'vite-plugin-mkcert'
 
 // Env
 config()
+const __dirname = new URL('', import.meta.url).pathname
 
 const { env } = process
 const [pathRoot, pathSrc] = [env.INIT_CWD, resolve(process.cwd(), './src')]
@@ -47,7 +48,7 @@ export const viteConfig = (options = {}) => {
         ]
       },
       build: {
-        ...(isDev ? { minify: false, sourcemap: 'inline' } : {}),
+        ...(isDev ? { minify: false, sourcemap: 'inline', emptyOutDir: true } : {}),
         rollupOptions: {
           // external: /^lit/
           // input: {
@@ -113,7 +114,11 @@ export const viteConfig = (options = {}) => {
                     rename: '404.html'
                   },
                   {
-                    src: normalizePath(resolve(new URL('', import.meta.url).pathname, './.nojekyll')),
+                    src: normalizePath(resolve(__dirname, './.nojekyll')),
+                    dest: './'
+                  },
+                  {
+                    src: normalizePath(resolve(__dirname, './public/CNAME')),
                     dest: './'
                   }
                 ]

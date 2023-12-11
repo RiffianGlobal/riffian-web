@@ -29,21 +29,28 @@ export const vote = async (album: string, amount: number, price: object) => {
 /**
  * read from twitter
  */
-export const readTwitter = async (addr: string) => {
+export const readTwitter = async (uri: string) => {
   try {
-    const contract = await getAlbumContract()
-    console.log(addr)
-    const method = 'getSocials'
-    const parameters = [addr]
-    const socials = await contract[method](...parameters)
-    console.log(addr + ':' + socials)
-    let uri = socials[0][2]
     console.log('URI:' + uri)
     uri = 'https://twitter.com/archdeaconsal/status/1732505736616563171'
     console.log('url:' + 'https://publish.twitter.com/oembed?url=' + encodeURIComponent(uri))
     let tweet = await fetchJsonP('https://publish.twitter.com/oembed?url=' + encodeURIComponent(uri))
     console.log(tweet.json())
     return tweet.json()
+  } catch (err: any) {
+    console.log(err)
+  }
+}
+
+export const getSocials = async (addr: string) => {
+  try {
+    const contract = await getAlbumContract()
+    console.log('addr->' + addr)
+    const method = 'getSocials'
+    const parameters = [addr]
+    const socials = await contract[method](...parameters)
+    let uri = socials[0][2]
+    return uri
   } catch (err: any) {
     console.log(err)
   }
@@ -114,26 +121,48 @@ export const votePriceWithFee = async (album: string) => {
   return await contract[method](...parameters)
 }
 
+export const weekList = async (count: Number, week: BigInt) => {
+  const daySeconds = 24n * 60n * 60n
+  let time = BigInt(new Date().getTime()) / 1000n - daySeconds
+  let queryJSON = `{
+      subjectWeeklyVotes(first: ${count}, where:{week:${week}}, orderBy: volumeTotal, orderDirection:desc) {
+        id
+        volumeTotal
+        subject {
+          id
+          name
+          image
+          uri
+          supply
+          creator {
+            address
+          }
+          voteLogs(first:1, where:{time_lt:${time}} orderBy:time, orderDirection:desc){
+            supply
+          }
+        }
+      }
+    }`
+  let result = await graphQuery('MediaBoard', queryJSON)
+  return result
+}
+
 export const albumList = async (count: Number) => {
-  let queryJSON =
-    `{
-      subjects(first: ` +
-    count +
-    `) {
+  const daySeconds = 24n * 60n * 60n
+  let time = BigInt(new Date().getTime()) / 1000n - daySeconds
+  let queryJSON = `{
+      subjects(first: ${count}, orderBy:supply, orderDirection:desc) {
         id
         image
         name
-        owner {
-          account
-          socials {
-            platform
-            uri
-          }
-          totalVotes
-        }
-        subject
-        totalVotes
         uri
+        supply
+        creator {
+          address
+        }
+        voteLogs(first:1, where:{time_lt:${time}} orderBy:time, orderDirection:desc){
+          supply
+        }
       }
     }`
   let result = await graphQuery('MediaBoard', queryJSON)

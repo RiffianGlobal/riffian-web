@@ -15,7 +15,10 @@ export const SubGraph: ChainConf = {
 
 export const getGraphUri = (name: string) => {
   let uri = SubGraph[name][Network.chainId]
-  if (!uri) throw new Error(`Not available for selected network(chain id ${Network.chainId}).`)
+  if (!uri) {
+    console.error(`Not available for selected network(chain id ${Network.chainId}). Fallback to default chainid`)
+    uri = SubGraph[name][Network.defaultChainId]
+  }
   return uri
 }
 

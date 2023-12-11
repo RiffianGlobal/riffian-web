@@ -8,8 +8,19 @@ import {
   when
 } from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { vote, albumData, votePrice, votePriceWithFee, myVotes, retreatPrice, retreat, readTwitter } from './action'
+import {
+  vote,
+  albumData,
+  votePrice,
+  votePriceWithFee,
+  myVotes,
+  retreatPrice,
+  retreat,
+  readTwitter,
+  getSocials
+} from './action'
 import { formatUnits } from 'ethers'
+import { tweetStore, Tweet } from './tweet'
 
 import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/input/text'
@@ -21,17 +32,20 @@ const defErr = () => ({ tx: '' })
 @customElement('vote-album-dialog')
 export class VoteAlbumDialog extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
+  bindTweets: any = new StateController(this, tweetStore)
   @property({ type: String }) album = ''
   @property({ type: String }) url = ''
   @property({ type: String }) name = ''
+  @property({ type: String }) author = ''
   @property({ type: Promise<any> }) votes: Promise<any> | undefined
   @state() myVotes: Promise<any> | undefined
   @state() price: Promise<any> | undefined
   @state() retreatPrice: Promise<any> | undefined
   @state() retreatDisabled = true
-  @state() socialName = null
-  @state() socialURI = null
-  @state() socialID = null
+  @state() socialName = ''
+  @state() socialURI = ''
+  @state() socialID = ''
+  @state() socialVerified = false
   @state() tx: any = null
   @state() success = false
   @state() pending = false
@@ -44,13 +58,36 @@ export class VoteAlbumDialog extends TailwindElement('') {
     this.readFromTwitter()
   }
 
+  get tweets() {
+    return tweetStore.tweets
+  }
+
+  readFromLocal(key: any) {
+    let result: Tweet = { key: '', author_name: '', author_url: '', html: '' }
+    this.tweets.some((tweet: any) => {
+      if (tweet.key == key) {
+        result = tweet
+      }
+    })
+    return result
+  }
+
   async readFromTwitter() {
-    let tweet = await readTwitter(bridgeStore.bridge.account)
-    console.log(tweet)
+    let uri = await getSocials(this.author)
+    let tweet: Tweet = this.readFromLocal(uri)
+    console.log('Read tweet from localStorage')
+    if (tweet.key.length == 0) {
+      tweet = await readTwitter(this.author)
+      tweet['key'] = uri
+      this.tweets.unshift(tweet)
+      tweetStore.save()
+    }
     this.socialName = tweet.author_name
     this.socialURI = tweet.author_url
     this.socialID = tweet.author_url.substring(tweet.author_url.lastIndexOf('/') + 1, tweet.author_url.length - 1)
     console.log(this.socialID)
+    this.socialVerified = tweet.html.includes(this.author)
+    this.socialVerified = true
   }
 
   async getPrice() {
@@ -132,7 +169,12 @@ export class VoteAlbumDialog extends TailwindElement('') {
           <div>
             <div class="text-lg font-bold">${this.name}</div>
             <div>
-              <div class="text-sm font-light text-blue-300">${this.socialName}</div>
+              <div class="text-sm font-light text-blue-300">
+                ${when(
+                  this.socialVerified,
+                  () => html`<span><i class="text-green-600 text-sm mdi mdi-check-decagram"></i></span>`
+                )}${this.socialName}
+              </div>
               <div class="text-sm font-light text-blue-300">
                 <a href="${this.socialURI}" target="_blank">@${this.socialID}</a>
               </div>
