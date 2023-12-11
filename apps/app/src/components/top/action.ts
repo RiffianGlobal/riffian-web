@@ -133,7 +133,6 @@ export const albumList = async (count: Number) => {
         }
         subject
         totalVotes
-        updatedTimestamp
         uri
       }
     }`

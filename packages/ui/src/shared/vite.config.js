@@ -1,6 +1,5 @@
 import { resolve } from 'node:path'
 import { defineConfig, splitVendorChunkPlugin, normalizePath } from 'vite'
-import type { UserConfig } from 'vite'
 //
 import { VitePWA } from 'vite-plugin-pwa'
 import { createHtmlPlugin } from 'vite-plugin-html'
@@ -25,15 +24,13 @@ const define = {
   global: 'globalThis'
 }
 
-console.log(viteStaticCopy)
-
-export const viteConfig = (options = <Record<string, any>>{}) => {
+export const viteConfig = (options = {}) => {
   const { server: { https = true } = {}, viteConfigOptions = {} } = options
   return ({ mode = '' }) => {
     const isDev = mode === 'development'
     if (isDev) env.TAILWIND_MODE = 'watch'
 
-    const defaultConfig: UserConfig = {
+    const defaultConfig = {
       base: env.VITE_APP_BASE || '/',
       define,
       server: {
@@ -64,7 +61,7 @@ export const viteConfig = (options = <Record<string, any>>{}) => {
       },
       plugins: [
         ...(https ? [mkcert()] : []),
-        minifyHTMLLiterals(),
+        minifyHTMLLiterals.default(),
         ...(viteConfigOptions.splitChunk === false ? [] : [splitVendorChunkPlugin()]),
         ...(viteConfigOptions.html === false
           ? []
@@ -116,7 +113,7 @@ export const viteConfig = (options = <Record<string, any>>{}) => {
                     rename: '404.html'
                   },
                   {
-                    src: normalizePath(resolve(__dirname, './.nojekyll')),
+                    src: normalizePath(resolve(new URL('', import.meta.url).pathname, './.nojekyll')),
                     dest: './'
                   }
                 ]
@@ -146,17 +143,17 @@ export const viteConfig = (options = <Record<string, any>>{}) => {
             ])
       ],
       optimizeDeps: {
-        include: ['readable-stream']
+        include: []
       }
     }
     // options (shallow merge)
-    const merge = (src: any, dest: any) => {
+    const merge = (src, dest) => {
       for (var key in dest) {
         if (key === 'viteConfigOptions') continue
         let [vSrc, vDest] = [src[key], dest[key]]
         if (vSrc && Array.isArray(vSrc)) {
-          vDest.forEach((dest: unknown) => {
-            const found = vSrc.some((r: unknown) => r == dest)
+          vDest.forEach((dest) => {
+            const found = vSrc.some((r) => r == dest)
             if (!found) vSrc.push(dest)
           })
         } else if (vSrc && typeof vSrc === 'object') merge(vSrc, vDest)

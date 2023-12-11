@@ -21,7 +21,7 @@ import style from './list.css?inline'
 @customElement('top-album')
 export class NewAlbum extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
-  @state() albumList: any
+  @state() albumList = []
   @state() showAlbumVote = false
   @state() albumToVote = { id: '', votes: 0, url: '', name: '' }
   @state() pending = false
@@ -87,7 +87,7 @@ export class NewAlbum extends TailwindElement(style) {
             </div>`
         )}
         ${when(
-          this.albumList,
+          this.albumList.length,
           () =>
             html`<ul role="list">
                 <li class="flex header p-1">

@@ -1,6 +1,7 @@
 {
   "name": "@riffian-web/app",
   "version": "0.12.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "vite --host --mode development",

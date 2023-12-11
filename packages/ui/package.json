@@ -1,18 +1,19 @@
 {
   "name": "@riffian-web/ui",
   "version": "0.14.0",
+  "type": "module",
   "scripts": {
     "build": "tsup src/index.ts --outDir ./lib --format esm,cjs --dts --clean",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "@metamask/jazzicon": "^2.0.0",
     "@riffian-web/core": "workspace:latest",
     "@riffian-web/ethers": "workspace:latest",
-    "@riffian-web/router": "workspace:latest",
-    "@metamask/jazzicon": "^2.0.0"
+    "@riffian-web/router": "workspace:latest"
   },
   "devDependencies": {
-    "tsup": "^8"
+    "tsup": "^8.0.1"
   },
   "peerDependencies": {
     "@lit-labs/router": "^0.1"

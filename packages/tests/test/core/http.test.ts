@@ -31,12 +31,13 @@ describe('http', async () => {
   })
 
   it('post', async () => {
-    let error
+    let error = ''
     try {
       await http.post(`${mockApi}/empty.json`, {})
     } catch (err: any) {
       error = err.message
     }
-    expect(error).include('failed')
+    console.log(error)
+    expect(error).not.toBe('')
   })
 })

@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@types/tr46": "^3.0.3",
-    "tsup": "^8"
+    "tsup": "^8.0.1"
   },
   "peerDependencies": {
     "ethers": "^6"
