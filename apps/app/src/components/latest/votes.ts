@@ -13,7 +13,8 @@ import { latestVote } from './actions'
 import { formatUnits } from 'ethers'
 import style from './votes.css?inline'
 import { asyncReplace } from 'lit/directives/async-replace.js'
-import jazzicon from '@metamask/jazzicon'
+// components
+import '@riffian-web/ui/src/address'
 
 @customElement('latest-votes')
 export class LatestVotes extends TailwindElement(style) {
@@ -38,10 +39,6 @@ export class LatestVotes extends TailwindElement(style) {
     }
     console.log(this.latestVotes)
     this.pending = false
-  }
-
-  static avatar(address: string) {
-    return jazzicon(32, parseInt(address.slice(2, 10), 16)).querySelector('svg')
   }
 
   timeAgo = async function* (timestamp: bigint) {
@@ -72,8 +69,8 @@ export class LatestVotes extends TailwindElement(style) {
           this.latestVotes,
           (item: any, i) =>
             html`<li class="py-2 justify-end">
-              <div class="flex items-end justify-end space-x-2">
-                ${LatestVotes.avatar(item.voter.address)}
+              <div class="flex items-center justify-end space-x-2">
+                <ui-address class="text-xl" .address=${item.voter.address} avatar hideAddr></ui-address>
                 <p class="text-highlight text-2xl">${formatUnits(item.value, 18)}</p>
               </div>
               <div>

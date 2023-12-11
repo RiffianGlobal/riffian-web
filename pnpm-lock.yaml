@@ -120,9 +120,6 @@ importers:
 
   apps/app:
     dependencies:
-      '@metamask/jazzicon':
-        specifier: ^2.0.0
-        version: 2.0.0
       '@riffian-web/core':
         specifier: workspace:latest
         version: link:../../packages/core
