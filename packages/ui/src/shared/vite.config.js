@@ -1,9 +1,11 @@
-import { resolve } from 'node:path'
+import path, { resolve, dirname } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
 import { defineConfig, splitVendorChunkPlugin, normalizePath } from 'vite'
 //
 import { VitePWA } from 'vite-plugin-pwa'
 import { createHtmlPlugin } from 'vite-plugin-html'
-import { viteStaticCopy } from 'vite-plugin-static-copy' // v1.0.0 is buggly
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 import minifyHTMLLiterals from 'rollup-plugin-minify-html-literals'
 import { config } from 'dotenv'
 // Polyfills
@@ -12,10 +14,11 @@ import mkcert from 'vite-plugin-mkcert'
 
 // Env
 config()
-const __dirname = new URL('', import.meta.url).pathname
+const cwd = process.cwd()
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const { env } = process
-const [pathRoot, pathSrc] = [env.INIT_CWD, resolve(process.cwd(), './src')]
+const [pathRoot, pathSrc] = [env.INIT_CWD, resolve(cwd, './src')]
 const appTitle = env.VITE_APP_TITLE || env.VITE_APP_NAME || env.npm_package_name
 const mdi = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7/css/materialdesignicons.min.css"/>`
 
@@ -48,11 +51,11 @@ export const viteConfig = (options = {}) => {
         ]
       },
       build: {
-        ...(isDev ? { minify: false, sourcemap: 'inline', emptyOutDir: true } : {}),
+        ...(isDev ? { minify: false, sourcemap: 'inline' } : {}),
         rollupOptions: {
           // external: /^lit/
           // input: {
-          //   main: resolve(process.cwd(), 'index.html')
+          //   main: resolve(cwd, 'index.html')
           // }
         }
       },
@@ -115,10 +118,6 @@ export const viteConfig = (options = {}) => {
                   },
                   {
                     src: normalizePath(resolve(__dirname, './.nojekyll')),
-                    dest: './'
-                  },
-                  {
-                    src: normalizePath(resolve(__dirname, './public/CNAME')),
                     dest: './'
                   }
                 ]
