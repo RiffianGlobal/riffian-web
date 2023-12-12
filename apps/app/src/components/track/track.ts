@@ -15,7 +15,6 @@ import '@riffian-web/ui/src/loading/skeleton'
 import '@riffian-web/ui/src/img/loader'
 import '@riffian-web/ui/src/dialog/prompt'
 import '~/components/rewards/claim'
-import emitter from '@riffian-web/core/src/emitter'
 import style from './list.css?inline'
 import { formatUnits } from 'ethers'
 import { albumData, myVotes, readTwitter } from '~/components/top/action'
@@ -39,6 +38,7 @@ export class TrackDetail extends TailwindElement(style) {
   @state() voteList: any = []
   @state() pending = false
   @state() prompt = false
+  @state() dialog = false
   @state() promptMessage: string = ''
   @state() err = defErr()
 
@@ -138,11 +138,12 @@ export class TrackDetail extends TailwindElement(style) {
         ${when(
           this.subject,
           () => html`
-            <div slot="center" class="flex mx-4 mt-4">
-              <div class="flex grow pb-4">
+            <div slot="center" class="grid mx-4 mt-4 grid-cols-6 gap-4 place-items-center">
+              <div class="flex grow pb-4 col-span-2">
                 <div class="w-24 mr-4"><img-loader src=${this.subject.url}></img-loader></div>
                 <div>
                   <div class="text-lg font-bold">${this.subject.name}</div>
+                  <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
                   <div>
                     <div class="text-sm font-light text-blue-300">
                       ${when(
@@ -154,17 +155,44 @@ export class TrackDetail extends TailwindElement(style) {
                       <a href="${this.socialURI}" target="_blank">@${this.socialID}</a>
                     </div>
                   </div>
-                  <div class="text-gray-500">
+                  <!-- <div class="text-gray-500">
                     You own ${until(this.myVotes, html`<i class="text-sm mdi mdi-loading"></i>`)} tickets
-                  </div>
+                  </div> -->
                 </div>
               </div>
-              <div class="text-right">
-                <span class="text-lg text-sky-500"
-                  >${until(this.votes, html`<i class="text-sm mdi mdi-loading"></i>`)}</span
+              <div class="">
+                <div class="text-sm text-gray-500 align-center">Voters</div>
+                <div class="text-4xl align-center">${this.subject.fansNumber}</div>
+              </div>
+              <div class="">
+                <div class="text-sm text-gray-500 align-center">Tickets</div>
+                <div class="text-4xl align-center">${this.subject.supply}</div>
+              </div>
+              <div class="">
+                <div class="text-sm text-gray-500 align-center">Total Vote Value</div>
+                <div class="text-4xl align-center">${formatUnits(this.subject.totalVoteValue, 18)} ST</div>
+              </div>
+              <div name="Dialog" class="">
+                <ui-button
+                  class="outlined"
+                  ?disabled="${this.disabled}"
+                  @click=${() => {
+                    this.dialog = true
+                  }}
+                  >VOTE</ui-button
                 >
-                <div class="text-sm text-gray-500">Tickets</div>
-                <div class="text-sm text-gray-500">Vote price <i class="text-sm mdi mdi-help-circle-outline"></i></div>
+                ${when(
+                  this.dialog && this.subject.id == this.subject.id,
+                  () =>
+                    html`<vote-album-dialog
+                      album=${this.subject.id}
+                      url=${this.subject.uri}
+                      name=${this.subject.name}
+                      votes=${this.subject.supply}
+                      author=${this.subject.creator.address}
+                      @close=${this.close}
+                    ></vote-album-dialog>`
+                )}
               </div>
             </div>
           `
