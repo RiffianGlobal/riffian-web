@@ -137,7 +137,8 @@ export class TopAlbum extends TailwindElement(style) {
                           emitter.emit('connect-wallet')
                         } else {
                           this.albumToVote = item
-                          this.showAlbumVote = true
+                          // this.showAlbumVote = true
+                          location.href="/track/"+item.id
                         }
                       }}
                     >
