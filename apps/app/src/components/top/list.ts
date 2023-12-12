@@ -27,7 +27,7 @@ export class TopAlbum extends TailwindElement(style) {
   @property({ type: Boolean }) weekly = false
   @state() subjectList: any
   @state() showAlbumVote = false
-  @state() albumToVote = { id: '', supply: 0, url: '', name: '', creator: { address: '' } }
+  @state() albumToVote = { id: '', supply: 0, url: '', name: '', creator: { address: '' }, uri:'' }
   @state() pending = false
   @state() prompt = false
   @state() promptMessage: string = ''
@@ -137,7 +137,8 @@ export class TopAlbum extends TailwindElement(style) {
                           emitter.emit('connect-wallet')
                         } else {
                           this.albumToVote = item
-                          this.showAlbumVote = true
+                          // this.showAlbumVote = true
+                          location.href="/track/"+item.id
                         }
                       }}
                     >

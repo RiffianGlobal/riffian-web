@@ -1,0 +1,21 @@
+li.header {
+  @apply text-stone-50 font-light mb-2;
+  border-bottom: 1px solid #898989;
+}
+
+li.item:hover {
+  @apply bg-zinc-700;
+}
+
+.name {
+  @media (min-width: 500px) {
+    @apply text-xl;
+  }
+}
+
+.icon {
+  @apply text-3xl;
+  @media (max-width: 500px) {
+    @apply text-2xl;
+  }
+}

@@ -38,6 +38,15 @@ export const routes = [
       return true
     }
   },
+  {
+    name: 'track',
+    path: '/track/:addr?',
+    render: ({addr = ''}) => html`<track-page addr="${addr}"></track-page>`,
+    enter: async () => {
+      await import('~/views/track')
+      return true
+    }
+  },
   import.meta.env.MODE === 'production'
     ? {}
     : {
