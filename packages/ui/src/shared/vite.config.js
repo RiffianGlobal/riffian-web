@@ -45,10 +45,7 @@ export const viteConfig = (options = {}) => {
         https
       },
       resolve: {
-        alias: [
-          { find: /^[~@]\//, replacement: pathSrc + '/' },
-          { find: '@lit-labs/router', replacement: '@riffian-web/router/src/index.ts' }
-        ]
+        alias: [{ find: /^[~@]\//, replacement: pathSrc + '/' }]
       },
       build: {
         ...(isDev ? { minify: false, sourcemap: 'inline' } : {}),

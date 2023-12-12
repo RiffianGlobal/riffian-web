@@ -4,7 +4,7 @@ import '@webcomponents/webcomponentsjs/webcomponents-loader.js'
 import 'lit/polyfill-support.js'
 //
 import { TailwindElement, html, customElement } from './TailwindElement'
-import type { RouteConfig } from '@lit-labs/router'
+import type { RouteConfig } from '@riffian-web/router'
 import { fallbackRender, fallbackEnter } from './router/fallback'
 import { Router, routerGuard } from './router'
 import emitter from '@riffian-web/core/src/emitter'

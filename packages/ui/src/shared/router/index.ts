@@ -1,6 +1,6 @@
-// Router Guard for @lit-labs/router
+// Router Guard
 import emitter from '@riffian-web/core/src/emitter'
-import { Router } from '@lit-labs/router'
+import { Router } from '@riffian-web/router'
 export { Router }
 
 const bareOrigin = (url: string) => url.replace(location.origin, '')
@@ -11,7 +11,7 @@ export const routerPathroot = (path?: string) => routerGuard.router.getPathroot(
 
 export const scrollTop = (y = 0) => setTimeout(() => globalThis.scrollTo(0, y))
 
-// Trick for @lit-labs/router
+// Trick for router
 export const routerGuard = {
   router: <Router | any>undefined,
   injected: false,
