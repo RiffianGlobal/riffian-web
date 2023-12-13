@@ -99,7 +99,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
         )}${when(
           this.pending,
           () =>
-            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your retreat has been submit.' } }}
+            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your retreat has been submitted.' } }}
               ><ui-button slot="view" href="/"> Close </ui-button></tx-state
             >`
         )}

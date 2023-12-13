@@ -92,7 +92,7 @@ export class ClaimRewardDialog extends TailwindElement('') {
           () =>
             html`<tx-state
               .tx=${this.tx}
-              .opts=${{ state: { success: 'Success. Your claim request has been submit.' } }}
+              .opts=${{ state: { success: 'Success. Your claim request has been submitted.' } }}
               ><ui-button slot="view" href="/">Close</ui-button></tx-state
             >`
         )}

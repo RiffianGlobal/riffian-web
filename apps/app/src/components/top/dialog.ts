@@ -198,7 +198,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
                 Retreat price: ${until(this.retreatPrice, html`<i class="text-sm mdi mdi-loading"></i>`)} FTM
               </div>`,
           () =>
-            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your vote has been submit.' } }}
+            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your vote has been submitted.' } }}
               ><ui-button slot="view" @click=${this.close}>Close</ui-button></tx-state
             >`
         )}
