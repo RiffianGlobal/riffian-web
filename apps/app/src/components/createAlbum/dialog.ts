@@ -5,6 +5,7 @@ import { createAlbum } from './action'
 import '@riffian-web/ui/src/button'
 import '@riffian-web/ui/src/input/text'
 import '@riffian-web/ui/src/tx-state'
+import '@riffian-web/ui/src/img/loader'
 
 type formKeys = 'album' | 'image' | 'url'
 
@@ -112,7 +113,14 @@ export class CreateAlbumDialog extends TailwindElement('') {
               <span slot="label">URL</span>
             </ui-input-text>
             <!-- Preview -->
-            <p class="text-center">${this.form.album || '-'}<span class="mx-1">/</span>${this.form.image || '-'}</p>
+
+            <div class="self-center w-[4.6rem] h-[4.6rem]">
+              <img-loader
+                .src=${this.form.image ||
+                'https://cdn.shopify.com/app-store/listing_images/a82167e02b45cadf681efc6c17c35f3a/icon/CMmMjb30lu8CEAE=.jpg'}
+              ></img-loader>
+            </div>
+            <p class="text-center">${this.form.album || '-'}</p>
             <ui-button class="mx-auto" @click=${this.create} ?disabled="${this.pending}">Confirm</ui-button>
           `
         )}
