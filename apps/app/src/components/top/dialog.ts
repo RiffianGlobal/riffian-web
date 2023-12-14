@@ -115,7 +115,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
       if (!this.tx) {
         this.tx = {}
         this.tx.status = 0
-        this.tx.err = err.code
+        this.tx.err = err
       }
     }
   }
@@ -129,7 +129,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
       if (!this.tx) {
         this.tx = {}
         this.tx.status = 0
-        this.tx.err = err.code
+        this.tx.err = err
       }
     }
   }
