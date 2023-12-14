@@ -95,20 +95,20 @@ export const myVotes = async (album: string) => {
 }
 
 export const retreatPrice = async (album: string) => {
-  const contract = await getAlbumContract()
-  const method = 'getRetreatPrice'
-  const overrides = {}
-  const parameters = [album, 1]
-  await assignOverrides(overrides, contract, method, parameters)
-  return await contract[method](...parameters)
+  try {
+    const contract = await getAlbumContract()
+    const method = 'getRetreatPrice'
+    const parameters = [album, 1]
+    return await contract[method](...parameters)
+  } catch (err) {
+    return 0
+  }
 }
 
 export const votePrice = async (album: string) => {
   const contract = await getAlbumContract()
   const method = 'getVotePrice'
-  const overrides = {}
   const parameters = [album, 1]
-  await assignOverrides(overrides, contract, method, parameters)
   return await contract[method](...parameters)
 }
 
