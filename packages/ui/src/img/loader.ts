@@ -13,7 +13,7 @@ import {
 } from '../shared/TailwindElement'
 import { isInstantUri } from '@riffian-web/core/src/uri'
 import { LazyElement } from '../shared/LazyElement'
-import comporess from './compress'
+import compress from './compress'
 // Styles
 import style from './loader.css?inline'
 
@@ -42,12 +42,12 @@ export class ImgLoader extends LazyElement(TailwindElement(style)) {
   get isResizableSrc() {
     return this.src && /\?(w|width)=/.test(this.src)
   }
-  get requireComporess() {
+  get requireCompress() {
     return !this.isResizableSrc && !this.isInstantSrc && !this.blobSrc
   }
   get uri() {
     if (this.err || !this.show) return
-    return this.requireComporess ? this.blobSrc : this.src
+    return this.requireCompress ? this.blobSrc : this.src
   }
   get empty() {
     return !(this.src || this.blobSrc) || !(this.uri || this.uriset)
@@ -74,8 +74,8 @@ export class ImgLoader extends LazyElement(TailwindElement(style)) {
   }
 
   protected shouldUpdate(props: Map<PropertyKey, unknown>): boolean {
-    if (props.has('src') && this.requireComporess) {
-      if (this.src) comporess(this.src).then((src) => (this.blobSrc = src))
+    if (props.has('src') && this.requireCompress) {
+      if (this.src) compress(this.src).then((src) => (this.blobSrc = src))
     }
     return true
   }
