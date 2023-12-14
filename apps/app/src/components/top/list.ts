@@ -27,7 +27,7 @@ export class TopAlbum extends TailwindElement(style) {
   @property({ type: Boolean }) weekly = false
   @state() subjectList: any
   @state() showAlbumVote = false
-  @state() albumToVote = { id: '', supply: 0, url: '', name: '', creator: { address: '' }, uri:'' }
+  @state() albumToVote = { id: '', supply: 0, url: '', name: '', creator: { address: '' }, uri: '', image: '' }
   @state() pending = false
   @state() prompt = false
   @state() promptMessage: string = ''
@@ -59,12 +59,7 @@ export class TopAlbum extends TailwindElement(style) {
     this.pending = false
 
     let urls = [
-      'https://m.media-amazon.com/images/M/MV5BMTA5NDBkNzMtNzY3NC00NDhiLWI2OGQtNmU2NGRmMzk3YjdiXkEyXkFqcGdeQXVyMjI0OTk0OTE@._V1_.jpg',
-      'https://i1.sndcdn.com/artworks-000329038545-d554xk-t500x500.jpg',
-      'https://upload.wikimedia.org/wikipedia/en/thumb/1/1e/You_Are_Not_Alone.jpg/220px-You_Are_Not_Alone.jpg',
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLE1c3OU9GZU5Ev_eXLBzyesTY8JOkUulBUw&usqp=CAU',
-      'https://upload.wikimedia.org/wikipedia/zh/5/5e/21_Adele_Album.jpg',
-      'https://i.kfs.io/album/global/25572377,4v1/fit/500x500.jpg'
+      'https://cdn.shopify.com/app-store/listing_images/a82167e02b45cadf681efc6c17c35f3a/icon/CMmMjb30lu8CEAE=.jpg',
     ]
     for (var i = 0; i < this.subjectList.length; i++) {
       if (this.weekly) {
@@ -72,7 +67,9 @@ export class TopAlbum extends TailwindElement(style) {
         this.subjectList[i] = weekResult.subject
         this.subjectList[i].volumeTotal = weekResult.volumeTotal
       }
-      // this.albumList[i].url = urls[this.getRandomInt(4)]
+      if (!this.subjectList[i].image || !this.subjectList[i].image.startsWith('http')) {
+        this.subjectList[i].image = urls[0]
+      }
     }
   }
 
@@ -138,14 +135,14 @@ export class TopAlbum extends TailwindElement(style) {
                         } else {
                           this.albumToVote = item
                           // this.showAlbumVote = true
-                          location.href="/track/"+item.id
+                          location.href = '/track/' + item.id
                         }
                       }}
                     >
                       <div class="flex-none w-16 pl-4 text-lg font-light">${i + 1}</div>
                       <div class="flex-initial flex">
                         <div class="w-[4.6rem] h-[4.6rem] mr-4">
-                          <img-loader sizes="74px, 74px" src=${item.uri}></img-loader>
+                          <img-loader .src=${item.image}></img-loader>
                         </div>
                         <div>
                           <p class="name truncate mt-2">${item.name}</p>
@@ -166,7 +163,7 @@ export class TopAlbum extends TailwindElement(style) {
                 () =>
                   html`<vote-album-dialog
                     album=${this.albumToVote.id}
-                    url=${this.albumToVote.uri}
+                    url=${this.albumToVote.image}
                     name=${this.albumToVote.name}
                     votes=${this.albumToVote.supply}
                     author=${this.albumToVote.creator.address}

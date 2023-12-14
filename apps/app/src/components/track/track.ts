@@ -137,10 +137,12 @@ export class TrackDetail extends TailwindElement(style) {
           () => html`
             <div slot="center" class="grid mx-4 mt-4 grid-cols-6 gap-4 place-items-center">
               <div class="flex grow pb-4 col-span-2">
-                <div class="w-24 mr-4"><img-loader src=${this.subject.uri}></img-loader></div>
+                <div class="w-24 h-24 mr-4"><img-loader src=${this.subject.image}></img-loader></div>
                 <div>
                   <div class="text-lg font-bold">${this.subject.name}</div>
-                  <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
+                  <span class="icon mt-1"
+                    ><a href="${this.subject.uri}"><i class="mdi mdi-play-circle-outline"></i></a
+                  ></span>
                   <div>
                     <div class="text-sm font-light text-blue-300">
                       ${when(
@@ -183,7 +185,7 @@ export class TrackDetail extends TailwindElement(style) {
                   () =>
                     html`<vote-album-dialog
                       album=${this.subject.id}
-                      url=${this.subject.uri}
+                      url=${this.subject.image}
                       name=${this.subject.name}
                       votes=${this.subject.supply}
                       author=${this.subject.creator.address}
