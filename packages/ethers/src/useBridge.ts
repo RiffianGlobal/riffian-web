@@ -180,8 +180,7 @@ export const estimateGasLimit = async (
   try {
     estimatedGas = BigInt(await contract[method].estimateGas(...parameters))
   } catch (err) {
-    await normalizeTxErr(err, [method, parameters])
-    throw err
+    throw await normalizeTxErr(err, [method, parameters])
   }
   const limit = gasLimit(estimatedGas)
   return limitPercent ? [limit, gasLimit(estimatedGas, limitPercent)] : limit

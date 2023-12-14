@@ -43,7 +43,7 @@ export class ClaimRewardDialog extends TailwindElement('') {
     } catch (err: any) {
       console.log(err)
       let msg = err.message || err.code
-      if (err.code === 'ACTION_REJECTED' || err.code === 'INVALID_ARGUMENT') {
+      if (err.code === 4001 || err.code === 'INVALID_ARGUMENT') {
         this.updateErr({ tx: msg })
         return this.close()
       }

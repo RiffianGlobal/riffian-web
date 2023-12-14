@@ -1,7 +1,5 @@
 import { customElement, TailwindElement, html, property } from '../shared/TailwindElement'
 import jazzicon from '@metamask/jazzicon'
-// components
-import '../img/loader'
 
 import style from './avatar.css?inline'
 @customElement('ui-address-avatar')

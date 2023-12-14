@@ -46,7 +46,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
       this.success = await this.tx.wait()
     } catch (err: any) {
       let msg = err.message || err.code
-      if (err.code === 'ACTION_REJECTED') {
+      if (err.code === 4001) {
         this.updateErr({ tx: msg })
         return this.close()
       }
