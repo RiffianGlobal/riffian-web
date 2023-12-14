@@ -34,7 +34,7 @@ export class TrackDetail extends TailwindElement(style) {
   @state() socialURI = ''
   @state() socialID = ''
   @state() socialVerified = false
-  @state() subject: any = {}
+  @state() subject: any = { totalVoteValue: '0' }
   @state() voteList: any = []
   @state() pending = false
   @state() prompt = false
@@ -72,7 +72,6 @@ export class TrackDetail extends TailwindElement(style) {
   async readFromTwitter() {
     let uri = this.subject.creator.socials[0][2]
     let tweet: Tweet = this.readFromLocal(uri)
-    console.log('Read tweet from localStorage')
     if (!tweet.key || tweet.key.length == 0) {
       tweet = await readTwitter(uri)
       tweet['key'] = uri
@@ -82,7 +81,6 @@ export class TrackDetail extends TailwindElement(style) {
     this.socialName = tweet.author_name
     this.socialURI = tweet.author_url
     this.socialID = tweet.author_url.substring(tweet.author_url.lastIndexOf('/') + 1, tweet.author_url.length - 1)
-    console.log(this.socialID)
     this.socialVerified = tweet.html.includes(this.subject.creator.address)
     this.socialVerified = true
   }
@@ -107,11 +105,9 @@ export class TrackDetail extends TailwindElement(style) {
     try {
       let result = await subjectInfo(this.trackAddress)
       this.subject = result.subject
-      console.log(this.subject)
       this.getPrice()
       this.readFromTwitter()
     } catch (e: any) {
-      console.error(e)
       this.promptMessage = e
       this.prompt = true
       return
@@ -121,6 +117,7 @@ export class TrackDetail extends TailwindElement(style) {
   }
 
   close = () => {
+    this.dialog = false
     this.init()
   }
 
@@ -140,7 +137,7 @@ export class TrackDetail extends TailwindElement(style) {
           () => html`
             <div slot="center" class="grid mx-4 mt-4 grid-cols-6 gap-4 place-items-center">
               <div class="flex grow pb-4 col-span-2">
-                <div class="w-24 mr-4"><img-loader src=${this.subject.url}></img-loader></div>
+                <div class="w-24 mr-4"><img-loader src=${this.subject.uri}></img-loader></div>
                 <div>
                   <div class="text-lg font-bold">${this.subject.name}</div>
                   <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
@@ -182,7 +179,7 @@ export class TrackDetail extends TailwindElement(style) {
                   >VOTE</ui-button
                 >
                 ${when(
-                  this.dialog && this.subject.id == this.subject.id,
+                  this.dialog,
                   () =>
                     html`<vote-album-dialog
                       album=${this.subject.id}

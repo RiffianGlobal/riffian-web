@@ -111,15 +111,12 @@ export class VoteAlbumDialog extends TailwindElement('') {
       this.tx = await vote(this.album, 1, { value: (await votePriceWithFee(this.album))[0] })
       this.success = await this.tx.wait()
     } catch (err: any) {
-      console.log(err)
-      let msg = err.message || err.code
-      if (err.code === 4001 || err.code === 'INVALID_ARGUMENT') {
-        this.updateErr({ tx: msg })
-        this.pending = false
-        // return this.close()
+      console.log('ERROR:->' + err)
+      if (!this.tx) {
+        this.tx = {}
+        this.tx.status = 0
+        this.tx.err = err.code
       }
-    } finally {
-      // this.pending = false
     }
   }
 
@@ -129,15 +126,11 @@ export class VoteAlbumDialog extends TailwindElement('') {
       this.tx = await retreat(this.album, 1)
       this.success = await this.tx.wait()
     } catch (err: any) {
-      console.log(err)
-      let msg = err.message || err.code
-      if (err.code === 4001 || err.code === 'INVALID_ARGUMENT') {
-        this.updateErr({ tx: msg })
-        this.pending = false
-        // return this.close()
+      if (!this.tx) {
+        this.tx = {}
+        this.tx.status = 0
+        this.tx.err = err.code
       }
-    } finally {
-      // this.pending = false
     }
   }
 
@@ -205,7 +198,7 @@ export class VoteAlbumDialog extends TailwindElement('') {
                 Retreat price: ${until(this.retreatPrice, html`<i class="text-sm mdi mdi-loading"></i>`)} FTM
               </div>`,
           () =>
-            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your vote has been submit.' } }}
+            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your vote has been submitted.' } }}
               ><ui-button slot="view" @click=${this.close}>Close</ui-button></tx-state
             >`
         )}

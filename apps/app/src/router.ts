@@ -41,9 +41,18 @@ export const routes = [
   {
     name: 'track',
     path: '/track/:addr?',
-    render: ({addr = ''}) => html`<track-page addr="${addr}"></track-page>`,
+    render: ({ addr = '' }) => html`<track-page addr="${addr}"></track-page>`,
     enter: async () => {
       await import('~/views/track')
+      return true
+    }
+  },
+  {
+    name: 'user',
+    path: '/user/:addr?',
+    render: ({ addr = '' }) => html`<user-page addr="${addr}"></user-page>`,
+    enter: async () => {
+      await import('~/views/user')
       return true
     }
   },

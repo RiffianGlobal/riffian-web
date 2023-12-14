@@ -1,7 +1,4 @@
-import { getAccount, getContract, assignOverrides } from '@riffian-web/ethers/src/useBridge'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
-
-export const getAlbumContract = async () => getContract('MediaBoard', { account: await getAccount() })
 
 export const subjectInfo = async (addr: string) => {
   let queryJSON =
