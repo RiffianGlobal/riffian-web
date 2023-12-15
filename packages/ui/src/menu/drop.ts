@@ -92,6 +92,7 @@ export class UIDrop extends TailwindElement(style) implements TAILWINDELEMENT {
   disconnectedCallback() {
     super.disconnectedCallback()
     this.unlisten()
+    this.close()
   }
 
   override render() {
