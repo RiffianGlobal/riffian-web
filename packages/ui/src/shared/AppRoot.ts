@@ -9,8 +9,6 @@ import { fallbackRender, fallbackEnter } from './router/fallback'
 import { Router, routerGuard } from './router'
 import emitter from '@riffian-web/core/src/emitter'
 import { debounce } from '@riffian-web/ethers/src/utils'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import Network from '@riffian-web/ethers/src/networks'
 
 import '~/variables-override.css' // -> /apps/*/src/variables-override.css
 import '../c/g.css'
@@ -20,7 +18,6 @@ export default function ({ routes = <RouteConfig[]>[], hashMode = false } = {}) 
   // App Root
   @customElement('app-root')
   class AppRoot extends TailwindElement('') {
-    bindBridge = new StateController(this, bridgeStore)
     _router: any = routerGuard.init(
       new Router(this, routes, {
         hashMode,
@@ -40,16 +37,6 @@ export default function ({ routes = <RouteConfig[]>[], hashMode = false } = {}) 
 
     connectedCallback() {
       super.connectedCallback()
-      let network: Network = bridgeStore.bridge.network
-      if (network.unSupported) {
-        bridgeStore.bridge.switchNetwork(Network.defaultChainId)
-      }
-      emitter.on('wallet-changed', () => {
-        let network: Network = bridgeStore.bridge.network
-        if (network.unSupported) {
-          bridgeStore.bridge.switchNetwork(Network.defaultChainId)
-        }
-      })
     }
 
     render() {

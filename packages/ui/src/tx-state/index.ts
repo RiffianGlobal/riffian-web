@@ -5,7 +5,7 @@ import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import './tx-view'
 
 import style from './tx-state.css?inline'
-import { txReceipt } from 'packages/ethers/src/txReceipt'
+import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 @customElement('tx-state')
 export class TxState extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
@@ -63,7 +63,7 @@ export class TxState extends TailwindElement(style) {
   }
 
   get txScanUri() {
-    return this.tx?.hash ? `${this.bridge.network.current.scan}/tx/${this.tx?.hash}` : ''
+    return this.tx?.hash ? `${this.bridge.network.current.scan}/tx/${this.tx.hash}` : ''
   }
 
   override render() {
