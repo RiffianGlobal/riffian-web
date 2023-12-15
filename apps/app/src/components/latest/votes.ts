@@ -59,25 +59,32 @@ export class LatestVotes extends TailwindElement(style) {
 
   render() {
     return html`${when(
-        this.pending && this.latestVotes.length == 0,
-        () => html`<loading-skeleton num="4"></loading-skeleton>`
-      )}
-      <ul role="list">
-        ${repeat(
-          this.latestVotes,
-          (item: any, i) =>
-            html`<li class="py-2 justify-end">
-              <div class="flex items-center justify-end space-x-2">
-                <ui-address class="text-xl" .address=${item.voter.address} avatar hideAddr></ui-address>
-                <p class="text-highlight text-2xl">${formatUnits(item.value, 18)}</p>
-              </div>
-              <div>
-                <p class="font-light text-gray-400 text-right text-sm">
-                  ${asyncReplace(this.timeAgo(BigInt(item.time)))}
-                </p>
-              </div>
-            </li> `
-        )}
-      </ul>`
+      this.pending && this.latestVotes.length == 0,
+      () => html`<loading-skeleton num="4"></loading-skeleton>`
+    )}
+    ${when(
+      !this.pending,
+      () =>
+        html`<ul role="list">
+          <li class="flex header p-1">
+            <div class="w-16">Bidders</div>
+          </li>
+          ${repeat(
+            this.latestVotes,
+            (item: any, i) =>
+              html`<li class="py-2 justify-start">
+                <div class="flex items-center justify-start space-x-2">
+                  <ui-address class="text-2xl" .address=${item.voter.address} avatar hideAddr></ui-address>
+                  <p class="text-highlight text-2xl">${formatUnits(item.value, 18)}</p>
+                </div>
+                <div>
+                  <p class="font-light text-gray-400 text-left text-sm">
+                    ${asyncReplace(this.timeAgo(BigInt(item.time)))}
+                  </p>
+                </div>
+              </li> `
+          )}
+        </ul>`
+    )} `
   }
 }

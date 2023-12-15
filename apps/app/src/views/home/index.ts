@@ -70,7 +70,7 @@ export class ViewHome extends TailwindElement(style) {
               <top-album></top-album>
             </div>
           </div>
-          <div class="flex-initial w-32 pt-16">
+          <div class="flex-initial w-32 pt-16 mt-7">
             <latest-votes />
           </div>
         `

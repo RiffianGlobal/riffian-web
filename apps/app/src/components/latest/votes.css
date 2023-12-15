@@ -8,3 +8,7 @@ svg {
     @apply w-full h-full;
   }
 }
+li.header {
+  @apply text-stone-50 font-light mb-2;
+  border-bottom: 1px solid #898989;
+}
