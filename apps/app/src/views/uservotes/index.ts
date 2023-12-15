@@ -7,14 +7,14 @@ import style from './index.css?inline'
 @customElement('user-votes')
 export class ViewTop extends TailwindElement(style) {
   render() {
-    return html`<div class="top">
-      <div class="ui-container relative flex justify-between items-center">
-        <div class="flex items-center gap-3 lg_gap-4 lg_w-40">
-          <p class="font-bold text-xl">My Votes</p>
+    return html`<div class="flex px-8 space-x-8 place-content-center">
+      <div class="flex-initial w-[64rem]">
+        <div class="h-20 pt-1 mb-8">
+          <div class="font-bold text-xl">My Votes</div>
         </div>
-      </div>
-      <div class="ui-container">
-        <user-votes-list></user-votes-list>
+        <div class="mt-0">
+          <user-votes-list></user-votes-list>
+        </div>
       </div>
     </div>`
   }

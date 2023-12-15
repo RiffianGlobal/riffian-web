@@ -1,4 +1,12 @@
-import { TailwindElement, customElement, html, repeat, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import {
+  TailwindElement,
+  customElement,
+  html,
+  repeat,
+  state,
+  when,
+  classMap
+} from '@riffian-web/ui/src/shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import './dialog'
 import { userVotes } from './action'
@@ -6,10 +14,10 @@ import '@riffian-web/ui/src/loading/icon'
 import '@riffian-web/ui/src/loading/skeleton'
 import '@riffian-web/ui/src/img/loader'
 import '~/components/rewards/claim'
-import { formatUnits } from 'ethers'
-
+import emitter from '@riffian-web/core/src/emitter'
+import style from './list.css?inline'
 @customElement('user-votes-list')
-export class UserVotesList extends TailwindElement('') {
+export class UserVotesList extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() userVotes: any = []
   @state() dialog = false
@@ -32,6 +40,7 @@ export class UserVotesList extends TailwindElement('') {
   init = async () => {
     this.pending = true
     let result = await userVotes(bridgeStore.bridge.account)
+    console.log(result)
     this.userVotes = result.userSubjectVotes
     this.pending = false
   }
@@ -39,12 +48,14 @@ export class UserVotesList extends TailwindElement('') {
   close = () => (this.dialog = false)
 
   render() {
-    return html` <div class="grid place-items-center b-1 m-4 p-4 rounded-md">
+    return html` <div>
       ${when(
         this.pending,
         () =>
           html`<div name="Loading" class="doc-intro">
             <div class="flex flex-col gap-8 m-8">
+              <loading-skeleton num="3"></loading-skeleton>
+              <loading-skeleton num="3"></loading-skeleton>
               <loading-skeleton num="3"></loading-skeleton>
             </div>
           </div>`
@@ -52,56 +63,53 @@ export class UserVotesList extends TailwindElement('') {
       ${when(
         !this.pending,
         () =>
-          html`<table class="w-full text-left border-collapse">
-            <thead>
-              <th>Collection</th>
-              <th>Name</th>
-              <th>Author</th>
-              <th>Current Retreat Price</th>
-              <th>Holding</th>
-              <th>Operation</th>
-            </thead>
+          html`<ul role="list">
+          <li class="flex header p-1">
+            <div class="w-16">Collection</div>
+            <div class="flex-auto text-right pr-3">Author</div>
+            <div class="flex-none w-16 text-right">Tickets</div>
+            <div class="flex-none w-16 text-right">Holding</div>
+            ${when(
+              this.pending,
+              () =>
+                html`<div>
+                  <i class="text-sm mdi mdi-loading"></i>
+                  <div></div>
+                </div>`
+            )}
+              </li>
             ${repeat(
               this.userVotes,
-              (item: any) =>
-                html`<tr>
-                  <td>
-                    <p class="w-24 h-24 rounded-md">
-                      <img-loader src=${item.subject.image} loading="lazy"></img-loader>
-                    </p>
-                  </td>
-                  <td class="py-2 pl-2 text-lg leading-6 whitespace-pre dark:text-indigo-300 font-sans">
-                    ${item.subject.name}
-                  </td>
-                  <td><ui-address .address="${item.subject.creator.address}" short avatar></ui-address></td>
-                  <td><p class="text-sm font-bold font-sans">${item.subject.supply / 10}</p></td>
-                  <td><p class="text-lg font-bold text-sky-500 font-sans">${item.holding}</p></td>
-                  <td>
-                    <div name="Dialog" class="doc-intro">
-                      <ui-button
-                        class="outlined"
-                        ?disabled="${this.disabled}"
-                        @click=${() => {
-                          this.currentAlbum = item.subject
-                          this.dialog = true
-                        }}
-                        >RETREAT</ui-button
-                      >
-                      ${when(
-                        this.dialog && item.subject.id == this.currentAlbum.id,
-                        () =>
-                          html`<retreat-vote-dialog
-                            album=${item.subject.id}
-                            url=${item.subject.image}
-                            votes=${item.subject.supply}
-                            @close=${this.close}
-                          ></retreat-vote-dialog>`
-                      )}
+              (item: any, i) =>
+                html`<li
+                  class="flex py-2 items-center cursor-pointer ${classMap({
+                    'bg-zinc-800/50': i % 2
+                  })}"
+                  @click=${() => {
+                    if (this.disabled) {
+                      emitter.emit('connect-wallet')
+                    } else {
+                      location.href = '/track/' + item.subject.id
+                    }
+                  }}
+                >
+                  <div class="flex-initial flex ">
+                    <div class="w-[4.6rem] h-[4.6rem] mr-4">
+                      <img-loader .src=${item.subject.image}></img-loader>
                     </div>
-                  </td>
-                </tr> `
+                    <div>
+                      <p class="name truncate mt-2">${item.subject.name}</p>
+                      <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
+                    </div>
+                  </div>
+                  <div class="flex-auto text-right pr-3 text-lg">
+                    <ui-address .address="${item.subject.creator.address}" short avatar></ui-address>
+                  </div>
+                  <div class="flex-none w-16 text-2xl font-light text-right">${item.subject.supply}</div>
+                  <div class="flex-none w-16 text-2xl font-light text-right">${item.holding}</div>
+                </li>`
             )}
-          </table>`
+          </div>`
       )}
     </div>`
   }
