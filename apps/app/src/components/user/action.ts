@@ -34,7 +34,6 @@ export const tracks = async (addr: string) => {
       }
     }`
   let result = await graphQuery('MediaBoard', queryJSON)
-  console.log(result)
   return result
 }
 
@@ -57,6 +56,5 @@ export const user = async (addr: string) => {
       }
     }`
   let result = await graphQuery('MediaBoard', queryJSON)
-  console.log(result)
   return result
 }

@@ -31,11 +31,8 @@ export const vote = async (album: string, amount: number, price: object) => {
  */
 export const readTwitter = async (uri: string) => {
   try {
-    console.log('URI:' + uri)
     uri = 'https://twitter.com/archdeaconsal/status/1732505736616563171'
-    console.log('url:' + 'https://publish.twitter.com/oembed?url=' + encodeURIComponent(uri))
     let tweet = await fetchJsonP('https://publish.twitter.com/oembed?url=' + encodeURIComponent(uri))
-    console.log(tweet.json())
     return tweet.json()
   } catch (err: any) {
     console.log(err)
@@ -45,7 +42,6 @@ export const readTwitter = async (uri: string) => {
 export const getSocials = async (addr: string) => {
   try {
     const contract = await getAlbumContract()
-    console.log('addr->' + addr)
     const method = 'getSocials'
     const parameters = [addr]
     const socials = await contract[method](...parameters)

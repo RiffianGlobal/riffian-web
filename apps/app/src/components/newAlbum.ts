@@ -40,7 +40,6 @@ export class NewAlbum extends TailwindElement('') {
     if (!name || !symbol) {
       this.result = 'Name or Symbol should not be blank!'
       this.err = true
-      console.log(this.result)
       return
     }
     if (!bridgeStore.bridge.account) {

@@ -32,12 +32,10 @@ export class LatestVotes extends TailwindElement(style) {
     this.pending = true
     try {
       let result = await latestVote(20)
-      console.log(result)
       this.latestVotes = result.voteLogs
     } catch (e: any) {
       console.error(e)
     }
-    console.log(this.latestVotes)
     this.pending = false
   }
 

@@ -75,7 +75,6 @@ export class VoteAlbumDialog extends TailwindElement('') {
   async readFromTwitter() {
     let uri = await getSocials(this.author)
     let tweet: Tweet = this.readFromLocal(uri)
-    console.log('Read tweet from localStorage')
     if (tweet.key.length == 0) {
       tweet = await readTwitter(this.author)
       tweet['key'] = uri
@@ -85,7 +84,6 @@ export class VoteAlbumDialog extends TailwindElement('') {
     this.socialName = tweet.author_name
     this.socialURI = tweet.author_url
     this.socialID = tweet.author_url.substring(tweet.author_url.lastIndexOf('/') + 1, tweet.author_url.length - 1)
-    console.log(this.socialID)
     this.socialVerified = tweet.html.includes(this.author)
     this.socialVerified = true
   }
@@ -111,7 +109,6 @@ export class VoteAlbumDialog extends TailwindElement('') {
       this.tx = await vote(this.album, 1, { value: (await votePriceWithFee(this.album))[0] })
       this.success = await this.tx.wait()
     } catch (err: any) {
-      console.log('ERROR:->' + err)
       if (!this.tx) {
         this.tx = {}
         this.tx.status = 0

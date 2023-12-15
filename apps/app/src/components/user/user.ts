@@ -97,7 +97,6 @@ export class TrackDetail extends TailwindElement('') {
     try {
       let result = await user(this.address)
       this.user = result.user
-      console.log('user->' + this.user)
       this.readFromTwitter()
     } catch (e: any) {
       this.promptMessage = e

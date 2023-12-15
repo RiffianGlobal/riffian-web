@@ -35,7 +35,6 @@ export const subjectInfo = async (addr: string) => {
     }
   }`
   let result = await graphQuery('MediaBoard', queryJSON)
-  console.log(result)
   return result
 }
 

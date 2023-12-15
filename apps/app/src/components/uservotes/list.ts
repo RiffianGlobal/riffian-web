@@ -40,7 +40,6 @@ export class UserVotesList extends TailwindElement(style) {
   init = async () => {
     this.pending = true
     let result = await userVotes(bridgeStore.bridge.account)
-    console.log(result)
     this.userVotes = result.userSubjectVotes
     this.pending = false
   }
