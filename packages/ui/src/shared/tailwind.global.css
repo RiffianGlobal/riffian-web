@@ -35,10 +35,10 @@
   }
   .ui-icon,
   .ui-logo {
-    @apply inline-block bg-contain;
+    @apply inline-block;
     width: var(--uiIconW);
     height: var(--uiIconH);
-    background: url(../i/ui-icon.svg) no-repeat center;
+    background: url(../i/ui-icon.svg) no-repeat center / contain;
   }
   .ui-logo {
     width: var(--uiLogoW);

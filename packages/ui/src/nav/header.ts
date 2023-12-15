@@ -2,8 +2,6 @@ import { TailwindElement, html, customElement, when, property, state, classMap }
 import { screenStore, StateController } from '@riffian-web/core/src/screen'
 // Components
 import '../connect-wallet/btn'
-import '../block-number'
-import '../network-warning'
 import '../link'
 import '../button'
 

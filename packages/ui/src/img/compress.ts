@@ -10,7 +10,7 @@ export const compress = async (src: string, { maxW = 400 } = {}): Promise<string
     if (cachedBlob) return resolve(cachedBlob)
     const img = new Image()
     img.src = src
-    // img.crossOrigin = 'anonymous'
+    img.crossOrigin = 'anonymous'
     img.onload = async () => {
       let [width, height] = [img.width, img.height]
       let [sx, sy, sw, sh] = [0, 0, width, height]
