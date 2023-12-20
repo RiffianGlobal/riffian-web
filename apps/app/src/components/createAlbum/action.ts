@@ -2,7 +2,8 @@ import { getAccount, getContract, assignOverrides } from '@riffian-web/ethers/sr
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 
-export const getAlbumContract = async () => getContract('MediaBoard', { account: await getAccount() })
+export const getAlbumContract = async (readonly = false) =>
+  getContract('MediaBoard', { account: readonly ? undefined : await getAccount() })
 
 export const createAlbum = async (name: string, image: string, url: string) => {
   const contract = await getAlbumContract()
@@ -45,14 +46,14 @@ export const bindSocial = async (platform: string, id: string, uri: string) => {
 }
 
 export const getSocials = async (address: string) => {
-  const contract = await getAlbumContract()
+  const contract = await getAlbumContract(true)
   const method = 'getSocials'
   const parameters = [address]
   return await contract[method](...parameters)
 }
 
 export const albumData = async (album: string) => {
-  const contract = await getAlbumContract()
+  const contract = await getAlbumContract(true)
   const method = 'subjectToData'
   const overrides = {}
   const parameters = [album]

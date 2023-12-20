@@ -1,57 +1,47 @@
 import { JsonRpcProvider, BrowserProvider, WebSocketProvider } from 'ethers'
 import Network from './networks'
-import emitter from '@riffian-web/core/src/emitter'
-import { getChainId, getChainIdSync } from './detectEthereum'
+import { walletStore } from './bridge'
+import { State, property } from './state'
 
-class Provider {
-  public provider: BrowserProvider | JsonRpcProvider | WebSocketProvider | any
-  public network: any
-  public storage: any
+export class Provider extends State {
+  @property() public provider?: BrowserProvider | JsonRpcProvider | WebSocketProvider | any
+  @property() public readonly network: Network
+  private storage: any
   constructor(options: useBridgeOptions = {}) {
-    let { chainId } = options
-    const { persistent } = options
+    super()
+    const { chainId, persistent } = options
     if (!persistent) this.storage = sessionStorage.getItem('chainId')
-    // Try chainId
-    if (!chainId) {
-      // !!! ethereum.chainId is deprecated, but this may make getter faster
-      if (window.ethereum?.chainId) chainId = getChainIdSync()
-      else if (this.storage) chainId = this.storage
-    }
-    // Try chainId again
-    if (!chainId) getChainId().then((chainId: any) => chainId && this.update({ chainId }))
-    // Init
-    if (chainId) chainId = `0x${(+chainId).toString(16)}`
-    this.network = new Network(chainId)
-    this.update({ chainId })
+    let wallet = walletStore.wallet ?? walletStore.wallets[0].app
+    this.network = new Network(chainId ?? wallet?.chainId ?? this.storage)
+    if (walletStore.wallet) this.update(options)
+    walletStore.subscribe(() => this.update(options), 'wallet')
+    this.network.subscribe(() => this.update(options), 'chainId')
   }
-  update = async (options: useBridgeOptions = {}) => {
-    let { chainId } = options
+  private update = async (options: useBridgeOptions = {}) => {
+    let { chainId } = this.network
     const { persistent, provider, rpc } = options
-    if (!persistent) {
-      const ethereumChainId = getChainIdSync()
-      if (ethereumChainId && chainId != ethereumChainId) chainId = ethereumChainId
+    let wallet = walletStore.wallet ?? walletStore.wallets[0].app
+    if (!persistent && wallet?.chainId) {
+      chainId = wallet.chainId
     }
     // TODO: Allow update when options.rpc changed
     if (this.provider) {
-      if (chainId == this.network.chainId) return
       this.provider.removeAllListeners()
     }
     if (!chainId) chainId = Network.defaultChainId
-    this.network.chainId = chainId
-    if (!persistent) this.storage = sessionStorage.setItem('chainId', chainId)
-    if (!persistent && window.ethereum) {
-      this.provider = new BrowserProvider(window.ethereum)
+    if (!persistent && wallet) {
+      this.storage = sessionStorage.setItem('chainId', chainId)
+      this.provider = await wallet.getProvider()
     } else {
       const _provider = provider || (this.network.providerWs ? WebSocketProvider : JsonRpcProvider)
       const _rpc = rpc || (this.network.providerWs ? this.network.providerWs : this.network.provider)
       this.provider = new _provider(_rpc)
     }
-    emitter.emit('network-change', '')
   }
-  get request() {
-    const { ethereum } = window
-    return ethereum?.request ?? this.provider.send
-  }
+  // seems not used
+  // get request() {
+  //   return this.provider?.request ?? this.provider?.send
+  // }
 }
 
 let provider: any

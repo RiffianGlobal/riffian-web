@@ -1,58 +1,26 @@
-import { Network } from 'ethers'
-
 // All Networks
 const apiKeyInfura = import.meta.env.VITE_KEY_INFURA
-export const native = { name: 'Ethereum', symbol: 'ETH', decimals: 18 }
+export function chainIdStr(chainId: number): string {
+  return '0x' + chainId.toString(16)
+}
+// @todo seems native is unused
+// export const native = { name: 'Ethereum', symbol: 'ETH', decimals: 18 }
+
 export const AllNetworks = {
-  // '0x1': {
-  //   chainId: '0x1',
-  //   title: 'Mainnet',
-  //   name: 'mainnet',
-  //   native,
-  //   // provider: 'https://rpc.ankr.com/eth',
-  //   // providerWs: 'wss://rpc.ankr.com/ws'
-  //   provider: `https://mainnet.infura.io/v3/${apiKeyInfura}`,
-  //   providerWs: `wss://mainnet.infura.io/ws/v3/${apiKeyInfura}`,
-  //   scan: 'https://etherscan.io',
-  //   icon: ''
-  // },
   '0xfa2': {
     chainId: '0xfa2',
     title: 'Fantom Testnet',
     name: 'FantomTestnet',
     native: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
     provider: 'https://rpc.testnet.fantom.network',
-    providerWs: 'wss://rpc.testnet.fantom.network/ws',
+    providerWs: '',
     scan: 'https://testnet.ftmscan.com',
     ens: { address: '', network: 4002 },
     icon: ''
   }
-  // '0xaa36a7': {
-  //   chainId: '0xaa36a7',
-  //   title: 'Sepolia testnet',
-  //   name: 'SepoliaTestnet',
-  //   native,
-  //   // provider: 'https://rpc.sepolia.dev',
-  //   // providerWs: 'wss://rpc.sepolia.dev/ws',
-  //   provider: `https://sepolia.infura.io/v3/${apiKeyInfura}`,
-  //   providerWs: `wss://sepolia.infura.io/ws/v3/${apiKeyInfura}`,
-  //   scan: 'https://sepolia.etherscan.io',
-  //   icon: ''
-  // },
-  // '0x5': {
-  //   chainId: '0x5',
-  //   title: 'Görli Testnet',
-  //   name: 'GoerliTestnet',
-  //   native,
-  //   // provider: 'https://rpc.goerli.dev',
-  //   // providerWs: 'wss://rpc.goerli.dev/ws',
-  //   provider: `https://goerli.infura.io/v3/${apiKeyInfura}`,
-  //   providerWs: `wss://goerli.infura.io/ws/v3/${apiKeyInfura}`,
-  //   scan: 'https://goerli.etherscan.io',
-  //   icon: ''
-  // }
 }
-export const EtherNetworks = ['0x1', '0xaa36a7', '0x5']
+
+export const EtherNetworks = ['0xfa2']
 
 export const unknownNetwork = {
   title: 'Unsupported Network',

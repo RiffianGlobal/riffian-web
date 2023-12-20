@@ -50,7 +50,7 @@ export const routes = [
   {
     name: 'user',
     path: '/user/:addr?',
-    render: ({ addr = '' }) => html`<user-page addr="${addr}"></user-page>`,
+    render: ({ addr = '' }) => html`<user-page .addr="${addr}"></user-page>`,
     enter: async () => {
       await import('~/views/user')
       return true

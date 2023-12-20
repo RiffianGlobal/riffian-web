@@ -6,6 +6,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "@doid/connect-ethers": "^0.1.0",
     "@ensdomains/address-encoder": "^0.2.22",
     "@riffian-web/core": "workspace:latest",
     "tr46": "^4.1.1"

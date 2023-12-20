@@ -1,4 +1,3 @@
-import { State, property } from '@lit-app/state'
 import Network, { Networks } from './networks'
 import Contracts from './constants/contracts'
 import { Bridge, walletStore } from './bridge'
@@ -6,19 +5,16 @@ import emitter from '@riffian-web/core/src/emitter'
 import { gasLimit, nowTs } from './utils'
 import { normalizeTxErr } from './parseErr'
 import { Contract, formatUnits } from 'ethers'
+import { State, property, reflectProperty } from './state'
 export { StateController } from '@lit-app/state'
 
-// Singleton Data
+/** Singleton Data, to keep bridge object and trigger updates as a {@link State} */
 class BridgeStore extends State {
-  @property() blockNumber!: number
-  @property() bridge!: Bridge
-  @property() _account: string = ''
-  constructor() {
-    super()
-    emitter.on('wallet-changed', () => {
-      this.reset() //  Trick for bridge.network cantnot update immediately probs
-      this._account = walletStore.account
-    })
+  @property({ skipReset: true }) blockNumber!: number
+  @property({ skipReset: true }) bridge!: Bridge
+  @property({ skipReset: true }) private _account: string = ''
+  init() {
+    reflectProperty(walletStore, 'account', this, '_account')
   }
   get stateTitle(): string {
     return this.bridge.state || ''
@@ -59,10 +55,11 @@ class BlockPolling {
     this.getBlockNumber()
     // Events
     emitter.on('tx-success', () => this.broadcast())
-    emitter.on('network-change', () => {
+    bridgeStore.bridge.subscribe(() => {
       this.reset()
+      this.getBlockNumber()
       this.listenProvider()
-    })
+    }, 'provider')
     this.listenProvider()
     // Polling
     this.polling()
@@ -74,7 +71,7 @@ class BlockPolling {
     bridgeStore.blockNumber = v
   }
   getBlockNumber = async () => {
-    this.block = await bridgeStore.bridge.provider.getBlockNumber()
+    if (bridgeStore.bridge.provider) this.block = await bridgeStore.bridge.provider.getBlockNumber()
   }
   polling = () => {
     clearTimeout(this.timer)
@@ -92,7 +89,7 @@ class BlockPolling {
     Object.assign(this.blockDebounce, { timer: null, interval: 50 })
   }
   listenProvider = async () => {
-    bridgeStore.bridge.provider.on('block', this.onBlock)
+    bridgeStore.bridge.provider?.on('block', this.onBlock)
   }
   onBlock = (block: number) => {
     if (block <= this.block) return
@@ -111,6 +108,7 @@ class BlockPolling {
 const initBridge = (options?: useBridgeOptions) => {
   if (!bridgeStore.bridge) {
     bridgeStore.bridge = new Bridge(options)
+    bridgeStore.init()
     new BlockPolling()
   }
   return bridgeStore.bridge
@@ -138,7 +136,7 @@ export const useBridgeAsync = async (options?: useBridgeOptions) => {
 
 export const getABI = async (name: string) => (await import(`./abi/${name}.json`)).default
 export const getBridge = async () => (await useBridgeAsync()).bridge
-export const getBridgeProvider = async () => (await getBridge()).provider
+export const getBridgeProvider = async () => (await getBridge()).provider!
 export const getWalletAccount = async () =>
   ((await (await getBridgeProvider()).send('eth_requestAccounts')) ?? [])[0] ?? ''
 export const getAccount = async (force = false) => (force ? await getWalletAccount() : (await getBridge()).account)
@@ -147,15 +145,14 @@ export const getNetworkSync = () => Networks[Network.chainId]
 export const getChainId = async () => (await getNetwork()).chainId
 export const getEnvKey = async (key = '', withoutAddr = false) =>
   (withoutAddr ? await getChainId() : (await useBridgeAsync()).envKey) + (key ? `.${key}` : '')
-export const getSigner = async (account: string) =>
-  (await getBridge()).provider.getSigner(account || (await getAccount()))
+export const getSigner = async (account: string) => (await getBridge()).getSigner(account || (await getAccount()))
 export const getBlockNumber = async () => {
   const { blockNumber } = await useBridgeAsync()
   return bridgeStore.blockNumber || blockNumber
 }
 export const getNonce = async (address?: string) => {
   if (!address) address = await getAccount()
-  return await bridgeStore.bridge.provider.getTransactionCount(address)
+  return await bridgeStore.bridge?.provider?.getTransactionCount(address)
 }
 export const getGraph = async (path = '') => ((await getNetwork()).graph ?? '') + path
 
@@ -216,7 +213,6 @@ export const getContract = async (
   const abi = await getABI(name)
   if (!abi) throw new Error(`abi not found: ${name}`)
   if (!address && !abi) throw new Error(`Contract ${address} not found`)
-  if (!account) account = await getAccount()
   if (!account && requireAccount) account = await getAccount()
   return new Contract(address, abi, await (account ? getSigner(account) : getBridgeProvider()))
 }

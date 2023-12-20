@@ -2,7 +2,6 @@ import { customElement, TailwindElement, html, state, when, property, classMap }
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import emitter from '@riffian-web/core/src/emitter'
 // Components
-import './dialog'
 import '../address'
 import '../menu/drop'
 import '../copy/icon'
@@ -11,18 +10,21 @@ import '../button'
 import style from './btn.css?inline'
 @customElement('connect-wallet-btn')
 export class ConnectWalletBtn extends TailwindElement(style) {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindNetwork: any = new StateController(this, bridgeStore.bridge.network)
+  bindBridge: any = new StateController(this, bridgeStore.bridge)
   @property({ type: Boolean }) dropable = false
   @property({ type: Boolean }) hideAddr = false
 
-  @state() dialog = false
   @state() menu = false
 
   get account() {
-    return bridgeStore.account
+    return bridgeStore.bridge.account
   }
   get addr() {
     return bridgeStore.bridge?.shortAccount
+  }
+  get doid() {
+    return bridgeStore.bridge.doid
   }
   get scan() {
     return `${bridgeStore.bridge?.network.current.scan}/address/${bridgeStore.bridge?.account}`
@@ -32,12 +34,10 @@ export class ConnectWalletBtn extends TailwindElement(style) {
     if (this.dropable && this.account) {
       this.menu = !this.menu
     } else {
-      this.dialog = true
+      bridgeStore.bridge.select(0)
     }
   }
-  close() {
-    this.dialog = false
-  }
+  close() {}
 
   connectedCallback(): void {
     super.connectedCallback()
@@ -57,7 +57,7 @@ export class ConnectWalletBtn extends TailwindElement(style) {
         ?icon=${this.dropable}
         btnSm
         text
-        dropClass="w-72"
+        dropClass="w-96"
         btnClass="text"
       >
         <ui-button icon slot="toggle"><ui-address avatar ?hideAddr=${this.hideAddr} short></ui-address></ui-button>
@@ -65,7 +65,7 @@ export class ConnectWalletBtn extends TailwindElement(style) {
         <div class="flex w-full justify-between items-center py-3 pl-4 pr-2">
           <div class="flex items-center space-x-2">
             <ui-address-avatar></ui-address-avatar>
-            <span>${this.addr}</span>
+            <span>${this.doid}(${this.addr})</span>
             <span>
               <ui-copy-icon .value=${this.account}></ui-copy-icon>
               <ui-button sm icon href=${this.scan}><i class="mdi mdi-open-in-new"></i></ui-button
@@ -80,11 +80,6 @@ export class ConnectWalletBtn extends TailwindElement(style) {
         <slot name="submenu"></slot>
       </ui-drop>`
     // Dialog Button
-    else
-      return html`
-        <ui-button class="outlined" sm @click=${() => (this.dialog = true)}>Connect Wallet</ui-button>
-        <!-- Dialog -->
-        ${when(this.dialog, () => html`<connect-wallet-dialog @close=${this.close}></connect-wallet-dialog>`)}
-      `
+    else return html` <ui-button class="outlined" sm @click=${() => this.show()}>Connect Wallet</ui-button> `
   }
 }

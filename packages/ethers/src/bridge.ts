@@ -1,91 +1,71 @@
-import { State, property } from '@lit-app/state'
-import icon from './wallet/metamask/icon.svg'
 import { shortAddress } from './utils'
-import Provider from './provider'
-import { getNetwork } from './networks'
-import detectEthereum, { getAccounts, ensureMetaMaskInjected } from './detectEthereum'
-import { WalletState, emitWalletChange } from './wallet'
-import { EtherNetworks } from './constants/networks'
-import MetaMask from './wallet/metamask'
+import { Provider } from './provider'
+import createProvider from './provider'
+import { Wallet, WalletState, emitWalletChange } from './wallet'
+import { DoidWallet } from './doid'
+import { State, property, reflectProperty, reflectSubProperty } from './state'
+import { JsonRpcApiProvider, JsonRpcSigner } from 'ethers'
+import Network from './networks'
 
-type WalletApp = {
+export interface WalletApp {
   name: string
   title: string
   icon: string
-  app: any
-  import: () => Promise<any>
+  app?: Wallet
+  import: () => Promise<Wallet>
   state?: WalletState
 }
 
 type WalletList = WalletApp[]
 
-export const Wallets: WalletList = [
-  {
-    name: 'metamask',
-    title: 'MetaMask',
-    icon,
-    app: undefined,
-    import: async () => {
-      // const MetaMask = (await import(`./wallet/metamask`)).default
-      return new MetaMask(Provider())
-    }
-  }
-]
+/** Available wallet apps */
+export const Wallets: WalletList = [new DoidWallet()]
 
 class WalletStore extends State {
-  @property() wallet!: any
-  get account(): string {
-    return this.wallet?.account ?? ''
+  @property() public wallet?: Wallet
+  @property() public wallets: WalletList = Wallets
+  @property() public account: string
+  constructor() {
+    super()
+    this.account = this.wallet?.account ?? ''
+    this.subscribe((_, value) => {
+      if (!value) this.account = ''
+      else reflectProperty(value, 'account', this)
+    }, 'wallet')
   }
 }
+/** Singleton wallet store, to keep current selected wallet. */
 export const walletStore = new WalletStore()
 
-export class Bridge {
-  public selected: WalletApp | undefined
-  public wallets: WalletList
-  public promise: any
-  public Provider: any
-  public store: any
+export class Bridge extends State {
+  private selected: WalletApp | undefined
+  private promise: any
+  private readonly Provider: Provider
+  @property({ skipReset: true }) public readonly store: WalletStore
+  @property({ skipReset: true }) public readonly network: Network
+  @property({ skipReset: true }) public provider?: JsonRpcApiProvider
+  @property({ skipReset: true }) public wallet?: Wallet
+  @property({ skipReset: true }) public doid?: string
+  @property({ skipReset: true }) public account?: string
   constructor(options?: useBridgeOptions) {
-    this.wallets = Wallets
-    this.Provider = Provider(options)
+    super()
+    this.Provider = createProvider(options)
+    this.provider = this.Provider.provider
+    reflectProperty(this.Provider, 'provider', this)
     this.selected = undefined
     this.promise = undefined
     this.store = walletStore
+    this.wallet = walletStore.wallet
+    reflectProperty(walletStore, 'wallet', this)
+    this.account = this.wallet?.account
+    reflectSubProperty(walletStore, 'wallet', 'account', this)
+    this.doid = this.wallet?.doid
+    reflectSubProperty(walletStore, 'wallet', 'doid', this)
+    this.network = this.Provider.network
   }
   alreadyTried = false
-  get wallet() {
-    return walletStore.wallet
-  }
   async switchNetwork(chainId: ChainId) {
-    const { chainId: currentChainId } = this.network
-    if (currentChainId === chainId) return
-    const target = getNetwork(chainId)
-    const { ethereum } = window
-    if (ethereum) {
-      const isEtherNetwork = EtherNetworks.includes(chainId)
-      const method = isEtherNetwork ? 'wallet_switchEthereumChain' : 'wallet_addEthereumChain'
-      const param = { chainId: target.chainId }
-      if (!isEtherNetwork)
-        Object.assign(param, {
-          chainName: target.name,
-          nativeCurrency: target.native ?? { name: 'Ethereum', symbol: 'ETH', decimals: 18 },
-          rpcUrls: [target.provider],
-          blockExplorerUrls: [target.scan],
-          iconUrls: ['']
-        })
-      try {
-        ethereum.on('chainChanged', () => window.location.reload())
-        await ethereum.request({
-          method,
-          params: [param]
-        })
-      } catch (err) {
-        console.error(err)
-      }
-    } else {
-      this.Provider.update({ chainId })
-    }
+    return this.wallet?.updateProvider(chainId)
   }
   async regToken(token: Tokenish, { alt = false, ext = 'svg' } = {}) {
     const { ethereum } = window
@@ -104,17 +84,17 @@ export class Bridge {
       }
     })
   }
-  get provider() {
-    return this.Provider.provider
-  }
-  get network() {
-    return this.Provider.network
-  }
-  get account(): string {
-    return this.wallet?.account ?? this.connectedAccounts[0] ?? ''
+  async getSigner(address: string): Promise<JsonRpcSigner> {
+    let wallet = this.wallet as DoidWallet
+    let signer = await wallet.getSigner(address)
+    if (!signer || signer.address != address) {
+      console.debug(signer ? `address mismatch, want ${address}, connector is ${signer.address}` : 'can not get signer')
+      throw new Error('failed to get signer')
+    }
+    return signer
   }
   get shortAccount() {
-    return shortAddress(this.account)
+    return shortAddress(this.account ?? '')
   }
   get state() {
     return this.wallet?.state ?? this.selected?.app?.state ?? WalletState.CONNECTING
@@ -123,18 +103,17 @@ export class Bridge {
     return this.state === WalletState.CONNECTED
   }
   connecting: any = undefined
-  connectedAccounts = []
+  connectedAccounts?: Address[]
   async tryConnect(options: useBridgeOptions = {}) {
     const { autoConnect = false } = options
     if (!this.connecting)
       this.connecting = (async () => {
-        if (this.wallet?.inited) return
-        let { ethereum } = window
-        if (autoConnect || !ethereum) ethereum = await detectEthereum()
-        if (ensureMetaMaskInjected()) {
-          this.connectedAccounts = (await getAccounts(ethereum)) || []
-          if (this.connectedAccounts[0]) await this.select(0, false)
-        }
+        let wallet = (this.wallet ??
+          walletStore.wallets[0].app ??
+          (await walletStore.wallets[0].import())) as DoidWallet
+        if (wallet.state == WalletState.CONNECTED) return
+        this.connectedAccounts = await wallet.getAddresses()
+        if (this.connectedAccounts[0]) await this.select(0, false)
         this.connecting = undefined
         this.alreadyTried = true
       })()
@@ -156,11 +135,10 @@ export class Bridge {
     }
   }
   async select(i: number = 0, force = true) {
-    const selected = (this.selected = this.wallets[i])
+    const selected = (this.selected = walletStore.wallets[i])
     if (!this.promise)
       this.promise = (async () => {
-        if (!selected.app) selected.app = await selected.import()
-        const wallet = selected.app
+        const wallet = selected.app ?? (await selected.import())
         try {
           await wallet.connect({ force })
         } catch (err) {

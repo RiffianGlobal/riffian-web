@@ -33,7 +33,7 @@ export class TrackDetail extends TailwindElement('') {
   @state() socialURI = ''
   @state() socialID = ''
   @state() socialVerified = false
-  @state() user: any = {}
+  @state() user: any
   @state() voteList: any = []
   @state() pending = false
   @state() prompt = false

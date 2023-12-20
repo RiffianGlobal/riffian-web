@@ -1,4 +1,4 @@
-import { customElement, TailwindElement, html, when, property, classMap } from '../shared/TailwindElement'
+import { customElement, TailwindElement, html, when, property, state } from '../shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { screenStore } from '@riffian-web/core/src/screen'
 import { shortAddress } from '@riffian-web/ethers/src/utils'
@@ -8,6 +8,7 @@ import '../link'
 import '../copy/icon'
 
 import style from './address.css?inline'
+import { getAddress } from 'ethers'
 @customElement('ui-address')
 export class UIAddress extends TailwindElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
@@ -18,6 +19,7 @@ export class UIAddress extends TailwindElement(style) {
   @property({ type: Boolean }) copy = false
   @property({ type: Boolean }) short = false // if false, auto short address
   @property() href?: string
+  @state() doid?: string
 
   get addr() {
     return typeof this.address === 'string' ? this.address : bridgeStore.bridge.account
@@ -26,7 +28,14 @@ export class UIAddress extends TailwindElement(style) {
     return typeof this.href === 'string'
   }
   get showAddr() {
-    return this.short || screenStore.screen.isMobi ? shortAddress(this.addr) : this.addr
+    if (!this.doid && this.addr)
+      bridgeStore.bridge.provider?.lookupAddress(this.addr).then((name) => (this.doid = name ?? ''))
+    let showAddr = this.short || screenStore.screen.isMobi ? shortAddress(this.addr) : this.addr
+    return this.doid
+      ? `${this.doid}(${showAddr})`
+      : this.doid === undefined
+        ? html`<i class="mdi mdi-loading"></i> (${showAddr})`
+        : showAddr
   }
 
   override render() {

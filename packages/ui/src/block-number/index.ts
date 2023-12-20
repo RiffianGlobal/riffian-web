@@ -14,7 +14,7 @@ export class BlockNumber extends TailwindElement(style) {
     return bridgeStore.bridge.provider
   }
   get err() {
-    return !this.provider.ready || !bridgeStore.blockNumber
+    return !this.provider?.ready || !bridgeStore.blockNumber
   }
   async motion() {
     this.pending = true

@@ -25,12 +25,13 @@ export class UserVotesList extends TailwindElement(style) {
   @state() pending = false
 
   get disabled() {
-    return !bridgeStore.bridge.account
+    return !bridgeStore.account
   }
 
   connectedCallback() {
     super.connectedCallback()
     this.init()
+    bridgeStore.bridge.subscribe(this.init)
   }
 
   getRandomInt(max: number) {
@@ -38,8 +39,9 @@ export class UserVotesList extends TailwindElement(style) {
   }
 
   init = async () => {
+    if (this.disabled) return
     this.pending = true
-    let result = await userVotes(bridgeStore.bridge.account)
+    let result = await userVotes(bridgeStore.account!)
     this.userVotes = result.userSubjectVotes
     this.pending = false
   }

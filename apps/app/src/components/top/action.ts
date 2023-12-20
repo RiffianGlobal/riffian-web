@@ -3,8 +3,10 @@ import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 import fetchJsonP from 'fetch-jsonp'
+import { userSubjectVotes } from '../uservotes/action'
 
-export const getAlbumContract = async () => getContract('MediaBoard', { account: await getAccount() })
+export const getAlbumContract = async (readonly = false) =>
+  getContract('MediaBoard', { account: readonly ? undefined : await getAccount() })
 
 export const vote = async (album: string, amount: number, price: object) => {
   const contract = await getAlbumContract()
@@ -41,7 +43,7 @@ export const readTwitter = async (uri: string) => {
 
 export const getSocials = async (addr: string) => {
   try {
-    const contract = await getAlbumContract()
+    const contract = await getAlbumContract(true)
     const method = 'getSocials'
     const parameters = [addr]
     const socials = await contract[method](...parameters)
@@ -73,7 +75,7 @@ export const retreat = async (album: string, amount: number) => {
 }
 
 export const albumData = async (album: string) => {
-  const contract = await getAlbumContract()
+  const contract = await getAlbumContract(true)
   const method = 'subjectToData'
   const overrides = {}
   const parameters = [album]
@@ -82,17 +84,12 @@ export const albumData = async (album: string) => {
 }
 
 export const myVotes = async (album: string) => {
-  const contract = await getAlbumContract()
-  const method = 'userSubjectVotes'
-  const overrides = {}
-  const parameters = [album, bridgeStore.bridge.account]
-  await assignOverrides(overrides, contract, method, parameters)
-  return await contract[method](...parameters)
+  return userSubjectVotes(album, bridgeStore.bridge.account)
 }
 
 export const retreatPrice = async (album: string) => {
   try {
-    const contract = await getAlbumContract()
+    const contract = await getAlbumContract(true)
     const method = 'getRetreatPrice'
     const parameters = [album, 1]
     return await contract[method](...parameters)
@@ -102,14 +99,14 @@ export const retreatPrice = async (album: string) => {
 }
 
 export const votePrice = async (album: string) => {
-  const contract = await getAlbumContract()
+  const contract = await getAlbumContract(true)
   const method = 'getVotePrice'
   const parameters = [album, 1]
   return await contract[method](...parameters)
 }
 
 export const votePriceWithFee = async (album: string) => {
-  const contract = await getAlbumContract()
+  const contract = await getAlbumContract(true)
   const method = 'getVotePriceWithFee'
   const overrides = {}
   const parameters = [album, 1]

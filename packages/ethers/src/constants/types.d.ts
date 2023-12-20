@@ -8,7 +8,13 @@ declare interface NetworkInfo {
   providerWs?: string
   scan: string
   icon: string
-  native?: Record<string, unknown>
+  ens?: { address?: Address; network: number }
+  native?: {
+    name: string
+    /** 2-6 characters long */
+    symbol: string
+    decimals: number
+  }
   domain?: string
 }
 declare interface ChainType {

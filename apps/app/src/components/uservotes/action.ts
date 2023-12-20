@@ -3,10 +3,11 @@ import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 
-export const getAlbumContract = async () => getContract('MediaBoard', { account: await getAccount() })
+export const getAlbumContract = async (readonly = false) =>
+  getContract('MediaBoard', { account: readonly ? undefined : await getAccount() })
 
 export const retreatPrice = async (album: string, amount: number) => {
-  const contract = await getAlbumContract()
+  const contract = await getAlbumContract(true)
   const method = 'getRetreatPrice'
   const overrides = {}
   const parameters = [album, amount]
@@ -21,7 +22,7 @@ export const retreatPrice = async (album: string, amount: number) => {
  * @returns
  */
 export const userSubjectVotes = async (subject: string, address: string) => {
-  const contract = await getAlbumContract()
+  const contract = await getAlbumContract(true)
   const method = 'userSubjectVotes'
   const overrides = {}
   const parameters = [subject, address]

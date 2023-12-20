@@ -1,5 +1,7 @@
 import emitter from '@riffian-web/core/src/emitter'
 import { sleep } from './utils'
+import { State } from './state'
+import { Provider, Signer } from 'ethers'
 
 export enum WalletState {
   DISCONNECTED = 'Disconnected',
@@ -9,6 +11,20 @@ export enum WalletState {
   INSTALLED = 'Installed',
   INSTALLING = 'Installing...',
   WAITING = 'Waiting...'
+}
+
+export interface Wallet extends State {
+  state: WalletState
+  account: string
+  doid: string
+  chainId: string
+  getAddresses: () => Promise<string[]>
+  getProvider: () => Promise<Provider>
+  getSigner: (account: string) => Promise<Signer>
+  updateProvider: (chainId: string) => any
+  connect: (config?: { force: boolean }) => any
+  disconnect: () => any
+  install: () => any
 }
 
 export const emitWalletChange = async () => {

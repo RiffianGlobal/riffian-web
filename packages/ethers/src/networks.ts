@@ -1,4 +1,6 @@
+import { walletStore } from './bridge'
 import { AllNetworks, unknownNetwork, EtherNetworks } from './constants/networks'
+import { State, property, reflectProperty, reflectSubProperty } from './state'
 
 const isProd = import.meta.env.MODE === 'production'
 const mainnetOffline = !!import.meta.env.VITE_DISABLE_MAINNET
@@ -18,29 +20,29 @@ export const getNetwork = (req?: string, exactly: boolean = false): NetworkInfo 
   return res ?? def
 }
 
-export class Network {
+export class Network extends State {
   public static readonly mainnetChainId: ChainId = mainnetChainId
   public static readonly defaultChainId: ChainId = defaultChainId
   public static chainId: ChainId
-  public Networks: typeof Networks
   public opts: Record<string, unknown> = {}
-  private _chainId: ChainId
+  @property() chainId?: ChainId
   constructor(chainId?: ChainId, opts = {}) {
-    this._chainId = this.chainId = chainId || Network.defaultChainId
-    this.Networks = Networks
+    super()
+    this.chainId = Network.chainId = chainId ?? walletStore.wallet?.chainId ?? Network.defaultChainId
+    // ensure this.chainId=walletStore.wallet?.chainId ?? undefined
+    reflectSubProperty(walletStore, 'wallet', 'chainId', this)
+    // ensure Network.chainId=this.chainId
+    reflectProperty(this, 'chainId', Network)
     Object.assign(this.opts, opts)
   }
-  get chainId(): ChainId {
-    return this._chainId
-  }
-  set chainId(chainId: ChainId) {
-    Network.chainId = this._chainId = (chainId as any)?.value ?? chainId
+  get Networks() {
+    return Networks
   }
   get isMainnet() {
-    return [Network.mainnetChainId].includes(this.chainId)
+    return this.chainId ? [Network.mainnetChainId].includes(this.chainId) : false
   }
   get current() {
-    return this.Networks[this.chainId] ?? unknownNetwork
+    return this.chainId ? this.Networks[this.chainId] ?? unknownNetwork : unknownNetwork
   }
   get default() {
     return this.Networks[defaultChainId]

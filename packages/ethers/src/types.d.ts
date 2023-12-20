@@ -73,5 +73,6 @@ declare interface useBridgeOptions {
   provider?: JsonRpcProvider | WebSocketProvider
   rpc?: string
   autoConnect?: boolean
-  persistent?: boolean // ignore injected ethereum
+  /** ignore injected ethereum */
+  persistent?: boolean
 }

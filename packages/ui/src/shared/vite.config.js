@@ -7,6 +7,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import { createHtmlPlugin } from 'vite-plugin-html'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 import minifyHTMLLiterals from 'rollup-plugin-minify-html-literals'
+
 import { config } from 'dotenv'
 // Polyfills
 import legacy from '@vitejs/plugin-legacy'
@@ -24,8 +25,7 @@ const mdi = `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font
 
 const define = {
   'import.meta.env.VITE_APP_VER': JSON.stringify(env.npm_package_version),
-  'import.meta.env.VITE_APP_MDI': JSON.stringify(mdi),
-  global: 'globalThis'
+  'import.meta.env.VITE_APP_MDI': JSON.stringify(mdi)
 }
 
 export const viteConfig = (options = {}) => {
@@ -45,7 +45,11 @@ export const viteConfig = (options = {}) => {
         https
       },
       resolve: {
-        alias: [{ find: /^[~@]\//, replacement: pathSrc + '/' }]
+        alias: {
+          '~': pathSrc + '/',
+          // bugfix: crypto-addr-codec@0.1.7
+          'crypto-addr-codec': 'crypto-addr-codec/dist/index.js'
+        }
       },
       build: {
         ...(isDev ? { minify: false, sourcemap: 'inline' } : {}),
@@ -62,7 +66,7 @@ export const viteConfig = (options = {}) => {
       },
       plugins: [
         ...(https ? [mkcert()] : []),
-        minifyHTMLLiterals.default(),
+        ...(isDev ? [] : [(minifyHTMLLiterals.default ?? minifyHTMLLiterals)()]),
         ...(viteConfigOptions.splitChunk === false ? [] : [splitVendorChunkPlugin()]),
         ...(viteConfigOptions.html === false
           ? []
