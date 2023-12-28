@@ -152,8 +152,8 @@ importers:
   packages/ethers:
     dependencies:
       '@doid/connect-ethers':
-        specifier: ^0.1.0
-        version: 0.1.0(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(ethers@6.9.0)(lit@3.1.0)(react@18.2.0)(typescript@5.3.3)
+        specifier: ^0.3.0
+        version: 0.3.0(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(ethers@6.9.0)(lit@3.1.0)(react@18.2.0)(typescript@5.3.3)
       '@ensdomains/address-encoder':
         specifier: ^0.2.22
         version: 0.2.22
@@ -1905,12 +1905,12 @@ packages:
     engines: {node: '>=14'}
     dev: false
 
-  /@doid/connect-ethers@0.1.0(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(ethers@6.9.0)(lit@3.1.0)(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-TEls7kOcNq3cb3C+BtUxb4E3v0UrFn1ilEpLJxfggV5SmI5fyCGuLljLzizuJQUaB9F2BXxDTXifZBAbqU+fNg==}
+  /@doid/connect-ethers@0.3.0(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(ethers@6.9.0)(lit@3.1.0)(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-MeuTUaHUZml7h1GQASPfiesdT2P1g8WvAiwt7VE5+f0+jOuaoUDacRS1GbfkgIk2N446iORAstF6wOUDT4U2Yw==}
     peerDependencies:
       ethers: ^6
     dependencies:
-      '@doid/connect': 0.2.0(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(react@18.2.0)(typescript@5.3.3)
+      '@doid/connect': 0.3.0(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(react@18.2.0)(typescript@5.3.3)
       '@doid/ui-core': 0.0.2(@types/react@18.2.45)(lit@3.1.0)
       '@wagmi/core': 1.4.12(@types/react@18.2.45)(react@18.2.0)(typescript@5.3.3)(viem@1.21.0)
       ethers: 6.9.0
@@ -1946,8 +1946,8 @@ packages:
       - zod
     dev: false
 
-  /@doid/connect@0.2.0(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-cUW8VUy/Y5JTB5RLH7orwUBVKI77GuV9LqRYYi+BoMbZMKbYK8gXHPJFVwZjEMIoFmA2cFtv0aPlOrf+YydcFQ==}
+  /@doid/connect@0.3.0(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-D2rlgVIpvJb1p7fSAVjWiO7IHciAjerQc+HghHh3janWa4qkGe5xh70zlPJvdRCasgTfSkZW6sR7t/MmZsMk+w==}
     dependencies:
       '@doid/name-validator': 0.0.3
       '@doid/ui-core': 0.0.2(@types/react@18.2.45)(lit@3.1.0)
@@ -2002,6 +2002,7 @@ packages:
 
   /@doid/ui-core@0.0.2(@types/react@18.2.45)(lit@3.1.0):
     resolution: {integrity: sha512-vqppcTNfNxYDQVb+manxwGr6KnZxH/owvorXQ/5qKX5cOryPRNZRsdavBV8XGG5BHQ2ZfwJhxQ+GHbwHQ2CQHA==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
     peerDependencies:
       lit: ^3.1.0
     dependencies:

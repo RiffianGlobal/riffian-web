@@ -17,10 +17,24 @@ export const AllNetworks = {
     scan: 'https://testnet.ftmscan.com',
     ens: { address: '', network: 4002 },
     icon: ''
+  },
+  '0xdddd': {
+    chainId: '0xdddd',
+    title: 'DOID Testnet',
+    name: 'doid-testnet',
+    native: {
+      decimals: 18,
+      name: 'DOID',
+      symbol: 'DOID'
+    },
+    provider: 'https://rpc.testnet.doid.tech/',
+    providerWs: 'ws://rpc.testnet.doid.tech/ws',
+    scan: '',
+    icon: ''
   }
 }
 
-export const EtherNetworks = ['0xfa2']
+export const EtherNetworks = ['0xfa2', '0xdddd']
 
 export const unknownNetwork = {
   title: 'Unsupported Network',

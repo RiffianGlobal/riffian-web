@@ -10,4 +10,7 @@
   &.FTM {
     background-image: url('../i/symbol/FTM.svg');
   }
+  &.DOID {
+    background-image: url('../i/symbol/DOID.svg');
+  }
 }

@@ -7,26 +7,9 @@ import { chainIdStr } from './constants/networks'
 export class DoidWallet extends State implements Wallet, WalletApp {
   private connector: any
   private async init() {
-    let { defineChain, doidTestnet, DOIDConnectorEthers } = await import('@doid/connect-ethers')
-    let doidDevnet = defineChain({
-      id: 4_001,
-      name: 'DOID Devnet',
-      network: 'doid-devnet',
-      nativeCurrency: {
-        decimals: 18,
-        name: 'DOID',
-        symbol: 'DOID'
-      },
-      rpcUrls: {
-        default: { http: ['http://34.41.106.36:4001/'] },
-        public: { http: ['http://34.41.106.36:4001/'] }
-      },
-      blockExplorers: {
-        default: { name: 'DOID Scan', url: 'https://testnet.ftmscan.com' }
-      }
-    })
+    let { defineChain, doid, doidTestnet, DOIDConnectorEthers } = await import('@doid/connect-ethers')
     this.connector = new DOIDConnectorEthers()
-    this.connector.updateChains([doidTestnet, doidDevnet])
+    this.connector.updateChains([doid, doidTestnet])
     this.connector.updateOptions({
       themeMode: 'dark',
       web3AuthEnabled: true,
