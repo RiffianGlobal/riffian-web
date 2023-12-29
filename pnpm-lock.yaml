@@ -152,8 +152,8 @@ importers:
   packages/ethers:
     dependencies:
       '@doid/connect-ethers':
-        specifier: ^0.3.0
-        version: 0.3.0(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(ethers@6.9.0)(lit@3.1.0)(react@18.2.0)(typescript@5.3.3)
+        specifier: ^0.3.1
+        version: 0.3.1(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(ethers@6.9.0)(lit@3.1.0)(react@18.2.0)(typescript@5.3.3)
       '@ensdomains/address-encoder':
         specifier: ^0.2.22
         version: 0.2.22
@@ -1905,12 +1905,12 @@ packages:
     engines: {node: '>=14'}
     dev: false
 
-  /@doid/connect-ethers@0.3.0(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(ethers@6.9.0)(lit@3.1.0)(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-MeuTUaHUZml7h1GQASPfiesdT2P1g8WvAiwt7VE5+f0+jOuaoUDacRS1GbfkgIk2N446iORAstF6wOUDT4U2Yw==}
+  /@doid/connect-ethers@0.3.1(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(ethers@6.9.0)(lit@3.1.0)(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-PmtoP6mUylJl6mbsfHjBDDEpNtq9/Ov4z9VXx0TUFU6dWzqZRTOKoyAjxHF6E45DDK6kJdP1JEBNp+O3H/Haww==}
     peerDependencies:
       ethers: ^6
     dependencies:
-      '@doid/connect': 0.3.0(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(react@18.2.0)(typescript@5.3.3)
+      '@doid/connect': 0.3.1(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(react@18.2.0)(typescript@5.3.3)
       '@doid/ui-core': 0.0.2(@types/react@18.2.45)(lit@3.1.0)
       '@wagmi/core': 1.4.12(@types/react@18.2.45)(react@18.2.0)(typescript@5.3.3)(viem@1.21.0)
       ethers: 6.9.0
@@ -1946,8 +1946,8 @@ packages:
       - zod
     dev: false
 
-  /@doid/connect@0.3.0(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(react@18.2.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-D2rlgVIpvJb1p7fSAVjWiO7IHciAjerQc+HghHh3janWa4qkGe5xh70zlPJvdRCasgTfSkZW6sR7t/MmZsMk+w==}
+  /@doid/connect@0.3.1(@babel/runtime@7.23.5)(@solana/web3.js@1.87.6)(@types/react@18.2.45)(react@18.2.0)(typescript@5.3.3):
+    resolution: {integrity: sha512-e+gIqV9DzGnXjNJqFLryOPRjTVf8y4YpUjCDoicFsrIr/wtATkNGwh5uMFBJ6bGrXOSQGrMtkkTuZ3sABratkw==}
     dependencies:
       '@doid/name-validator': 0.0.3
       '@doid/ui-core': 0.0.2(@types/react@18.2.45)(lit@3.1.0)

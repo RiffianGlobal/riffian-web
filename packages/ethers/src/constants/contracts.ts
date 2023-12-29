@@ -6,7 +6,8 @@ export const AllContracts: ChainConf = {
     '0x5': '0x77dca2c955b15e9de4dbbcf1246b4b85b651e50e'
   },
   MediaBoard: {
-    '0xfa2': '0x5D0D729990C9b97Ab1de2A65CF98901b1229f3cf'
+    '0xfa2': '0x5D0D729990C9b97Ab1de2A65CF98901b1229f3cf',
+    '0xdddd': '0x6c5BDD99537F344838796DeDFf6cD98b4908c57c'
   }
 }
 
