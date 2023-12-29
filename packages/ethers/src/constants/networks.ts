@@ -7,17 +7,6 @@ export function chainIdStr(chainId: number): string {
 // export const native = { name: 'Ethereum', symbol: 'ETH', decimals: 18 }
 
 export const AllNetworks = {
-  '0xfa2': {
-    chainId: '0xfa2',
-    title: 'Fantom Testnet',
-    name: 'FantomTestnet',
-    native: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
-    provider: 'https://rpc.testnet.fantom.network',
-    providerWs: '',
-    scan: 'https://testnet.ftmscan.com',
-    ens: { address: '', network: 4002 },
-    icon: ''
-  },
   '0xdddd': {
     chainId: '0xdddd',
     title: 'DOID Testnet',
@@ -34,7 +23,7 @@ export const AllNetworks = {
   }
 }
 
-export const EtherNetworks = ['0xfa2', '0xdddd']
+export const EtherNetworks = ['0xdddd']
 
 export const unknownNetwork = {
   title: 'Unsupported Network',

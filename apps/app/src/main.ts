@@ -24,9 +24,7 @@ export class AppMain extends TailwindElement('') {
   }
 
   get faucetLink() {
-    return bridgeStore.bridge.network.chainId == '0xdddd'
-      ? 'https://faucet.testnet.doid.tech'
-      : 'https://faucet.fantom.network'
+    return bridgeStore.bridge.network.chainId == '0xdddd' ? 'https://faucet.testnet.doid.tech' : ''
   }
 
   chkView = () => {
