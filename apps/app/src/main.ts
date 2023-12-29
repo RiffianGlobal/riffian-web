@@ -11,14 +11,22 @@ import '@riffian-web/ui/src/nav/nav'
 import '@riffian-web/ui/src/block-number'
 import { StateController, screenStore } from '@riffian-web/core/src/screen'
 import '~/components/createAlbum/btn'
+import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
 
 @customElement('app-main')
 export class AppMain extends TailwindElement('') {
   bindScreen: any = new StateController(this, screenStore)
+  bindNetwork: any = new StateController(this, bridgeStore.bridge.network)
   @state() inRoot = false
 
   get isMobi() {
     return screenStore.isMobi
+  }
+
+  get faucetLink() {
+    return bridgeStore.bridge.network.chainId == '0xdddd'
+      ? 'https://faucet.testnet.doid.tech'
+      : 'https://faucet.fantom.network'
   }
 
   chkView = () => {
@@ -50,7 +58,7 @@ export class AppMain extends TailwindElement('') {
             </ui-nav>`
         )}
         <div slot="right"><network-menu></network-menu></div>
-        <ui-link slot="left" href="https://faucet.fantom.network/" class="text-neutral-400">FAUCET</ui-link>
+        <ui-link slot="left" href="${this.faucetLink}" class="text-neutral-400">FAUCET</ui-link>
       </ui-header>
       <main class="ui-app-main">
         ${when(

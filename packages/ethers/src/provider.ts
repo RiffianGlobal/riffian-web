@@ -2,6 +2,7 @@ import { JsonRpcProvider, BrowserProvider, WebSocketProvider } from 'ethers'
 import Network from './networks'
 import { walletStore } from './bridge'
 import { State, property } from './state'
+import { EtherNetworks } from './constants/networks'
 
 export class Provider extends State {
   @property() public provider?: BrowserProvider | JsonRpcProvider | WebSocketProvider | any
@@ -28,7 +29,10 @@ export class Provider extends State {
     if (this.provider) {
       this.provider.removeAllListeners()
     }
-    if (!chainId) chainId = Network.defaultChainId
+    if (!chainId || !EtherNetworks.includes(chainId)) {
+      chainId = Network.defaultChainId
+      if (wallet) await wallet.updateProvider(chainId)
+    }
     if (!persistent && wallet) {
       this.storage = sessionStorage.setItem('chainId', chainId)
       this.provider = await wallet.getProvider()

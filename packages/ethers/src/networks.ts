@@ -6,8 +6,8 @@ const isProd = import.meta.env.MODE === 'production'
 const mainnetOffline = !!import.meta.env.VITE_DISABLE_MAINNET
 export const Networks: Networks = AllNetworks
 
-export const [mainnetChainId, testnetS] = EtherNetworks
-export const defaultChainId = isProd && !mainnetOffline ? mainnetChainId : import.meta.env.VITE_DEF_TESTNET ?? '0xfa2'
+export const [mainnetChainId, testnet] = EtherNetworks
+export const defaultChainId = isProd && !mainnetOffline ? mainnetChainId : import.meta.env.VITE_DEF_TESTNET ?? testnet
 
 // This may return wrong network value if no req provided
 // If you want to get current network, please use `userBridge/getNetwork` instead

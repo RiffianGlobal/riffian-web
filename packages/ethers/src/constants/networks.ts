@@ -29,7 +29,7 @@ export const AllNetworks = {
     },
     provider: 'https://rpc.testnet.doid.tech/',
     providerWs: 'ws://rpc.testnet.doid.tech/ws',
-    scan: '',
+    scan: 'https://scan.testnet.doid.tech',
     icon: ''
   }
 }
