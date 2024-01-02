@@ -1,9 +1,10 @@
-import { customElement, TailwindElement, html, state, classMap, repeat } from '../shared/TailwindElement'
+import { customElement, TailwindElement, html, state, classMap, repeat, when } from '../shared/TailwindElement'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { Networks } from '@riffian-web/ethers/src/networks'
 // Components
 import '../menu/drop'
 import '../link'
+import '../dialog/prompt'
 
 import style from './menu.css?inline'
 
@@ -12,6 +13,8 @@ export class NetworkMenu extends TailwindElement(style) {
   bindBridge = new StateController(this, bridgeStore.bridge.network)
   @state() pending = false
   @state() menu = false
+  @state() promptMsg = ''
+  @state() promptTitle = ''
 
   get bridge() {
     return bridgeStore.bridge
@@ -32,7 +35,13 @@ export class NetworkMenu extends TailwindElement(style) {
   async switch(network: NetworkInfo) {
     this.menu = false
     this.pending = true
-    await this.bridge.switchNetwork(network.chainId)
+    try {
+      await this.bridge.switchNetwork(network.chainId)
+    } catch (e) {
+      console.warn('switch network failed with error:', e)
+      this.promptTitle = 'Switch network failed'
+      this.promptMsg = e
+    }
     this.pending = false
   }
 
@@ -61,6 +70,14 @@ export class NetworkMenu extends TailwindElement(style) {
           )}
         </ul>
       </ui-drop>
+      ${when(
+        this.promptMsg,
+        () =>
+          html`<ui-prompt>
+            <p slot="header">${this.promptTitle}</p>
+            <p class="whitespace-pre text-md">${this.promptMsg}</p>
+          </ui-prompt>`
+      )}
     `
   }
 }
