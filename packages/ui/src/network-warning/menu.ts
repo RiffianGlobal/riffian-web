@@ -1,4 +1,4 @@
-import { customElement, TailwindElement, html, state, classMap, repeat, when } from '../shared/TailwindElement'
+import { customElement, ThemeElement, html, state, classMap, repeat, when } from '../shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { Networks } from '@riffian-web/ethers/src/networks'
 // Components
@@ -9,7 +9,7 @@ import '../dialog/prompt'
 import style from './menu.css?inline'
 
 @customElement('network-menu')
-export class NetworkMenu extends TailwindElement(style) {
+export class NetworkMenu extends ThemeElement(style) {
   bindBridge = new StateController(this, bridgeStore.bridge.network)
   @state() pending = false
   @state() menu = false

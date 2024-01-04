@@ -1,5 +1,5 @@
-import { TailwindElement, html, customElement, property, when, classMap } from '../shared/TailwindElement'
-import { LazyElement } from '../shared/LazyElement'
+import { ThemeElement, html, customElement, property, when, classMap } from '../shared/theme-element'
+import { LazyElement } from '@lit-web3/base/lazy-element'
 
 // Components
 import '../loading/icon'
@@ -7,7 +7,7 @@ import '../link'
 // Styles
 import style from './index.css?inline'
 @customElement('ui-pagination')
-export class UIPagination extends LazyElement(TailwindElement(style), { persistent: true, rootMargin: '30px' }) {
+export class UIPagination extends LazyElement(ThemeElement(style), { persistent: true, rootMargin: '30px' }) {
   @property({ type: Number }) pageSize = 5
   @property({ type: Number }) page = 1
   @property() mode = 'scroll' //scroll or click auto

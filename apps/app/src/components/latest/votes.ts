@@ -1,23 +1,15 @@
-import {
-  TailwindElement,
-  customElement,
-  html,
-  property,
-  repeat,
-  state,
-  when
-} from '@riffian-web/ui/src/shared/TailwindElement'
-import '@riffian-web/ui/src/loading/skeleton'
+import { ThemeElement, customElement, html, property, repeat, state, when } from '@riffian-web/ui/shared/theme-element'
+import '@riffian-web/ui/loading/skeleton'
 
 import { latestVote } from './actions'
 import { formatUnits } from 'ethers'
 import style from './votes.css?inline'
 import { asyncReplace } from 'lit/directives/async-replace.js'
 // components
-import '@riffian-web/ui/src/address'
+import '@riffian-web/ui/address'
 
 @customElement('latest-votes')
-export class LatestVotes extends TailwindElement(style) {
+export class LatestVotes extends ThemeElement(style) {
   @property({ type: Boolean }) weekly = false
   @state() latestVotes = []
   @state() albumToVote = { id: '', voter: 0, time: 0, value: 0 }

@@ -1,4 +1,4 @@
-import { TailwindElement, html, customElement, property } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, html, customElement, property } from '@riffian-web/ui/shared/theme-element'
 import '~/components/track/voters'
 import '~/components/track/track'
 
@@ -6,7 +6,7 @@ import '~/components/track/track'
 import style from './index.css?inline'
 
 @customElement('track-page')
-export class TrackPage extends TailwindElement(style) {
+export class TrackPage extends ThemeElement(style) {
   @property({ type: String }) addr = ''
 
   render() {

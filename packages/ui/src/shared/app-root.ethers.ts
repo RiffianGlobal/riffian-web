@@ -1,7 +1,7 @@
-import AppRoot from './AppRoot'
+import AppRoot from './app-root'
 import useBridge, { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { html, keyed } from './TailwindElement'
-import type { RouteConfig } from '@riffian-web/router'
+import { html, keyed } from './theme-element'
+import type { RouteConfig } from '@lit-web3/router'
 
 useBridge()
 

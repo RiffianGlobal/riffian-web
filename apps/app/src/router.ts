@@ -1,7 +1,8 @@
 import { html } from 'lit'
-import emitter from '@riffian-web/core/src/emitter'
+import emitter from '@lit-web3/base/emitter'
+import type { RouteConfig } from '@lit-web3/router'
 
-export const routes = [
+export const routes: RouteConfig[] = [
   {
     name: 'home',
     path: '/',
@@ -55,32 +56,31 @@ export const routes = [
       await import('~/views/user')
       return true
     }
-  },
-  import.meta.env.MODE === 'production'
-    ? {}
-    : {
-        name: 'docs',
-        path: '/docs/:anchor?',
-        render: ({ anchor = '' }) => html`<view-docs .anchor="${anchor}"></view-docs>`,
-        enter: async ({ anchor = '' }) => {
-          await import('~/views/docs')
-          const scroll2 = () => {
-            const target: HTMLElement | null | undefined = document!
-              .querySelector('app-root')
-              ?.shadowRoot?.querySelector('app-main')
-              ?.querySelector('view-docs')
-              ?.shadowRoot?.querySelector('ui-docs')
-              ?.shadowRoot?.querySelector('ui-components')
-              ?.shadowRoot?.querySelector(`[name="${anchor}"]`)
-            let top = target?.offsetTop ?? 0
-            if (top && top < 200) top = 0
-            window.scrollTo(0, top)
-          }
-          setTimeout(scroll2)
-          emitter.on('docs-loaded', scroll2)
-          return true
-        }
-      }
+  }
 ]
+if (import.meta.env.MODE !== 'production')
+  routes.push({
+    name: 'docs',
+    path: '/docs/:anchor?',
+    render: ({ anchor = '' }) => html`<view-docs .anchor="${anchor}"></view-docs>`,
+    enter: async ({ anchor = '' }) => {
+      await import('~/views/docs')
+      const scroll2 = () => {
+        const target: HTMLElement | null | undefined = document!
+          .querySelector('app-root')
+          ?.shadowRoot?.querySelector('app-main')
+          ?.querySelector('view-docs')
+          ?.shadowRoot?.querySelector('ui-docs')
+          ?.shadowRoot?.querySelector('ui-components')
+          ?.shadowRoot?.querySelector(`[name="${anchor}"]`)
+        let top = target?.offsetTop ?? 0
+        if (top && top < 200) top = 0
+        window.scrollTo(0, top)
+      }
+      setTimeout(scroll2)
+      emitter.on('docs-loaded', scroll2)
+      return true
+    }
+  })
 
 export default routes

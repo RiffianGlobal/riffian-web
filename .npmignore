@@ -1,4 +1,5 @@
 .DS_Store
+.gitignore
 tsconfig.json
 lib._esm
 tsconfig.tsbuildinfo

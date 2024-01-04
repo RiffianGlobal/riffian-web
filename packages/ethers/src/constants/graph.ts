@@ -1,6 +1,6 @@
 // SubGraph API
 import Network from '../networks'
-import http, { Jsonish } from '@riffian-web/core/src/http'
+import http, { Jsonish } from '@lit-web3/base/http'
 
 export const SubGraph: ChainConf = {
   main: {

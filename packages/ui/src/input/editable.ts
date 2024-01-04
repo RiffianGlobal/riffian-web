@@ -1,4 +1,4 @@
-import { TAILWINDELEMENT, state, property, Ref, ref, createRef, classMap } from '../shared/TailwindElement'
+import { TAILWINDELEMENT, state, property, Ref, ref, createRef, classMap } from '../shared/theme-element'
 import { html, unsafeStatic } from 'lit/static-html.js'
 
 const converter = (val: string | null, type: unknown, { lower = false, upper = false } = {}) => {
@@ -87,33 +87,34 @@ export const EditableElement = <T extends PublicConstructor<TAILWINDELEMENT>>(
     }
 
     renderDefRight = () => html``
-    renderHtml = () => html`<div
-      class="ui-input-text ${classMap(this.$c([this.class, { sm: this.sm, dense: this.dense }]))}"
-      ?required=${this.required}
-      ?rightSlotted=${this.rightSlotted}
-      ?leftSlotted=${this.leftSlotted}
-      part="ui-input-text"
-    >
-      <label><slot name="label" @slotchange=${this.onSlotChange}></slot></label>
-      <span class="ui-input-left"><slot name="left" @slotchange=${this.onSlotLeft}></slot></span>
-      <input
-        ${ref(this.el$)}
-        .type="${this.type}"
-        .disabled="${this.disabled}"
-        placeholder="${this.placeholder}"
-        value="${this.value}"
-        title="${this.title}"
-        ?autofocus=${this.autofocus}
-        @focus="${this.onFocus}"
-        @input="${this.onInput}"
-        @keyup="${this.onKeyup}"
-      />
-      <div class="ui-input-right">
-        <slot name="right" @slotchange=${this.onSlotRight}>${this.renderDefRight()}</slot>
-      </div>
-      <div class="ui-input-msg"><slot name="msg" @slotchange=${this.onSlotChange}></slot></div>
-      <div class="ui-input-tip"><slot name="tip" @slotchange=${this.onSlotChange}></slot></div>
-    </div>`
+    renderHtml = () =>
+      html`<div
+        class="ui-input-text ${classMap(this.$c([this.class, { sm: this.sm, dense: this.dense }]))}"
+        ?required=${this.required}
+        ?rightSlotted=${this.rightSlotted}
+        ?leftSlotted=${this.leftSlotted}
+        part="ui-input-text"
+      >
+        <label><slot name="label" @slotchange=${this.onSlotChange}></slot></label>
+        <span class="ui-input-left"><slot name="left" @slotchange=${this.onSlotLeft}></slot></span>
+        <input
+          ${ref(this.el$)}
+          .type="${this.type}"
+          .disabled="${this.disabled}"
+          placeholder="${this.placeholder}"
+          value="${this.value}"
+          title="${this.title}"
+          ?autofocus=${this.autofocus}
+          @focus="${this.onFocus}"
+          @input="${this.onInput}"
+          @keyup="${this.onKeyup}"
+        />
+        <div class="ui-input-right">
+          <slot name="right" @slotchange=${this.onSlotRight}>${this.renderDefRight()}</slot>
+        </div>
+        <div class="ui-input-msg"><slot name="msg" @slotchange=${this.onSlotChange}></slot></div>
+        <div class="ui-input-tip"><slot name="tip" @slotchange=${this.onSlotChange}></slot></div>
+      </div>`
 
     connectedCallback() {
       super.connectedCallback()

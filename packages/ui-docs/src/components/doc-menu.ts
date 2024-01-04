@@ -1,9 +1,9 @@
-import { customElement, TailwindElement, html, when, state, property } from '@riffian-web/ui/src/shared/TailwindElement'
+import { customElement, ThemeElement, html, state } from '@riffian-web/ui/shared/theme-element'
 // Components
-import '@riffian-web/ui/src/menu/drop'
+import '@riffian-web/ui/menu/drop'
 
 @customElement('doc-menu')
-export class DocMenu extends TailwindElement('') {
+export class DocMenu extends ThemeElement('') {
   @state() menu = false
   closeMenu = () => {
     this.menu = false

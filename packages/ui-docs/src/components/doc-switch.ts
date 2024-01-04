@@ -1,9 +1,9 @@
-import { customElement, TailwindElement, html, when, state, property } from '@riffian-web/ui/src/shared/TailwindElement'
+import { customElement, ThemeElement, html, state } from '@riffian-web/ui/shared/theme-element'
 // Components
-import '@riffian-web/ui/src/input/switch'
+import '@riffian-web/ui/input/switch'
 
 @customElement('doc-switch')
-export class DocSwitch extends TailwindElement('') {
+export class DocSwitch extends ThemeElement('') {
   @state() val = false
   override render() {
     return html`

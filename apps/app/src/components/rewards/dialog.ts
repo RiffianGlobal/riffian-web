@@ -1,17 +1,17 @@
-import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { claimRewards, userWeeklyReward } from './action'
 import { formatUnits } from 'ethers'
 
-import '@riffian-web/ui/src/button'
-import '@riffian-web/ui/src/input/text'
-import '@riffian-web/ui/src/loading/skeleton'
-import '@riffian-web/ui/src/img/loader'
-import '@riffian-web/ui/src/tx-state'
+import '@riffian-web/ui/button'
+import '@riffian-web/ui/input/text'
+import '@riffian-web/ui/loading/skeleton'
+import '@riffian-web/ui/img/loader'
+import '@riffian-web/ui/tx-state'
 
 const defErr = () => ({ tx: '' })
 @customElement('claim-reward-dialog')
-export class ClaimRewardDialog extends TailwindElement('') {
+export class ClaimRewardDialog extends ThemeElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() userWeeklyReward = -1
   @state() tx: any = null

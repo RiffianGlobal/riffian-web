@@ -1,4 +1,4 @@
-import { customElement, TailwindElement, html, Ref, ref, createRef } from '../shared/TailwindElement'
+import { customElement, ThemeElement, html, Ref, ref, createRef } from '../shared/theme-element'
 // Component
 import './index'
 import '../button'
@@ -7,7 +7,7 @@ import { UIDialog } from './index'
 import style from './confirm.css?inline'
 @customElement('ui-confirm')
 // @ts-ignore
-export class UIConfirm extends TailwindElement([UIDialog.styles, style]) {
+export class UIConfirm extends ThemeElement([UIDialog.styles, style]) {
   el$: Ref<UIDialog> = createRef()
   onClose() {
     this.emit('close')

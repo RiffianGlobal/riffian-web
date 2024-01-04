@@ -1,15 +1,15 @@
-import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 // Components
-import '@riffian-web/ui/src/button'
+import '@riffian-web/ui/button'
 import './dialog'
 import './social'
-import emitter from '@riffian-web/core/src/emitter'
+import emitter from '@lit-web3/base/emitter'
 import { getSocials } from './action'
 
 import style from './btn.css?inline'
 @customElement('create-album-btn')
-export class CreateAlbumBtn extends TailwindElement(style) {
+export class CreateAlbumBtn extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   @property({ type: Boolean }) icon = false
 

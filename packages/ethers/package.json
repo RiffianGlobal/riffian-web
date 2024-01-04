@@ -1,15 +1,20 @@
 {
   "name": "@riffian-web/ethers",
   "version": "0.12.0",
+  "type": "module",
+  "files": [
+    "src",
+    "dist"
+  ],
   "scripts": {
     "build": "tsup src/index.ts --outDir ./lib --format esm,cjs --dts --clean",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@doid/connect-ethers": "^0.3.2",
+    "@doid/connect-ethers": "^0.6.0",
     "@ensdomains/address-encoder": "^0.2.22",
-    "@riffian-web/core": "workspace:latest",
-    "tr46": "^4.1.1"
+    "@lit-web3/base": "^0.4.6",
+    "tr46": "^5.0.0"
   },
   "devDependencies": {
     "@types/tr46": "^3.0.3",

@@ -1,7 +1,7 @@
-import { viteConfig } from '@riffian-web/ui/src/shared/vite.config.js'
+import viteAppConfig from '@lit-web3/base/vite.config.app'
 
 export default ({ mode = '' }) => {
-  return viteConfig({
+  return viteAppConfig({
     server: { port: 3000 },
     build: {
       emptyOutDir: mode === 'development'

@@ -1,4 +1,4 @@
-import emitter from '@riffian-web/core/src/emitter'
+import emitter from '@lit-web3/base/emitter'
 
 export const cmps = [
   'doc-button',

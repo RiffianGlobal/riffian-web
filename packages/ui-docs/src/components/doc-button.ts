@@ -1,9 +1,9 @@
-import { customElement, TailwindElement, html, when, state, property } from '@riffian-web/ui/src/shared/TailwindElement'
+import { customElement, ThemeElement, html } from '@riffian-web/ui/shared/theme-element'
 // Components
-import '@riffian-web/ui/src/button'
+import '@riffian-web/ui/button'
 
 @customElement('doc-button')
-export class DocButton extends TailwindElement('') {
+export class DocButton extends ThemeElement('') {
   override render() {
     return html`
       <p class="flex w-full items-center gap-2 my-2">

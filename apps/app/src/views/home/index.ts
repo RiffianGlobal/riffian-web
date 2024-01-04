@@ -1,4 +1,4 @@
-import { TailwindElement, html, customElement, until, classMap, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, html, customElement, until, classMap, when } from '@riffian-web/ui/shared/theme-element'
 import '~/components/top/list'
 import '~/components/createAlbum/btn'
 import '~/components/createAlbum/socialbtn'
@@ -8,10 +8,10 @@ import '~/components/latest/votes'
 // Style
 import style from './index.css?inline'
 import { getWeek } from '~/components/rewards/action'
-import { StateController, screenStore } from '@riffian-web/core/src/screen'
+import { StateController, screenStore } from '@lit-web3/base/screen'
 
 @customElement('view-home')
-export class ViewHome extends TailwindElement(style) {
+export class ViewHome extends ThemeElement(style) {
   bindScreen: any = new StateController(this, screenStore)
 
   get isSmall() {

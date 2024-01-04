@@ -1,11 +1,11 @@
-import { TailwindElement, html, customElement } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, html, customElement } from '@riffian-web/ui/shared/theme-element'
 import '~/components/uservotes/list'
 
 // Style
 import style from './index.css?inline'
 
 @customElement('user-votes')
-export class ViewTop extends TailwindElement(style) {
+export class ViewTop extends ThemeElement(style) {
   render() {
     return html`<div class="flex px-8 space-x-8 place-content-center">
       <div class="flex-initial w-[64rem]">

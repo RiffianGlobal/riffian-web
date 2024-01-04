@@ -1,12 +1,12 @@
 import Network, { Networks } from './networks'
 import Contracts from './constants/contracts'
 import { Bridge, walletStore } from './bridge'
-import emitter from '@riffian-web/core/src/emitter'
+import emitter from '@lit-web3/base/emitter'
 import { gasLimit, nowTs } from './utils'
 import { normalizeTxErr } from './parseErr'
 import { Contract, formatUnits } from 'ethers'
 import { State, property, reflectProperty } from './state'
-export { StateController } from '@lit-app/state'
+export { StateController } from '@lit-web3/base/state'
 
 /** Singleton Data, to keep bridge object and trigger updates as a {@link State} */
 class BridgeStore extends State {

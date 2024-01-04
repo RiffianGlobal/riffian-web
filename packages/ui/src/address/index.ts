@@ -1,6 +1,6 @@
-import { customElement, TailwindElement, html, when, property, state } from '../shared/TailwindElement'
+import { customElement, ThemeElement, html, when, property, state } from '../shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { screenStore } from '@riffian-web/core/src/screen'
+import { screenStore } from '@lit-web3/base/screen'
 import { shortAddress } from '@riffian-web/ethers/src/utils'
 // Components
 import './avatar'
@@ -8,9 +8,9 @@ import '../link'
 import '../copy/icon'
 
 import style from './address.css?inline'
-import { getAddress } from 'ethers'
+
 @customElement('ui-address')
-export class UIAddress extends TailwindElement(style) {
+export class UIAddress extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   bindScreen: any = new StateController(this, screenStore)
   @property() address?: string // !!! if not defined, use current wallet address

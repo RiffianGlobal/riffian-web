@@ -1,10 +1,10 @@
-import { TailwindElement, customElement, html, repeat, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, customElement, html, repeat, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { bindSocial, getSocials } from './action'
 // Components
-import '@riffian-web/ui/src/button'
-import '@riffian-web/ui/src/input/text'
-import '@riffian-web/ui/src/tx-state'
+import '@riffian-web/ui/button'
+import '@riffian-web/ui/input/text'
+import '@riffian-web/ui/tx-state'
 
 type formKeys = 'platform' | 'id' | 'url'
 
@@ -12,7 +12,7 @@ const defFrom = () => ({ platform: '', id: '', url: '' })
 const defErr = () => ({ album: '', symbol: '', tx: '' })
 
 @customElement('create-social-dialog')
-export class CreateSocailDialog extends TailwindElement('') {
+export class CreateSocailDialog extends ThemeElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() url = ''
   @state() platform = ''

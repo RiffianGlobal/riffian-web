@@ -1,4 +1,4 @@
-import { State, property } from '@lit-app/state'
+import { State, property } from '@lit-web3/base/state'
 
 class Tweets extends State {
   key = ''

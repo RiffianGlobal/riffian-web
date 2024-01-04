@@ -1,9 +1,9 @@
-import { customElement, TailwindElement, html, property, classMap } from '../shared/TailwindElement'
+import { customElement, ThemeElement, html, property, classMap } from '../shared/theme-element'
 import { PropertyValues } from 'lit'
 import style from './checkbox.css?inline'
 
 @customElement('ui-radio')
-export class UIRadio extends TailwindElement(style) {
+export class UIRadio extends ThemeElement(style) {
   @property() name!: string
   @property() value!: unknown
   @property() checked = false

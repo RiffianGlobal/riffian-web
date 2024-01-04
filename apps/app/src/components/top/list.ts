@@ -1,5 +1,5 @@
 import {
-  TailwindElement,
+  ThemeElement,
   classMap,
   customElement,
   html,
@@ -7,22 +7,22 @@ import {
   repeat,
   state,
   when
-} from '@riffian-web/ui/src/shared/TailwindElement'
+} from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { albumList, weekList } from './action'
-import '@riffian-web/ui/src/loading/icon'
-import '@riffian-web/ui/src/loading/skeleton'
-import '@riffian-web/ui/src/img/loader'
-import '@riffian-web/ui/src/dialog/prompt'
+import '@riffian-web/ui/loading/icon'
+import '@riffian-web/ui/loading/skeleton'
+import '@riffian-web/ui/img/loader'
+import '@riffian-web/ui/dialog/prompt'
 import '~/components/rewards/claim'
-import emitter from '@riffian-web/core/src/emitter'
+import emitter from '@lit-web3/base/emitter'
 
 import style from './list.css?inline'
 import { getWeek } from '../rewards/action'
 import { formatUnits } from 'ethers'
 @customElement('top-album')
-export class TopAlbum extends TailwindElement(style) {
+export class TopAlbum extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   @property({ type: Boolean }) weekly = false
   @state() subjectList: any
@@ -59,7 +59,7 @@ export class TopAlbum extends TailwindElement(style) {
     this.pending = false
 
     let urls = [
-      'https://cdn.shopify.com/app-store/listing_images/a82167e02b45cadf681efc6c17c35f3a/icon/CMmMjb30lu8CEAE=.jpg',
+      'https://cdn.shopify.com/app-store/listing_images/a82167e02b45cadf681efc6c17c35f3a/icon/CMmMjb30lu8CEAE=.jpg'
     ]
     for (var i = 0; i < this.subjectList.length; i++) {
       if (this.weekly) {

@@ -1,6 +1,6 @@
-import { customElement, TailwindElement, html, state, when, property, classMap } from '../shared/TailwindElement'
+import { customElement, ThemeElement, html, state, when, property, classMap } from '../shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import emitter from '@riffian-web/core/src/emitter'
+import emitter from '@lit-web3/base/emitter'
 // Components
 import '../address'
 import '../menu/drop'
@@ -9,7 +9,7 @@ import '../button'
 
 import style from './btn.css?inline'
 @customElement('connect-wallet-btn')
-export class ConnectWalletBtn extends TailwindElement(style) {
+export class ConnectWalletBtn extends ThemeElement(style) {
   bindNetwork: any = new StateController(this, bridgeStore.bridge.network)
   bindBridge: any = new StateController(this, bridgeStore.bridge)
   @property({ type: Boolean }) dropable = false

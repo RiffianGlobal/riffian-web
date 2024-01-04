@@ -1,11 +1,11 @@
-import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { createAlbum } from './action'
 // Components
-import '@riffian-web/ui/src/button'
-import '@riffian-web/ui/src/input/text'
-import '@riffian-web/ui/src/tx-state'
-import '@riffian-web/ui/src/img/loader'
+import '@riffian-web/ui/button'
+import '@riffian-web/ui/input/text'
+import '@riffian-web/ui/tx-state'
+import '@riffian-web/ui/img/loader'
 
 type formKeys = 'album' | 'image' | 'url'
 
@@ -13,7 +13,7 @@ const defFrom = () => ({ album: '', image: '', url: '' })
 const defErr = () => ({ album: '', image: '', tx: '' })
 
 @customElement('create-album-dialog')
-export class CreateAlbumDialog extends TailwindElement('') {
+export class CreateAlbumDialog extends ThemeElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() album = ''
   @state() image = ''

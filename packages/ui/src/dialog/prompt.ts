@@ -1,4 +1,4 @@
-import { customElement, TailwindElement, html, when, ref, createRef, property, Ref } from '../shared/TailwindElement'
+import { customElement, ThemeElement, html, when, ref, createRef, property, Ref } from '../shared/theme-element'
 // Component
 import './index'
 import '../button'
@@ -7,7 +7,7 @@ import { UIDialog } from './index'
 import style from './prompt.css?inline'
 @customElement('ui-prompt')
 // @ts-ignore
-export class UIPrompt extends TailwindElement([UIDialog.styles, style]) {
+export class UIPrompt extends ThemeElement([UIDialog.styles, style]) {
   @property({ type: Boolean }) button = false
   el$: Ref<UIDialog> = createRef()
   onClose() {

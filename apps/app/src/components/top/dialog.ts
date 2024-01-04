@@ -1,12 +1,4 @@
-import {
-  TailwindElement,
-  customElement,
-  html,
-  property,
-  state,
-  until,
-  when
-} from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, customElement, html, property, state, until, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import {
   vote,
@@ -22,15 +14,15 @@ import {
 import { formatUnits } from 'ethers'
 import { tweetStore, Tweet } from './tweet'
 
-import '@riffian-web/ui/src/button'
-import '@riffian-web/ui/src/input/text'
-import '@riffian-web/ui/src/loading/skeleton'
-import '@riffian-web/ui/src/img/loader'
-import '@riffian-web/ui/src/tx-state'
+import '@riffian-web/ui/button'
+import '@riffian-web/ui/input/text'
+import '@riffian-web/ui/loading/skeleton'
+import '@riffian-web/ui/img/loader'
+import '@riffian-web/ui/tx-state'
 
 const defErr = () => ({ tx: '' })
 @customElement('vote-album-dialog')
-export class VoteAlbumDialog extends TailwindElement('') {
+export class VoteAlbumDialog extends ThemeElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   bindTweets: any = new StateController(this, tweetStore)
   @property({ type: String }) album = ''

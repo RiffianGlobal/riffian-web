@@ -1,13 +1,12 @@
 // Todo: ShadowRoot should be created as childNodes of document.body
-import { customElement, TailwindElement, html, state, property, classMap } from '../shared/TailwindElement'
-import type { TAILWINDELEMENT } from '../shared/TailwindElement'
+import { customElement, ThemeElement, html, state, property, classMap } from '../shared/theme-element'
 import { sleep } from '@riffian-web/ethers/src/utils'
 import { animate } from '@lit-labs/motion'
 
 import style from './dialog.css?inline'
 
 @customElement('ui-dialog')
-export class UIDialog extends TailwindElement(style) implements TAILWINDELEMENT {
+export class UIDialog extends ThemeElement(style) {
   @property({ type: Boolean }) persistent = false
   @state() model = false
 
