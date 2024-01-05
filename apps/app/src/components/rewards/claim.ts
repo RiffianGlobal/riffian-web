@@ -31,13 +31,13 @@ export class ClaimRewards extends TailwindElement(style) {
         hours = (timeLeft - days * 86400n) / 3600n,
         minutes = (timeLeft - days * 86400n - hours * 3600n) / 60n,
         seconds = timeLeft - days * 86400n - hours * 3600n - minutes * 60n
-      yield days.toString() +
-        'D ' +
+      yield `${days ? days.toString() + 'D:' : ''}` +
         hours.toString().padStart(2, '0') +
-        'H ' +
+        'H:' +
         minutes.toString().padStart(2, '0') +
-        'M ' +
-        seconds.toString().padStart(2, '0')
+        'm:' +
+        seconds.toString().padStart(2, '0') +
+        's'
       await new Promise((r) => setTimeout(r, 1000))
     } while (timeLeft > 1)
   }
@@ -83,7 +83,7 @@ export class ClaimRewards extends TailwindElement(style) {
                 >${formatUnits(this.rewards, 18)}`
           )}
         </div>
-        <div class="font-light text-green-500 mt-2">${asyncReplace(this.timeCountDown())}</div>
+        <div class="text-green-500 mt-2">${asyncReplace(this.timeCountDown())}</div>
       </div>
       ${when(this.dialog, () => html`<claim-reward-dialog @close=${this.close}></claim-reward-dialog>`)}
     `

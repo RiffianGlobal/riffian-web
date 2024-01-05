@@ -9,7 +9,7 @@ import '@riffian-web/ui/src/loading/skeleton'
 import '@riffian-web/ui/src/img/loader'
 import '@riffian-web/ui/src/tx-state'
 
-const defErr = () => ({ tx: '' })
+const defErr = () => ({ load: '', tx: '' })
 @customElement('claim-reward-dialog')
 export class ClaimRewardDialog extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
@@ -17,8 +17,17 @@ export class ClaimRewardDialog extends TailwindElement('') {
   @state() tx: any = null
   @state() success = false
   @state() pending = false
+  @state() pendingTx = false
   @state() rewards = false
   @state() err = defErr()
+  @state() ts = 0
+
+  get bridge() {
+    return bridgeStore.bridge
+  }
+  get emptyRewards() {
+    return this.ts && !(this.userWeeklyReward > 0)
+  }
 
   connectedCallback() {
     super.connectedCallback()
@@ -26,17 +35,21 @@ export class ClaimRewardDialog extends TailwindElement('') {
   }
 
   async getPrice() {
+    // if (bridgeStore.notReady) return
+    this.pending = true
     try {
-      this.userWeeklyReward = await userWeeklyReward(bridgeStore.bridge.account)
+      this.userWeeklyReward = await userWeeklyReward(bridgeStore.bridge.account as string)
     } catch (err: any) {
       let msg = err.message || err.code
-      this.updateErr({ tx: msg })
+      this.updateErr({ load: msg })
     } finally {
+      this.ts++
+      this.pending = false
     }
   }
 
   async claim() {
-    this.pending = true
+    this.pendingTx = true
     try {
       this.tx = await claimRewards()
       this.success = await this.tx.wait()
@@ -47,15 +60,20 @@ export class ClaimRewardDialog extends TailwindElement('') {
         this.updateErr({ tx: msg })
         return this.close()
       }
+      if (/(Week not past)/.test(msg)) {
+        this.updateErr({ tx: `Week is not past, please try later.` })
+      }
     } finally {
-      this.pending = false
+      this.pendingTx = false
     }
   }
   resetState = () => {
     this.err = defErr()
     this.pending = false
+    this.pendingTx = false
     this.success = false
-    this.userWeeklyReward = 0
+    this.userWeeklyReward = -1
+    this.ts = 0
   }
   close = async () => {
     this.tx = null
@@ -71,30 +89,61 @@ export class ClaimRewardDialog extends TailwindElement('') {
         this.close()
       }}
     >
-      <p slot="header" class="my-2 font-bold">Claim Rewards</p>
-      <div class="grid place-items-center b-1 border m-4 p-4 rounded-md">
+      <!-- header -->
+      <p slot="header" class="w-full mr-2 text-base">Claim Rewards</p>
+      <!-- content -->
+      <div class="w-full h-[5.6rem] flex flex-col justify-center items-center self-center">
         ${when(
-          !(this.userWeeklyReward >= 0),
-          () =>
-            html`<div class="my-4">
-              <loading-icon></loading-icon>
-            </div>`
-        )}
-        ${when(
-          this.userWeeklyReward >= 0 && !this.pending,
+          this.emptyRewards,
+          // no rewards
+          () => html`No rewards to claim yet.`,
           () => html`
-            <p class="font-bold">Reward Value</p>
-            <p class="text-xl text-sky-500">${formatUnits(this.userWeeklyReward, 18)} FTM</p>
-            <ui-button ?disabled="${this.userWeeklyReward <= 0}" class="m-1" @click=${this.claim}> CLAIM </ui-button>
+            ${when(
+              this.pending,
+              // loading
+              () => html`
+                <div class="my-4">
+                  <loading-icon></loading-icon>
+                </div>
+              `,
+              // rewards info
+              () =>
+                html`${when(
+                  this.pendingTx,
+                  () =>
+                    html`<tx-state
+                      .tx=${this.tx}
+                      .opts=${{ state: { success: 'Success. Your claim request has been submitted.' } }}
+                    >
+                    </tx-state>`,
+                  () =>
+                    html`<div class="text-base inline-flex items-center">
+                        <span class="text-2xl text-yellow-500 mr-2">${formatUnits(this.userWeeklyReward, 18)}</span>
+                        rewards to claim.
+                      </div>
+                      ${when(
+                        this.err.tx,
+                        () => html`<div class="mt-1.5 text-red-500 text-sm opacity-70">${this.err.tx}</div>`
+                      )}`
+                )}`
+            )}
           `
-        )}${when(
-          this.pending,
+        )}
+      </div>
+      <!-- foot -->
+      <div slot="bottom">
+        ${when(
+          this.ts && !this.emptyRewards,
+          // have rewards
           () =>
-            html`<tx-state
-              .tx=${this.tx}
-              .opts=${{ state: { success: 'Success. Your claim request has been submitted.' } }}
-              ><ui-button slot="view" href="/">Close</ui-button></tx-state
-            >`
+            html`<div
+              class="flex justify-center items-center mx-4 py-4 border-t border-transparent"
+              style="border-color: rgba(255, 255, 255, .12)"
+            >
+              <ui-button ?disabled=${this.pendingTx} ?pending=${this.pendingTx} @click=${this.claim}
+                >Claim<i class="mdi ${this.pending ? 'mdi-loading' : ''}"></i
+              ></ui-button>
+            </div>`
         )}
       </div>
     </ui-dialog>`

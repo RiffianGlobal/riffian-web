@@ -9,13 +9,16 @@ import '@riffian-web/ui/src/tx-state'
 type formKeys = 'platform' | 'id' | 'url'
 
 const defFrom = () => ({ platform: '', id: '', url: '' })
-const defErr = () => ({ album: '', symbol: '', tx: '' })
+const defErr = () => ({ album: '', symbol: '', tx: '', load: '' })
 
+enum SOCIAL_TYPE {
+  'TWI' = 'twitter'
+}
 @customElement('create-social-dialog')
 export class CreateSocailDialog extends TailwindElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() url = ''
-  @state() platform = ''
+  @state() platform = SOCIAL_TYPE.TWI
   @state() id = ''
   @state() form = defFrom()
   @state() err = defErr()
@@ -23,6 +26,7 @@ export class CreateSocailDialog extends TailwindElement('') {
   @state() success = false
   @state() tx: any = null
   @state() socials: any
+  @state() ts = 0
 
   connectedCallback() {
     super.connectedCallback()
@@ -30,11 +34,21 @@ export class CreateSocailDialog extends TailwindElement('') {
   }
 
   async getSocialUrl() {
-    this.socials = await getSocials(bridgeStore.bridge.account)
+    try {
+      this.socials = await getSocials(bridgeStore.bridge.account as string)
+    } catch (err: any) {
+      const msg = err.message || err.code
+      this.updateErr({ load: msg })
+    } finally {
+      this.ts++
+    }
   }
 
+  get socialEmpty() {
+    return this.ts && !this.socials.length
+  }
   get invalid() {
-    return !this.form.url || !this.form.platform || !this.form.id
+    return !this.form.url //|| !this.form.platform || !this.form.id
   }
   get txPending() {
     return this.tx && !this.tx.ignored
@@ -66,7 +80,7 @@ export class CreateSocailDialog extends TailwindElement('') {
   async create() {
     this.pending = true
     try {
-      this.tx = await bindSocial('twitter', '', this.form.url)
+      this.tx = await bindSocial(SOCIAL_TYPE.TWI, '', this.form.url)
       this.success = await this.tx.wait()
     } catch (err: any) {
       let msg = err.message || err.code
@@ -81,16 +95,24 @@ export class CreateSocailDialog extends TailwindElement('') {
 
   render() {
     return html`<ui-dialog @close=${this.close}>
-      <p slot="header" class="my-2 font-bold">Bind Social Account</p>
+      <p slot="header" class="w-full mr-2 text-base">Bind Social Account</p>
+      <!-- Current social accounts -->
       ${when(
-        this.socials,
+        !this.socialEmpty,
         () =>
-          html`<p class="font-bold">Current:</p>
-            <ul>
-              ${repeat(this.socials, (item: any, i) => html`<li>${item[0]}: ${item[2]}</li> `)}
-            </ul>`
+          html`<div class="pb-8 border-b" style="border-color: rgba(255, 255, 255, .12)">
+            <div class="mb-4">Current:</div>
+            <ul class="px-4 py-6 divide-y divide-solid divide-slate-50 rounded-md" style="background: #181832">
+              ${repeat(
+                this.socials,
+                (item: any) =>
+                  html`<li class="text-base "><span class="opacity-60 mr-2">${item[0]}:</span>${item[2]}</li> `
+              )}
+            </ul>
+          </div>`
       )}
-      <div class="flex flex-col w-full m-4 gap-4 mx-auto">
+      <!-- Edit one social account -->
+      <div class="flex flex-col w-full gap-4 m-4 mx-auto mt-6">
         <!-- Tx pending -->
         ${when(
           this.txPending,
@@ -104,6 +126,7 @@ export class CreateSocailDialog extends TailwindElement('') {
           !this.txPending,
           () => html`
             <ui-link
+              class="text-sm"
               href="https://twitter.com/intent/tweet?text=My%20account%20on%20riffian%20is%20${bridgeStore.bridge
                 .account}"
               >Click here to post a tweet with your account address and copy your tweet url bellow.</ui-link
@@ -111,15 +134,22 @@ export class CreateSocailDialog extends TailwindElement('') {
             <ui-input-text
               value=${this.form.url}
               @input=${(e: CustomEvent) => this.onInput(e, 'url')}
-              placeholder="Your social URI"
+              placeholder=${'Your ' + this.platform + ' account URI'}
               required
             >
               <span slot="label">URI</span>
             </ui-input-text>
-            <ui-button class="mx-auto" @click=${this.create} ?disabled="${this.pending}">Confirm</ui-button>
+            <ui-button
+              class="mx-auto"
+              @click=${this.create}
+              ?disabled="${this.invalid || this.pending}"
+              ?pending=${this.pending}
+              >Confirm<i class="mdi ${this.pending ? 'mdi-loading' : ''}"></i
+            ></ui-button>
           `
         )}
       </div>
+      <div slot="bottom"></div>
     </ui-dialog>`
   }
 }

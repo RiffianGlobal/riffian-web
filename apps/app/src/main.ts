@@ -46,17 +46,20 @@ export class AppMain extends TailwindElement('') {
         <div slot="logo" class="inline-flex justify-center items-center mr-4">
           <a class="inline-flex justify-center items-center font-bold" href="/"><i class="ui-logo"></i></a>
         </div>
-        ${when(
-          !this.isMobi,
-          () =>
-            html`<ui-nav slot="right" class="font-bold text-2xl">
-              <ui-link href="/" nav alias="/">HOME</ui-link>
-              <ui-link href="/uservotes" nav>MY VOTES</ui-link>
-              <create-album-btn></create-album-btn>
-            </ui-nav>`
-        )}
+
         <div slot="right"><network-menu></network-menu></div>
-        <ui-link slot="left" href="${this.faucetLink}" class="text-neutral-400">FAUCET</ui-link>
+        <div slot="left" class="flex justify-start items-center gap-4">
+          ${when(
+            !this.isMobi,
+            () =>
+              html`<ui-nav slot="right" class="text-lg">
+                <ui-link href="/" nav alias="/">Home</ui-link>
+                <ui-link href="/uservotes" nav>My Vote</ui-link>
+                <create-album-btn></create-album-btn>
+              </ui-nav>`
+          )}
+          <ui-link slot="left" href="${this.faucetLink}" class="text-neutral-400">Faucet</ui-link>
+        </div>
       </ui-header>
       <main class="ui-app-main">
         ${when(

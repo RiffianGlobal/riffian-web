@@ -32,8 +32,8 @@ export class ViewHome extends TailwindElement(style) {
       return (
         dateBegin.toLocaleString('en-US', { month: 'short' }) +
         dateBegin.getDate() +
-        (dateBegin.getFullYear() == dateEnd.getFullYear() ? '' : ', ' + dateEnd.getFullYear()) +
-        '-' +
+        (dateBegin.getFullYear() == dateEnd.getFullYear() ? '' : ', ' + dateBegin.getFullYear()) +
+        ' - ' +
         (dateBegin.getMonth() == dateEnd.getMonth() ? '' : dateEnd.toLocaleString('en-us', { month: 'short' })) +
         dateEnd.getDate() +
         ', ' +
@@ -43,12 +43,12 @@ export class ViewHome extends TailwindElement(style) {
   }
 
   render() {
-    return html`<div class="flex px-8 space-x-8 place-content-center">
-      <div class="flex-initial w-[32rem]">
-        <div class="flex justify-between h-20">
+    return html`<div class="flex flex-col lg_flex-row px-8 lg_space-x-12 place-content-center">
+      <div class="lg_flex-initial w-full lg_w-[30rem]">
+        <div class="flex justify-between h-20 lg_mt-8">
           <div>
-            <div class="font-bold text-2xl text-highlight">Weekly</div>
-            <div class="font-light mt-2">${until(this.weekRange())}</div>
+            <div class="text-2xl text-highlight">Weekly</div>
+            <div class="text-neutral-400 mt-2">${until(this.weekRange())}</div>
           </div>
           <div class="flex flex-row-reverse">
             <claim-rewards></claim-rewards>
@@ -62,15 +62,15 @@ export class ViewHome extends TailwindElement(style) {
       ${when(
         !this.isSmall,
         () => html`
-          <div class="flex-initial w-[32rem]">
-            <div class="h-20 pt-1">
-              <div class="font-bold text-xl">All</div>
+          <div class="flex-initial w-full lg_w-[30rem]">
+            <div class="h-20 pt-1 lg_mt-8">
+              <div class="text-xl">All</div>
             </div>
             <div class="mt-3">
               <top-album></top-album>
             </div>
           </div>
-          <div class="flex-initial w-32 pt-16 mt-7">
+          <div class="flex-initial w-full lg_w-32 pt-16 mt-7">
             <latest-votes />
           </div>
         `

@@ -45,7 +45,7 @@ export class CreateAlbumBtn extends TailwindElement(style) {
         >${when(
           this.pending,
           () => html`<i class="i mdi mdi-loading"></i>`,
-          () => (this.icon ? html`<i class="mdi mdi-file-upload-outline text-3xl text-white"></i>` : html`UPLOAD`)
+          () => (this.icon ? html`<i class="mdi mdi-file-upload-outline !text-base text-white"></i>` : html`Upload`)
         )}</span
       >
       <!-- Prompt -->

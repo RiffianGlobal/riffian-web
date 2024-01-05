@@ -94,7 +94,7 @@ export class UserVotesList extends TailwindElement(style) {
                     }
                   }}
                 >
-                  <div class="flex-initial flex ">
+                  <div class="flex-initial flex">
                     <div class="w-[4.6rem] h-[4.6rem] mr-4">
                       <img-loader .src=${item.subject.image}></img-loader>
                     </div>

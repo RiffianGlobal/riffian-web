@@ -8,7 +8,7 @@ body {
 html {
   @apply overflow-y-scroll scroll-smooth leading-normal;
   color: var(--textColor);
-  background: #121212;
+  background: #161831;
 }
 body {
   font-size: var(--textBase);

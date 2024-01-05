@@ -9,6 +9,6 @@ svg {
   }
 }
 li.header {
-  @apply text-stone-50 font-light mb-2;
-  border-bottom: 1px solid #898989;
+  @apply text-neutral-400 mb-2;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }

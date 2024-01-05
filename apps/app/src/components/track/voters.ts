@@ -63,7 +63,7 @@ export class TrackInfo extends TailwindElement(style) {
   }
 
   render() {
-    return html`<div>
+    return html`<div class="py-6">
         ${when(
           this.pending && !this.subjectData,
           () =>
@@ -83,7 +83,7 @@ export class TrackInfo extends TailwindElement(style) {
                 <div class="w-16">Rank</div>
                 <div class="flex-auto">Addr</div>
                 <div class="flex-auto text-right pr-3">Comsumption</div>
-                <div class="flex-none w-16 text-right">Earning</div>
+                <div class="flex-none w-28 text-right">Earning</div>
                 ${when(
                   this.pending,
                   () =>
@@ -97,9 +97,7 @@ export class TrackInfo extends TailwindElement(style) {
                 this.voteList,
                 (item: any, i) =>
                   html`<li
-                    class="flex py-2 items-center cursor-pointer ${classMap({
-                      'bg-zinc-800/50': i % 2
-                    })}"
+                    class="item flex py-2.5 items-center cursor-pointer"
                     @click=${() => {
                       if (this.disabled) {
                         emitter.emit('connect-wallet')
@@ -108,20 +106,23 @@ export class TrackInfo extends TailwindElement(style) {
                       }
                     }}
                   >
-                    <div class="flex-none w-16 pl-4 text-lg font-light">${i + 1}</div>
+                    <div class="flex-none w-16 pl-4 text-sm font-light opacity-75">${i + 1}</div>
                     <div class="flex-initial flex">
-                        <ui-address .address="${item.user.address}" short avatar></ui-address>
+                        <ui-address .address="${item.user.address}" short avatar class="text-base"></ui-address>
                     </div>
-                    <div class="flex-auto text-right pr-3">
-                      <p class="text-2xl">
-                      <p class="name truncate mt-2">${formatUnits(item.volumeVote, 18)} ST</p>
+                    <div class="flex-auto text-right pr-3 items-end">
+                      
+                      <p class="name truncate mt-2">${formatUnits(
+                        item.volumeVote,
+                        18
+                      )} <span class="ml-0.5 text-sm opacity-70">ST</span></p>
                       
                       </p>
                     </div>
-                    <div class="flex-none w-16 text-lg font-light"><p class="name truncate mt-2">${formatUnits(
+                    <div class="flex-none w-28 text-right"><p class="name truncate mt-2">${formatUnits(
                       item.user.rewardClaimed,
                       18
-                    )} ST</p></div>
+                    )} <span class="ml-0.5 text-sm opacity-70">ST</span></p></div>
                   </li> `
               )}
             </ul>`
