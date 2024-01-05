@@ -1,11 +1,11 @@
-import { TailwindElement, html, customElement, property, state, classMap } from '../shared/TailwindElement'
+import { ThemeElement, html, customElement, property, state, classMap } from '../shared/theme-element'
 
 import clipboard from './clipboard'
 
 import style from './index.css?inline'
 
 @customElement('ui-copy')
-export class UICopy extends TailwindElement(style) {
+export class UICopy extends ThemeElement(style) {
   @property() value = ''
   @property({ type: String }) class = ''
   @property({ type: Boolean }) icon = false

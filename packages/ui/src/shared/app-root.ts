@@ -1,13 +1,7 @@
-// Polyfills
-import 'urlpattern-polyfill' // Safari 15
-import '@webcomponents/webcomponentsjs/webcomponents-loader.js'
-import 'lit/polyfill-support.js'
-//
-import { TailwindElement, html, customElement } from './TailwindElement'
-import type { RouteConfig } from '@riffian-web/router'
-import { fallbackRender, fallbackEnter } from './router/fallback'
-import { Router, routerGuard } from './router'
-import emitter from '@riffian-web/core/src/emitter'
+import '@lit-web3/base/webcomponent-polyfills'
+import emitter from '@lit-web3/base/emitter'
+import { Router, routerGuard, type RouteConfig, fallbackRender, fallbackEnter } from '@lit-web3/router'
+import { ThemeElement, html, customElement } from './theme-element'
 import { debounce } from '@riffian-web/ethers/src/utils'
 
 import '~/variables-override.css' // -> /apps/*/src/variables-override.css
@@ -17,7 +11,7 @@ export default function ({ routes = <RouteConfig[]>[], hashMode = false } = {}) 
   routerGuard.inject()
   // App Root
   @customElement('app-root')
-  class AppRoot extends TailwindElement('') {
+  class AppRoot extends ThemeElement('') {
     _router: any = routerGuard.init(
       new Router(this, routes, {
         hashMode,
@@ -28,15 +22,10 @@ export default function ({ routes = <RouteConfig[]>[], hashMode = false } = {}) 
       })
     )
 
-    // Trick for @lit-app/state
     forceUpdate = debounce(() => this.requestUpdate(), 100)
     constructor() {
       super()
       emitter.on('force-request-update', () => this.forceUpdate())
-    }
-
-    connectedCallback() {
-      super.connectedCallback()
     }
 
     render() {

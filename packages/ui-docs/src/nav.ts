@@ -1,11 +1,11 @@
-import { customElement, TailwindElement, html, repeat } from '@riffian-web/ui/src/shared/TailwindElement'
+import { customElement, ThemeElement, html, repeat } from '@riffian-web/ui/shared/theme-element'
 import { names } from './data'
 // Components
-import '@riffian-web/ui/src/link'
+import '@riffian-web/ui/link'
 
 import style from './index.css?inline'
 @customElement('ui-docs-nav')
-export class UIDocs extends TailwindElement(style) {
+export class UIDocs extends ThemeElement(style) {
   override render() {
     return html`
       <div class="border p-4 rounded-md sticky top-4">

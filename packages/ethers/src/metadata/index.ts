@@ -1,5 +1,5 @@
-import http from '@riffian-web/core/src/http'
-import { normalizeUri, isInstantUri } from '@riffian-web/core/src/uri'
+import http from '@lit-web3/base/http'
+import { normalizeUri, isInstantUri } from '@lit-web3/base/uri'
 import { useStorage } from '../useStorage'
 import { storageOpt, normalize } from './shared'
 import { getMetaDataByAPI } from './getMetaDataByAPI'

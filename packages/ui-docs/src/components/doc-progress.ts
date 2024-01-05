@@ -1,10 +1,10 @@
-import { customElement, TailwindElement, html, when, state, property } from '@riffian-web/ui/src/shared/TailwindElement'
+import { customElement, ThemeElement, html } from '@riffian-web/ui/shared/theme-element'
 // Components
-import '@riffian-web/ui/src/progress/ring'
-import '@riffian-web/ui/src/progress/bar'
+import '@riffian-web/ui/progress/ring'
+import '@riffian-web/ui/progress/bar'
 
 @customElement('doc-progress')
-export class DocProgress extends TailwindElement('') {
+export class DocProgress extends ThemeElement('') {
   override render() {
     return html`
       <div class="flex gap-8 items-center">

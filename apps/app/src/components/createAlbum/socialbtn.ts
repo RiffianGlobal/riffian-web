@@ -1,12 +1,12 @@
-import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 // Components
-import '@riffian-web/ui/src/button'
+import '@riffian-web/ui/button'
 import './social'
-import emitter from '@riffian-web/core/src/emitter'
+import emitter from '@lit-web3/base/emitter'
 
 @customElement('bind-social-btn')
-export class BindSocialBtn extends TailwindElement('') {
+export class BindSocialBtn extends ThemeElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
 
   @state() dialog = false

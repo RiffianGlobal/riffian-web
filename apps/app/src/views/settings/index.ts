@@ -1,10 +1,10 @@
-import { TailwindElement, html, customElement } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, html, customElement } from '@riffian-web/ui/shared/theme-element'
 
 // Style
 import style from './index.css?inline'
 
 @customElement('view-settings')
-export class ViewSettings extends TailwindElement(style) {
+export class ViewSettings extends ThemeElement(style) {
   render() {
     return html`<div class="settings">
       <div class="ui-container">

@@ -1,23 +1,23 @@
 import {
   customElement,
-  TailwindElement,
+  ThemeElement,
   repeat,
   property,
   state,
   when,
   classMap
-} from '@riffian-web/ui/src/shared/TailwindElement'
+} from '@riffian-web/ui/shared/theme-element'
 import { html, unsafeStatic } from 'lit/static-html.js'
-import { routerPathname } from '@riffian-web/ui/src/shared/router'
-import emitter from '@riffian-web/core/src/emitter'
+import { routerPathname } from '@lit-web3/router'
+import emitter from '@lit-web3/base/emitter'
 // Components
 import { cmps, names, loadComponents } from '../data'
-import '@riffian-web/ui/src/tip'
+import '@riffian-web/ui/tip'
 import '../code'
 
 import style from './cmp.css?inline'
 @customElement('ui-components')
-export class UIComponents extends TailwindElement(style) {
+export class UIComponents extends ThemeElement(style) {
   @property({ type: String }) class = ''
   @state() pathname = routerPathname()
   @state() currentCode = ''

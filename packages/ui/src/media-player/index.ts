@@ -1,5 +1,5 @@
 import {
-  TailwindElement,
+  ThemeElement,
   customElement,
   html,
   state,
@@ -9,9 +9,9 @@ import {
   when,
   ref,
   createRef
-} from '../shared/TailwindElement'
-import { NFTType, MediaType, fetchMediaType } from '@riffian-web/core/src/MIMETypes'
-import emitter from '@riffian-web/core/src/emitter'
+} from '../shared/theme-element'
+import { NFTType, MediaType, fetchMediaType } from '@lit-web3/base/MIMETypes'
+import emitter from '@lit-web3/base/emitter'
 // Components
 import '../img/loader'
 import './video'
@@ -20,7 +20,7 @@ import './audio'
 import style from './media-player.css?inline'
 
 @customElement('ui-media-player')
-export class UIMediaPlayer extends TailwindElement(style) {
+export class UIMediaPlayer extends ThemeElement(style) {
   player$: any = createRef()
   @property({ type: String }) class = ''
   @property({ type: Object }) meta?: Meta
@@ -108,10 +108,7 @@ export class UIMediaPlayer extends TailwindElement(style) {
               () => html`<ui-audio ${ref(this.player$)} src=${this.raw} ?autoplay=${this.autoplay}></ui-audio>`
             ],
             ['threed', () => html``],
-            [
-              'video',
-              () => html`<ui-video ${ref(this.player$)} src=${this.raw} ?autoplay=${this.autoplay}></ui-video>`
-            ]
+            ['video', () => html`<ui-video ${ref(this.player$)} src=${this.raw} ?autoplay=${this.autoplay}></ui-video>`]
           ])}`
       )}
       <!-- Player cover -->
@@ -124,18 +121,19 @@ export class UIMediaPlayer extends TailwindElement(style) {
         <!-- Play button -->
         ${when(
           this.showPlayBtn,
-          () => html` <div
-            class="play-btn flex justify-center items-center w-8 h-8 right-2 bottom-2 absolute z-10 bg-black text-2xl rounded-full"
-          >
-            <svg viewBox="0 0 36 36">
-              <path
-                fill="#fff"
-                d=${this.playing
-                  ? 'M12,26 16,26 16,10 12,10zM21,26 25,26 25,10 21,10z'
-                  : 'M13.75,26 20.25,22 20.25,14 13.75,10zM20.25,22 25,18 25,18 20.25,14z'}
-              ></path>
-            </svg>
-          </div>`
+          () =>
+            html` <div
+              class="play-btn flex justify-center items-center w-8 h-8 right-2 bottom-2 absolute z-10 bg-black text-2xl rounded-full"
+            >
+              <svg viewBox="0 0 36 36">
+                <path
+                  fill="#fff"
+                  d=${this.playing
+                    ? 'M12,26 16,26 16,10 12,10zM21,26 25,26 25,10 21,10z'
+                    : 'M13.75,26 20.25,22 20.25,14 13.75,10zM20.25,22 25,18 25,18 20.25,14z'}
+                ></path>
+              </svg>
+            </div>`
         )}
       </div>
       <!-- Zoom in in dialog -->

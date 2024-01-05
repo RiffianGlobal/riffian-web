@@ -1,6 +1,6 @@
-import http from '@riffian-web/core/src/http'
-import { fetchNFTType } from '@riffian-web/core/src/MIMETypes'
-import { normalizeUri } from '@riffian-web/core/src/uri'
+import http from '@lit-web3/base/http'
+import { fetchNFTType } from '@lit-web3/base/MIMETypes'
+import { normalizeUri } from '@lit-web3/base/uri'
 import { sleep, nowTs } from '../utils'
 
 export const normalize = async (data: Record<string, any>): Promise<Meta> => {
@@ -46,9 +46,12 @@ export const throttle = async (provider: string, uri: string, interval = 1024): 
   pending[provider] = nowTs()
   try {
     meta = await http.get(uri)
-    setTimeout(() => {
-      pending[provider] = 0
-    }, Math.max(nowTs() - pending[provider], interval))
+    setTimeout(
+      () => {
+        pending[provider] = 0
+      },
+      Math.max(nowTs() - pending[provider], interval)
+    )
   } catch (err: any) {
     if (err.code === 403) throw err
     pending[provider] = 0

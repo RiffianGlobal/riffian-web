@@ -1,9 +1,9 @@
-import { customElement, TailwindElement, html, when, state, property } from '@riffian-web/ui/src/shared/TailwindElement'
+import { customElement, ThemeElement, html } from '@riffian-web/ui/shared/theme-element'
 // Components
-import '@riffian-web/ui/src/link'
+import '@riffian-web/ui/link'
 
 @customElement('doc-link')
-export class DocLink extends TailwindElement('') {
+export class DocLink extends ThemeElement('') {
   override render() {
     return html`
       <div class="flex w-full items-center gap-8">

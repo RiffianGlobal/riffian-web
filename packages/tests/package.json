@@ -10,16 +10,15 @@
     "preinstall": "npx only-allow pnpm"
   },
   "dependencies": {
-    "@riffian-web/core": "workspace:latest",
     "@riffian-web/ethers": "workspace:latest",
     "@riffian-web/ui": "workspace:latest"
   },
   "devDependencies": {
-    "@vitest/ui": "^0.28.5",
-    "cross-fetch": "^3.1.8",
-    "jsdom": "^21.1.2",
-    "msw": "^2.0.10",
-    "vitest": "^0.28.5"
+    "@vitest/ui": "^1.1.1",
+    "cross-fetch": "^4.0.0",
+    "jsdom": "^23.0.1",
+    "msw": "^2.0.11",
+    "vitest": "^1.1.1"
   },
   "stackblitz": {
     "startCommand": "npm run test:ui"

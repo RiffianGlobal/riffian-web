@@ -1,6 +1,6 @@
-import { State, Unsubscribe } from '@lit-app/state'
+import { State, Unsubscribe } from '@lit-web3/base/state'
 
-export * from '@lit-app/state'
+export * from '@lit-web3/base/state'
 
 /** require {@link state} to be a State with property {@link key} */
 function requireStateProperty(state: any, key: string) {

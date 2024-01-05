@@ -1,9 +1,9 @@
-import { customElement, TailwindElement, html, when, state, property } from '@riffian-web/ui/src/shared/TailwindElement'
+import { customElement, ThemeElement, html, state } from '@riffian-web/ui/shared/theme-element'
 // Components
-import '@riffian-web/ui/src/pagination'
+import '@riffian-web/ui/pagination'
 
 @customElement('doc-pagination')
-export class DocPagination extends TailwindElement('') {
+export class DocPagination extends ThemeElement('') {
   // Pagination
   @state() pending = false
   loaded = () => {

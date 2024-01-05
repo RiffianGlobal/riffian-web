@@ -1,13 +1,13 @@
-import { customElement, TailwindElement, html, when, state, classMap, unsafeHTML } from '../shared/TailwindElement'
+import { customElement, ThemeElement, html, when, state, classMap, unsafeHTML } from '../shared/theme-element'
 import { animate } from '@lit-labs/motion'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { screenStore } from '@riffian-web/core/src/screen'
+import { screenStore } from '@lit-web3/base/screen'
 // Components
 import '../link'
 
 import style from './network-warning.css?inline'
 @customElement('network-warning')
-export class NetworkWarning extends TailwindElement(style) {
+export class NetworkWarning extends ThemeElement(style) {
   bindBridge = new StateController(this, bridgeStore)
   bindScreen = new StateController(this, screenStore)
   @state() pending = false

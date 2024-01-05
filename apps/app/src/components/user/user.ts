@@ -1,27 +1,18 @@
-import {
-  TailwindElement,
-  customElement,
-  html,
-  property,
-  state,
-  when,
-  until
-} from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { user } from './action'
-import '@riffian-web/ui/src/loading/icon'
-import '@riffian-web/ui/src/loading/skeleton'
-import '@riffian-web/ui/src/img/loader'
-import '@riffian-web/ui/src/dialog/prompt'
+import '@riffian-web/ui/loading/icon'
+import '@riffian-web/ui/loading/skeleton'
+import '@riffian-web/ui/img/loader'
+import '@riffian-web/ui/dialog/prompt'
 import '~/components/rewards/claim'
-import { formatUnits } from 'ethers'
 import { readTwitter } from '~/components/top/action'
 import { Tweet, tweetStore } from '~/components/top/tweet'
 
 const defErr = () => ({ tx: '' })
 @customElement('user-detail')
-export class TrackDetail extends TailwindElement('') {
+export class TrackDetail extends ThemeElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   bindTweets: any = new StateController(this, tweetStore)
   @property({ type: Boolean }) weekly = false

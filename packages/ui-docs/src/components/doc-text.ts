@@ -1,10 +1,10 @@
-import { customElement, TailwindElement, html, when, state, property } from '@riffian-web/ui/src/shared/TailwindElement'
+import { customElement, ThemeElement, html, when, state } from '@riffian-web/ui/shared/theme-element'
 // Components
-import '@riffian-web/ui/src/input/text'
-import '@riffian-web/ui/src/input/pwd'
+import '@riffian-web/ui/input/text'
+import '@riffian-web/ui/input/pwd'
 
 @customElement('doc-text')
-export class DocText extends TailwindElement('') {
+export class DocText extends ThemeElement('') {
   @state() inputPwd = ''
   @state() inputText = ''
   @state() inputTextErr = ''

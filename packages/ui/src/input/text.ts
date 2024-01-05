@@ -1,5 +1,5 @@
 import { customElement, property, state } from 'lit/decorators.js'
-import { TailwindElement, html, classMap } from '../shared/TailwindElement'
+import { ThemeElement, html, classMap } from '../shared/theme-element'
 
 const converter = (val: string | null, type: unknown, { lower = false, upper = false } = {}) => {
   if (val) {
@@ -12,12 +12,13 @@ const converter = (val: string | null, type: unknown, { lower = false, upper = f
 
 import style from './text.css?inline'
 @customElement('ui-input-text')
-export class UIInputText extends TailwindElement(style) {
+export class UIInputText extends ThemeElement(style) {
   @property({ type: String }) placeholder = ''
   @property({ type: String }) class = ''
   @property({ type: Boolean }) sm = false
   @property({ type: Boolean }) dense = false
   @property({ type: Boolean }) disabled = false
+  @property({ type: Boolean }) readonly = false
   @property({ type: Boolean }) autofocus = false
   @property({ type: Boolean }) required = false
   @property({ type: Boolean }) lower = false
@@ -84,6 +85,8 @@ export class UIInputText extends TailwindElement(style) {
     return html`<div
       class="ui-input-text ${classMap(this.$c([this.class, { sm: this.sm, dense: this.dense }]))}"
       ?required=${this.required}
+      ?disabled="${this.disabled}"
+      ?readonly="${this.readonly}"
       ?rightSlotted=${this.rightSlotted}
       ?leftSlotted=${this.leftSlotted}
       part="ui-input-text"
@@ -92,7 +95,8 @@ export class UIInputText extends TailwindElement(style) {
       <span class="ui-input-left"><slot name="left" @slotchange=${this.onSlotLeft}></slot></span>
       <input
         .type="${this.type}"
-        .disabled="${this.disabled}"
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
         placeholder="${this.placeholder}"
         value="${this.value}"
         title="${this.title}"

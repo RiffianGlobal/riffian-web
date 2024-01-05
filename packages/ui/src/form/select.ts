@@ -1,11 +1,11 @@
-import { customElement, TailwindElement, html, repeat, state, classMap, property } from '../shared/TailwindElement'
+import { customElement, ThemeElement, html, repeat, state, classMap, property } from '../shared/theme-element'
 // Components
 import '../menu/drop'
 
 type Option = any | Record<string, any>
 
 @customElement('ui-select')
-export class UISelect extends TailwindElement('') {
+export class UISelect extends ThemeElement('') {
   @property() options: Option[] = []
   @property() value: Option | undefined
 

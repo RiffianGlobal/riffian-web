@@ -1,5 +1,5 @@
-import { TailwindElement, html, customElement, when, property, state, classMap } from '../shared/TailwindElement'
-import { screenStore, StateController } from '@riffian-web/core/src/screen'
+import { ThemeElement, html, customElement, when, property, state, classMap } from '../shared/theme-element'
+import { screenStore, StateController } from '@lit-web3/base/screen'
 // Components
 import '../connect-wallet/btn'
 import '../link'
@@ -7,7 +7,7 @@ import '../button'
 
 import style from './header.css?inline'
 @customElement('ui-header')
-export class UIHeader extends TailwindElement(style) {
+export class UIHeader extends ThemeElement(style) {
   bindScreen: any = new StateController(this, screenStore)
   @property({ type: Boolean }) menuable = false
   @property({ type: Boolean }) fixed = false

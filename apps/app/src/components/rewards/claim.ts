@@ -1,15 +1,15 @@
-import { TailwindElement, customElement, html, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, customElement, html, state, when } from '@riffian-web/ui/shared/theme-element'
 import { asyncReplace } from 'lit/directives/async-replace.js'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { getWeek, weekStatistic, weeklyReward } from './action'
 import { formatUnits } from 'ethers'
 // Components
-import '@riffian-web/ui/src/button'
+import '@riffian-web/ui/button'
 import './dialog'
 
 import style from './claim.css?inline'
 @customElement('claim-rewards')
-export class ClaimRewards extends TailwindElement(style) {
+export class ClaimRewards extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
 
   @state() rewards = 0n

@@ -1,4 +1,4 @@
-import { TailwindElement, html, customElement } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, html, customElement } from '@riffian-web/ui/shared/theme-element'
 import '~/components/top/list'
 import '~/components/createAlbum/btn'
 import '~/components/createAlbum/socialbtn'
@@ -7,7 +7,7 @@ import '~/components/createAlbum/socialbtn'
 import style from './index.css?inline'
 
 @customElement('view-top')
-export class ViewTop extends TailwindElement(style) {
+export class ViewTop extends ThemeElement(style) {
   render() {
     return html`<div class="top">
       <div class="ui-container relative flex justify-between items-center">

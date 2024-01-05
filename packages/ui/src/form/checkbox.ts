@@ -1,8 +1,8 @@
-import { customElement, TailwindElement, html, property, state, classMap } from '../shared/TailwindElement'
+import { customElement, ThemeElement, html, property, state, classMap } from '../shared/theme-element'
 import style from './checkbox.css?inline'
 
 @customElement('ui-checkbox')
-export class UICheckbox extends TailwindElement(style) {
+export class UICheckbox extends ThemeElement(style) {
   @property() name = ''
   @property() readonly = false
   @property() disabled = false

@@ -2,18 +2,53 @@
   "name": "@riffian-web/ui",
   "version": "0.15.0",
   "type": "module",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts",
+    "./address": "./src/address/index.ts",
+    "./block-number": "./src/block-number/index.ts",
+    "./button": "./src/button/index.ts",
+    "./c/*": "./src/c/*.css",
+    "./dialog": "./src/dialog/index.ts",
+    "./link": "./src/link/index.ts",
+    "./media-player": "./src/media-player/index.ts",
+    "./network-warning": "./src/network-warning/index.ts",
+    "./pagination": "./src/pagination/index.ts",
+    "./tx-state": "./src/tx-state/index.ts",
+    "./tip": "./src/tip/index.ts"
+  },
+  "publicConfig": {
+    "exports": {
+      ".": "./dist/index.js",
+      "./*": "./dist/*.js",
+      "./address": "./dist/address/index.js",
+      "./block-number": "./dist/block-number/index.js",
+      "./button": "./dist/button/index.js",
+      "./c/*": "./dist/c/*.css",
+      "./dialog": "./dist/dialog/index.js",
+      "./link": "./dist/link/index.js",
+      "./media-player": "./dist/media-player/index.js",
+      "./network-warning": "./dist/network-warning/index.js",
+      "./pagination": "./dist/pagination/index.js",
+      "./tx-state": "./dist/tx-state/index.js",
+      "./tip": "./dist/tip/index.js"
+    }
+  },
   "scripts": {
-    "build": "tsup src/index.ts --outDir ./lib --format esm,cjs --dts --clean",
+    "build": "vite build",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "@lit-labs/motion": "^1.0.6",
+    "@lit-web3/base": "^0.4.6",
+    "@lit-web3/router": "^0.3.5",
     "@metamask/jazzicon": "^2.0.0",
-    "@riffian-web/core": "workspace:latest",
     "@riffian-web/ethers": "workspace:latest",
-    "@riffian-web/router": "workspace:latest"
-  },
-  "devDependencies": {
-    "tsup": "^8.0.1"
+    "lit": "^3.1.0"
   },
   "license": "MIT"
 }

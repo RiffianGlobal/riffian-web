@@ -1,12 +1,12 @@
 import { PropertyValues } from 'lit'
-import { customElement, TailwindElement, html, classMap, state, when, keyed } from '../shared/TailwindElement'
+import { customElement, ThemeElement, html, classMap, state, when, keyed } from '../shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { sleep } from '@riffian-web/ethers/src/utils'
 
 import style from './blockNumber.css?inline'
 
 @customElement('block-number')
-export class BlockNumber extends TailwindElement(style) {
+export class BlockNumber extends ThemeElement(style) {
   bindBridge = new StateController(this, bridgeStore)
   @state() pending = false
 

@@ -1,20 +1,20 @@
-import AppRoot from '@riffian-web/ui/src/shared/AppRoot.ethers'
-import emitter from '@riffian-web/core/src/emitter'
-import { routerPathroot } from '@riffian-web/ui/src/shared/router'
+import emitter from '@lit-web3/base/emitter'
+import { routerPathroot } from '@lit-web3/router'
+import { StateController, screenStore } from '@lit-web3/base/screen'
 import { routes } from '~/router'
-import { TailwindElement, html, customElement, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, html, customElement, state, when } from '@riffian-web/ui/shared/theme-element'
 // Components
-import '@riffian-web/ui/src/network-warning/menu'
-import '@riffian-web/ui/src/nav/header'
-import '@riffian-web/ui/src/nav/footer'
-import '@riffian-web/ui/src/nav/nav'
-import '@riffian-web/ui/src/block-number'
-import { StateController, screenStore } from '@riffian-web/core/src/screen'
+import AppRoot from '@riffian-web/ui/shared/app-root.ethers'
+import '@riffian-web/ui/network-warning/menu'
+import '@riffian-web/ui/nav/header'
+import '@riffian-web/ui/nav/footer'
+import '@riffian-web/ui/nav/nav'
+import '@riffian-web/ui/block-number'
 import '~/components/createAlbum/btn'
 import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
 
 @customElement('app-main')
-export class AppMain extends TailwindElement('') {
+export class AppMain extends ThemeElement('') {
   bindScreen: any = new StateController(this, screenStore)
   bindNetwork: any = new StateController(this, bridgeStore.bridge.network)
   @state() inRoot = false

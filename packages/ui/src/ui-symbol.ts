@@ -1,9 +1,9 @@
-import { TailwindElement, classMap, customElement, html, property } from './shared/TailwindElement'
+import { ThemeElement, classMap, customElement, html, property } from './shared/theme-element'
 
 import icon from './i/ui-icon.svg'
 
 @customElement('ui-symbol')
-export class UISymbol extends TailwindElement('') {
+export class UISymbol extends ThemeElement('') {
   @property() icon = ''
   @property({ type: Boolean }) sm = false
   @property({ type: Boolean }) dense = false
@@ -19,7 +19,7 @@ export class UISymbol extends TailwindElement('') {
 }
 
 @customElement('ui-icon')
-export class UIIcon extends TailwindElement('') {
+export class UIIcon extends ThemeElement('') {
   @property({ type: Boolean }) sm = false
   render() {
     return html`<img

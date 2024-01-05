@@ -6,7 +6,8 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@riffian-web/core": "workspace:latest",
+    "@lit-web3/base": "^0.4.6",
+    "@lit-web3/router": "^0.3.5",
     "@riffian-web/ui": "workspace:latest",
     "prismjs": "^1.29.0"
   },

@@ -1,11 +1,11 @@
-import { customElement, TailwindElement, html, when, state, repeat } from '@riffian-web/ui/src/shared/TailwindElement'
+import { customElement, ThemeElement, html, state, repeat } from '@riffian-web/ui/shared/theme-element'
 // Components
-import '@riffian-web/ui/src/form/checkbox'
-import '@riffian-web/ui/src/form/radio'
-import '@riffian-web/ui/src/form/select'
+import '@riffian-web/ui/form/checkbox'
+import '@riffian-web/ui/form/radio'
+import '@riffian-web/ui/form/select'
 
 @customElement('doc-form')
-export class DocForm extends TailwindElement('') {
+export class DocForm extends ThemeElement('') {
   @state() checked = true
   @state() options = ['A', 'B', 'C', 'D']
   @state() selected = this.options[0]

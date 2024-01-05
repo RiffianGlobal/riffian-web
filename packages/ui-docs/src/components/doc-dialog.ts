@@ -1,11 +1,11 @@
-import { customElement, TailwindElement, html, when, state, property } from '@riffian-web/ui/src/shared/TailwindElement'
+import { customElement, ThemeElement, html, when, state } from '@riffian-web/ui/shared/theme-element'
 // Components
-import '@riffian-web/ui/src/dialog'
-import '@riffian-web/ui/src/dialog/prompt'
-import '@riffian-web/ui/src/dialog/confirm'
+import '@riffian-web/ui/dialog'
+import '@riffian-web/ui/dialog/prompt'
+import '@riffian-web/ui/dialog/confirm'
 
 @customElement('doc-dialog')
-export class DocDialog extends TailwindElement('') {
+export class DocDialog extends ThemeElement('') {
   @state() dialog = false
   @state() prompt = false
   @state() confirm = false

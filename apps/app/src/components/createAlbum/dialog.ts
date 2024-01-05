@@ -1,11 +1,11 @@
-import { TailwindElement, customElement, html, property, state, when } from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { createAlbum } from './action'
 // Components
-import '@riffian-web/ui/src/button'
-import '@riffian-web/ui/src/input/text'
-import '@riffian-web/ui/src/tx-state'
-import '@riffian-web/ui/src/img/loader'
+import '@riffian-web/ui/button'
+import '@riffian-web/ui/input/text'
+import '@riffian-web/ui/tx-state'
+import '@riffian-web/ui/img/loader'
 
 type formKeys = 'album' | 'image' | 'url'
 
@@ -13,7 +13,7 @@ const defFrom = () => ({ album: '', image: '', url: '' })
 const defErr = () => ({ album: '', image: '', tx: '' })
 
 @customElement('create-album-dialog')
-export class CreateAlbumDialog extends TailwindElement('') {
+export class CreateAlbumDialog extends ThemeElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() album = ''
   @state() image = ''
@@ -120,8 +120,9 @@ export class CreateAlbumDialog extends TailwindElement('') {
             <!-- Preview -->
             <p class="text-base">Preview</p>
             <div class="mb-4 p-4 flex gap-4 border border-white/20 rounded-lg">
-              <div class="self-center w-[4rem] h-[4rem]">
+              <div class="self-center w-[3.75rem] h-[3.75rem] rounded-lg">
                 <img-loader
+                  class="w-[3.75rem] h-[3.75rem] rounded-lg"
                   .src=${this.invalid.image
                     ? this.form.image
                     : 'https://cdn.shopify.com/app-store/listing_images/a82167e02b45cadf681efc6c17c35f3a/icon/CMmMjb30lu8CEAE=.jpg'}

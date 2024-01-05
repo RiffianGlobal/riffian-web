@@ -1,5 +1,5 @@
-import { TailwindElement, customElement } from '../shared/TailwindElement'
+import { ThemeElement, customElement } from '../shared/theme-element'
 import { PlayPauseAbleElement } from './audioish'
 
 @customElement('ui-video')
-export class UIVideo extends PlayPauseAbleElement(TailwindElement('')) {}
+export class UIVideo extends PlayPauseAbleElement(ThemeElement('')) {}

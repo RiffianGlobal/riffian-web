@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { html, el, elInside } from '~/utils'
-import '@riffian-web/ui/src/button'
+import '@riffian-web/ui/button'
 
 describe('Button', async () => {
   beforeEach(async () => {})

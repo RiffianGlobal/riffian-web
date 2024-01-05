@@ -1,4 +1,4 @@
-import { customElement, property, state, TailwindElement } from '@riffian-web/ui/src/shared/TailwindElement'
+import { customElement, property, state, ThemeElement } from '@riffian-web/ui/shared/theme-element'
 import { html, unsafeStatic } from 'lit/static-html.js'
 // Code Highlight
 import Prism from 'prismjs'
@@ -9,7 +9,7 @@ import './components'
 
 import style from './index.css?inline'
 @customElement('doc-code')
-export class DocCode extends TailwindElement(style) {
+export class DocCode extends ThemeElement(style) {
   @property() cmp = ''
   @state() html = ''
 

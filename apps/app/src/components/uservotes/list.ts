@@ -1,23 +1,15 @@
-import {
-  TailwindElement,
-  customElement,
-  html,
-  repeat,
-  state,
-  when,
-  classMap
-} from '@riffian-web/ui/src/shared/TailwindElement'
+import { ThemeElement, customElement, html, repeat, state, when, classMap } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import './dialog'
 import { userVotes } from './action'
-import '@riffian-web/ui/src/loading/icon'
-import '@riffian-web/ui/src/loading/skeleton'
-import '@riffian-web/ui/src/img/loader'
+import '@riffian-web/ui/loading/icon'
+import '@riffian-web/ui/loading/skeleton'
+import '@riffian-web/ui/img/loader'
 import '~/components/rewards/claim'
-import emitter from '@riffian-web/core/src/emitter'
+import emitter from '@lit-web3/base/emitter'
 import style from './list.css?inline'
 @customElement('user-votes-list')
-export class UserVotesList extends TailwindElement(style) {
+export class UserVotesList extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() userVotes: any = []
   @state() dialog = false

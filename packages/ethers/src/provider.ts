@@ -3,6 +3,7 @@ import Network from './networks'
 import { walletStore } from './bridge'
 import { State, property } from './state'
 import { EtherNetworks } from './constants/networks'
+import emitter from '@lit-web3/base/emitter'
 
 export class Provider extends State {
   @property() public provider?: BrowserProvider | JsonRpcProvider | WebSocketProvider | any
@@ -18,7 +19,7 @@ export class Provider extends State {
     walletStore.subscribe(() => this.update(options), 'wallet')
     this.network.subscribe(() => this.update(options), 'chainId')
   }
-  private update = async (options: useBridgeOptions = {}) => {
+  update = async (options: useBridgeOptions = {}) => {
     let { chainId } = this.network
     const { persistent, provider, rpc } = options
     let wallet = walletStore.wallet ?? walletStore.wallets[0].app
@@ -41,6 +42,7 @@ export class Provider extends State {
       const _rpc = rpc || (this.network.providerWs ? this.network.providerWs : this.network.provider)
       this.provider = new _provider(_rpc)
     }
+    emitter.emit('network-change', '')
   }
   // seems not used
   // get request() {

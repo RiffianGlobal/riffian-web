@@ -1,21 +1,21 @@
 import {
-  TailwindElement,
+  ThemeElement,
   customElement,
   html,
   property,
   state,
   when,
   queryAll
-} from '@riffian-web/ui/src/shared/TailwindElement'
+} from '@riffian-web/ui/shared/theme-element'
 import { getContract } from '@riffian-web/ethers/src/useBridge'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { parseRevertReason } from '@riffian-web/ethers/src/parseErr'
-import '@riffian-web/ui/src/button'
-import '@riffian-web/ui/src/dialog'
-import '@riffian-web/ui/src/input/text'
+import '@riffian-web/ui/button'
+import '@riffian-web/ui/dialog'
+import '@riffian-web/ui/input/text'
 
 @customElement('new-album')
-export class NewAlbum extends TailwindElement('') {
+export class NewAlbum extends ThemeElement('') {
   @property({ type: Boolean }) submit = false
   @property({ type: String }) result = ''
   @property({ type: Boolean }) err = true
@@ -69,7 +69,7 @@ export class NewAlbum extends TailwindElement('') {
           html` <div>
               <ui-input-text id="name" name="name" type="text" placeholder="Input Name" required>
                 <span slot="label">Album Name</span>
-              </<ui-input-text>
+              </ui-input-text>
             </div>
             <div>
               <ui-input-text type="text" id="symbol" name="symbol" placeholder="Input Symbol" required>

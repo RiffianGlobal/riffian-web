@@ -4,13 +4,14 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "vite --host --mode development",
+    "dev": "vite --host --mode development --force",
     "build": "vite build",
     "preinstall": "npx only-allow pnpm"
   },
   "keywords": [],
   "dependencies": {
-    "@riffian-web/core": "workspace:latest",
+    "@lit-web3/base": "^0.4.6",
+    "@lit-web3/router": "^0.3.5",
     "@riffian-web/ethers": "workspace:latest",
     "@riffian-web/ui": "workspace:latest",
     "@riffian-web/ui-docs": "workspace:latest",

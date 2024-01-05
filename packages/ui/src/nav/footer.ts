@@ -1,10 +1,10 @@
-import { TailwindElement, html, property, classMap, customElement } from '../shared/TailwindElement'
+import { ThemeElement, html, property, classMap, customElement } from '../shared/theme-element'
 // Components
 import '../link'
 
 import style from './footer.css?inline'
 @customElement('ui-footer')
-export class UIFooter extends TailwindElement(style) {
+export class UIFooter extends ThemeElement(style) {
   @property({ type: Boolean }) full = false
   render() {
     return html`

@@ -1,6 +1,6 @@
 // SubGraph API
 import Network from '../networks'
-import http, { Jsonish } from '@riffian-web/core/src/http'
+import http, { Jsonish } from '@lit-web3/base/http'
 
 export const SubGraph: ChainConf = {
   main: {
@@ -9,8 +9,8 @@ export const SubGraph: ChainConf = {
     '0x5': 'https://api.studio.thegraph.com/query/'
   },
   MediaBoard: {
-    '0xfa2': 'https://api.thegraph.com/subgraphs/name/pho360360/riffianboard', //fantom testnet
-    '0xdddd': 'https://api.thegraph.com/subgraphs/name/pho360360/riffianboard' //doid testnet
+    '0xfa2': 'https://api.thegraph.com/subgraphs/name/pho360360/riffianboard',
+    '0xdddd': 'https://graph.testnet.doid.tech/subgraphs/name/riffian/board'
   }
 }
 

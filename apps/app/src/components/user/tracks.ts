@@ -1,5 +1,5 @@
 import {
-  TailwindElement,
+  ThemeElement,
   classMap,
   customElement,
   html,
@@ -7,19 +7,19 @@ import {
   repeat,
   state,
   when
-} from '@riffian-web/ui/src/shared/TailwindElement'
+} from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { tracks } from './action'
-import '@riffian-web/ui/src/loading/icon'
-import '@riffian-web/ui/src/loading/skeleton'
-import '@riffian-web/ui/src/img/loader'
-import '@riffian-web/ui/src/dialog/prompt'
+import '@riffian-web/ui/loading/icon'
+import '@riffian-web/ui/loading/skeleton'
+import '@riffian-web/ui/img/loader'
+import '@riffian-web/ui/dialog/prompt'
 import '~/components/rewards/claim'
-import emitter from '@riffian-web/core/src/emitter'
-import { formatUnits } from 'ethers'
+import emitter from '@lit-web3/base/emitter'
+
 @customElement('track-list')
-export class TrackInfo extends TailwindElement('') {
+export class TrackInfo extends ThemeElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   @property({ type: Boolean }) weekly = false
   @property({ type: String }) address = ''
