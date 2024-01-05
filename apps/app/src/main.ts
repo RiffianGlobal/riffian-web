@@ -11,12 +11,13 @@ import '@riffian-web/ui/nav/footer'
 import '@riffian-web/ui/nav/nav'
 import '@riffian-web/ui/block-number'
 import '~/components/createAlbum/btn'
+import '~/components/reward/btn'
 import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
 
 @customElement('app-main')
 export class AppMain extends ThemeElement('') {
   bindScreen: any = new StateController(this, screenStore)
-  bindNetwork: any = new StateController(this, bridgeStore.bridge.network)
+  bindBridge: any = new StateController(this, bridgeStore)
   @state() inRoot = false
 
   get isMobi() {
@@ -55,7 +56,12 @@ export class AppMain extends ThemeElement('') {
               <create-album-btn></create-album-btn>
             </ui-nav>`
         )}
-        <div slot="right"><network-menu></network-menu></div>
+        <div slot="right">
+          <div class="inline-flex items-center gap-4 mx-4">
+            <network-menu></network-menu>
+            ${when(bridgeStore.bridge.account, () => html`<reward-btn></reward-btn>`)}
+          </div>
+        </div>
         <ui-link slot="left" href="${this.faucetLink}" class="text-neutral-400">FAUCET</ui-link>
       </ui-header>
       <main class="ui-app-main">

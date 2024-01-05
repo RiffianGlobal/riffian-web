@@ -1,4 +1,4 @@
-import { StateController, referralStore, bindReferral, getReferral } from './store'
+import { StateController, referralStore, bindReferral } from './store'
 // Components
 import {
   ThemeElement,
@@ -17,7 +17,7 @@ import style from './bind.css?inline'
 
 @customElement('referral-bind')
 export class referralBind extends ThemeElement(style) {
-  bindReferral: any = new StateController(this, referralStore)
+  bindStore: any = new StateController(this, referralStore)
 
   @property() address = ''
 
