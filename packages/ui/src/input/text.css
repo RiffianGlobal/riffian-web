@@ -14,7 +14,8 @@
     outline: 0 none;
     outline-offset: 0;
   }
-  &[disabled] {
+  &[disabled],
+  &[readonly] {
     @apply opacity-60;
   }
   &.dense {

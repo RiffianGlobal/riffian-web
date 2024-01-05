@@ -18,6 +18,7 @@ export class UIInputText extends ThemeElement(style) {
   @property({ type: Boolean }) sm = false
   @property({ type: Boolean }) dense = false
   @property({ type: Boolean }) disabled = false
+  @property({ type: Boolean }) readonly = false
   @property({ type: Boolean }) autofocus = false
   @property({ type: Boolean }) required = false
   @property({ type: Boolean }) lower = false
@@ -84,6 +85,8 @@ export class UIInputText extends ThemeElement(style) {
     return html`<div
       class="ui-input-text ${classMap(this.$c([this.class, { sm: this.sm, dense: this.dense }]))}"
       ?required=${this.required}
+      ?disabled="${this.disabled}"
+      ?readonly="${this.readonly}"
       ?rightSlotted=${this.rightSlotted}
       ?leftSlotted=${this.leftSlotted}
       part="ui-input-text"
@@ -92,7 +95,8 @@ export class UIInputText extends ThemeElement(style) {
       <span class="ui-input-left"><slot name="left" @slotchange=${this.onSlotLeft}></slot></span>
       <input
         .type="${this.type}"
-        .disabled="${this.disabled}"
+        ?disabled="${this.disabled}"
+        ?readonly="${this.readonly}"
         placeholder="${this.placeholder}"
         value="${this.value}"
         title="${this.title}"

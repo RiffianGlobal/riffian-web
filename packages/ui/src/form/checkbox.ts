@@ -1,4 +1,4 @@
-import { customElement, ThemeElement, html, property, state, classMap } from './shared/theme-element'
+import { customElement, ThemeElement, html, property, state, classMap } from '../shared/theme-element'
 import style from './checkbox.css?inline'
 
 @customElement('ui-checkbox')

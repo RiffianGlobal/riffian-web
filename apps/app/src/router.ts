@@ -31,6 +31,15 @@ export const routes: RouteConfig[] = [
     }
   },
   {
+    name: 'referral',
+    path: '/referral/:address?',
+    render: ({ address = '' }) => html`<view-referral .address=${address}></view-referral>`,
+    enter: async () => {
+      await import('~/views/referral')
+      return true
+    }
+  },
+  {
     name: 'uservotes',
     path: '/uservotes',
     render: () => html`<user-votes></user-votes>`,

@@ -13,6 +13,13 @@ class BridgeStore extends State {
   @property({ skipReset: true }) blockNumber!: number
   @property({ skipReset: true }) bridge!: Bridge
   @property({ skipReset: true }) private _account: string = ''
+  constructor() {
+    super()
+    emitter.on('wallet-changed', () => {
+      this.reset() //  Trick for bridge.network cantnot update immediately probs
+      this._account = walletStore.account
+    })
+  }
   init() {
     reflectProperty(walletStore, 'account', this, '_account')
   }
@@ -55,6 +62,10 @@ class BlockPolling {
     this.getBlockNumber()
     // Events
     emitter.on('tx-success', () => this.broadcast())
+    emitter.on('network-change', () => {
+      this.reset()
+      this.listenProvider()
+    })
     bridgeStore.bridge.subscribe(() => {
       this.reset()
       this.getBlockNumber()
@@ -145,7 +156,7 @@ export const getNetworkSync = () => Networks[Network.chainId]
 export const getChainId = async () => (await getNetwork()).chainId
 export const getEnvKey = async (key = '', withoutAddr = false) =>
   (withoutAddr ? await getChainId() : (await useBridgeAsync()).envKey) + (key ? `.${key}` : '')
-export const getSigner = async (account: string) => (await getBridge()).getSigner(account || (await getAccount()))
+export const getSigner = async (account?: string) => (await getBridge()).getSigner(account || (await getAccount()))
 export const getBlockNumber = async () => {
   const { blockNumber } = await useBridgeAsync()
   return bridgeStore.blockNumber || blockNumber
