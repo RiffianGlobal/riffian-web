@@ -47,22 +47,24 @@ export class AppMain extends ThemeElement('') {
         <div slot="logo" class="inline-flex justify-center items-center mr-4">
           <a class="inline-flex justify-center items-center font-bold" href="/"><i class="ui-logo"></i></a>
         </div>
-        ${when(
-          !this.isMobi,
-          () =>
-            html`<ui-nav slot="right" class="font-bold text-2xl">
-              <ui-link href="/" nav alias="/">HOME</ui-link>
-              <ui-link href="/uservotes" nav>MY VOTES</ui-link>
-              <create-album-btn></create-album-btn>
-            </ui-nav>`
-        )}
+
         <div slot="right">
-          <div class="inline-flex items-center gap-4 mx-4">
-            <network-menu></network-menu>
+          <div class="inline-flex items-center gap-4">
             ${when(bridgeStore.bridge.account, () => html`<reward-btn></reward-btn>`)}
+            <network-menu></network-menu>
           </div>
         </div>
-        <ui-link slot="left" href="${this.faucetLink}" class="text-neutral-400">FAUCET</ui-link>
+        <div slot="left" class="flex justify-start items-center gap-4">
+          ${when(
+            !this.isMobi,
+            () =>
+              html`<ui-nav slot="right" class="text-lg">
+                <ui-link href="/" nav alias="/">Home</ui-link>
+                <ui-link href="/uservotes" nav>My Vote</ui-link>
+                <create-album-btn></create-album-btn>
+              </ui-nav>`
+          )}
+        </div>
       </ui-header>
       <main class="ui-app-main">
         ${when(
@@ -80,11 +82,9 @@ export class AppMain extends ThemeElement('') {
       </main>
       <ui-footer full>
         <div slot="block"></div>
-        <div slot="right" class="flex">
-          ${when(
-            !(import.meta.env.MODE === 'production'),
-            () => html`<ui-link class="text-sm text-gray-600 mr-2" href="/docs">COMPONENTS</ui-link>`
-          )}
+        <div slot="right" class="flex gap-6 text-xs">
+          <ui-link href=${this.faucetLink}>Faucet</ui-link>
+          ${when(!(import.meta.env.MODE === 'production'), () => html`<ui-link href="/docs">Components</ui-link>`)}
           <block-number></block-number>
         </div>
       </ui-footer>`

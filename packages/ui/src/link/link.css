@@ -29,19 +29,21 @@
   &.router-active {
   }
   &[nav] {
-    @apply inline-flex px-1 py-1.5 border-transparent rounded-full whitespace-nowrap leading-none;
+    @apply inline-flex px-3 py-3 border-transparent rounded-full whitespace-nowrap leading-none opacity-60;
     font-family: Roboto, var(--fontFamily);
     color: inherit;
 
     &:hover {
       color: currentColor;
+      @apply opacity-100;
     }
     &:hover {
-      @apply no-underline;
+      @apply no-underline opacity-100;
     }
     &[active],
     &[exact-active] {
-      color: var(--colorHighlight);
+      /* color: var(--colorHighlight); */
+      @apply opacity-100;
     }
   }
   &[link] {

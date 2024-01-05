@@ -12,7 +12,7 @@
   --fontFamily: var(--font-family, 'Helvetica Neue', Arial, sans-serif);
   --textColor: var(--text-color, #fff);
   --textColorInverse: var(--text-color-inverse, rgb(182, 175, 168));
-  --headerH: var(--header-height, 112px);
+  --headerH: var(--header-height, 72px);
   --footerH: var(--footer-height, 60px);
   --appMainH: calc(100vh - var(--headerH) - var(--footerH) - var(--networkWarnH, 0px));
   --appMainBg: var(--app-main-bg, #fff);
@@ -23,7 +23,7 @@
   --colorSuccess: var(--color-success, #4caf50);
   --colorDark: var(--color-dark, #373737);
   /* Buttons */
-  --btnBg: var(--btn-bg, #60a5fa);
+  --btnBg: var(--btn-bg, #3d82db);
   --btnBgHover: var(--btn-bg-hover, #93c5fd);
   --btnBgActive: var(--btn-bg-active, #bfdbfe);
   --btnBgSecondary: var(--btn-bg-secondary, #94a3b8);
@@ -39,8 +39,8 @@
   --formFocus: #c7d2fe;
   --formGlow: 3px solid var(--formFocus);
   /* UIs */
-  --uiLogoW: var(--ui-logo-w, 112px); /* 1:5.27 */
-  --uiLogoH: var(--ui-logo-h, 112px);
+  --uiLogoW: var(--ui-logo-w, 160px); /* 1:5.27 */
+  --uiLogoH: var(--ui-logo-h, 40px);
   --uiIconW: var(--ui-icon-w, 32px);
   --uiIconH: var(--ui-icon-h, 32px);
 }

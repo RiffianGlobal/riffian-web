@@ -1,4 +1,4 @@
-import { StateController, referralStore, bindReferral } from './store'
+import { StateController, referralStore, setReferral } from './store'
 // Components
 import {
   ThemeElement,
@@ -17,7 +17,7 @@ import style from './bind.css?inline'
 
 @customElement('referral-bind')
 export class referralBind extends ThemeElement(style) {
-  bindStore: any = new StateController(this, referralStore)
+  bindReferral: any = new StateController(this, referralStore)
 
   @property() address = ''
 
@@ -31,7 +31,7 @@ export class referralBind extends ThemeElement(style) {
     if (referralStore.address) return
     referralStore.pending = true
     try {
-      referralStore.tx = await bindReferral(this.address)
+      referralStore.tx = await setReferral(this.address)
       await referralStore.tx.wait()
     } catch (err: any) {
       let msg = err.message || err.code

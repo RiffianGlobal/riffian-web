@@ -78,7 +78,7 @@ export class UIDialog extends ThemeElement(style) {
       <div
         @click="${() => !this.persistent && this.close()}"
         part="dialog-overlay"
-        class="z-0 absolute left-0 top-0 w-full h-full visible bg-black ${this.model ? 'opacity-40' : 'opacity-0'}"
+        class="z-0 absolute left-0 top-0 w-full h-full visible bg-black ${this.model ? 'opacity-30' : 'opacity-0'}"
         ${animate({ guard: () => this.model })}
       ></div>
     `

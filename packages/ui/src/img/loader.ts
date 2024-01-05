@@ -26,6 +26,7 @@ export class ImgLoader extends LazyElement(ThemeElement(style)) {
   @property({ type: Boolean }) stop = false
   @property({ type: String }) loading = 'eager'
   @property({ type: String }) sizes? = undefined // default: auto, eg. sizes="(max-width: 600px) 200px, 380px"
+  @property({ type: String }) class? = ''
   @state() w: string = '100%'
   @state() firstLoaded = this.loaded
   @state() imgLoaded = this.loaded
@@ -88,7 +89,9 @@ export class ImgLoader extends LazyElement(ThemeElement(style)) {
   render() {
     return html`<i
       ${ref(this.el$)}
-      class="${classMap({ loaded: this.firstLoaded, err: this.err, empty: this.empty, stop: this.stop })}"
+      class="${classMap(
+        this.$c([this.class, { loaded: this.firstLoaded, err: this.err, empty: this.empty, stop: this.stop }])
+      )}"
       >${when(
         this.isResizableSrc ? this.uriset : this.uri,
         () =>

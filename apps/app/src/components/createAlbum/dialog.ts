@@ -24,7 +24,7 @@ export class CreateAlbumDialog extends ThemeElement('') {
   @state() tx: any = null
 
   get invalid() {
-    return !this.form.album || !this.form.image
+    return !this.form.album || !this.form.image || ['album', 'image'].map((k) => this.err[k])
   }
   get txPending() {
     return this.tx && !this.tx.ignored
@@ -71,7 +71,8 @@ export class CreateAlbumDialog extends ThemeElement('') {
 
   render() {
     return html`<ui-dialog @close=${this.close}>
-      <p slot="header" class="my-2 font-bold">New Track</p>
+      <p slot="header" class="w-full text-base mr-2">New Track</p>
+
       <div class="flex flex-col w-full m-4 gap-4 mx-auto">
         <!-- Tx pending -->
         ${when(
@@ -92,17 +93,21 @@ export class CreateAlbumDialog extends ThemeElement('') {
               placeholder="Your track name"
               required
               autofocus
+              err=${this.err.album}
             >
               <span slot="label">Track Name</span>
+              ${when(this.err.album, () => html`<span slot="msg" class="text-red-400">${this.err.album}</span>`)}
             </ui-input-text>
             <!-- Symbol -->
             <ui-input-text
               value=${this.form.image}
               @input=${(e: CustomEvent) => this.onInput(e, 'image')}
               placeholder="Your image URL"
+              err=${this.err.image}
               required
             >
               <span slot="label">Image</span>
+              ${when(this.err.image, () => html`<span slot="msg" class="text-red-400">${this.err.image}</span>`)}
             </ui-input-text>
             <ui-input-text
               value=${this.form.url}
@@ -113,18 +118,29 @@ export class CreateAlbumDialog extends ThemeElement('') {
               <span slot="label">URL</span>
             </ui-input-text>
             <!-- Preview -->
-
-            <div class="self-center w-[4.6rem] h-[4.6rem]">
-              <img-loader
-                .src=${this.form.image ||
-                'https://cdn.shopify.com/app-store/listing_images/a82167e02b45cadf681efc6c17c35f3a/icon/CMmMjb30lu8CEAE=.jpg'}
-              ></img-loader>
+            <p class="text-base">Preview</p>
+            <div class="mb-4 p-4 flex gap-4 border border-white/20 rounded-lg">
+              <div class="self-center w-[3.75rem] h-[3.75rem] rounded-lg">
+                <img-loader
+                  class="w-[3.75rem] h-[3.75rem] rounded-lg"
+                  .src=${this.invalid.image
+                    ? this.form.image
+                    : 'https://cdn.shopify.com/app-store/listing_images/a82167e02b45cadf681efc6c17c35f3a/icon/CMmMjb30lu8CEAE=.jpg'}
+                ></img-loader>
+              </div>
+              <p class="text-lg">${!this.err.album ? this.form.album : ''}</p>
             </div>
-            <p class="text-center">${this.form.album || '-'}</p>
-            <ui-button class="mx-auto" @click=${this.create} ?disabled="${this.pending}">Confirm</ui-button>
+            <ui-button
+              class="mx-auto"
+              @click=${this.create}
+              ?disabled="${this.invalid || this.pending}"
+              ?pending=${this.pending}
+              >Confirm</ui-button
+            >
           `
         )}
       </div>
+      <div slot="bottom"></div>
     </ui-dialog>`
   }
 }

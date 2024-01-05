@@ -4,7 +4,7 @@
 .p {
   @apply w-24 h-full rounded-md overflow-hidden;
   height: 1em;
-  background: rgba(222, 226, 230);
+  background: #22243c;
   &::after {
     content: '';
     @apply block w-full h-full;

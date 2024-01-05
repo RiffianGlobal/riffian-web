@@ -58,21 +58,19 @@ export class LatestVotes extends ThemeElement(style) {
       !this.pending,
       () =>
         html`<ul role="list">
-          <li class="flex header p-1">
+          <li class="flex header p-1 lg_mt-3">
             <div class="w-16">Bidders</div>
           </li>
           ${repeat(
             this.latestVotes,
             (item: any, i) =>
               html`<li class="py-2 justify-start">
-                <div class="flex items-center justify-start space-x-2">
+                <div class="flex items-top justify-between space-x-2">
                   <ui-address class="text-2xl" .address=${item.voter.address} avatar hideAddr></ui-address>
-                  <p class="text-highlight text-2xl">${formatUnits(item.value, 18)}</p>
-                </div>
-                <div>
-                  <p class="font-light text-gray-400 text-left text-sm">
-                    ${asyncReplace(this.timeAgo(BigInt(item.time)))}
-                  </p>
+                  <div class="flex flex-col justify-center items-end">
+                    <p class="opacity-95 text-base">${formatUnits(item.value, 18)}</p>
+                    <p class="text-left text-xs text-neutral-400">${asyncReplace(this.timeAgo(BigInt(item.time)))}</p>
+                  </div>
                 </div>
               </li> `
           )}

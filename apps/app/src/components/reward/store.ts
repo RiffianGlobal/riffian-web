@@ -15,7 +15,7 @@ export { StateController } from '@lit-web3/base/state'
 class RewardStore extends State {
   @property({ value: null }) tx?: any
   @property({ value: false }) pending!: boolean
-  @property({ value: '' }) total!: number | ''
+  @property({ value: null }) total!: number | null
 
   get txPending() {
     return this.tx && !this.tx.ignored
@@ -42,7 +42,7 @@ export const rewards = async () => {
   try {
     rewardStore.total = res1
   } catch {
-    rewardStore.total = ''
+    rewardStore.total = null
   }
   return rewardStore.total
 }

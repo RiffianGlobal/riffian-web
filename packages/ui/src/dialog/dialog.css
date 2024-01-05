@@ -1,5 +1,5 @@
 :host {
-  --dialogMinH: 18rem;
+  --dialogMinH: 14rem;
   --dialogHeaderH: 3.5rem;
   --dialogFooterH: 3.3125rem;
   @apply z-50 fixed flex justify-center items-center left-0 top-0 w-full h-full invisible px-4 lg_px-0;
@@ -8,6 +8,11 @@
     @apply w-full;
     max-width: var(--appMaxW, 28rem);
     min-height: var(--dialogMinH);
+    background-color: #212145;
+    @apply border border-transparent;
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+    background-image: linear-gradient(to right, #212145, #212145), linear-gradient(90deg, #bd47ff, #2c73b1);
   }
   &::part(dialog-close) {
   }

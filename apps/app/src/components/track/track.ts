@@ -126,67 +126,77 @@ export class TrackDetail extends ThemeElement(style) {
         )}
         ${when(
           this.subject,
-          () => html`
-            <div slot="center" class="grid mx-4 mt-4 grid-cols-6 gap-4 place-items-center">
-              <div class="flex grow pb-4 col-span-2">
-                <div class="w-24 h-24 mr-4"><img-loader src=${this.subject.image}></img-loader></div>
-                <div>
-                  <div class="text-lg font-bold">${this.subject.name}</div>
-                  <span class="icon mt-1"
-                    ><a href="${this.subject.uri}"><i class="mdi mdi-play-circle-outline"></i></a
-                  ></span>
-                  <div>
-                    <div class="text-sm font-light text-blue-300">
-                      ${when(
-                        this.socialVerified,
-                        () => html`<span><i class="text-green-600 text-sm mdi mdi-check-decagram"></i></span>`
-                      )}${this.socialName}
-                    </div>
-                    <div class="text-sm font-light text-blue-300">
-                      <a href="${this.socialURI}" target="_blank">@${this.socialID}</a>
-                    </div>
+          () =>
+            html`<div class="grid lg_grid-cols-13 gap-2">
+              <!-- meta info -->
+              <div class="lg_col-span-6 flex gap-6">
+                <div class="w-32 h-32 rounded-xl bg-white/10">
+                  <img-loader src=${this.subject.image} class="w-32 h-32 rounded-xl"></img-loader>
+                </div>
+                <div class="flex flex-col justify-start ml-4">
+                  <div class="text-xl mb-1.5">${this.subject.name}</div>
+                  <div class="inline-flex text-base font-normal mb-0.5">
+                    ${this.socialName}
+                    ${when(
+                      this.socialVerified,
+                      () =>
+                        html`<span class="ml-0.5"><i class="mdi mdi-check-decagram text-sm text-green-600"></i></span>`
+                    )}
                   </div>
-                  <!-- <div class="text-gray-500">
-                    You own ${until(this.myVotes, html`<i class="text-sm mdi mdi-loading"></i>`)} tickets
-                  </div> -->
+                  <a class="text-base font-normal text-blue-300" href="${this.socialURI}" target="_blank"
+                    >@${this.socialID}</a
+                  >
+                  <div class="mt-2">
+                    <ui-button
+                      sm
+                      class="outlined"
+                      ?disabled="${this.disabled}"
+                      @click=${() => {
+                        this.dialog = true
+                      }}
+                      >VOTE</ui-button
+                    >
+                    ${when(
+                      this.dialog,
+                      () =>
+                        html`<vote-album-dialog
+                          album=${this.subject.id}
+                          url=${this.subject.image}
+                          name=${this.subject.name}
+                          votes=${this.subject.supply}
+                          author=${this.subject.creator.address}
+                          @close=${this.close}
+                        ></vote-album-dialog>`
+                    )}
+                  </div>
                 </div>
               </div>
-              <div class="">
-                <div class="text-sm text-gray-500 align-center">Voters</div>
-                <div class="text-4xl align-center">${this.subject.fansNumber}</div>
-              </div>
-              <div class="">
-                <div class="text-sm text-gray-500 align-center">Tickets</div>
-                <div class="text-4xl align-center">${this.subject.supply}</div>
-              </div>
-              <div class="">
-                <div class="text-sm text-gray-500 align-center">Total Vote Value</div>
-                <div class="text-4xl align-center">${formatUnits(this.subject.totalVoteValue, 18)} ST</div>
-              </div>
-              <div name="Dialog" class="">
-                <ui-button
-                  class="outlined"
-                  ?disabled="${this.disabled}"
-                  @click=${() => {
-                    this.dialog = true
-                  }}
-                  >VOTE</ui-button
+              <!-- statistic -->
+              <div
+                class="lg_col-start-7 lg_col-span-7 grid grid-cols-6 lg_grid-cols-8 gap-4 place-items-center items-center"
+              >
+                <div
+                  class="lg_col-start-3 col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
                 >
-                ${when(
-                  this.dialog,
-                  () =>
-                    html`<vote-album-dialog
-                      album=${this.subject.id}
-                      url=${this.subject.image}
-                      name=${this.subject.name}
-                      votes=${this.subject.supply}
-                      author=${this.subject.creator.address}
-                      @close=${this.close}
-                    ></vote-album-dialog>`
-                )}
+                  <div class="text-base text-gray-500 align-center">Voters</div>
+                  <div class="text-4xl align-center">${this.subject.fansNumber}</div>
+                </div>
+                <div
+                  class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
+                >
+                  <div class="text-base text-gray-500 align-center">Tickets</div>
+                  <div class="text-4xl align-center">${this.subject.supply}</div>
+                </div>
+                <div
+                  class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
+                >
+                  <div class="text-base text-gray-500 align-center">Total Vote Value</div>
+                  <div class="text-4xl align-center">
+                    ${formatUnits(this.subject.totalVoteValue, 18)}<span class="ml-2 text-lg">ST</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          `
+            </div>`
         )}
       </div>
       <!-- Prompt -->

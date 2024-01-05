@@ -1,4 +1,13 @@
-import { ThemeElement, customElement, html, property, state, until, when } from '@riffian-web/ui/shared/theme-element'
+import {
+  ThemeElement,
+  customElement,
+  html,
+  property,
+  state,
+  until,
+  when,
+  classMap
+} from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import {
   vote,
@@ -43,15 +52,20 @@ export class VoteAlbumDialog extends ThemeElement('') {
   @state() pending = false
   @state() rewards = false
   @state() err = defErr()
+  @state() ts = 0
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback()
-    this.getPrice()
-    this.readFromTwitter()
+    await this.getPrice()
+    await this.readFromTwitter()
+    this.ts++
   }
 
   get tweets() {
     return tweetStore.tweets
+  }
+  get hasVoted() {
+    return this.ts && this.this.myVotes?.length
   }
 
   readFromLocal(key: any) {
@@ -144,53 +158,94 @@ export class VoteAlbumDialog extends ThemeElement('') {
         this.close()
       }}
     >
-      <p slot="header" class="font-bold">VOTE Track</p>
-      <div slot="center" class="flex mx-4 mt-4">
-        <div class="flex grow pb-4">
-          <div class="w-24 mr-4"><img-loader src=${this.url}></img-loader></div>
-          <div>
-            <div class="text-lg font-bold">${this.name}</div>
+      <p slot="header" class="w-full text-base mr-2">Vote Track</p>
+      <div slot="center" class="flex mx-4 my-6">
+        <div class="flex grow justify-between p-4 bg-black/20">
+          <!-- meta info -->
+          <div class="flex gap-6">
+            <div class="w-24 h-24 rounded-lg bg-white/10">
+              <img-loader class="w-24 h-24 rounded-lg" src=${this.url}></img-loader>
+            </div>
             <div>
-              <div class="text-sm font-light text-blue-300">
+              <div class="text-lg mb-1.5">${this.name}</div>
+              <div class="text-sm">
                 ${when(
                   this.socialVerified,
                   () => html`<span><i class="text-green-600 text-sm mdi mdi-check-decagram"></i></span>`
                 )}${this.socialName}
               </div>
-              <div class="text-sm font-light text-blue-300">
-                <a href="${this.socialURI}" target="_blank">@${this.socialID}</a>
+
+              <a class="text-sm text-blue-300" href="${this.socialURI}" target="_blank">@${this.socialID}</a>
+
+              <div class="text-neutral-400">
+                You own ${until(this.myVotes, html`<i class="text-sm mdi mdi-loading"></i>`)} tickets
               </div>
             </div>
-            <div class="text-gray-500">
-              You own ${until(this.myVotes, html`<i class="text-sm mdi mdi-loading"></i>`)} tickets
-            </div>
+          </div>
+          <!-- Tickets -->
+          <div class="text-right">
+            <span class="text-lg text-sky-500"
+              >${until(this.votes, html`<i class="text-sm mdi mdi-loading"></i>`)}</span
+            >
+            <div class="text-sm text-gray-500">Tickets</div>
           </div>
         </div>
-        <div class="text-right">
-          <span class="text-lg text-sky-500">${until(this.votes, html`<i class="text-sm mdi mdi-loading"></i>`)}</span>
-          <div class="text-sm text-gray-500">Tickets</div>
-          <span class="text-lg text-sky-500"
-            >${until(this.price, html`<i class="text-sm mdi mdi-loading"></i>`)} FTM</span
-          >
-          <div class="text-sm text-gray-500">Vote price <i class="text-sm mdi mdi-help-circle-outline"></i></div>
-        </div>
+        <!-- tip -->
       </div>
-      <div slot="bottom" class="mx-4 grid grid-cols-1 text-center">
-        ${when(
-          !this.pending,
-          () =>
-            html`<ui-button class="mt-1 w-full" @click=${this.vote}>Vote</ui-button>
-              <ui-button class="mt-1 w-full" ?disabled=${this.retreatDisabled} @click=${this.retreat}
-                >Retreat</ui-button
-              >
-              <div class="text-sm text-gray-500">
+      <div slot="bottom" class="mx-4 pb-8">
+        <p class="w-full flex justify-between items-center">
+          It will cost
+          <span class="text-right"
+            ><span class="text-sm text-gray-500">Vote price <i class="text-sm mdi mdi-help-circle-outline"></i></span
+          ></span>
+        </p>
+        <div
+          class="mt-8 grid divide-x divide-blue-400/20 ${classMap(
+            this.$c(['grid-cols-' + this.hasVoted && !this.pendingTx ? '2' : '1'])
+          )}"
+        >
+          ${when(
+            !this.pending,
+            () =>
+              html`<div class="flex flex-col justify-center items-center px-4">
+                  <div>
+                    <span class="text-2xl text-"
+                      >${until(this.price, html`<i class="text-sm mdi mdi-loading"></i>`)}
+                      <span class="text-sm ml-0.5 opacity-70">ST</span></span
+                    >
+                  </div>
+                  <ui-button class="mt-3 w-full" ?disabled=${this.pending} ?pending=${this.pending} @click=${this.vote}
+                    >Vote</ui-button
+                  >
+                </div>
+                ${when(
+                  this.ts && this.retreatPrice > 0,
+                  () => html`
+                    <div class="flex flex-col justify-center items-center px-4 border-white/12">
+                      <div class="text-2xl">
+                        ${until(this.retreatPrice, html`<i class="text-sm mdi mdi-loading"></i>`)}
+                        <span class="text-sm ml-0.5 opacity-70">ST</span>
+                      </div>
+
+                      <ui-button
+                        class="mt-3 w-full outlined"
+                        ?disabled=${this.retreatDisabled}
+                        ?pending=${this.retreatDisabled}
+                        @click=${this.retreat}
+                        >Retreat</ui-button
+                      >
+                    </div>
+                  `
+                )}
+                <!-- <div class="text-sm text-gray-500">
                 Retreat price: ${until(this.retreatPrice, html`<i class="text-sm mdi mdi-loading"></i>`)} FTM
-              </div>`,
-          () =>
-            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your vote has been submitted.' } }}
-              ><ui-button slot="view" @click=${this.close}>Close</ui-button></tx-state
-            >`
-        )}
+              </div> --> `,
+            () =>
+              html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your vote has been submitted.' } }}
+                ><ui-button slot="view" @click=${this.close}>Close</ui-button></tx-state
+              >`
+          )}
+        </div>
       </div>
     </ui-dialog>`
   }

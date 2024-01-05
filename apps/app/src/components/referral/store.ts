@@ -37,7 +37,7 @@ export const getReferral = async () => {
   return referralStore.address
 }
 
-export const bindReferral = async (agentAddress: string) => {
+export const setReferral = async (agentAddress: string) => {
   const contract = await getAlbumContract()
   const [method, overrides] = ['bindAgent', {}]
   const parameters = [

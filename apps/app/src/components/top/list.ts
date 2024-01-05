@@ -126,9 +126,7 @@ export class TopAlbum extends ThemeElement(style) {
                   this.subjectList,
                   (item: any, i) =>
                     html`<li
-                      class="flex py-2 items-center cursor-pointer ${classMap({
-                        'bg-zinc-800/50': i % 2
-                      })}"
+                      class="item flex py-2 items-center cursor-pointer"
                       @click=${() => {
                         if (this.disabled) {
                           emitter.emit('connect-wallet')
@@ -139,10 +137,10 @@ export class TopAlbum extends ThemeElement(style) {
                         }
                       }}
                     >
-                      <div class="flex-none w-16 pl-4 text-lg font-light">${i + 1}</div>
+                      <div class="flex-none w-16 pl-4 text-sm font-light opacity-75">${i + 1}</div>
                       <div class="flex-initial flex">
-                        <div class="w-[4.6rem] h-[4.6rem] mr-4">
-                          <img-loader .src=${item.image}></img-loader>
+                        <div class="w-[3.75rem] h-[3.75rem] mr-4 rounded-lg">
+                          <img-loader .src=${item.image} class="rounded-lg"></img-loader>
                         </div>
                         <div>
                           <p class="name truncate mt-2">${item.name}</p>
@@ -150,11 +148,13 @@ export class TopAlbum extends ThemeElement(style) {
                         </div>
                       </div>
                       <div class="flex-auto text-right pr-3">
-                        <p class="text-2xl">
+                        <p class="text-sm">
                           ${this.weekly ? formatUnits(item.volumeTotal, 18) : (Number(item.supply) + 1) / 10}
                         </p>
                       </div>
-                      <div class="flex-none w-16 text-lg font-light">${TopAlbum.dayChange(item)}</div>
+                      <div class="flex-none w-16 text-right text-sm" style="color: #34C77B">
+                        ${TopAlbum.dayChange(item)}
+                      </div>
                     </li> `
                 )}
               </ul>

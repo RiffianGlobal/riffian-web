@@ -1,7 +1,7 @@
 span {
   @apply inline-flex px-1 py-1.5 border-transparent rounded-full whitespace-nowrap leading-none cursor-pointer;
   font-family: Roboto, var(--fontFamily);
-  font-size: 28px;
+  /* font-size: 28px; */
   @media (max-width: 1024px) {
     @apply text-xl;
   }
