@@ -143,6 +143,15 @@
       @apply w-7 h-7;
     }
   }
+  &[xs] {
+    @apply text-xs py-1;
+    &:not([dense]) {
+      @apply px-1.5;
+    }
+    &[icon] {
+      @apply w-5 h-5;
+    }
+  }
   &[lg] {
     @apply text-lg py-2.5;
     &:not([dense]) {

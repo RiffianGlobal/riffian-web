@@ -4,8 +4,8 @@ import { StateController, rewardStore } from './store'
 import { ThemeElement, html, customElement, state, when } from '@riffian-web/ui/shared/theme-element'
 import '@riffian-web/ui/input/text'
 import '@riffian-web/ui/button'
-import '@riffian-web/ui/dialog'
 import '~/components/referral/bind'
+import './dialog'
 
 // Style
 import { coinSvg } from './icon'
@@ -24,20 +24,19 @@ export class RewardBtn extends ThemeElement(style) {
 
   close = () => (this.dialog = false)
 
+  connectedCallback() {
+    super.connectedCallback()
+    rewardStore.update()
+  }
+
   render() {
     return html`
       <!-- Button -->
       <ui-button @click=${this.open} text sm class="outlined">
-        <span class="inline-flex gap-2 items-center">${coinSvg} ${rewardStore.total ?? '-'}</span>
+        <span class="inline-flex gap-2 items-center">${coinSvg} ${rewardStore.totalHumanized ?? '-'}</span>
       </ui-button>
       <!-- Dialog -->
-      ${when(
-        this.dialog,
-        () =>
-          html`<ui-dialog @close=${this.close}>
-            <div class="text-center">Coming soon...</div>
-          </ui-dialog> `
-      )}
+      ${when(this.dialog, () => html`<reward-dialog @close=${this.close}></reward-dialog> `)}
     `
   }
 }

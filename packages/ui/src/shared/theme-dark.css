@@ -16,18 +16,26 @@
   }
   .ui-option {
     @apply whitespace-nowrap select-none;
-    & > li {
-      @apply flex items-center gap-2 py-2 px-4 hover_bg-gray-50 cursor-pointer;
+    & > * {
+      @apply flex items-center gap-2 py-2 px-4 cursor-pointer;
 
       &:hover {
-        background: #e9ecef;
+        background: #373757;
       }
       &.active {
         @apply cursor-default;
-        background: #dee2e6;
+        background: #373757;
       }
       & > .mdi:first-child {
         @apply text-gray-600;
+      }
+    }
+  }
+  .ui-list {
+    & > * {
+      @apply flex w-full py-1.5 px-2 items-center gap-4;
+      &:not(:first-child) {
+        border-top: 1px dotted #373757;
       }
     }
   }

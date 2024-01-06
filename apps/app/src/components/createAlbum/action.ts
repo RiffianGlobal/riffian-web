@@ -45,10 +45,10 @@ export const bindSocial = async (platform: string, id: string, uri: string) => {
   })
 }
 
-export const getSocials = async (address: string) => {
+export const getSocials = async (address?: string) => {
   const contract = await getAlbumContract(true)
   const method = 'getSocials'
-  const parameters = [address]
+  const parameters = [address ?? (await getAccount())]
   return await contract[method](...parameters)
 }
 
