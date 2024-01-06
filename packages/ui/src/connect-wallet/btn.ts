@@ -31,7 +31,7 @@ export class ConnectWalletBtn extends ThemeElement(style) {
   }
 
   show = () => {
-    if (this.dropable && this.account) {
+    if (this.dropable && this.doid) {
       this.menu = !this.menu
     } else {
       bridgeStore.bridge.select(0)
@@ -50,7 +50,7 @@ export class ConnectWalletBtn extends ThemeElement(style) {
 
   render() {
     // Dropdown Button
-    if (this.account)
+    if (this.doid)
       return html`<ui-drop
         .show=${this.menu}
         @change=${(e: CustomEvent) => (this.menu = e.detail)}
