@@ -11,16 +11,16 @@ import style from './list.css?inline'
 @customElement('user-votes-list')
 export class UserVotesList extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
-  @state() userVotes: any = []
+  @state() uVotes: any = []
   @state() dialog = false
   @state() currentAlbum = { id: '', votes: 0, url: '' }
   @state() pending = false
 
   get disabled() {
-    return !bridgeStore.account
+    return !bridgeStore.bridge.account
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback()
     this.init()
     bridgeStore.bridge.subscribe(this.init)
@@ -33,8 +33,8 @@ export class UserVotesList extends ThemeElement(style) {
   init = async () => {
     if (this.disabled) return
     this.pending = true
-    let result = await userVotes(bridgeStore.account!)
-    this.userVotes = result.userSubjectVotes
+    let { userSubjectVotes } = await userVotes(bridgeStore.bridge.account!)
+    this.uVotes = userSubjectVotes
     this.pending = false
   }
 
@@ -56,12 +56,12 @@ export class UserVotesList extends ThemeElement(style) {
       ${when(
         !this.pending,
         () =>
-          html`<ul role="list">
+          html`<ul role="list" class="py-6">
           <li class="flex header p-1">
             <div class="w-16">Collection</div>
             <div class="flex-auto text-right pr-3">Author</div>
-            <div class="flex-none w-16 text-right">Tickets</div>
-            <div class="flex-none w-16 text-right">Holding</div>
+            <div class="flex-none w-24 text-right">Tickets</div>
+            <div class="flex-none w-24 text-right">Holding</div>
             ${when(
               this.pending,
               () =>
@@ -72,12 +72,10 @@ export class UserVotesList extends ThemeElement(style) {
             )}
               </li>
             ${repeat(
-              this.userVotes,
+              this.uVotes,
               (item: any, i) =>
                 html`<li
-                  class="flex py-2 items-center cursor-pointer ${classMap({
-                    'bg-zinc-800/50': i % 2
-                  })}"
+                  class="item flex py-2 items-center cursor-pointer"
                   @click=${() => {
                     if (this.disabled) {
                       emitter.emit('connect-wallet')
@@ -87,7 +85,7 @@ export class UserVotesList extends ThemeElement(style) {
                   }}
                 >
                   <div class="flex-initial flex">
-                    <div class="w-[4.6rem] h-[4.6rem] mr-4">
+                    <div class="w-[3.75rem] h-[3.75rem] mr-4 rounded-lg">
                       <img-loader .src=${item.subject.image}></img-loader>
                     </div>
                     <div>
@@ -95,11 +93,11 @@ export class UserVotesList extends ThemeElement(style) {
                       <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
                     </div>
                   </div>
-                  <div class="flex-auto text-right pr-3 text-lg">
+                  <div class="flex-auto text-right pr-3">
                     <ui-address .address="${item.subject.creator.address}" short avatar></ui-address>
                   </div>
-                  <div class="flex-none w-16 text-2xl font-light text-right">${item.subject.supply}</div>
-                  <div class="flex-none w-16 text-2xl font-light text-right">${item.holding}</div>
+                  <div class="flex-none w-24 font-light text-right">${item.subject.supply}</div>
+                  <div class="flex-none w-24 font-light text-right">${item.holding}</div>
                 </li>`
             )}
           </div>`

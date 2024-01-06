@@ -39,9 +39,9 @@ export class VoteAlbumDialog extends ThemeElement('') {
   @property({ type: String }) name = ''
   @property({ type: String }) author = ''
   @property({ type: Promise<any> }) votes: Promise<any> | undefined
-  @state() myVotes: Promise<any> | undefined
+  @state() myVotes: any = 0
   @state() price: Promise<any> | undefined
-  @state() retreatPrice: Promise<any> | undefined
+  @state() retreatPrice: any = 0
   @state() retreatDisabled = true
   @state() socialName = ''
   @state() socialURI = ''
@@ -65,7 +65,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
     return tweetStore.tweets
   }
   get hasVoted() {
-    return this.ts && this.this.myVotes?.length
+    return this.ts && formatUnits(this.myVotes, 1) > 0
   }
 
   readFromLocal(key: any) {
@@ -97,12 +97,12 @@ export class VoteAlbumDialog extends ThemeElement('') {
   async getPrice() {
     try {
       this.votes = albumData(this.album).then((result) => result[4])
-      this.myVotes = myVotes(this.album).then((votes) => {
+      this.myVotes = await myVotes(this.album).then((votes) => {
         if (votes > 0) this.retreatDisabled = false
         return votes
       })
       this.price = votePrice(this.album).then((price) => formatUnits(price, 18))
-      this.retreatPrice = retreatPrice(this.album).then((price) => formatUnits(price, 18))
+      this.retreatPrice = await retreatPrice(this.album).then((price) => formatUnits(price, 18))
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })
@@ -178,7 +178,13 @@ export class VoteAlbumDialog extends ThemeElement('') {
               <a class="text-sm text-blue-300" href="${this.socialURI}" target="_blank">@${this.socialID}</a>
 
               <div class="text-neutral-400">
-                You own ${until(this.myVotes, html`<i class="text-sm mdi mdi-loading"></i>`)} tickets
+                You own
+                ${when(
+                  this.ts,
+                  () => html`${this.myVotes.length}`,
+                  () => html`<i class="text-sm mdi mdi-loading"></i>`
+                )}
+                tickets
               </div>
             </div>
           </div>
@@ -201,7 +207,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
         </p>
         <div
           class="mt-8 grid divide-x divide-blue-400/20 ${classMap(
-            this.$c(['grid-cols-' + this.hasVoted && !this.pendingTx ? '2' : '1'])
+            this.$c([this.hasVoted && !this.pending ? 'grid-cols-2' : 'grid-cols-1'])
           )}"
         >
           ${when(
@@ -219,7 +225,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
                   >
                 </div>
                 ${when(
-                  this.ts && this.retreatPrice > 0,
+                  this.ts && this.hasVoted,
                   () => html`
                     <div class="flex flex-col justify-center items-center px-4 border-white/12">
                       <div class="text-2xl">

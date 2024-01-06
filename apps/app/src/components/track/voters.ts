@@ -79,11 +79,13 @@ export class TrackInfo extends ThemeElement(style) {
           this.subjectData,
           () =>
             html`<ul role="list">
-              <li class="flex header p-1">
+              <li class="flex header p-2">
                 <div class="w-16">Rank</div>
                 <div class="flex-auto">Addr</div>
-                <div class="flex-auto text-right pr-3">Comsumption</div>
-                <div class="flex-none w-28 text-right">Earning</div>
+                <div class="flex-auto text-right pr-3">
+                  Comsumption<span class="ml-1 text-sm opacity-70">(ST)</span>
+                </div>
+                <div class="flex-none w-28 text-right">Earning<span class="ml-1 text-sm opacity-70">(ST)</span></div>
                 ${when(
                   this.pending,
                   () =>
@@ -112,17 +114,14 @@ export class TrackInfo extends ThemeElement(style) {
                     </div>
                     <div class="flex-auto text-right pr-3 items-end">
                       
-                      <p class="name truncate mt-2">${formatUnits(
-                        item.volumeVote,
-                        18
-                      )} <span class="ml-0.5 text-sm opacity-70">ST</span></p>
+                      <p class="name truncate mt-2">${formatUnits(item.volumeVote, 18)}</p>
                       
                       </p>
                     </div>
                     <div class="flex-none w-28 text-right"><p class="name truncate mt-2">${formatUnits(
                       item.user.rewardClaimed,
                       18
-                    )} <span class="ml-0.5 text-sm opacity-70">ST</span></p></div>
+                    )}</p></div>
                   </li> `
               )}
             </ul>`
