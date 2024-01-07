@@ -100,13 +100,17 @@ export class CreateSocailDialog extends ThemeElement('') {
       ${when(
         !this.socialEmpty,
         () =>
-          html`<div class="pb-8 border-b" style="border-color: rgba(255, 255, 255, .12)">
+          html`<div class="border-b border-b-gray-700">
             <div class="mb-4">Current:</div>
-            <ul class="px-4 py-6 divide-y divide-solid divide-slate-50 rounded-md" style="background: #181832">
+            <ul class="">
               ${repeat(
                 this.socials,
                 (item: any) =>
-                  html`<li class="text-base "><span class="opacity-60 mr-2">${item[0]}:</span>${item[2]}</li> `
+                  html`<li class="text-base ">
+                    <ui-input-text value=${item[2]} readonly>
+                      <span slot="label">${item[0]}</span>
+                    </ui-input-text>
+                  </li> `
               )}
             </ul>
           </div>`

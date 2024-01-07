@@ -7,6 +7,7 @@ import {
   getNetwork
 } from '@riffian-web/ethers/src/useBridge'
 import { StateController, rewardStore, getRewardContract } from './store'
+import { normalizeTxErr } from '@riffian-web/ethers/src/parseErr'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { emitter } from '@lit-web3/base'
 import { getSocials } from '~/components/createAlbum/action'
@@ -85,8 +86,14 @@ export class RewardClaim extends ThemeElement(style) {
       await this.tx.wait()
       const res = await contract[this.reward.write]()
       console.log(res)
-    } catch (err) {
-      throw err
+      rewardStore.update()
+    } catch (err: any) {
+      err = await normalizeTxErr(err)
+      console.log(err)
+      if (err.code !== 4001) {
+        this.emit('error', err.message)
+        throw err
+      }
     } finally {
       this.pending = false
     }
@@ -99,6 +106,7 @@ export class RewardClaim extends ThemeElement(style) {
 
   async connectedCallback() {
     super.connectedCallback()
+    rewardStore.update()
     // TODO: move to user profile store
     this._claimable = this.isSocial ? (await getSocials()).length : true
   }
@@ -113,7 +121,7 @@ export class RewardClaim extends ThemeElement(style) {
         class="outlined"
         text
         xs
-        >Claim</ui-button
+        >${this.claimable || !this.isSocial ? 'Claim' : 'Claimed'}</ui-button
       >
     `
   }

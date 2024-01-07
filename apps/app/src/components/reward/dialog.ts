@@ -2,7 +2,7 @@ import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
 import { StateController, rewardStore } from './store'
 import { emitter } from '@lit-web3/base'
 // Components
-import { ThemeElement, html, customElement, when, classMap, repeat } from '@riffian-web/ui/shared/theme-element'
+import { ThemeElement, html, customElement, when, classMap, repeat, state } from '@riffian-web/ui/shared/theme-element'
 import '@riffian-web/ui/input/text'
 import './claim'
 import '@riffian-web/ui/dialog'
@@ -16,6 +16,8 @@ import style from './btn.css?inline'
 export class RewardDialog extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   bindStore: any = new StateController(this, rewardStore)
+
+  @state() err = ''
 
   close = () => {
     this.emit('close')
@@ -48,13 +50,19 @@ export class RewardDialog extends ThemeElement(style) {
                 <div class="flex gap-2 items-center text-right">
                   <b class="${classMap({ 'text-green-600': +reward.amnt > 0 })}">${reward.amnt}</b>
                   <div class="w-[4em]">
-                    <reward-claim @close=${this.close} .reward=${reward}></reward-claim>
+                    <reward-claim
+                      @error=${(e: CustomEvent) => (this.err = e.detail)}
+                      @click=${() => (this.err = '')}
+                      @close=${this.close}
+                      .reward=${reward}
+                    ></reward-claim>
                   </div>
                 </div>
               </li>
             `
           )}
         </ul>
+        <p class="text-center text-orange-600">${this.err}</p>
       </div>
     </ui-dialog>`
   }
