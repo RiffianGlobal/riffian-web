@@ -48,7 +48,7 @@ export class RewardDialog extends ThemeElement(style) {
                   )}
                 </span>
                 <div class="flex gap-2 items-center text-right">
-                  <b class="${classMap({ 'text-green-600': +reward.amnt > 0 })}">${reward.amnt}</b>
+                  <span class="${classMap({ 'text-green-600 font-bold': +reward.amnt > 0 })}">${reward.amnt}</span>
                   <div class="w-[4em]">
                     <reward-claim
                       @error=${(e: CustomEvent) => (this.err = e.detail)}

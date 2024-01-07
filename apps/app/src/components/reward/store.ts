@@ -22,14 +22,15 @@ export const rewardMap = [
     claimable: false
   },
   { key: 'vote', title: 'Vote', read: 'RewardVote', write: 'claimVote', claimable: false },
-  { key: 'follow', title: 'Follow', read: 'RewardFollow', write: 'claimFollow', claimable: false },
-  { key: 'share', title: 'Share', read: 'RewardShare', write: 'claimShare', claimable: false }
+  { key: 'follow', title: 'Follow', read: 'RewardFollow', write: 'claimFollow', claimable: false, closed: true },
+  { key: 'share', title: 'Share', read: 'RewardShare', write: 'claimShare', claimable: false, closed: true }
 ]
 
 class RewardStore extends State {
   @property({ value: null }) tx?: any
   @property({ value: false }) pending!: boolean
   @property({ value: [] }) rewards!: bigint[]
+  @property({ value: [] }) jobs!: bigint[]
   @property({ value: [] }) rewardsClaimable!: boolean[]
 
   get txPending() {
@@ -39,7 +40,7 @@ class RewardStore extends State {
     return this.rewards.map((v, i) => ({
       ...rewardMap[i],
       v,
-      amnt: formatUnits(v),
+      amnt: +formatUnits(v),
       claimable: this.rewardsClaimable[i]
     }))
   }
@@ -47,7 +48,7 @@ class RewardStore extends State {
     return this.rewards.reduce((next, cur) => next + cur, 0n)
   }
   get totalHumanized() {
-    return formatUnits(this.total)
+    return +formatUnits(this.total)
   }
 
   update = async () => await getRewards()
@@ -63,11 +64,12 @@ export const getRewards = async () => {
   const contract = await getRewardContract(account)
 
   // TODO: MultiCall
-  const calls: any[] = [...rewardMap.map((r) => contract[r.read]())]
+  const calls: any[] = [contract.claimable(), ...rewardMap.map((r) => contract[r.read]())]
   calls.push(...[contract.isSocialVerifyClaimed(account), contract.isVotingClaimed(account)])
   const res = await Promise.all(calls)
-  rewardStore.rewards = res.splice(0, rewardMap.length)
-  rewardStore.rewardsClaimable = [!res.shift(), true, true, true]
+  rewardStore.rewards = res.shift()
+  rewardStore.jobs = res.splice(0, rewardMap.length)
+  rewardStore.rewardsClaimable = [!res.shift(), true, false, false]
 }
 
 // TODO: MultiCall

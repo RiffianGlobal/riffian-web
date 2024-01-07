@@ -52,6 +52,9 @@ export class RewardClaim extends ThemeElement(style) {
   get claimable() {
     return this.reward.claimable
   }
+  get processing() {
+    return this.pending || this.txPending
+  }
 
   personalSign = async () => {
     const [signer, { chainId }] = [await getSigner(), await getNetwork()]
@@ -114,14 +117,12 @@ export class RewardClaim extends ThemeElement(style) {
   render() {
     return html`
       <!-- Claim -->
-      <ui-button
-        @click=${this.claim}
-        .disabled=${!this.claimable}
-        .pending=${this.pending || this.txPending}
-        class="outlined"
-        text
-        xs
-        >${this.claimable || !this.isSocial ? 'Claim' : 'Claimed'}</ui-button
+      <ui-button @click=${this.claim} .disabled=${!this.claimable} .pending=${this.processing} class="outlined" text xs
+        >${when(
+          this.processing,
+          () => html`<i class="mdi mdi-loading"></i>`,
+          () => html`${this.claimable || !this.isSocial ? 'Claim' : 'Claimed'}`
+        )}</ui-button
       >
     `
   }
