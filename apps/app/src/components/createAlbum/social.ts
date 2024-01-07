@@ -129,15 +129,15 @@ export class CreateSocailDialog extends ThemeElement('') {
               class="text-sm"
               href="https://twitter.com/intent/tweet?text=My%20account%20on%20riffian%20is%20${bridgeStore.bridge
                 .account}"
-              >Click here to post a tweet with your account address and copy your tweet url bellow.</ui-link
+              >Click here to post a tweet with your address and enter your tweet url bellow.</ui-link
             >
             <ui-input-text
               value=${this.form.url}
               @input=${(e: CustomEvent) => this.onInput(e, 'url')}
-              placeholder=${'Your ' + this.platform + ' account URI'}
+              placeholder="eg. https://x.com/your_id/status/123"
               required
             >
-              <span slot="label">URI</span>
+              <span slot="label">Tweet URL with your address</span>
             </ui-input-text>
             <ui-button
               class="mx-auto"

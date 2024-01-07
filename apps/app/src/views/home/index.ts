@@ -52,7 +52,7 @@ export class ViewHome extends ThemeElement(style) {
           </div>
           <div class="flex flex-row-reverse">
             <claim-rewards></claim-rewards>
-            <bind-social-btn></bind-social-btn>
+            <!-- <bind-social-btn></bind-social-btn> -->
           </div>
         </div>
         <div class="mt-3">

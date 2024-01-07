@@ -16,6 +16,7 @@ export class UIButton extends ThemeElement(style) {
   @property({ type: Boolean }) icon = false
   @property({ type: Boolean }) text = false
   @property({ type: Boolean }) sm = false
+  @property({ type: Boolean }) xs = false
   @property({ type: Boolean }) lg = false
   @property({ type: Boolean }) dense = false
   @property({ type: String, reflect: true }) theme?: string
@@ -63,6 +64,7 @@ export class UIButton extends ThemeElement(style) {
             ?pending=${this.pending}
             ?text=${this.text}
             ?sm=${this.sm}
+            ?xs=${this.xs}
             ?lg=${this.lg}
             theme=${this.theme}
           >
@@ -79,6 +81,7 @@ export class UIButton extends ThemeElement(style) {
             ?pending=${this.pending}
             ?text=${this.text}
             ?sm=${this.sm}
+            ?xs=${this.xs}
             ?lg=${this.lg}
             theme=${this.theme}
           >

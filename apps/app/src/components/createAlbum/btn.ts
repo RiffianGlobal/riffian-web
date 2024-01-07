@@ -40,6 +40,14 @@ export class CreateAlbumBtn extends ThemeElement(style) {
 
   close = () => (this.dialogCreate = false)
 
+  connectedCallback(): void {
+    super.connectedCallback()
+    // TODO: event triggerable elements should be moved to main.ts
+    emitter.on('ui-bindsocial', () => {
+      this.dialogBind = true
+    })
+  }
+
   render() {
     return html`<span ?disabled=${this.pending} ?icon=${this.icon} @click="${this.open}" title="Upload your track"
         >${when(
