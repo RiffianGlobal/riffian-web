@@ -144,7 +144,7 @@ export const albumList = async (count: Number) => {
   const daySeconds = 24n * 60n * 60n
   let time = BigInt(new Date().getTime()) / 1000n - daySeconds
   let queryJSON = `{
-      subjects(first: ${count}, orderBy:supply, orderDirection:desc) {
+      subjects(first: ${count}, orderBy:supply, orderDirection:desc, where: {creator_starts_with: "0x"}) {
         id
         image
         name

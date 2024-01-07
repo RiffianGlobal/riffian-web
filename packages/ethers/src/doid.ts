@@ -9,12 +9,11 @@ export class DoidWallet extends State implements Wallet, WalletApp {
   private async init() {
     let { fantomTestnet, doid, doidTestnet, DOIDConnectorEthers } = await import('@doid/connect-ethers')
     this.connector = new DOIDConnectorEthers()
-    this.connector.updateChains([fantomTestnet, doid, doidTestnet])
+    this.connector.updateChains([doidTestnet, fantomTestnet, doid])
     this.connector.updateOptions({
       themeMode: 'dark',
       web3AuthEnabled: true,
       walletConnectEnabled: true,
-      doidNetwork: fantomTestnet,
       walletConnectId: 'b9850e108fc2d1e587dd41ce1fea0a16'
     })
     if (import.meta.env.MODE !== 'production') {
@@ -32,7 +31,11 @@ export class DoidWallet extends State implements Wallet, WalletApp {
     }, 'doid')
     if (this.connector.chainId) this.chainId = chainIdStr(this.connector.chainId)
     this.connector.subscribe((_: any, value: number | undefined) => {
+      if (!value) return
       this.chainId = value ? chainIdStr(value) : ''
+      this.doid = this.account = ""
+      if (value == doidTestnet.id) this.connector.updateOptions({ doidNetwork: doidTestnet })
+      if (value == fantomTestnet.id) this.connector.updateOptions({ doidNetwork: fantomTestnet })
     }, 'chainId')
   }
 

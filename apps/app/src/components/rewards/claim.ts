@@ -54,7 +54,7 @@ export class ClaimRewards extends ThemeElement(style) {
         this.rewards = await weeklyReward()
       } catch (e) {
         let week = await weekStatistic(await getWeek())
-        this.rewards = (BigInt(week.weeklyStatistic.volumeVote) * 4n) / 100n
+        this.rewards = (BigInt(week.weeklyStatistic?.volumeVote??0) * 4n) / 100n
       }
       this.pending = false
     } catch (err: any) {
