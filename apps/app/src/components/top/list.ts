@@ -38,14 +38,15 @@ export class TopAlbum extends ThemeElement(style) {
 
   connectedCallback() {
     super.connectedCallback()
-    this.init()
+    this.fetch()
+    emitter.on('toplist-fetch', this.fetch)
   }
 
   getRandomInt(max: number) {
     return Math.floor(Math.random() * max)
   }
 
-  init = async () => {
+  fetch = async () => {
     this.pending = true
     try {
       let result = this.weekly ? await weekList(10, await getWeek()) : await albumList(10)
@@ -75,7 +76,7 @@ export class TopAlbum extends ThemeElement(style) {
 
   close = () => {
     this.showAlbumVote = false
-    this.init()
+    this.fetch()
   }
 
   static dayChange(item: any) {
@@ -113,14 +114,6 @@ export class TopAlbum extends ThemeElement(style) {
                   <div class="flex-auto">Collection</div>
                   <div class="flex-auto text-right pr-3">${this.weekly ? 'Volume' : 'Price'}</div>
                   <div class="flex-none w-16 text-right">24H</div>
-                  ${when(
-                    this.pending,
-                    () =>
-                      html`<div>
-                        <i class="text-sm mdi mdi-loading"></i>
-                        <div></div>
-                      </div>`
-                  )}
                 </li>
                 ${repeat(
                   this.subjectList,

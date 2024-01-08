@@ -36,9 +36,10 @@ export class Provider {
 }
 
 const multicallAddresses: Record<string, string> = {
-  1: '0xeefba1e63905ef1d7acba5a8513c70307c1ce441',
-  5: '0x77dca2c955b15e9de4dbbcf1246b4b85b651e50e',
-  11155111: '0x53c43764255c17bd724f74c4ef150724ac50a3ed'
+  1: '0xcA11bde05977b3631167028862bE2a173976CA11',
+  5: '0xcA11bde05977b3631167028862bE2a173976CA11',
+  4002: '0xcA11bde05977b3631167028862bE2a173976CA11',
+  56797: '0x32A668a6bAAe81AF97e6527F1d114910f838350E'
 }
 
 export function setMulticallAddress(chainId: number, address: string) {
