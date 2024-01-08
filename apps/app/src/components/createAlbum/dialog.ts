@@ -1,6 +1,7 @@
 import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { createAlbum } from './action'
+import emitter from '@lit-web3/base/emitter'
 // Components
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/input/text'
@@ -9,7 +10,7 @@ import '@riffian-web/ui/img/loader'
 
 type formKeys = 'album' | 'image' | 'url'
 
-const defFrom = () => ({ album: '', image: '', url: '' })
+const defForm = () => ({ album: '', image: '', url: '' })
 const defErr = () => ({ album: '', image: '', tx: '' })
 
 @customElement('create-album-dialog')
@@ -17,7 +18,7 @@ export class CreateAlbumDialog extends ThemeElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   @state() album = ''
   @state() image = ''
-  @state() form = defFrom()
+  @state() form = defForm()
   @state() err = defErr()
   @state() pending = false
   @state() success = false
@@ -42,7 +43,7 @@ export class CreateAlbumDialog extends ThemeElement('') {
   }
 
   resetState = () => {
-    this.form = defFrom()
+    this.form = defForm()
     this.err = defErr()
     this.pending = false
     this.success = false
@@ -67,6 +68,10 @@ export class CreateAlbumDialog extends ThemeElement('') {
     } finally {
       this.pending = false
     }
+  }
+  connectedCallback() {
+    super.connectedCallback()
+    emitter.emit('toplist-update')
   }
 
   render() {
