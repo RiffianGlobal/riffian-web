@@ -33,7 +33,11 @@ export class RewardBtn extends ThemeElement(style) {
     return html`
       <!-- Button -->
       <ui-button @click=${this.open} text sm class="outlined">
-        <span class="inline-flex gap-2 items-center"><span class="text-base text-white opacity-60">Airdrop</span>${coinSvg}<span class="text-highlight">${rewardStore.totalHumanized ?? '-'}</span></span>
+        <span class="inline-flex gap-2 items-center"
+          ><span class="text-white opacity-60">Airdrop</span>${coinSvg}<span class="text-highlight"
+            >${rewardStore.totalHumanized ?? '-'}</span
+          ></span
+        >
       </ui-button>
       <!-- Dialog -->
       ${when(this.dialog, () => html`<reward-dialog @close=${this.close}></reward-dialog> `)}

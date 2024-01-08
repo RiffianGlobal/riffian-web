@@ -9,8 +9,8 @@ import '@riffian-web/ui/dialog/prompt'
 import '~/components/rewards/claim'
 import style from './list.css?inline'
 import { formatUnits } from 'ethers'
-import { albumData, myVotes, readTwitter } from '~/components/top/action'
-import { Tweet, tweetStore } from '~/components/top/tweet'
+import { albumData, myVotes } from '~/components/top/action'
+import { tweetStore, type Social } from '~/components/top/tweet'
 
 const defErr = () => ({ tx: '' })
 @customElement('track-detail')
@@ -22,10 +22,7 @@ export class TrackDetail extends ThemeElement(style) {
   @property({ type: Promise<any> }) votes: Promise<any> | undefined
   @state() myVotes: Promise<any> | undefined
   @state() retreatDisabled = true
-  @state() socialName = ''
-  @state() socialURI = ''
-  @state() socialID = ''
-  @state() socialVerified = false
+  @state() social: Social | undefined
   @state() subject: any = { totalVoteValue: '0' }
   @state() voteList: any = []
   @state() pending = false
@@ -47,34 +44,11 @@ export class TrackDetail extends ThemeElement(style) {
     return Math.floor(Math.random() * max)
   }
 
-  get tweets() {
-    return tweetStore.tweets
-  }
-
-  readFromLocal(key: any) {
-    let result: Tweet = { key: '', author_name: '', author_url: '', html: '' }
-    this.tweets.some((tweet: any) => {
-      if (tweet.key == key) {
-        result = tweet
-      }
-    })
-    return result
-  }
-
   async readFromTwitter() {
-    let uri = this.subject.creator.socials[0][2]
-    let tweet: Tweet = this.readFromLocal(uri)
-    if (!tweet.key || tweet.key.length == 0) {
-      tweet = await readTwitter(uri)
-      tweet['key'] = uri
-      this.tweets.unshift(tweet)
-      tweetStore.save()
-    }
-    this.socialName = tweet.author_name
-    this.socialURI = tweet.author_url
-    this.socialID = tweet.author_url.substring(tweet.author_url.lastIndexOf('/') + 1, tweet.author_url.length - 1)
-    this.socialVerified = tweet.html.includes(this.subject.creator.address)
-    this.socialVerified = true
+    const { uri } = this.subject.creator.socials[0] ?? {}
+    const social = await tweetStore.get(uri)
+    if (social) Object.assign(social, { verified: social.address.includes(this.subject.creator.address) })
+    this.social = social
   }
 
   async getPrice() {
@@ -134,18 +108,27 @@ export class TrackDetail extends ThemeElement(style) {
                   <img-loader src=${this.subject.image} class="w-32 h-32 rounded-xl"></img-loader>
                 </div>
                 <div class="flex flex-col justify-start ml-4">
-                  <div class="text-xl mb-1.5">${this.subject.name}</div>
-                  <div class="inline-flex text-base font-normal mb-0.5">
-                    ${this.socialName}
-                    ${when(
-                      this.socialVerified,
-                      () =>
-                        html`<span class="ml-0.5"><i class="mdi mdi-check-decagram text-sm text-green-600"></i></span>`
-                    )}
-                  </div>
-                  <a class="text-base font-normal text-blue-300" href="${this.socialURI}" target="_blank"
-                    >@${this.socialID}</a
-                  >
+                  <div class="text-xl mb-1.5">${this.subject.name ?? '-'}</div>
+                  <!-- Author -->
+                  ${when(
+                    this.social,
+                    () =>
+                      html`<div class="inline-flex text-base font-normal mb-0.5">
+                          ${this.social?.name}
+                          ${when(
+                            this.social?.verified,
+                            () =>
+                              html`<span class="ml-0.5"
+                                ><i class="mdi mdi-check-decagram text-sm text-green-600"></i
+                              ></span>`
+                          )}
+                        </div>
+                        <a class="text-base font-normal text-blue-300" href="${this.social?.url}" target="_blank"
+                          >@${this.social?.id}</a
+                        >`,
+                    () => html`-`
+                  )}
+
                   <div class="mt-2">
                     <ui-button
                       sm

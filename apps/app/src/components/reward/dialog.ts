@@ -36,28 +36,13 @@ export class RewardDialog extends ThemeElement(style) {
           ${repeat(
             rewardStore.rewardsHumanized,
             (reward) => html`
-              <li class="justify-between">
-                <span
-                  >${reward.title}
-                  ${when(
-                    reward.key === 'social',
-                    () =>
-                      html`<ui-button @click=${this.bindSocial} icon sm
-                        ><i class="i mdi mdi-twitter text-blue-500"></i
-                      ></ui-button>`
-                  )}
-                </span>
-                <div class="flex gap-2 items-center text-right">
-                  <span class="${classMap({ 'text-green-600 font-bold': +reward.amnt > 0 })}">${reward.amnt}</span>
-                  <div class="w-[4em]">
-                    <reward-claim
-                      @error=${(e: CustomEvent) => (this.err = e.detail)}
-                      @click=${() => (this.err = '')}
-                      @close=${this.close}
-                      .reward=${reward}
-                    ></reward-claim>
-                  </div>
-                </div>
+              <li>
+                <reward-claim
+                  @error=${(e: CustomEvent) => (this.err = e.detail)}
+                  @click=${() => (this.err = '')}
+                  @close=${this.close}
+                  .reward=${reward}
+                ></reward-claim>
               </li>
             `
           )}

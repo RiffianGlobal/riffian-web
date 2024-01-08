@@ -19,11 +19,12 @@ export const rewardMap = [
     title: 'Social Verification',
     read: 'RewardSocialVerify',
     write: 'claimSocialVerify',
-    claimable: false
+    once: true,
+    closed: false
   },
-  { key: 'vote', title: 'Vote', read: 'RewardVote', write: 'claimVote', claimable: false },
-  { key: 'follow', title: 'Follow', read: 'RewardFollow', write: 'claimFollow', claimable: false, closed: true },
-  { key: 'share', title: 'Share', read: 'RewardShare', write: 'claimShare', claimable: false, closed: true }
+  { key: 'vote', title: 'Vote', read: 'RewardVote', write: 'claimVote', once: true, closed: false },
+  { key: 'follow', title: 'Follow', read: 'RewardFollow', write: 'claimFollow', closed: true },
+  { key: 'share', title: 'Share', read: 'RewardShare', write: 'claimShare', closed: true }
 ]
 
 class RewardStore extends State {
@@ -31,7 +32,7 @@ class RewardStore extends State {
   @property({ value: false }) pending!: boolean
   @property({ value: [] }) rewards!: bigint[]
   @property({ value: [] }) jobs!: bigint[]
-  @property({ value: [] }) rewardsClaimable!: boolean[]
+  @property({ value: [] }) rewardsClaimed!: boolean[]
 
   get txPending() {
     return this.tx && !this.tx.ignored
@@ -41,7 +42,7 @@ class RewardStore extends State {
       ...rewardMap[i],
       v,
       amnt: +formatUnits(v),
-      claimable: this.rewardsClaimable[i]
+      claimed: this.rewardsClaimed[i]
     }))
   }
   get total() {
@@ -67,9 +68,9 @@ export const getRewards = async () => {
   const calls: any[] = [contract.claimable(), ...rewardMap.map((r) => contract[r.read]())]
   calls.push(...[contract.isSocialVerifyClaimed(account), contract.isVotingClaimed(account)])
   const res = await Promise.all(calls)
-  rewardStore.rewards = res.shift()
+  rewardStore.rewards = res.shift().map((v: bigint, i: number) => (rewardMap[i].closed ? 0n : v))
   rewardStore.jobs = res.splice(0, rewardMap.length)
-  rewardStore.rewardsClaimable = [!res.shift(), true, false, false]
+  rewardStore.rewardsClaimed = [...res, false, false]
 }
 
 // TODO: MultiCall

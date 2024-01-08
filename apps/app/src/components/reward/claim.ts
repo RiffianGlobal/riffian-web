@@ -11,6 +11,7 @@ import { normalizeTxErr } from '@riffian-web/ethers/src/parseErr'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { emitter } from '@lit-web3/base'
 import { getSocials } from '~/components/createAlbum/action'
+import { userVotes } from '~/components/uservotes/action'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 // Components
 import {
@@ -29,8 +30,7 @@ import '@riffian-web/ui/dialog'
 import '~/components/referral/bind'
 
 // Style
-import { coinSvg } from './icon'
-import style from './btn.css?inline'
+import style from './claim.css?inline'
 
 @customElement('reward-claim')
 export class RewardClaim extends ThemeElement(style) {
@@ -49,8 +49,11 @@ export class RewardClaim extends ThemeElement(style) {
   get isSocial() {
     return this.reward.key === 'social'
   }
+  get claimed() {
+    return this.reward.claimed
+  }
   get claimable() {
-    return this.reward.claimable
+    return this.reward.claimable && !this.reward.claimed
   }
   get processing() {
     return this.pending || this.txPending
@@ -87,15 +90,12 @@ export class RewardClaim extends ThemeElement(style) {
         }
       })
       await this.tx.wait()
-      const res = await contract[this.reward.write]()
-      console.log(res)
-      rewardStore.update()
+      await rewardStore.update()
     } catch (err: any) {
       err = await normalizeTxErr(err)
-      console.log(err)
       if (err.code !== 4001) {
         this.emit('error', err.message)
-        throw err
+        console.error(err)
       }
     } finally {
       this.pending = false
@@ -111,19 +111,55 @@ export class RewardClaim extends ThemeElement(style) {
     super.connectedCallback()
     rewardStore.update()
     // TODO: move to user profile store
-    this._claimable = this.isSocial ? (await getSocials()).length : true
+    switch (this.reward.key) {
+      case 'social':
+        this._claimable = (await getSocials()).length
+        break
+      case 'vote':
+        this._claimable = (await userVotes()).length
+        break
+      default:
+        this._claimable = true
+    }
   }
 
   render() {
     return html`
-      <!-- Claim -->
-      <ui-button @click=${this.claim} .disabled=${!this.claimable} .pending=${this.processing} class="outlined" text xs
-        >${when(
-          this.processing,
-          () => html`<i class="mdi mdi-loading"></i>`,
-          () => html`${this.claimable || !this.isSocial ? 'Claim' : 'Claimed'}`
-        )}</ui-button
-      >
+      <div class="flex w-full justify-between items-center ${classMap({ 'text-gray-600': this.reward.closed })}">
+        <!-- Name -->
+        <span
+          >${this.reward.title}
+          ${when(
+            this.isSocial,
+            () =>
+              html`<ui-button @click=${this.bindSocial} icon sm
+                ><i class="i mdi mdi-twitter text-blue-500"></i
+              ></ui-button>`
+          )}
+        </span>
+        <div class="flex gap-2 items-center text-right">
+          <!-- Amnt -->
+          <span class="${classMap({ 'text-green-600 font-bold': +this.reward.amnt > 0 })}"
+            >${this.reward.closed || this.claimed ? '' : this.reward.amnt}</span
+          >
+          <!-- Button -->
+          <div class="flex justify-end items-center w-[4em] h-[2em]">
+            <ui-button
+              @click=${this.claim}
+              .disabled=${!this.claimable || this.reward.closed}
+              .pending=${this.processing}
+              class="outlined"
+              text
+              xs
+              >${when(
+                this.processing,
+                () => html`<i class="mdi mdi-loading"></i>`,
+                () => html`${this.reward.closed ? '-' : this.claimed ? 'Claimed' : 'Claim'}`
+              )}</ui-button
+            >
+          </div>
+        </div>
+      </div>
     `
   }
 }

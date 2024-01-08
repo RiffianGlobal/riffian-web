@@ -71,7 +71,7 @@ export class CreateAlbumDialog extends ThemeElement('') {
   }
   connectedCallback() {
     super.connectedCallback()
-    emitter.emit('toplist-update')
+    emitter.emit('toplist-fetch')
   }
 
   render() {

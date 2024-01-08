@@ -23,11 +23,7 @@ export const retreatPrice = async (album: string, amount: number) => {
  */
 export const userSubjectVotes = async (subject: string, address: string) => {
   const contract = await getAlbumContract(true)
-  const method = 'userSubjectVotes'
-  const overrides = {}
-  const parameters = [subject, address]
-  await assignOverrides(overrides, contract, method, parameters)
-  return await contract[method](...parameters)
+  return await contract.userSubjectVotes(subject, address)
 }
 
 /**
@@ -56,7 +52,9 @@ export const retreat = async (subject: string, amount: number) => {
   })
 }
 
-export const userVotes = async (addr: string) => {
+export const userVotes = async (addr?: string) => {
+  if (!addr) addr = await getAccount()
+  if (!addr) return []
   let queryJSON = `{
       userSubjectVotes(where:{holding_gt:0,user:"${addr.toLowerCase()}"}) {
         holding
@@ -74,5 +72,5 @@ export const userVotes = async (addr: string) => {
       }
     }`
   let result = await graphQuery('MediaBoard', queryJSON)
-  return result
+  return result.userSubjectVotes ?? []
 }

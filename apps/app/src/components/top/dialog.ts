@@ -9,17 +9,7 @@ import {
   classMap
 } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import {
-  vote,
-  albumData,
-  votePrice,
-  votePriceWithFee,
-  myVotes,
-  retreatPrice,
-  retreat,
-  readTwitter,
-  getSocials
-} from './action'
+import { vote, albumData, votePrice, votePriceWithFee, myVotes, retreatPrice, retreat, getSocials } from './action'
 import { formatUnits } from 'ethers'
 import { tweetStore, Tweet } from './tweet'
 
@@ -61,32 +51,13 @@ export class VoteAlbumDialog extends ThemeElement('') {
     this.ts++
   }
 
-  get tweets() {
-    return tweetStore.tweets
-  }
   get hasVoted() {
-    return this.ts && formatUnits(this.myVotes, 1) > 0
-  }
-
-  readFromLocal(key: any) {
-    let result: Tweet = { key: '', author_name: '', author_url: '', html: '' }
-    this.tweets.some((tweet: any) => {
-      if (tweet.key == key) {
-        result = tweet
-      }
-    })
-    return result
+    return this.ts && +formatUnits(this.myVotes, 1) > 0
   }
 
   async readFromTwitter() {
-    let uri = await getSocials(this.author)
-    let tweet: Tweet = this.readFromLocal(uri)
-    if (tweet.key.length == 0) {
-      tweet = await readTwitter(this.author)
-      tweet['key'] = uri
-      this.tweets.unshift(tweet)
-      tweetStore.save()
-    }
+    const uri = await getSocials(this.author)
+    const tweet = await tweetStore.get(uri)
     this.socialName = tweet.author_name
     this.socialURI = tweet.author_url
     this.socialID = tweet.author_url.substring(tweet.author_url.lastIndexOf('/') + 1, tweet.author_url.length - 1)

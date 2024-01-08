@@ -1,5 +1,5 @@
 import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { bridgeStore, StateController, getAccount } from '@riffian-web/ethers/src/useBridge'
 import { retreatPrice, userSubjectVotes, retreat } from './action'
 import { formatUnits } from 'ethers'
 
@@ -30,7 +30,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
 
   async getPrice() {
     try {
-      let result = await userSubjectVotes(this.album, bridgeStore.bridge.account)
+      let result = await userSubjectVotes(this.album, await getAccount())
       this.votes = result
       this.price = await retreatPrice(this.album, this.votes)
     } catch (err: any) {
