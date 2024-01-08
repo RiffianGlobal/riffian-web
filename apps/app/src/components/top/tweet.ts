@@ -17,7 +17,7 @@ export const getTwitter = async (uri: string) => {
   return {
     name,
     url,
-    id: url.substring(url.lastIndexOf('/') + 1, url.length - 1),
+    id: (url.match(/([^/]+?)$/) ?? [])[1] ?? '',
     address: (html.match(/(0x([a-zA-Z0-9]+)?)/) ?? [])[1] ?? ''
   }
 }
@@ -33,7 +33,7 @@ class Tweets extends State {
   sync = () => {
     let cached = JSON.parse(ttlStorage.getItem(this.key) || '{}')
     // TODO: remove this after mainnet launched
-    if (Array.isArray(cached)) {
+    if (new Date().getTime() < 1704798753768) {
       ttlStorage.removeItem(this.key)
       cached = {}
     }

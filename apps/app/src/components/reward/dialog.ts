@@ -9,7 +9,6 @@ import '@riffian-web/ui/dialog'
 import '~/components/referral/bind'
 
 // Style
-import { coinSvg } from './icon'
 import style from './btn.css?inline'
 
 @customElement('reward-dialog')
