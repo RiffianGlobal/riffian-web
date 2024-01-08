@@ -25,7 +25,7 @@ export class CreateAlbumDialog extends ThemeElement('') {
   @state() tx: any = null
 
   get invalid() {
-    return !this.form.album || !this.form.image || ['album', 'image'].some((k) => this.err[k])
+    return !this.form.album || !this.form.image || !this.form.url || ['album', 'image'].some((k) => !!this.err[k])
   }
   get txPending() {
     return this.tx && !this.tx.ignored
@@ -128,12 +128,18 @@ export class CreateAlbumDialog extends ThemeElement('') {
               <div class="self-center w-[3.75rem] h-[3.75rem] rounded-lg">
                 <img-loader
                   class="w-[3.75rem] h-[3.75rem] rounded-lg"
-                  .src=${this.invalid.image
+                  .src=${!this.invalid.image
                     ? this.form.image
                     : 'https://cdn.shopify.com/app-store/listing_images/a82167e02b45cadf681efc6c17c35f3a/icon/CMmMjb30lu8CEAE=.jpg'}
                 ></img-loader>
               </div>
-              <p class="text-lg">${!this.err.album ? this.form.album : ''}</p>
+              <div>
+                <p class="text-lg">${!this.err.album ? this.form.album : '-'}</p>
+                ${when(
+                  this.form.url,
+                  () => html` <span class="icon" class=""><i class="mdi mdi-play-circle-outline"></i></span> `
+                )}
+              </div>
             </div>
             <ui-button
               class="mx-auto"
