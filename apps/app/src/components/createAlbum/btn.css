@@ -8,6 +8,7 @@ span {
   color: inherit;
 
   &:hover {
+    opacity: 1;
     color: currentColor;
   }
   &:hover {
