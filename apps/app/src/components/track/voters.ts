@@ -63,7 +63,7 @@ export class TrackInfo extends ThemeElement(style) {
   }
 
   render() {
-    return html`<div class="py-6">
+    return html`<div>
         ${when(
           this.pending && !this.subjectData,
           () =>
@@ -78,14 +78,12 @@ export class TrackInfo extends ThemeElement(style) {
         ${when(
           this.subjectData,
           () =>
-            html`<ul role="list">
-              <li class="flex header p-2">
+            html`<ul role="list" class="ui-list hover py-5">
+              <li class="flex header">
                 <div class="w-16">Rank</div>
-                <div class="flex-auto">Addr</div>
-                <div class="flex-auto text-right pr-3">
-                  Comsumption<span class="ml-1 text-sm opacity-70">(ST)</span>
-                </div>
-                <div class="flex-none w-28 text-right">Earning<span class="ml-1 text-sm opacity-70">(ST)</span></div>
+                <div class="address flex-auto">Addr</div>
+                <div class="num flex-none">Comsumption<span class="ml-1 text-xs opacity-70">(ST)</span></div>
+                <div class="num flex-none w-28">Earning<span class="ml-1 text-xs opacity-70">(ST)</span></div>
                 ${when(
                   this.pending,
                   () =>
@@ -99,7 +97,7 @@ export class TrackInfo extends ThemeElement(style) {
                 this.voteList,
                 (item: any, i) =>
                   html`<li
-                    class="item flex py-2.5 items-center cursor-pointer"
+                    class="item flex py-2.5"
                     @click=${() => {
                       if (this.disabled) {
                         emitter.emit('connect-wallet')
@@ -108,17 +106,16 @@ export class TrackInfo extends ThemeElement(style) {
                       }
                     }}
                   >
-                    <div class="flex-none w-16 pl-4 text-sm font-light opacity-75">${i + 1}</div>
-                    <div class="flex-initial flex">
-                        <ui-address .address="${item.user.address}" short avatar class="text-base"></ui-address>
+                    <div class="flex-none w-16 pl-4 text-sm font-light opacity-70">${i + 1}</div>
+                    <div class="flex-auto">
+                      <ui-address .address="${item.user.address}" short avatar class="text-base"></ui-address>
                     </div>
-                    <div class="flex-auto text-right pr-3 items-end">
-                      
+                    <div class="num flex-none">
                       <p class="name truncate mt-2">${formatUnits(item.volumeVote, 18)}</p>
                       
                       </p>
                     </div>
-                    <div class="flex-none w-28 text-right"><p class="name truncate mt-2">${formatUnits(
+                    <div class="num flex-none w-28"><p class="name truncate mt-2">${formatUnits(
                       item.user.rewardClaimed,
                       18
                     )}</p></div>

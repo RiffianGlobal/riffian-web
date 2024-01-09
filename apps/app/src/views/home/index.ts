@@ -64,7 +64,7 @@ export class ViewHome extends ThemeElement(style) {
         () => html`
           <div class="flex-initial w-full lg_w-[30rem]">
             <div class="h-20 pt-1 lg_mt-8">
-              <div class="text-xl">All</div>
+              <div class="text-xl">Top 10</div>
             </div>
             <div class="mt-3">
               <top-album></top-album>

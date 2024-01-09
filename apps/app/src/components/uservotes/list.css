@@ -1,20 +1,11 @@
-li.header {
-  @apply text-neutral-400 text-sm mb-3;
-}
-
-li.item:hover {
-  @apply bg-white/5;
-}
-
-.name {
-  @media (min-width: 500px) {
-    @apply text-base;
+.ui-list {
+  & .item {
+    @apply items-center cursor-pointer;
   }
-}
-
-.icon {
-  @apply text-2xl;
-  @media (max-width: 500px) {
-    @apply text-2xl;
+  & .name {
+    @apply md_text-base;
+  }
+  & .author {
+    @apply w-52 text-right;
   }
 }

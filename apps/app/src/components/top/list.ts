@@ -16,6 +16,7 @@ import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/img/loader'
 import '@riffian-web/ui/dialog/prompt'
 import '~/components/rewards/claim'
+// import '~/components/symbol'
 import emitter from '@lit-web3/base/emitter'
 
 import style from './list.css?inline'
@@ -36,9 +37,9 @@ export class TopAlbum extends ThemeElement(style) {
     return !bridgeStore.bridge.account
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback()
-    this.fetch()
+    await this.fetch()
     emitter.on('toplist-fetch', this.fetch)
   }
 
@@ -108,18 +109,21 @@ export class TopAlbum extends ThemeElement(style) {
         ${when(
           this.subjectList,
           () =>
-            html`<ul role="list">
-                <li class="flex header p-1">
-                  <div class="w-16">Rank</div>
-                  <div class="flex-auto">Collection</div>
-                  <div class="flex-auto text-right pr-3">${this.weekly ? 'Volume' : 'Price'}</div>
-                  <div class="flex-none w-16 text-right">24H</div>
+            html`<ul role="list" class="ui-list hover gap-2">
+                <li class="flex header">
+                  <div class="w-10">Rank</div>
+                  <div class="flex-shrink">Collection</div>
+                  <div class="flex-auto"></div>
+                  <div class="num flex-auto w-32">
+                    <!-- <native-symbol class="ml-0.5 text-xs opacity-70" bracket></native-symbol> -->
+                    ${this.weekly ? 'Volume' : html`Price`} / 24H
+                  </div>
                 </li>
                 ${repeat(
                   this.subjectList,
                   (item: any, i) =>
                     html`<li
-                      class="item flex py-2 items-center cursor-pointer"
+                      class="item flex items-center"
                       @click=${() => {
                         if (this.disabled) {
                           emitter.emit('connect-wallet')
@@ -130,23 +134,17 @@ export class TopAlbum extends ThemeElement(style) {
                         }
                       }}
                     >
-                      <div class="flex-none w-16 pl-4 text-sm font-light opacity-75">${i + 1}</div>
-                      <div class="flex-initial flex">
-                        <div class="w-[3.75rem] h-[3.75rem] mr-4 rounded-lg">
-                          <img-loader .src=${item.image} class="rounded-lg"></img-loader>
-                        </div>
-                        <div>
-                          <p class="name truncate mt-2">${item.name}</p>
-                          <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
-                        </div>
+                      <div class="flex-none w-10 pl-2 text-sm font-light opacity-70">${i + 1}</div>
+                      <div class="flex-shrink">
+                        <img-loader .src=${item.image} class="w-[3.75rem] h-[3.75rem] rounded-lg"></img-loader>
                       </div>
-                      <div class="flex-auto text-right pr-3">
-                        <p class="text-sm">
-                          ${this.weekly ? formatUnits(item.volumeTotal, 18) : (Number(item.supply) + 1) / 10}
-                        </p>
+                      <div class="flex-auto truncate">
+                        <p class="name truncate">${item.name}</p>
+                        <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
                       </div>
-                      <div class="flex-none w-16 text-right text-sm" style="color: #34C77B">
-                        ${TopAlbum.dayChange(item)}
+                      <div class="num flex-initial flex flex-col !w-18 text-sm items-end">
+                        <span>${this.weekly ? formatUnits(item.volumeTotal, 18) : (Number(item.supply) + 1) / 10}</span>
+                        <span class="text-xs" style="color: #34C77B">${TopAlbum.dayChange(item)}</span>
                       </div>
                     </li> `
                 )}

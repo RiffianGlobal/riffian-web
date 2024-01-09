@@ -23,7 +23,7 @@ export class LatestVotes extends ThemeElement(style) {
   init = async () => {
     this.pending = true
     try {
-      let result = await latestVote(20)
+      let result = await latestVote(14)
       this.latestVotes = result.voteLogs
     } catch (e: any) {
       console.error(e)
@@ -36,12 +36,19 @@ export class LatestVotes extends ThemeElement(style) {
       let tsNow = BigInt(new Date().getTime()) / 1000n,
         timeAgo = tsNow - timestamp,
         days = timeAgo / 86400n,
-        hours = (timeAgo - days * 86400n) / 3600n,
-        minutes = (timeAgo - days * 86400n - hours * 3600n) / 60n,
         ret = ''
-      if (days > 0) ret += days.toString() + 'd '
-      if (hours > 0) ret += +hours.toString() + 'h '
-      if (minutes > 0) ret += minutes.toString() + 'm '
+      // if (days > 0) ret += days.toString() + (days < 7 ? 'd ' : 'days ')
+
+      if (days > 0)
+        ret +=
+          days < 2 ? `${days.toString()}d ` : days > 14 ? '2 weeks ' : days < 7 ? `${days.toString()} days ` : `7 days `
+
+      if (days < 7) {
+        const hours = (timeAgo - days * 86400n) / 3600n,
+          minutes = (timeAgo - days * 86400n - hours * 3600n) / 60n
+        if (hours > 0) days < 2 ? (ret += +hours.toString() + 'h ') : ''
+        if (minutes > 0) days < 2 ? (ret += minutes.toString() + 'm ') : ''
+      }
       if (!ret) ret = '<1m'
       else ret += 'ago'
       yield ret
@@ -57,8 +64,8 @@ export class LatestVotes extends ThemeElement(style) {
     ${when(
       !this.pending,
       () =>
-        html`<ul role="list">
-          <li class="flex header p-1 lg_mt-3">
+        html`<ul role="ui-list hover gap-2">
+          <li class="flex header p-1 lg_mt-4">
             <div class="w-16">Bidders</div>
           </li>
           ${repeat(
@@ -66,7 +73,9 @@ export class LatestVotes extends ThemeElement(style) {
             (item: any, i) =>
               html`<li class="py-2 justify-start">
                 <div class="flex items-top justify-between space-x-2">
-                  <ui-address class="text-2xl" .address=${item.voter.address} avatar hideAddr></ui-address>
+                  <ui-link href=${`/user/${item.voter.address}`}>
+                    <ui-address class="text-2xl" .address=${item.voter.address} avatar hideAddr></ui-address>
+                  </ui-link>
                   <div class="flex flex-col justify-center items-end">
                     <p class="opacity-95 text-base">${formatUnits(item.value, 18)}</p>
                     <p class="text-left text-xs text-neutral-400">${asyncReplace(this.timeAgo(BigInt(item.time)))}</p>

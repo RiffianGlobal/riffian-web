@@ -1,4 +1,4 @@
-import { customElement, ThemeElement, html, when, property, state } from '../shared/theme-element'
+import { customElement, ThemeElement, html, when, property, state, classMap } from '../shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { screenStore } from '@lit-web3/base/screen'
 import { shortAddress } from '@riffian-web/ethers/src/utils'
@@ -32,7 +32,7 @@ export class UIAddress extends ThemeElement(style) {
       bridgeStore.bridge.provider?.lookupAddress(this.addr).then((name) => (this.doid = name ?? ''))
     let showAddr = this.short || screenStore.screen.isMobi ? shortAddress(this.addr) : this.addr
     return this.doid
-      ? `${this.doid}(${showAddr})`
+      ? html`${this.doid}<span class=${classMap({ 'opacity-50': this.doid })}>(${showAddr})</span>`
       : this.doid === undefined
         ? html`<i class="mdi mdi-loading"></i> (${showAddr})`
         : showAddr

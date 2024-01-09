@@ -1,22 +1,11 @@
-li.header {
-  @apply text-neutral-400 text-sm mb-3;
-  /* border-color: rgba(255, 255, 255, 0.12); */
-}
-
-li.item:hover {
-  /* @apply bg-zinc-700; */
-  @apply bg-white/5;
-}
-
-.name {
-  @media (min-width: 500px) {
-    @apply text-base;
+.ui-list {
+  & .item {
+    @apply items-center cursor-pointer;
   }
-}
-
-.icon {
-  @apply text-2xl;
-  @media (max-width: 500px) {
-    @apply text-2xl;
+  & .name {
+    @apply md_text-base;
+  }
+  & .address {
+    /* @apply w-52; */
   }
 }

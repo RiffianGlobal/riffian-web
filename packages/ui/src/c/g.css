@@ -25,3 +25,31 @@ button {
   @apply inline-flex w-24 h-24;
   background: red;
 }
+
+body {
+  @apply bg-pink-300;
+}
+/* data list */
+ul.data-list {
+  & li {
+    &.header {
+      @apply text-neutral-400 text-sm mb-3 bg-blue-500/50;
+    }
+    &.item {
+      &:hover {
+        @apply bg-white/5;
+      }
+    }
+    & .name {
+      @media (min-width: 500px) {
+        @apply text-base;
+      }
+    }
+    & .icon {
+      @apply text-2xl;
+      @media (max-width: 500px) {
+        @apply text-2xl;
+      }
+    }
+  }
+}
