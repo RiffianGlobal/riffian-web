@@ -82,7 +82,8 @@ class BlockPolling {
     bridgeStore.blockNumber = v
   }
   getBlockNumber = async () => {
-    if (bridgeStore.bridge.provider) this.block = await bridgeStore.bridge.provider.getBlockNumber()
+    const provider = await getBridgeProvider()
+    if (provider) this.block = await provider.getBlockNumber()
   }
   polling = () => {
     clearTimeout(this.timer)
@@ -100,7 +101,8 @@ class BlockPolling {
     Object.assign(this.blockDebounce, { timer: null, interval: 50 })
   }
   listenProvider = async () => {
-    bridgeStore.bridge.provider?.on('block', this.onBlock)
+    const provider = await getBridgeProvider()
+    provider.on('block', this.onBlock)
   }
   onBlock = (block: number) => {
     if (block <= this.block) return
@@ -163,7 +165,8 @@ export const getBlockNumber = async () => {
 }
 export const getNonce = async (address?: string) => {
   if (!address) address = await getAccount()
-  return await bridgeStore.bridge?.provider?.getTransactionCount(address)
+  const provider = await getBridgeProvider()
+  return await provider.getTransactionCount(address)
 }
 export const getGraph = async (path = '') => ((await getNetwork()).graph ?? '') + path
 
@@ -171,12 +174,12 @@ export const getGraph = async (path = '') => ((await getNetwork()).graph ?? '') 
 // blockNumber, default: current block
 export const getBlockTimestamp = async ({ offset = 0, blockNumber = 0 } = {}) => {
   if (!blockNumber) blockNumber = await getBlockNumber()
-  const { timestamp } = await bridgeStore.bridge.provider.getBlock(blockNumber - offset / 3)
+  const { timestamp } = await (await getBridgeProvider()).getBlock(blockNumber - offset / 3)
   return timestamp
 }
 
 export const getNativeBalance = async (address: string) =>
-  formatUnits(await bridgeStore.bridge.provider.getBalance(address))
+  formatUnits(await (await getBridgeProvider()).getBalance(address))
 
 export const estimateGasLimit = async (
   contract: Contract,
@@ -196,7 +199,8 @@ export const estimateGasLimit = async (
 
 export const assignOverrides = async (overrides: any, ...args: any[]) => {
   let [contract, method, parameters, { gasLimitPer, nonce } = <any>{}] = args
-  if (nonce || bridgeStore.bridge.provider.nonce) overrides.nonce = nonce || bridgeStore.bridge.provider.nonce
+  const provider = await getBridgeProvider()
+  if (nonce || provider.nonce) overrides.nonce = nonce || provider.nonce
   let gasLimit
   try {
     if (gasLimitPer) {

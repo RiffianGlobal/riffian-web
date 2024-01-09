@@ -102,6 +102,27 @@ export class RewardClaim extends ThemeElement(style) {
     }
   }
 
+  // TODO: seperate to sub elements
+  // claimWeekly = async () => {
+  //   const contract = await getAlbumContract()
+  //   const method = 'claimReward'
+  //   const overrides = {}
+  //   const parameters = [getWeek()]
+  //   await assignOverrides(overrides, contract, method, parameters)
+  //   const call = contract[method](...parameters)
+
+  //   return new txReceipt(call, {
+  //     errorCodes: 'MediaBoard',
+  //     allowAlmostSuccess: true,
+  //     seq: {
+  //       type: 'ClaimAlbumRewards',
+  //       title: `Claim Album Rewards`,
+  //       ts: nowTs(),
+  //       overrides
+  //     }
+  //   })
+  // }
+
   bindSocial = () => {
     emitter.emit('ui-bindsocial')
     setTimeout(() => this.emit('close'), 300)

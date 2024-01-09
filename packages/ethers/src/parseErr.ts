@@ -1,5 +1,5 @@
 import { toUtf8String } from 'ethers'
-import { useBridgeAsync } from './useBridge'
+import { getBridgeProvider } from './useBridge'
 
 export const ErrorCodeMap: Record<string, string> = {
   1006: 'Disconnected',
@@ -11,9 +11,8 @@ export const parseRevertReason = async (err: any): Promise<string> => {
   let { reason = '', transaction } = err
   if (reason) {
     if (!reason.includes(': ') && transaction) {
-      const bridgeStore = await useBridgeAsync()
       try {
-        const code = await bridgeStore.bridge.provider.call(transaction)
+        const code = await (await getBridgeProvider()).call(transaction)
         reason = toUtf8String(code)
       } catch {}
     }

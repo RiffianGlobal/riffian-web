@@ -11,7 +11,7 @@ import {
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { vote, albumData, votePrice, votePriceWithFee, myVotes, retreatPrice, retreat, getSocials } from './action'
 import { formatUnits } from 'ethers'
-import { tweetStore, Tweet } from './tweet'
+import { tweetStore, type Social } from './tweet'
 
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/input/text'
@@ -33,10 +33,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
   @state() price: Promise<any> | undefined
   @state() retreatPrice: any = 0
   @state() retreatDisabled = true
-  @state() socialName = ''
-  @state() socialURI = ''
-  @state() socialID = ''
-  @state() socialVerified = false
+  @state() social: Social | undefined
   @state() tx: any = null
   @state() success = false
   @state() pending = false
@@ -57,12 +54,9 @@ export class VoteAlbumDialog extends ThemeElement('') {
 
   async readFromTwitter() {
     const uri = await getSocials(this.author)
-    const tweet = await tweetStore.get(uri)
-    this.socialName = tweet.author_name
-    this.socialURI = tweet.author_url
-    this.socialID = tweet.author_url.substring(tweet.author_url.lastIndexOf('/') + 1, tweet.author_url.length - 1)
-    this.socialVerified = tweet.html.includes(this.author)
-    this.socialVerified = true
+    const social = await tweetStore.get(uri)
+    if (social) Object.assign(social, { verified: social.address.includes(this.author) })
+    this.social = social
   }
 
   async getPrice() {
@@ -141,12 +135,12 @@ export class VoteAlbumDialog extends ThemeElement('') {
               <div class="text-lg mb-1.5">${this.name}</div>
               <div class="text-sm">
                 ${when(
-                  this.socialVerified,
+                  this.social?.verified,
                   () => html`<span><i class="text-green-600 text-sm mdi mdi-check-decagram"></i></span>`
-                )}${this.socialName}
+                )}${this.social?.name}
               </div>
 
-              <a class="text-sm text-blue-300" href="${this.socialURI}" target="_blank">@${this.socialID}</a>
+              <a class="text-sm text-blue-300" href="${this.social?.url}" target="_blank">@${this.social?.id}</a>
 
               <div class="text-neutral-400">
                 You own
