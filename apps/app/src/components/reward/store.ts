@@ -1,14 +1,9 @@
-import {
-  getAccount,
-  bridgeStore,
-  getSigner,
-  getContract,
-  getContracts,
-  assignOverrides
-} from '@riffian-web/ethers/src/useBridge'
+import { getAccount, getSigner, getContract, assignOverrides } from '@riffian-web/ethers/src/useBridge'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
-import { formatUnits } from 'ethers'
+import { formatUnits, FixedNumber } from 'ethers'
+import getMultiCall, { getMultiCallContract } from '@riffian-web/ethers/src/multiCall'
+import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 
 import { State, property } from '@lit-web3/base/state'
 export { StateController } from '@lit-web3/base/state'
@@ -16,22 +11,47 @@ export { StateController } from '@lit-web3/base/state'
 export const rewardMap = [
   {
     key: 'social',
-    title: 'Social Verification',
+    title: 'Bind a social account',
     read: 'RewardSocialVerify',
     write: 'claimSocialVerify',
-    claimable: false
+    check: 'isSocialVerifyClaimed',
+    once: true,
+    closed: false
   },
-  { key: 'vote', title: 'Vote', read: 'RewardVote', write: 'claimVote', claimable: false },
-  { key: 'follow', title: 'Follow', read: 'RewardFollow', write: 'claimFollow', claimable: false, closed: true },
-  { key: 'share', title: 'Share', read: 'RewardShare', write: 'claimShare', claimable: false, closed: true }
+  {
+    key: 'vote',
+    title: 'Voted at least once',
+    read: 'RewardVote',
+    write: 'claimVote',
+    check: 'isVotingClaimed',
+    once: true,
+    closed: false
+  },
+  { key: 'follow', title: 'Follow', read: 'RewardFollow', write: 'claimFollow', check: 'followClaimed', closed: true },
+  { key: 'share', title: 'Share', read: 'RewardShare', write: 'claimShare', check: 'shareClaimed', closed: true }
+]
+
+export const rewardTasks = [
+  {
+    key: 'votes',
+    title: 'Weekly Votes',
+    read: 'RewardSocialVerify',
+    write: 'claimSocialVerify',
+    check: 'isSocialVerifyClaimed',
+    closed: false
+  },
+  ...rewardMap
 ]
 
 class RewardStore extends State {
   @property({ value: null }) tx?: any
   @property({ value: false }) pending!: boolean
   @property({ value: [] }) rewards!: bigint[]
-  @property({ value: [] }) jobs!: bigint[]
-  @property({ value: [] }) rewardsClaimable!: boolean[]
+  @property({ value: [] }) tasks!: bigint[]
+  @property({ value: [] }) rewardsClaimed!: boolean[]
+  @property({ value: [] }) weeklies!: UserWeekly[]
+
+  inited = false
 
   get txPending() {
     return this.tx && !this.tx.ignored
@@ -41,14 +61,16 @@ class RewardStore extends State {
       ...rewardMap[i],
       v,
       amnt: +formatUnits(v),
-      claimable: this.rewardsClaimable[i]
+      claimed: this.rewardsClaimed[i]
     }))
   }
   get total() {
-    return this.rewards.reduce((next, cur) => next + cur, 0n)
+    const weeklies = this.weeklies.reduce((cur, next) => cur + (next?.reward ?? 0n), 0n)
+    return this.rewards.reduce((cur, next) => next + cur, weeklies)
   }
   get totalHumanized() {
-    return +formatUnits(this.total)
+    if (!this.inited) return 0
+    return (+formatUnits(this.total)).toFixed(4)
   }
 
   update = async () => await getRewards()
@@ -58,25 +80,27 @@ export const rewardStore = new RewardStore()
 export const getRewardContract = async (account?: string) =>
   getContract('Reward', { account: account ?? (await getAccount()) })
 
-// TODO: MultiCall
 export const getRewards = async () => {
   const account = await getAccount()
-  const contract = await getRewardContract(account)
+  rewardStore.weeklies = await userWeeklyRewards()
 
-  // TODO: MultiCall
-  const calls: any[] = [contract.claimable(), ...rewardMap.map((r) => contract[r.read]())]
-  calls.push(...[contract.isSocialVerifyClaimed(account), contract.isVotingClaimed(account)])
-  const res = await Promise.all(calls)
-  rewardStore.rewards = res.shift()
-  rewardStore.jobs = res.splice(0, rewardMap.length)
-  rewardStore.rewardsClaimable = [!res.shift(), true, false, false]
-}
-
-// TODO: MultiCall
-export const claimed = async () => {
-  const contract = await getRewardContract()
-  const [res1, res2] = await Promise.all([contract.isSocialVerifyClaimed(), contract.isVotingClaimed()])
-  return [res1, res2]
+  const { MultiCallContract: rewardContract, MultiCallProvider } = await getMultiCall('Reward')
+  // Aggregated calls
+  // 0: claimable amnts
+  const calls = [rewardContract.claimable()]
+  // 1-4: Task max amnts
+  calls.push(...rewardMap.map((r) => rewardContract[r.read]()))
+  // 5-8: isClaimed
+  calls.push(...rewardMap.map((r) => rewardContract[r.check](account)))
+  const [res] = await MultiCallProvider.all(calls)
+  // Aggregated res
+  // 0: claimable amnts
+  rewardStore.rewards = res.shift().map((v: bigint, i: number) => (rewardMap[i].closed ? 0n : v))
+  // 1-4: Task max amnts
+  rewardStore.tasks = res.splice(0, rewardMap.length)
+  // 5-8: isClaimed
+  rewardStore.rewardsClaimed = res.splice(0, rewardMap.length)
+  rewardStore.inited = true
 }
 
 export const claim = async () => {
@@ -97,4 +121,42 @@ export const claim = async () => {
       overrides
     }
   })
+}
+
+export type UserWeekly = {
+  week: number
+  votes: string
+  reward?: bigint
+}
+export const getUserWeeklies = async (account?: string): Promise<UserWeekly[]> => {
+  account ||= await getAccount()
+  const { userWeeklyVotes } = await graphQuery(
+    'MediaBoard',
+    `{ userWeeklyVotes( where: {user_: {address: "${account}"}} ) { week votes } }`
+  )
+  return userWeeklyVotes
+}
+
+export const userWeeklyRewards = async (account?: string): Promise<UserWeekly[]> => {
+  const userWeeklies = await getUserWeeklies(account || (await getAccount()))
+  const { MultiCallContract: contract, MultiCallProvider } = await getMultiCall('MediaBoard')
+  // Aggregated calls
+  const calls = []
+  // weekly total votes
+  calls.push(...userWeeklies.map(({ week }) => contract.weeklyVotes(week)))
+  // weekly total rewards
+  calls.push(...userWeeklies.map(({ week }) => contract.weeklyReward(week)))
+  const [data] = await MultiCallProvider.all(calls)
+  // Aggregated res
+  // weekly total votes
+  const weeklyVotes = data.splice(0, userWeeklies.length)
+  // weekly total rewards
+  const weeklyRewards = data.splice(0, userWeeklies.length)
+  //
+  const res = userWeeklies.map((weekly, i) => {
+    const { votes } = weekly
+    const reward = (weeklyRewards[i] * BigInt(votes[i])) / weeklyVotes[i]
+    return { ...weekly, reward }
+  })
+  return res
 }

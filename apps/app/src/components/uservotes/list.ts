@@ -33,7 +33,7 @@ export class UserVotesList extends ThemeElement(style) {
   init = async () => {
     if (this.disabled) return
     this.pending = true
-    let { userSubjectVotes } = await userVotes(bridgeStore.bridge.account!)
+    const userSubjectVotes = await userVotes()
     this.uVotes = userSubjectVotes
     this.pending = false
   }

@@ -26,5 +26,5 @@ export async function all<T extends any[] = any[]>(
     const result = outputs.length === 1 ? params[0] : params
     callResult.push(result)
   }
-  return [callResult, response.blockNumber.toNumber()]
+  return [callResult, response.blockNumber]
 }

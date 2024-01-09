@@ -1,29 +1,39 @@
 // ethers-multicall
 import { Contract, Provider } from './ethers-multicall'
-//
-import { getContracts, getABI, useBridgeAsync } from '../useBridge'
+import { getContracts, getBridgeProvider, getABI } from '../useBridge'
 
 let MultiCallProvider: any
 
 export const getMultiCallProvider = async () => {
-  const {
-    bridge: { provider }
-  } = await useBridgeAsync()
-  await provider.ready
+  const provider = await getBridgeProvider()
   const { chainId: bridgeChainId } = await provider.getNetwork()
   let { chainId } = MultiCallProvider?._provider?.network ?? {}
-  if (!chainId || chainId != bridgeChainId) MultiCallProvider = new Provider(provider, bridgeChainId)
+  if (!chainId || chainId != bridgeChainId) MultiCallProvider = new Provider(provider, Number(bridgeChainId))
   return MultiCallProvider
 }
 
-export const getMultiCallContract = async (name: string, { forceMainnet = false, address = '', abiName = '' } = {}) => {
-  const provider = await getMultiCallProvider()
+export const getMultiCallContract = async (
+  name: string,
+  { forceMainnet = false, address = '', abiName = '' } = <multiCallOpts>{}
+) => {
   if (!address) {
     address = getContracts(name, forceMainnet)
     if (!address) throw new Error(`Contract ${name} not found`)
   }
-  const abi = await getABI(abiName || name)
-  return { MultiCallContract: new Contract(address, abi), MultiCallProvider: provider }
+  return new Contract(address, await getABI(abiName || name))
 }
 
-export default getMultiCallContract
+export const getMultiCall = async (name: string, options?: multiCallOpts) => {
+  return {
+    MultiCallContract: await getMultiCallContract(name, options),
+    MultiCallProvider: await getMultiCallProvider()
+  }
+}
+
+export declare type multiCallOpts = {
+  forceMainnet?: boolean
+  address?: string
+  abiName?: string
+}
+
+export default getMultiCall

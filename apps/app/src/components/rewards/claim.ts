@@ -31,13 +31,7 @@ export class ClaimRewards extends ThemeElement(style) {
         hours = (timeLeft - days * 86400n) / 3600n,
         minutes = (timeLeft - days * 86400n - hours * 3600n) / 60n,
         seconds = timeLeft - days * 86400n - hours * 3600n - minutes * 60n
-      yield `${days ? days.toString() + 'D:' : ''}` +
-        hours.toString().padStart(2, '0') +
-        'H:' +
-        minutes.toString().padStart(2, '0') +
-        'm:' +
-        seconds.toString().padStart(2, '0') +
-        's'
+      yield [days * 24n + hours, minutes, seconds].map((r) => (r + '').padStart(2, '0')).join(':')
       await new Promise((r) => setTimeout(r, 1000))
     } while (timeLeft > 1)
   }
@@ -54,7 +48,7 @@ export class ClaimRewards extends ThemeElement(style) {
         this.rewards = await weeklyReward()
       } catch (e) {
         let week = await weekStatistic(await getWeek())
-        this.rewards = (BigInt(week.weeklyStatistic?.volumeVote??0) * 4n) / 100n
+        this.rewards = (BigInt(week.weeklyStatistic?.volumeVote ?? 0) * 4n) / 100n
       }
       this.pending = false
     } catch (err: any) {

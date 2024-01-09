@@ -39,3 +39,26 @@ export const addressEquals = (source: string, dest: string) => {
   if (!dest.startsWith('0x')) dest = `0x${dest}`
   return source.toLowerCase() == dest.toLowerCase()
 }
+
+export const ttlStorage = {
+  getItem: (key: string) => {
+    const raw: any = localStorage.getItem(key)
+    let val = raw
+    try {
+      val = JSON.parse(val)
+    } catch {}
+    if (!val?.expire) return raw
+    if (nowTs() > val.expire) {
+      localStorage.removeItem(key)
+      return null
+    }
+    return val.val
+  },
+  setItem: (key: string, val: any, ttl?: number) => {
+    if (ttl) {
+      val = JSON.stringify({ val, expire: nowTs() + ttl })
+    }
+    return localStorage.setItem(key, val)
+  },
+  removeItem: (key: string) => localStorage.removeItem(key)
+}

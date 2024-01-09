@@ -7,8 +7,7 @@ import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/img/loader'
 import '@riffian-web/ui/dialog/prompt'
 import '~/components/rewards/claim'
-import { readTwitter } from '~/components/top/action'
-import { Tweet, tweetStore } from '~/components/top/tweet'
+import { tweetStore, type Social } from '~/components/top/tweet'
 import style from './user.css?inline'
 
 const defErr = () => ({ loading: '', tx: '' })
@@ -22,10 +21,7 @@ export class TrackDetail extends ThemeElement(style) {
   @property({ type: Promise<any> }) votes: Promise<any> | undefined
   @state() myVotes: Promise<any> | undefined
   @state() retreatDisabled = true
-  @state() socialName = ''
-  @state() socialURI = ''
-  @state() socialID = ''
-  @state() socialVerified = false
+  @state() social: Social | undefined
   @state() user: any
   @state() voteList: any = []
   @state() pending = false
@@ -48,42 +44,11 @@ export class TrackDetail extends ThemeElement(style) {
     return Math.floor(Math.random() * max)
   }
 
-  get tweets() {
-    return tweetStore.tweets
-  }
-
-  readFromLocal(key: any) {
-    let result: Tweet = { key: '', author_name: '', author_url: '', html: '' }
-    this.tweets.some((tweet: any) => {
-      if (tweet.key == key) {
-        result = tweet
-      }
-    })
-    return result
-  }
-
   async readFromTwitter() {
-    if (this.user && this.user.socials) {
-      // console.info(this.user.socials)
-      let uri = this.user.socials[0]?.uri
-      let tweet: Tweet = this.readFromLocal(uri)
-      if (!tweet.key || tweet.key.length == 0) {
-        tweet = await readTwitter(uri)
-        tweet['key'] = uri
-        this.tweets.unshift(tweet)
-        tweetStore.save()
-      }
-      this.socialName = tweet.author_name
-      this.socialURI = tweet.author_url
-      this.socialID = tweet.author_url.substring(tweet.author_url.lastIndexOf('/') + 1, tweet.author_url.length - 1)
-      this.socialVerified = tweet.html.includes(this.user.address)
-      this.socialVerified = true
-    } else {
-      this.socialName = 'Unknown'
-      this.socialURI = ''
-      this.socialID = 'NotBind'
-      this.socialVerified = false
-    }
+    let { uri } = this.user.socials[0] ?? {}
+    const social = await tweetStore.get(uri)
+    if (social) Object.assign(social, { verified: this.user.address })
+    this.social = social
   }
 
   updateErr = (err = {}) => (this.err = Object.assign({}, this.err, err))
@@ -112,7 +77,7 @@ export class TrackDetail extends ThemeElement(style) {
   render() {
     return html`<div class="m-4 text-center">
       ${when(
-        !this.ts && !this.err.load,
+        !this.ts && !this.err.loading,
         () =>
           html`<div name="Loading" class="doc-intro">
             <div class="flex flex-col gap-8 m-8">
@@ -129,15 +94,15 @@ export class TrackDetail extends ThemeElement(style) {
                 <div class="mt-4">
                   <span class="text-base font-light middle-dot-divider">
                     ${when(
-                      this.socialVerified,
+                      this.social?.verified,
                       () =>
-                        html`${this.socialName}<span class="ml-0.5"
+                        html`${this.social?.name}<span class="ml-0.5"
                             ><i class="text-green-600 text-sm mdi mdi-check-decagram"></i
                           ></span>`
                     )}
                   </span>
                   <span class="text-base font-light">
-                    <a href="${this.socialURI}" class="text-blue-300" target="_blank">@${this.socialID}</a>
+                    <a href="${this.social?.url}" class="text-blue-300" target="_blank">@${this.social?.id}</a>
                   </span>
                 </div>
                 <div class="mt-0.5">

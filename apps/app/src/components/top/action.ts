@@ -28,19 +28,6 @@ export const vote = async (album: string, amount: number, price: object) => {
   })
 }
 
-/**
- * read from twitter
- */
-export const readTwitter = async (uri: string) => {
-  try {
-    uri = 'https://twitter.com/archdeaconsal/status/1732505736616563171'
-    let tweet = await fetchJsonP('https://publish.twitter.com/oembed?url=' + encodeURIComponent(uri))
-    return tweet.json()
-  } catch (err: any) {
-    console.log(err)
-  }
-}
-
 export const getSocials = async (addr: string) => {
   try {
     const contract = await getAlbumContract(true)
@@ -84,7 +71,7 @@ export const albumData = async (album: string) => {
 }
 
 export const myVotes = async (album: string) => {
-  return userSubjectVotes(album, bridgeStore.bridge.account)
+  return userSubjectVotes(album, await getAccount())
 }
 
 export const retreatPrice = async (album: string) => {
