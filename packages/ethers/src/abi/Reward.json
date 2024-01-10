@@ -266,12 +266,23 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "claimable",
     "outputs": [
       {
         "internalType": "uint256",
         "name": "socialVerify",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "vote",
         "type": "uint256"
       },
       {
@@ -282,11 +293,6 @@
       {
         "internalType": "uint256",
         "name": "share",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "vote",
         "type": "uint256"
       }
     ],

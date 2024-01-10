@@ -87,7 +87,7 @@ export const getRewards = async () => {
   const { MultiCallContract: rewardContract, MultiCallProvider } = await getMultiCall('Reward')
   // Aggregated calls
   // 0: claimable amnts
-  const calls = [rewardContract.claimable()]
+  const calls = [rewardContract.claimable(account)]
   // 1-4: Task max amnts
   calls.push(...rewardMap.map((r) => rewardContract[r.read]()))
   // 5-8: isClaimed
