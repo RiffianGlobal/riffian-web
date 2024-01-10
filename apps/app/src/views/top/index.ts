@@ -9,7 +9,7 @@ import style from './index.css?inline'
 @customElement('view-top')
 export class ViewTop extends ThemeElement(style) {
   render() {
-    return html`<div class="top">
+    return html`
       <div class="ui-container relative flex justify-between items-center">
         <div class="flex items-center gap-3 lg_gap-4 lg_w-40">
           <p class="font-bold text-xl">Weekly</p>
@@ -22,6 +22,6 @@ export class ViewTop extends ThemeElement(style) {
         </div>
       </div>
       <top-album></top-album>
-    </div>`
+    `
   }
 }

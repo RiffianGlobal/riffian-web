@@ -10,7 +10,7 @@ export class TrackPage extends ThemeElement(style) {
   @property({ type: String }) addr = ''
 
   render() {
-    return html`<div class="md_max-w-7xl mx-auto flex flex-col place-content-center pt-12">
+    return html`<div class="ui-container mx-auto flex flex-col place-content-center pt-12">
       <track-detail trackAddress=${this.addr}> </track-detail>
       <div class="mt-14">
         <div class="w-full inline-flex pb-6 border-b border-slate-50/10">

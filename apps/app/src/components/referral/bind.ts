@@ -48,7 +48,7 @@ export class referralBind extends ThemeElement(style) {
   }
 
   render() {
-    return html`<div class="flex flex-col gap-8 my-8">
+    return html`<div class="flex flex-col gap-8 mt-20">
       <div class="flex gap-3 items-center">
         <b>Referral:</b>
         <ui-input-text

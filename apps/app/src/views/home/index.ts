@@ -60,7 +60,9 @@ export class ViewHome extends ThemeElement(style) {
   }
 
   render() {
-    return html`<div class="flex flex-col lg_flex-row lg_mt-8 px-2 lg_px-8 gap-4 lg_gap-12 place-content-center">
+    return html`<div
+      class="ui-container flex flex-col lg_flex-row lg_mt-8 px-2 lg_px-8 gap-4 lg_gap-12 place-content-center"
+    >
       <!-- Weekly -->
       <div class="home-board">
         <div class="home-board-header">

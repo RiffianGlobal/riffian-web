@@ -10,9 +10,9 @@ export class TrackPage extends ThemeElement(style) {
   @property({ type: String }) addr = ''
 
   render() {
-    return html`<div class="md_max-w-7xl mx-auto flex flex-col place-content-center pt-10">
+    return html`<div class="ui-container mx-auto flex flex-col place-content-center pt-10">
       <!-- user profile -->
-      <user-detail .address=${this.addr}></user-detail>
+      <user-detail .address=${this.addr} class="mx-auto"></user-detail>
 
       <div class="w-full inline-flex pb-6 border-b border-slate-50/10">
         <div class="py-1.5 px-3 text-base font-normal bg-sky-300/10  text-white/70 rounded-md">Tracks</div>

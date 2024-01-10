@@ -11,7 +11,7 @@ export class ViewReferral extends ThemeElement(style) {
   @property() address = ''
 
   render() {
-    return html`<div class="view-referral">
+    return html`<div class="ui-container view-referral">
       <div class="ui-container flex justify-center">
         <referral-bind .address=${this.address}></referral-bind>
       </div>

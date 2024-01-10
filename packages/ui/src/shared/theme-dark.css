@@ -6,7 +6,7 @@
     min-height: var(--appMainH);
   }
   .ui-container {
-    @apply clear-both lg_max-w-5xl min-h-full mx-auto px-3 lg_px-4;
+    @apply clear-both lg_max-w-7xl min-h-full mx-auto px-3 lg_px-4;
     &.sparse {
       @apply px-4;
     }
