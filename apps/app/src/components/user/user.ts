@@ -6,7 +6,6 @@ import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/img/loader'
 import '@riffian-web/ui/dialog/prompt'
-import '~/components/rewards/claim'
 import { tweetStore, type Social } from '~/components/top/tweet'
 import style from './user.css?inline'
 

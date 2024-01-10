@@ -20,22 +20,6 @@ export class ClaimRewards extends ThemeElement(style) {
     return !bridgeStore.bridge.account
   }
 
-  timeCountDown = async function* () {
-    const weekSeconds = 7n * 24n * 60n * 60n
-    let weekBegin = await getWeek(),
-      timeLeft = 0n
-    do {
-      let tsNow = BigInt(new Date().getTime()) / 1000n
-      timeLeft = weekBegin + weekSeconds - tsNow
-      let days = timeLeft / 86400n,
-        hours = (timeLeft - days * 86400n) / 3600n,
-        minutes = (timeLeft - days * 86400n - hours * 3600n) / 60n,
-        seconds = timeLeft - days * 86400n - hours * 3600n - minutes * 60n
-      yield [days * 24n + hours, minutes, seconds].map((r) => (r + '').padStart(2, '0')).join(':')
-      await new Promise((r) => setTimeout(r, 1000))
-    } while (timeLeft > 1)
-  }
-
   connectedCallback(): void {
     super.connectedCallback()
     this.weeklyRewards()
@@ -61,25 +45,22 @@ export class ClaimRewards extends ThemeElement(style) {
 
   render() {
     return html`
-      <div class="text-right">
-        <div class="font-light text-2xl text-highlight">
+      <div class="text-right font-light">
+        <div class="">
           ${when(
             this.pending,
             () => html`<i class="text-lg mdi mdi-loading"></i>`,
             () =>
-              html`<ui-button
-                  icon
-                  class="ml-1 mx-auto sm"
-                  @click="${this.open}"
-                  ?disabled="${this.disabled}"
-                  title="Claim"
+              html`<ui-button icon sm @click="${this.open}" ?disabled="${this.disabled}" title="Claim"
                   ><i class="mdi mdi-hand-coin-outline"></i></ui-button
-                >${formatUnits(this.rewards, 18)}`
+                ><span class="">
+                  <span class="text-base text-gray-300">Pool: </span>
+                  <span class="ui-em text-xl">${formatUnits(this.rewards, 18)}</span></span
+                >`
           )}
         </div>
-        <div class="text-green-500 mt-2">${asyncReplace(this.timeCountDown())}</div>
+        ${when(this.dialog, () => html`<claim-reward-dialog @close=${this.close}></claim-reward-dialog>`)}
       </div>
-      ${when(this.dialog, () => html`<claim-reward-dialog @close=${this.close}></claim-reward-dialog>`)}
     `
   }
 }

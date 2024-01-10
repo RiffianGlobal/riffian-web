@@ -65,20 +65,22 @@ export class LatestVotes extends ThemeElement(style) {
       !this.pending,
       () =>
         html`<ul role="ui-list hover gap-2">
-          <li class="flex header p-1 lg_mt-4">
+          <li class="flex header p-1 lg_mt-2">
             <div class="w-16">Bidders</div>
           </li>
           ${repeat(
             this.latestVotes,
             (item: any, i) =>
-              html`<li class="py-2 justify-start">
-                <div class="flex items-top justify-between space-x-2">
+              html`<li class="my-4 py-0.5 justify-start">
+                <div class="relative flex items-center justify-between gap-2">
                   <ui-link href=${`/user/${item.voter.address}`}>
-                    <ui-address class="text-2xl" .address=${item.voter.address} avatar hideAddr></ui-address>
+                    <ui-address class="text-xl" .address=${item.voter.address} avatar hideAddr></ui-address>
                   </ui-link>
                   <div class="flex flex-col justify-center items-end">
                     <p class="opacity-95 text-base">${formatUnits(item.value, 18)}</p>
-                    <p class="text-left text-xs text-neutral-400">${asyncReplace(this.timeAgo(BigInt(item.time)))}</p>
+                    <p class="text-right text-xs leading-none text-neutral-400 whitespace-nowrap">
+                      ${asyncReplace(this.timeAgo(BigInt(item.time)))}
+                    </p>
                   </div>
                 </div>
               </li> `

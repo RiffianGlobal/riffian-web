@@ -11,11 +11,12 @@ import {
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { albumList, weekList } from './action'
+import { goto } from '@lit-web3/router'
+// Components
 import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/img/loader'
 import '@riffian-web/ui/dialog/prompt'
-import '~/components/rewards/claim'
 // import '~/components/symbol'
 import emitter from '@lit-web3/base/emitter'
 
@@ -93,6 +94,16 @@ export class TopAlbum extends ThemeElement(style) {
     }
   }
 
+  go2 = (item: any) => {
+    if (this.disabled) {
+      emitter.emit('connect-wallet')
+    } else {
+      this.albumToVote = item
+      // this.showAlbumVote = true
+      goto(`/track/${item.id}`)
+    }
+  }
+
   render() {
     return html`<div>
         ${when(
@@ -116,30 +127,23 @@ export class TopAlbum extends ThemeElement(style) {
                   <div class="flex-auto"></div>
                   <div class="num flex-auto w-32">
                     <!-- <native-symbol class="ml-0.5 text-xs opacity-70" bracket></native-symbol> -->
-                    ${this.weekly ? 'Volume' : html`Price`} / 24H
+                    ${this.weekly ? 'Volume' : html`Price`}
                   </div>
                 </li>
                 ${repeat(
                   this.subjectList,
                   (item: any, i) =>
-                    html`<li
-                      class="item flex items-center"
-                      @click=${() => {
-                        if (this.disabled) {
-                          emitter.emit('connect-wallet')
-                        } else {
-                          this.albumToVote = item
-                          // this.showAlbumVote = true
-                          location.href = '/track/' + item.id
-                        }
-                      }}
-                    >
+                    html`<li class="item flex items-center">
                       <div class="flex-none w-10 pl-2 text-sm font-light opacity-70">${i + 1}</div>
                       <div class="flex-shrink">
-                        <img-loader .src=${item.image} class="w-[3.75rem] h-[3.75rem] rounded-lg"></img-loader>
+                        <img-loader
+                          @click=${() => this.go2(item)}
+                          .src=${item.image}
+                          class="w-[3.75rem] h-[3.75rem] rounded-lg cursor-pointer"
+                        ></img-loader>
                       </div>
                       <div class="flex-auto truncate">
-                        <p class="name truncate">${item.name}</p>
+                        <p class="name truncate cursor-pointer" @click=${() => this.go2(item)}>${item.name}</p>
                         <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
                       </div>
                       <div class="num flex-initial flex flex-col !w-18 text-sm items-end">

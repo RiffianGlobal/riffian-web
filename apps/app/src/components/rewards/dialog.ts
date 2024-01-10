@@ -90,7 +90,7 @@ export class ClaimRewardDialog extends ThemeElement('') {
       }}
     >
       <!-- header -->
-      <p slot="header" class="w-full mr-2 text-base">Claim Rewards</p>
+      <p slot="header">Claim Rewards</p>
       <!-- content -->
       <div class="w-full h-[5.6rem] flex flex-col justify-center items-center self-center">
         ${when(

@@ -11,11 +11,12 @@ import {
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { voters } from './action'
+import { goto } from '@lit-web3/router'
+// Components
 import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/img/loader'
 import '@riffian-web/ui/dialog/prompt'
-import '~/components/rewards/claim'
 import emitter from '@lit-web3/base/emitter'
 import style from './list.css?inline'
 import { formatUnits } from 'ethers'
@@ -62,6 +63,14 @@ export class TrackInfo extends ThemeElement(style) {
     this.init()
   }
 
+  go2 = (item: any) => {
+    if (this.disabled) {
+      emitter.emit('connect-wallet')
+    } else {
+      goto(`/user/${item.user.address}`)
+    }
+  }
+
   render() {
     return html`<div>
         ${when(
@@ -98,13 +107,7 @@ export class TrackInfo extends ThemeElement(style) {
                 (item: any, i) =>
                   html`<li
                     class="item flex py-2.5"
-                    @click=${() => {
-                      if (this.disabled) {
-                        emitter.emit('connect-wallet')
-                      } else {
-                        location.href = '/user/' + item.user.address
-                      }
-                    }}
+                    @click=${() => this.go2(item)}
                   >
                     <div class="flex-none w-16 pl-4 text-sm font-light opacity-70">${i + 1}</div>
                     <div class="flex-auto">

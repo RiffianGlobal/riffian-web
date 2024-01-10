@@ -34,7 +34,7 @@ export class RewardBtn extends ThemeElement(style) {
       <!-- Button -->
       <ui-button @click=${this.open} text sm class="outlined">
         <span class="inline-flex gap-2 items-center"
-          >${coinSvg}<span class="text-highlight">${rewardStore.totalHumanized ?? '-'}</span></span
+          >${coinSvg}<span class="ui-em">${rewardStore.totalHumanized ?? '-'}</span></span
         >
       </ui-button>
       <!-- Dialog -->

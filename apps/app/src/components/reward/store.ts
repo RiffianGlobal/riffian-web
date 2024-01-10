@@ -20,7 +20,7 @@ export const rewardMap = [
   },
   {
     key: 'vote',
-    title: 'Voted at least once',
+    title: 'Vote at least once',
     read: 'RewardVote',
     write: 'claimVote',
     check: 'isVotingClaimed',
@@ -35,9 +35,10 @@ export const rewardTasks = [
   {
     key: 'votes',
     title: 'Weekly Votes',
-    read: 'RewardSocialVerify',
-    write: 'claimSocialVerify',
-    check: 'isSocialVerifyClaimed',
+    read: '',
+    write: '',
+    check: '',
+    claimable: true,
     closed: false
   },
   ...rewardMap
@@ -50,6 +51,7 @@ class RewardStore extends State {
   @property({ value: [] }) tasks!: bigint[]
   @property({ value: [] }) rewardsClaimed!: boolean[]
   @property({ value: [] }) weeklies!: UserWeekly[]
+  @property({ value: [] }) weeklyPools!: bigint[]
 
   inited = false
 
@@ -57,12 +59,18 @@ class RewardStore extends State {
     return this.tx && !this.tx.ignored
   }
   get rewardsHumanized() {
-    return this.rewards.map((v, i) => ({
-      ...rewardMap[i],
-      v,
-      amnt: +formatUnits(v),
-      claimed: this.rewardsClaimed[i]
-    }))
+    return this.rewards
+      .map((v, i) => ({
+        ...rewardMap[i],
+        v,
+        amnt: +formatUnits(v),
+        claimed: this.rewardsClaimed[i]
+      }))
+      .sort((r) => (r.claimed ? 1 : -1))
+  }
+  get weeklyPool() {
+    const [pool] = this.weeklyPools
+    return pool ? formatUnits(pool) : ''
   }
   get total() {
     const weeklies = this.weeklies.reduce((cur, next) => cur + (next?.reward ?? 0n), 0n)
@@ -151,11 +159,11 @@ export const userWeeklyRewards = async (account?: string): Promise<UserWeekly[]>
   // weekly total votes
   const weeklyVotes = data.splice(0, userWeeklies.length)
   // weekly total rewards
-  const weeklyRewards = data.splice(0, userWeeklies.length)
+  rewardStore.weeklyPools = data.splice(0, userWeeklies.length)
   //
   const res = userWeeklies.map((weekly, i) => {
     const { votes } = weekly
-    const reward = (weeklyRewards[i] * BigInt(votes[i])) / weeklyVotes[i]
+    const reward = (rewardStore.weeklyPools[i] * BigInt(votes[i])) / weeklyVotes[i]
     return { ...weekly, reward }
   })
   return res

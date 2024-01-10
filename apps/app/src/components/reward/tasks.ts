@@ -1,9 +1,10 @@
 import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
 import { StateController, rewardStore, rewardTasks } from './store'
+import { formatUnits, FixedNumber } from 'ethers'
 // Components
 import { ThemeElement, html, customElement, repeat, state, when } from '@riffian-web/ui/shared/theme-element'
 import './claim'
-import { formatUnits, FixedNumber } from 'ethers'
+import '~/components/rewards/dialog'
 
 // Style
 import style from './task.css?inline'
@@ -30,8 +31,9 @@ export class RewardTasks extends ThemeElement(style) {
   }
 
   render() {
-    return html`<div class="h-48">
-      <ul class="ui-list">
+    return html`<div class="h-64">
+      <p class="ui-em mb-6 text-xl text-center">${rewardStore.totalHumanized}</p>
+      <ul class="ui-list dense bordered">
         ${when(
           this.voteReward,
           () =>
@@ -59,6 +61,6 @@ export class RewardTasks extends ThemeElement(style) {
         )}
       </ul>
       <p class="text-center text-orange-600">${this.err}</p>
-    </div>`
+    </div> `
   }
 }

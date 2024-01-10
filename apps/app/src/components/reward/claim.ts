@@ -42,6 +42,7 @@ export class RewardClaim extends ThemeElement(style) {
   @state() pending = false
   @state() _claimable = false
   @state() tx: any = null
+  @state() votesDialog = false
 
   get txPending() {
     return this.tx && !this.tx.ignored
@@ -70,6 +71,7 @@ export class RewardClaim extends ThemeElement(style) {
 
   claim = async () => {
     if (this.isSocial && !this._claimable) return this.bindSocial()
+    if (this.reward.key === 'votes') return this.claimVotes()
     this.pending = true
     try {
       const contract = await getRewardContract()
@@ -127,6 +129,12 @@ export class RewardClaim extends ThemeElement(style) {
     emitter.emit('ui-bindsocial')
     setTimeout(() => this.emit('close'), 300)
   }
+  claimVotes = () => {
+    this.votesDialog = true
+  }
+  closeVotesDialog = () => {
+    this.votesDialog = false
+  }
 
   async connectedCallback() {
     super.connectedCallback()
@@ -181,6 +189,8 @@ export class RewardClaim extends ThemeElement(style) {
           </div>
         </div>
       </div>
+      <!-- Votes Dialog -->
+      ${when(this.votesDialog, () => html`<claim-reward-dialog @close=${this.closeVotesDialog}></claim-reward-dialog>`)}
     `
   }
 }

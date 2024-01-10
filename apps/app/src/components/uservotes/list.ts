@@ -1,11 +1,12 @@
 import { ThemeElement, customElement, html, repeat, state, when, classMap } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { goto } from '@lit-web3/router'
+// Components
 import './dialog'
 import { userVotes } from './action'
 import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/img/loader'
-import '~/components/rewards/claim'
 import emitter from '@lit-web3/base/emitter'
 import style from './list.css?inline'
 @customElement('user-votes-list')
@@ -39,6 +40,14 @@ export class UserVotesList extends ThemeElement(style) {
   }
 
   close = () => (this.dialog = false)
+
+  go2 = (item: any) => {
+    if (this.disabled) {
+      emitter.emit('connect-wallet')
+    } else {
+      goto(`/track/${item.subject.id}`)
+    }
+  }
 
   render() {
     return html`<div>
@@ -74,16 +83,7 @@ export class UserVotesList extends ThemeElement(style) {
             ${repeat(
               this.uVotes,
               (item: any, i) =>
-                html`<li
-                  class="item flex py-2.5"
-                  @click=${() => {
-                    if (this.disabled) {
-                      emitter.emit('connect-wallet')
-                    } else {
-                      location.href = '/track/' + item.subject.id
-                    }
-                  }}
-                >
+                html`<li class="item flex py-2.5" @click=${() => this.go2(item)}>
                   <div class="flex-auto flex items-center">
                     <img-loader .src=${item.subject.image} class="w-[3.25rem] h-[3.25rem] rounded-lg mr-4"></img-loader>
 

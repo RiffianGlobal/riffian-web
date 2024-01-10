@@ -9,13 +9,14 @@ import {
   when
 } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { goto } from '@lit-web3/router'
+// Components
 import '~/components/top/dialog'
 import { tracks } from './action'
 import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/img/loader'
 import '@riffian-web/ui/dialog/prompt'
-import '~/components/rewards/claim'
 import emitter from '@lit-web3/base/emitter'
 import style from './tracks.css?inline'
 
@@ -62,6 +63,14 @@ export class TrackInfo extends ThemeElement(style) {
     this.init()
   }
 
+  go2 = (item: any) => {
+    if (this.disabled) {
+      emitter.emit('connect-wallet')
+    } else {
+      goto(`/track/${item.address}`)
+    }
+  }
+
   render() {
     return html`<div class="py-6">
         ${when(
@@ -97,16 +106,7 @@ export class TrackInfo extends ThemeElement(style) {
               ${repeat(
                 this.trackList,
                 (item: any, i) =>
-                  html`<li
-                    class="item flex py-2 pr-2 items-center cursor-pointer "
-                    @click=${() => {
-                      if (this.disabled) {
-                        emitter.emit('connect-wallet')
-                      } else {
-                        location.href = '/track/' + item.address
-                      }
-                    }}
-                  >
+                  html`<li class="item flex py-2 pr-2 items-center cursor-pointer " @click=${() => this.go2(item)}>
                     <div class="flex-none w-16 pl-4 text-sm font-light opacity-75">${i + 1}</div>
                     <div class="flex-auto flex">
                       <div class="w-[3.75rem] h-[3.75rem] mr-4 rounded-lg">
