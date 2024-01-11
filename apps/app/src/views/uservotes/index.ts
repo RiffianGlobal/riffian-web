@@ -13,7 +13,7 @@ export class ViewTop extends ThemeElement(style) {
           <div class="py-1.5 px-3 text-base font-normal bg-sky-300/10  text-white/70 rounded-md">My Votes</div>
         </div>
       </div>
-      <user-votes-list></user-votes-list>
+      <user-votes-list by="id"></user-votes-list>
     </div>`
   }
 }

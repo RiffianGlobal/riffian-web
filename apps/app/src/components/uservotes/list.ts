@@ -1,4 +1,13 @@
-import { ThemeElement, customElement, html, repeat, state, when, classMap } from '@riffian-web/ui/shared/theme-element'
+import {
+  ThemeElement,
+  customElement,
+  html,
+  repeat,
+  state,
+  when,
+  classMap,
+  property
+} from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { goto } from '@lit-web3/router'
 // Components
@@ -12,6 +21,10 @@ import style from './list.css?inline'
 @customElement('user-votes-list')
 export class UserVotesList extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
+
+  @property() by = ''
+  @property() dir = ''
+
   @state() uVotes: any = []
   @state() dialog = false
   @state() currentAlbum = { id: '', votes: 0, url: '' }
@@ -34,7 +47,7 @@ export class UserVotesList extends ThemeElement(style) {
   init = async () => {
     if (this.disabled) return
     this.pending = true
-    const userSubjectVotes = await userVotes()
+    const userSubjectVotes = await userVotes('', { orderBy: this.by })
     this.uVotes = userSubjectVotes
     this.pending = false
   }

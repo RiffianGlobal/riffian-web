@@ -52,25 +52,16 @@ export const retreat = async (subject: string, amount: number) => {
   })
 }
 
-export const userVotes = async (addr?: string) => {
+export const userVotes = async (addr?: string, { orderBy = '', dir = '' } = {}) => {
   if (!addr) addr = await getAccount()
   if (!addr) return []
+  orderBy ||= 'holding'
+  dir ||= 'desc'
   let queryJSON = `{
-      userSubjectVotes(where:{holding_gt:0,user:"${addr.toLowerCase()}"}) {
-        holding
-        votes
-        subject {
-          id
-          name
-          image
-          uri
-          supply
-          creator{
-            address
-          }
-        }
-      }
-    }`
+    userSubjectVotes(where: { holding_gt: 0, user: "${addr.toLowerCase()}" } orderBy: "${orderBy}" orderDirection: "${dir}") {
+      holding votes subject { id name image uri supply creator { address } }
+    }
+  }`
   let result = await graphQuery('MediaBoard', queryJSON)
   return result.userSubjectVotes ?? []
 }

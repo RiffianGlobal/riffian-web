@@ -163,7 +163,7 @@ export const userWeeklyRewards = async (account?: string): Promise<UserWeekly[]>
   //
   const res = userWeeklies.map((weekly, i) => {
     const { votes } = weekly
-    const reward = (rewardStore.weeklyPools[i] * BigInt(votes[i])) / weeklyVotes[i]
+    const reward = (rewardStore.weeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
     return { ...weekly, reward }
   })
   return res

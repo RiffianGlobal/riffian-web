@@ -12,6 +12,7 @@ import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { albumList, weekList } from './action'
 import { goto } from '@lit-web3/router'
+import { isImage } from '@lit-web3/base/MIMETypes'
 // Components
 import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
@@ -70,7 +71,10 @@ export class TopAlbum extends ThemeElement(style) {
         this.subjectList[i] = weekResult.subject
         this.subjectList[i].volumeTotal = weekResult.volumeTotal
       }
-      if (!this.subjectList[i].image || !this.subjectList[i].image.startsWith('http')) {
+      if (
+        !this.subjectList[i].image ||
+        (!isImage(this.subjectList[i].image) && !this.subjectList[i].image.startsWith('http'))
+      ) {
         this.subjectList[i].image = urls[0]
       }
     }
