@@ -23,7 +23,7 @@ export class LatestVotes extends ThemeElement(style) {
   init = async () => {
     this.pending = true
     try {
-      let result = await latestVote(14)
+      let result = await latestVote(12)
       this.latestVotes = result.voteLogs
     } catch (e: any) {
       console.error(e)
@@ -57,22 +57,25 @@ export class LatestVotes extends ThemeElement(style) {
   }
 
   render() {
-    return html`${when(
-      this.pending && this.latestVotes.length == 0,
-      () => html`<loading-skeleton num="4"></loading-skeleton>`
-    )}
-    ${when(
-      !this.pending,
-      () =>
-        html`<ul role="ui-list hover gap-2">
-          <li class="flex header">
-            <div class="w-16">Bidders</div>
-          </li>
+    return html` <div role="list" class="ui-list hover gap-2 bidders">
+      <div class="flex header border-bottom"><div class="w-full">Bidders</div></div>
+      ${when(
+        this.pending && this.latestVotes.length == 0,
+        () => html`
+          <div name="Loading" class="doc-intro">
+            <div class="flex flex-col gap-8 m-4">
+              <loading-skeleton num="3"></loading-skeleton>
+              <loading-skeleton num="3"></loading-skeleton>
+              <loading-skeleton num="3"></loading-skeleton>
+            </div>
+          </div>
+        `,
+        () => html`
           ${repeat(
             this.latestVotes,
-            (item: any, i) =>
-              html`<li class="my-4 py-0.5 justify-start">
-                <div class="relative flex items-center justify-between gap-2">
+            (item: any) =>
+              html`<div class="item flex items-center pr-0.5">
+                <div class="w-full flex items-center justify-between gap-2">
                   <ui-link href=${`/user/${item.voter.address}`}>
                     <ui-address class="text-xl" .address=${item.voter.address} avatar hideAddr></ui-address>
                   </ui-link>
@@ -83,9 +86,10 @@ export class LatestVotes extends ThemeElement(style) {
                     </p>
                   </div>
                 </div>
-              </li> `
+              </div> `
           )}
-        </ul>`
-    )} `
+        `
+      )}
+    </div>`
   }
 }

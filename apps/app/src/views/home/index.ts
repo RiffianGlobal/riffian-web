@@ -77,11 +77,11 @@ export class ViewHome extends ThemeElement(style) {
           </div>
           <div class="home-board-lead">
             ${when(
-              rewardStore.weeklyPool,
+              rewardStore.inited,
               () =>
                 html`<h5>
                   <span class="text-base text-gray-300">Pool: </span>
-                  <span class="ui-em text-xl">${rewardStore.weeklyPool}</span>
+                  <span class="ui-em text-xl">${rewardStore.weeklyPool || 0}</span>
                 </h5>`,
               () => html`<i class="mdi mdi-loading"></i>`
             )}
@@ -90,7 +90,7 @@ export class ViewHome extends ThemeElement(style) {
         <top-album weekly></top-album>
       </div>
       ${when(
-        !this.isMobi,
+        true,
         () => html`
           <!-- Top 10 -->
           <div class="home-board">

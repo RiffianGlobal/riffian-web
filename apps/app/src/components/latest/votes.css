@@ -5,7 +5,17 @@ svg {
     @apply w-full h-full;
   }
 }
-li.header {
-  @apply text-neutral-400 mb-2;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+.ui-list {
+  & li.header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  &.bidders {
+    @apply grid grid-cols-3 md_grid-cols-1 gap-4 place-items-end min-h-60;
+    & li.header {
+      @apply col-span-3 md_col-span-1;
+    }
+  }
+  & .item {
+    @apply shadow-md md_shadow-none;
+  }
 }

@@ -47,13 +47,12 @@ export const rewardTasks = [
 class RewardStore extends State {
   @property({ value: null }) tx?: any
   @property({ value: false }) pending!: boolean
+  @property({ value: false }) inited!: boolean
   @property({ value: [] }) rewards!: bigint[]
   @property({ value: [] }) tasks!: bigint[]
   @property({ value: [] }) rewardsClaimed!: boolean[]
   @property({ value: [] }) weeklies!: UserWeekly[]
   @property({ value: [] }) weeklyPools!: bigint[]
-
-  inited = false
 
   get txPending() {
     return this.tx && !this.tx.ignored
