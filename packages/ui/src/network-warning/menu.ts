@@ -37,10 +37,12 @@ export class NetworkMenu extends ThemeElement(style) {
     this.pending = true
     try {
       await this.bridge.switchNetwork(network.chainId)
-    } catch (e) {
-      console.warn('switch network failed with error:', e)
-      this.promptTitle = 'Switch network failed'
-      this.promptMsg = e
+    } catch (err: any) {
+      if (err.code !== 4001) {
+        console.warn('switch network failed with error:', err)
+        this.promptTitle = 'Switch network failed'
+        this.promptMsg = err.details ?? err.message
+      }
     }
     this.pending = false
   }

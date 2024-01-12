@@ -81,35 +81,37 @@ class RewardStore extends State {
     return (+formatUnits(this.total)).toFixed(4)
   }
 
-  update = async () => await getRewards()
+  // AKA: getRewards
+  update = async () => {
+    this.pending = true
+    try {
+      const account = await getAccount()
+      rewardStore.weeklies = await userWeeklyRewards()
+
+      const { MultiCallContract: rewardContract, MultiCallProvider } = await getMultiCall('Reward')
+      // Aggregated calls
+      // 0: claimable amnts
+      const calls = [rewardContract.claimable(account)]
+      // 1-4: Task max amnts
+      calls.push(...rewardMap.map((r) => rewardContract[r.read]()))
+      // 5-8: isClaimed
+      calls.push(...rewardMap.map((r) => rewardContract[r.check](account)))
+      const [res] = await MultiCallProvider.all(calls)
+      // Aggregated res
+      // 0: claimable amnts
+      rewardStore.rewards = res.shift().map((v: bigint, i: number) => (rewardMap[i].closed ? 0n : v))
+      // 1-4: Task max amnts
+      rewardStore.tasks = res.splice(0, rewardMap.length)
+      // 5-8: isClaimed
+      rewardStore.rewardsClaimed = res.splice(0, rewardMap.length)
+    } catch {}
+    rewardStore.inited = true
+  }
 }
 export const rewardStore = new RewardStore()
 
 export const getRewardContract = async (account?: string) =>
   getContract('Reward', { account: account ?? (await getAccount()) })
-
-export const getRewards = async () => {
-  const account = await getAccount()
-  rewardStore.weeklies = await userWeeklyRewards()
-
-  const { MultiCallContract: rewardContract, MultiCallProvider } = await getMultiCall('Reward')
-  // Aggregated calls
-  // 0: claimable amnts
-  const calls = [rewardContract.claimable(account)]
-  // 1-4: Task max amnts
-  calls.push(...rewardMap.map((r) => rewardContract[r.read]()))
-  // 5-8: isClaimed
-  calls.push(...rewardMap.map((r) => rewardContract[r.check](account)))
-  const [res] = await MultiCallProvider.all(calls)
-  // Aggregated res
-  // 0: claimable amnts
-  rewardStore.rewards = res.shift().map((v: bigint, i: number) => (rewardMap[i].closed ? 0n : v))
-  // 1-4: Task max amnts
-  rewardStore.tasks = res.splice(0, rewardMap.length)
-  // 5-8: isClaimed
-  rewardStore.rewardsClaimed = res.splice(0, rewardMap.length)
-  rewardStore.inited = true
-}
 
 export const claim = async () => {
   const signer = await getSigner()

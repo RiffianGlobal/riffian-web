@@ -17,6 +17,16 @@
   .ui-em {
     color: var(--colorHighlight);
   }
+  .q {
+    display: inline;
+    margin-left: 0.25em;
+    &::before {
+      content: '(';
+    }
+    &::after {
+      content: ')';
+    }
+  }
   .ui-option {
     @apply whitespace-nowrap select-none;
     & > * {

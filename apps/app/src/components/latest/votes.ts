@@ -65,7 +65,7 @@ export class LatestVotes extends ThemeElement(style) {
       !this.pending,
       () =>
         html`<ul role="ui-list hover gap-2">
-          <li class="flex header p-1 lg_mt-2">
+          <li class="flex header">
             <div class="w-16">Bidders</div>
           </li>
           ${repeat(

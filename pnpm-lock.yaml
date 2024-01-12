@@ -61,8 +61,8 @@ importers:
   apps/app:
     dependencies:
       '@lit-web3/base':
-        specifier: ^0.4.6
-        version: 0.4.6(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
+        specifier: ^0.4.7
+        version: 0.4.7(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       '@lit-web3/router':
         specifier: ^0.3.5
         version: 0.3.5(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
@@ -88,8 +88,8 @@ importers:
         specifier: ^0.2.22
         version: 0.2.22
       '@lit-web3/base':
-        specifier: ^0.4.6
-        version: 0.4.6(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
+        specifier: ^0.4.7
+        version: 0.4.7(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       ethers:
         specifier: ^6
         version: 6.9.2
@@ -135,8 +135,8 @@ importers:
         specifier: ^1.0.6
         version: 1.0.6
       '@lit-web3/base':
-        specifier: ^0.4.6
-        version: 0.4.6(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
+        specifier: ^0.4.7
+        version: 0.4.7(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       '@lit-web3/router':
         specifier: ^0.3.5
         version: 0.3.5(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
@@ -153,8 +153,8 @@ importers:
   packages/ui-docs:
     dependencies:
       '@lit-web3/base':
-        specifier: ^0.4.6
-        version: 0.4.6(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
+        specifier: ^0.4.7
+        version: 0.4.7(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       '@lit-web3/router':
         specifier: ^0.3.5
         version: 0.3.5(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
@@ -1809,7 +1809,7 @@ packages:
     resolution: {integrity: sha512-UN0vTBhLKM3vrn7BD3Vy19T5exCoj+SATZF4ZxiOnX0lT7JmLOEpdEXxQW912Cs2pBt3RIRabMk5JgaSXMGQJQ==}
     dependencies:
       '@doid/connect': 0.6.3(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
-      '@lit-web3/base': 0.4.6(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
+      '@lit-web3/base': 0.4.7(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       '@wagmi/core': 1.4.12(@types/react@18.2.46)(react@18.2.0)(typescript@5.3.3)(viem@1.21.4)
       ethers: 6.9.2
       viem: 1.21.4(typescript@5.3.3)
@@ -1856,7 +1856,7 @@ packages:
       '@doid/name-validator': 0.0.3
       '@lit-app/state': 1.0.0
       '@lit-labs/motion': 1.0.6
-      '@lit-web3/base': 0.4.6(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
+      '@lit-web3/base': 0.4.7(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       '@shoelace-style/shoelace': 2.12.0(@types/react@18.2.46)
       '@wagmi/core': 1.4.12(@types/react@18.2.46)(react@18.2.0)(typescript@5.3.3)(viem@1.21.4)
       '@web3auth/base': 7.2.1(@babel/runtime@7.23.7)
@@ -2269,8 +2269,8 @@ packages:
   /@lit-labs/ssr-dom-shim@1.1.2:
     resolution: {integrity: sha512-jnOD+/+dSrfTWYfSXBXlo5l5f0q1UuJo3tkbMDCYA2lKUYq79jaxqtGEvnRoh049nt1vdo1+45RinipU6FGY2g==}
 
-  /@lit-web3/base@0.4.6(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0):
-    resolution: {integrity: sha512-aC6edTqFg5FQ3sfERSifWu4sUk3TK5+ZYuV19NfNimLNjE4WHEWuIlISIbUVVbHHFkEguutPhiDXZs8BOLMDjA==}
+  /@lit-web3/base@0.4.7(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0):
+    resolution: {integrity: sha512-ZCKN3yLTJjKg2ZMsD7ryLxjkyq+H9EbVqrkK30V5ILCIQUc4i4Q0w+3Il9cEi9orKvrQpWElfgt7GAKvjgZthw==}
     peerDependencies:
       lit: ^3
       vite: ^5.0.10
@@ -2330,7 +2330,7 @@ packages:
     peerDependencies:
       lit: ^3
     dependencies:
-      '@lit-web3/base': 0.4.6(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
+      '@lit-web3/base': 0.4.7(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       lit: 3.1.0
     transitivePeerDependencies:
       - '@types/node'

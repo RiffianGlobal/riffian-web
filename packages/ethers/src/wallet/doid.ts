@@ -1,11 +1,18 @@
-import { WalletApp } from './bridge'
-import { Wallet, WalletState, emitWalletChange } from './wallet'
-import { State, property } from './state'
+import { Wallet, WalletState, emitWalletChange } from '../wallet'
+import { State, property } from '../state'
 import { JsonRpcApiProvider, JsonRpcSigner } from 'ethers'
-import { chainIdStr } from './constants/networks'
+import { chainIdStr } from '../constants/networks'
 
-export class DoidWallet extends State implements Wallet, WalletApp {
+const injectedKey = 'doid-connect.injected'
+
+export class DoidWallet extends State implements Wallet {
+  public inited = false
+  constructor() {
+    super()
+    this.init()
+  }
   private connector: any
+  resolved = false
   private async init() {
     let { fantomTestnet, doid, doidTestnet, DOIDConnectorEthers } = await import('@doid/connect-ethers')
     this.connector = new DOIDConnectorEthers()
@@ -33,10 +40,12 @@ export class DoidWallet extends State implements Wallet, WalletApp {
     this.connector.subscribe((_: any, value: number | undefined) => {
       if (!value) return
       this.chainId = value ? chainIdStr(value) : ''
-      this.doid = this.account = ""
+      this.doid = this.connector.doid ?? ''
       if (value == doidTestnet.id) this.connector.updateOptions({ doidNetwork: doidTestnet })
       if (value == fantomTestnet.id) this.connector.updateOptions({ doidNetwork: fantomTestnet })
+      this.updateProvider(this.chainId)
     }, 'chainId')
+    this.resolved = true
   }
 
   //-- Wallet interface implementation --
@@ -57,43 +66,54 @@ export class DoidWallet extends State implements Wallet, WalletApp {
     return this.connector?.getSigner(this.chainId, account)
   }
 
+  switchChain = (chainId: string) => this.connector.switchChain(Number(chainId))
   updateProvider(chainId: string) {
-    return this.connector.switchChain(Number(chainId))
+    emitWalletChange()
   }
-  async connect({ force } = { force: false }) {
+  async connect({ force = false } = {}) {
+    this.inited = true
     this.state = WalletState.CONNECTING
-    await this.connector
-      .connect({ noModal: !force })
-      .then(() => {
-        this.state = WalletState.CONNECTED
-      })
-      .catch((err: any) => {
-        this.state = WalletState.DISCONNECTED
-        console.info('Connect failed')
-        console.info(err)
-      })
+    try {
+      await this.connector.connect({ noModal: !force })
+    } catch (err: any) {
+      this.state = WalletState.DISCONNECTED
+      console.info('Connect failed')
+      console.info(err)
+    } finally {
+      localStorage.setItem(injectedKey, '1')
+    }
   }
   async disconnect() {
     await this.connector.disconnect()
+    localStorage.removeItem(injectedKey)
     this.state = WalletState.DISCONNECTED
     emitWalletChange()
   }
   install() {}
 
-  // -- WalletApp interface implementation --
-  readonly name = 'DOID'
-  readonly title = 'DOID'
-  readonly icon = ''
-  @property() public app?: Wallet
-  private initializer: any
-  import = async () => {
-    if (!this.app) {
-      if (!this.initializer) this.initializer = this.init()
-      await this.initializer
-      if (!this.app) {
-        this.app = this
+  ensure = () => {
+    return new Promise((resolve) => {
+      if (this.resolved) resolve(this)
+      const resolver = () => {
+        this.resolved = true
+        resolve(this)
       }
-    }
-    return this
+      let retryTimes = 0
+      const detectChainId = async () => {
+        if (this.chainId) resolver()
+        else if (retryTimes++ < 30) setTimeout(detectChainId, 10)
+        else resolver()
+      }
+      detectChainId()
+    })
   }
+  injected = () => !!localStorage.getItem(injectedKey)
+}
+
+export const importer = {
+  name: 'DOID',
+  title: 'DOID',
+  icon: '',
+  app: undefined,
+  import: async () => new DoidWallet().ensure()
 }

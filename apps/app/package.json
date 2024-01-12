@@ -10,7 +10,7 @@
   },
   "keywords": [],
   "dependencies": {
-    "@lit-web3/base": "^0.4.6",
+    "@lit-web3/base": "^0.4.7",
     "@lit-web3/router": "^0.3.5",
     "@riffian-web/ethers": "workspace:latest",
     "@riffian-web/ui": "workspace:latest",

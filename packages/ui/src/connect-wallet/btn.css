@@ -1,2 +1,4 @@
 :host {
+  @apply inline-flex justify-center;
+  min-width: 2rem;
 }

@@ -2,7 +2,7 @@ import { shortAddress } from './utils'
 import { Provider } from './provider'
 import createProvider from './provider'
 import { Wallet, WalletState, emitWalletChange } from './wallet'
-import { DoidWallet } from './doid'
+import { DoidWallet, importer } from './wallet/doid'
 import { State, property, reflectProperty, reflectSubProperty } from './state'
 import { JsonRpcApiProvider, JsonRpcSigner } from 'ethers'
 import Network from './networks'
@@ -19,12 +19,12 @@ export interface WalletApp {
 type WalletList = WalletApp[]
 
 /** Available wallet apps */
-export const Wallets: WalletList = [new DoidWallet()]
+export const Wallets: WalletList = [importer as WalletApp]
 
 class WalletStore extends State {
-  @property() public wallet?: Wallet
-  @property() public wallets: WalletList = Wallets
-  @property() public account: string
+  @property({ value: undefined }) wallet?: Wallet
+  @property({ value: Wallets }) wallets!: WalletList
+  @property({ value: '' }) account: string
   constructor() {
     super()
     this.account = this.wallet?.account ?? ''
@@ -47,6 +47,7 @@ export class Bridge extends State {
   @property({ skipReset: true }) public wallet?: Wallet
   @property({ skipReset: true }) public doid?: string
   @property({ skipReset: true }) public account?: string
+  @property({ value: false }) public alreadyTried!: boolean
   constructor(options?: useBridgeOptions) {
     super()
     this.Provider = createProvider(options)
@@ -63,9 +64,9 @@ export class Bridge extends State {
     reflectSubProperty(walletStore, 'wallet', 'doid', this)
     this.network = this.Provider.network
   }
-  alreadyTried = false
+
   async switchNetwork(chainId: ChainId) {
-    if (this.wallet) return this.wallet.updateProvider(chainId)
+    if (this.wallet) return this.wallet.switchChain(chainId)
     else this.network.chainId = chainId
     this.Provider.update({ chainId })
   }
@@ -105,17 +106,27 @@ export class Bridge extends State {
     return this.state === WalletState.CONNECTED
   }
   connecting: any = undefined
-  connectedAccounts?: Address[]
+  connectedAccounts: Address[] = []
   async tryConnect(options: useBridgeOptions = {}) {
     const { autoConnect = false } = options
     if (!this.connecting)
       this.connecting = (async () => {
-        let wallet = (this.wallet ??
-          walletStore.wallets[0].app ??
-          (await walletStore.wallets[0].import())) as DoidWallet
-        if (wallet.state == WalletState.CONNECTED) return
-        this.connectedAccounts = await wallet.getAddresses()
-        if (this.connectedAccounts[0]) await this.select(0, false)
+        if (this.wallet?.inited) return
+        // detect inited
+        await this.wallet?.ensure()
+        // TODO: support multi-wallets select
+        // force select to doid-connect temporarily
+        await this.select(0, false, false)
+
+        if (this.wallet?.injected()) {
+          let wallet = (this.wallet ??
+            walletStore.wallets[0].app ??
+            (await walletStore.wallets[0].import())) as DoidWallet
+          if (wallet.state == WalletState.CONNECTED) return
+          this.connectedAccounts = await wallet.getAddresses()
+          if (this.connectedAccounts[0]) await this.select(0, false)
+        }
+
         this.connecting = undefined
         this.alreadyTried = true
       })()
@@ -136,13 +147,13 @@ export class Bridge extends State {
       this.selected = undefined
     }
   }
-  async select(i: number = 0, force = true) {
+  async select(i: number = 0, force = true, connect = true) {
     const selected = (this.selected = walletStore.wallets[i])
     if (!this.promise)
       this.promise = (async () => {
         const wallet = selected.app ?? (await selected.import())
         try {
-          await wallet.connect({ force })
+          if (connect) await wallet.connect({ force })
         } catch (err) {
           throw err
         } finally {

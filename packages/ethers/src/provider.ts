@@ -32,10 +32,10 @@ export class Provider extends State {
     }
     if (!chainId || !EtherNetworks.includes(chainId)) {
       chainId = Network.defaultChainId
-      if (wallet) await wallet.updateProvider(chainId)
+      this.network.chainId = chainId
     }
+    if (!persistent) this.storage = sessionStorage.setItem('chainId', chainId)
     if (!persistent && wallet) {
-      this.storage = sessionStorage.setItem('chainId', chainId)
       this.provider = await wallet.getProvider()
     } else {
       const _provider = provider || (this.network.providerWs ? WebSocketProvider : JsonRpcProvider)
@@ -44,10 +44,6 @@ export class Provider extends State {
     }
     emitter.emit('network-change', '')
   }
-  // seems not used
-  // get request() {
-  //   return this.provider?.request ?? this.provider?.send
-  // }
 }
 
 let provider: any

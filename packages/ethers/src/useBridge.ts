@@ -15,7 +15,8 @@ class BridgeStore extends State {
   @property({ skipReset: true }) private _account: string = ''
   constructor() {
     super()
-    emitter.on('wallet-changed', () => {
+    emitter.on('wallet-changed', async () => {
+      await walletStore.wallet?.ensure()
       this.reset() //  Trick for bridge.network cantnot update immediately probs
       this._account = walletStore.account
     })
@@ -102,7 +103,7 @@ class BlockPolling {
   }
   listenProvider = async () => {
     const provider = await getBridgeProvider()
-    provider.on('block', this.onBlock)
+    provider?.on('block', this.onBlock)
   }
   onBlock = (block: number) => {
     if (block <= this.block) return

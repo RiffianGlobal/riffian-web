@@ -1,37 +1,15 @@
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 
 export const subjectInfo = async (addr: string) => {
-  let queryJSON =
-    `{
-    subject(
-      id: "` +
-    addr +
-    `"
-    ) {
-      address
-      createdAt
+  let queryJSON = `{
+    subject ( id: "${addr}" ) {
+      address createdAt
+      fansNumber id image lastVoteAt name supply totalVoteValue
+      uri volumeRetreat volumeTotal volumeVote
       creator {
-        address
-        id
-        rewardClaimed
-        socials {
-          uri
-          pid
-          id
-          platform
-        }
+        address id rewardClaimed
+        socials { uri pid id platform }
       }
-      fansNumber
-      id
-      image
-      lastVoteAt
-      name
-      supply
-      totalVoteValue
-      uri
-      volumeRetreat
-      volumeTotal
-      volumeVote
     }
   }`
   let result = await graphQuery('MediaBoard', queryJSON)
@@ -39,46 +17,16 @@ export const subjectInfo = async (addr: string) => {
 }
 
 export const voters = async (addr: string) => {
-  let queryJSON =
-    `{
-    subject(
-      id: "` +
-    addr +
-    `"
-    ) {
-      address
-      createdAt
+  let queryJSON = `{
+    subject ( id: "${addr}" ) {
+      address createdAt volumeTotal volumeVote
+      fansNumber id image lastVoteAt name supply totalVoteValue uri volumeRetreat 
       creator {
-        address
-        id
-        rewardClaimed
-        socials {
-          uri
-          pid
-          id
-          platform
-        }
+        address id rewardClaimed socials { uri pid id platform }
       }
-      fansNumber
-      id
-      image
-      lastVoteAt
-      name
-      supply
-      totalVoteValue
-      uri
-      volumeRetreat
-      volumeTotal
-      volumeVote
-      userVotes {
-        volumeRetreat
-        volumeTotal
-        volumeVote
-        votes
-        user {
-          address
-          rewardClaimed
-        }
+      userVotes (orderBy: "volumeTotal" orderDirection: "desc" ) {
+        volumeRetreat volumeTotal volumeVote votes
+        user { address rewardClaimed }
       }
     }
   }`

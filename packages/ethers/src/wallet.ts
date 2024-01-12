@@ -14,6 +14,10 @@ export enum WalletState {
 }
 
 export interface Wallet extends State {
+  inited: boolean
+  ensure: Function
+  injected: () => boolean
+
   state: WalletState
   account: string
   doid: string
@@ -21,6 +25,7 @@ export interface Wallet extends State {
   getAddresses: () => Promise<string[]>
   getProvider: () => Promise<Provider>
   getSigner: (account: string) => Promise<Signer>
+  switchChain: (chainId: string) => any
   updateProvider: (chainId: string) => any
   connect: (config?: { force: boolean }) => any
   disconnect: () => any

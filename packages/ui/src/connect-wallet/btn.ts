@@ -50,29 +50,32 @@ export class ConnectWalletBtn extends ThemeElement(style) {
 
   render() {
     // Dropdown Button
-    if (this.doid)
+    if (!bridgeStore.bridge.alreadyTried) return html`<i class="mdi mdi-loading"></i>`
+    if (this.account)
       return html`<ui-drop
         .show=${this.menu}
         @change=${(e: CustomEvent) => (this.menu = e.detail)}
         ?icon=${this.dropable}
         btnSm
         text
-        dropClass="w-96"
+        dropClass=""
         btnClass="text"
       >
         <ui-button icon slot="toggle"><ui-address avatar ?hideAddr=${this.hideAddr} short></ui-address></ui-button>
         <!-- Content -->
-        <div class="flex w-full justify-between items-center py-3 pl-4 pr-2">
-          <div class="flex items-center space-x-2">
-            <ui-address-avatar></ui-address-avatar>
-            <span>${this.doid}(${this.addr})</span>
-            <span>
-              <ui-copy-icon .value=${this.account}></ui-copy-icon>
-              <ui-button sm icon href=${this.scan}><i class="mdi mdi-open-in-new"></i></ui-button
+        <div class="flex w-full justify-between items-center gap-4 py-3 px-3">
+          <div class="flex items-center">
+            <span class="inline-flex items-center gap-2">
+              <ui-address-avatar></ui-address-avatar>
+              <span>${this.doid}<q class="q text-xs">${this.addr}</q></span>
+            </span>
+            <span class="inline-flex items-center">
+              <ui-copy-icon title="Copy" .value=${this.account}></ui-copy-icon>
+              <ui-button title="View" sm icon href=${this.scan}><i class="mdi mdi-open-in-new"></i></ui-button
             ></span>
           </div>
           <div>
-            <ui-button sm icon @click=${() => bridgeStore.bridge.disconnect()}
+            <ui-button title="Disconnect" sm icon @click=${() => bridgeStore.bridge.disconnect()}
               ><i class="mdi mdi-link-variant-off"></i
             ></ui-button>
           </div>
