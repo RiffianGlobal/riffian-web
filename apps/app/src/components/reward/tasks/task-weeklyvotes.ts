@@ -62,7 +62,8 @@ export class TaskWeeklyvotes extends ThemeElement(style) {
   }
 
   render() {
-    return html` <p class="text-center mb-8">Weely Rewards</p>
+    return html`
+      <p class="text-center mb-8">Weely Rewards</p>
       <ul class="ui-list bordered hover">
         <li class="header">
           <p class="w-20">Week</p>
@@ -70,10 +71,6 @@ export class TaskWeeklyvotes extends ThemeElement(style) {
           <p class="grow text-right">Amount</p>
           <p class="w-20 text-right"></p>
         </li>
-        ${when(
-          !rewardStore.userWeeklyRewards.length,
-          () => html`<li><loading-skeleton num="3"></loading-skeleton></li>`
-        )}
         ${repeat(
           rewardStore.userWeeklyRewards,
           (weekly, i) =>
@@ -100,6 +97,11 @@ export class TaskWeeklyvotes extends ThemeElement(style) {
               </p>
             </li>`
         )}
-      </ul>`
+      </ul>
+      <!-- Initializing -->
+      ${when(!rewardStore.inited, () => html`<li><loading-skeleton num="3"></loading-skeleton></li>`)}
+      <!-- No data -->
+      ${when(!rewardStore.userWeeklyRewards.length, () => html`<p class="mt-4 text-center">No votes yet</p>`)}
+    `
   }
 }

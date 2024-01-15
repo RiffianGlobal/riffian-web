@@ -59,6 +59,7 @@ export class RewardClaim extends ThemeElement(style) {
     return this.reward.claimed
   }
   get claimable() {
+    if (this.isSocial && !rewardStore.isSocialClaimed) return true
     return this.reward.claimable && !this.reward.claimed && !this.reward.closed
   }
   get processing() {
@@ -188,7 +189,12 @@ export class RewardClaim extends ThemeElement(style) {
               >${when(
                 this.processing,
                 () => html`<i class="mdi mdi-loading"></i>`,
-                () => html`${this.reward.closed ? '-' : this.claimed ? 'Claimed' : 'Claim'}`
+                () =>
+                  html`${when(
+                    this.isSocial,
+                    () => html`<span @click=${this.bindSocial} icon sm>Bind</span>`,
+                    () => html`${this.reward.closed ? '-' : this.claimed ? 'Claimed' : 'Claim'}`
+                  )}`
               )}</ui-button
             >
             <!-- Icon -->

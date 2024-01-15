@@ -83,6 +83,9 @@ class RewardStore extends State {
     if (!this.inited) return
     return (+formatUnits(this.total)).toFixed(4)
   }
+  get isSocialClaimed() {
+    return this.inited && this.rewardsClaimed[0]
+  }
 
   // AKA: getRewards
   update = async () => {

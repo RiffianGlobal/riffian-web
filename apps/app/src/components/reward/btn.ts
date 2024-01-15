@@ -31,6 +31,17 @@ export class RewardBtn extends ThemeElement(style) {
 
   render() {
     return html`
+      <!-- Unboound tip -->
+      ${when(
+        !rewardStore.isSocialClaimed,
+        () =>
+          html`<span @click=${this.open} class="twTip absolute top-1.5 whitespace-nowrap right-full cursor-pointer">
+            <span class="border text-gray-200 bg-gray-700 rounded-md border-gray-800 p-1 px-2"
+              >Bind twitter to get <span class="ui-em">40</span></span
+            ><i class="mdi mdi-arrow-right-thin"></i>
+          </span>`
+      )}
+
       <!-- Button -->
       <ui-button @click=${this.open} text sm class="outlined">
         <span class="inline-flex gap-2 items-center"
