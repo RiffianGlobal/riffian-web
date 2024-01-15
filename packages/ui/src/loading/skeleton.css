@@ -2,7 +2,7 @@
   @apply inline-flex flex-col w-full h-full gap-4;
 }
 .p {
-  @apply w-24 h-full rounded-md overflow-hidden;
+  @apply h-full rounded-md overflow-hidden;
   height: 1em;
   background: #22243c;
   &::after {
@@ -17,11 +17,29 @@
       0% 0% / 1200px;
     animation: skeleton 3s ease-in-out infinite;
   }
-  &:nth-child(2) {
+  &:nth-child(3n + 1) {
+    @apply w-24;
+  }
+  &:nth-child(3n + 2) {
     @apply w-36;
   }
-  &:nth-child(3) {
+  &:nth-child(3n + 3) {
     @apply w-48;
+  }
+}
+
+.skeleton.sm {
+  & .p {
+    @apply w-full;
+    &:nth-child(3n + 1) {
+      @apply w-8/12;
+    }
+    &:nth-child(3n + 2) {
+      @apply w-10/12;
+    }
+    &:nth-child(3n) {
+      @apply w-full;
+    }
   }
 }
 

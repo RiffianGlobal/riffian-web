@@ -137,7 +137,7 @@ export class CreateAlbumDialog extends ThemeElement('') {
                 <p class="text-lg">${!this.err.album ? this.form.album : '-'}</p>
                 ${when(
                   this.form.url,
-                  () => html` <span class="icon" class=""><i class="mdi mdi-play-circle-outline"></i></span> `
+                  () => html`<span class="icon"><i class="mdi mdi-play-circle-outline"></i></span>`
                 )}
               </div>
             </div>

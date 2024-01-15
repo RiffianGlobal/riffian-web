@@ -24,6 +24,7 @@ const defErr = () => ({ tx: '' })
 export class VoteAlbumDialog extends ThemeElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   bindTweets: any = new StateController(this, tweetStore)
+  @property({ type: String }) action = ''
   @property({ type: String }) album = ''
   @property({ type: String }) url = ''
   @property({ type: String }) name = ''
@@ -139,14 +140,19 @@ export class VoteAlbumDialog extends ThemeElement('') {
                   () => html`<span><i class="text-green-600 text-sm mdi mdi-check-decagram"></i></span>`
                 )}${this.social?.name}
               </div>
-
-              <a class="text-sm text-blue-300" href="${this.social?.url}" target="_blank">@${this.social?.id}</a>
+              ${when(
+                this.social?.id,
+                () => html`
+                  <a class="text-sm text-blue-300" href="${this.social?.url}" target="_blank">@${this.social?.id}</a>
+                `,
+                () => html`-`
+              )}
 
               <div class="text-neutral-400">
                 You own
                 ${when(
                   this.ts,
-                  () => html`${this.myVotes.length}`,
+                  () => html`${formatUnits(this.myVotes, 0)}`,
                   () => html`<i class="text-sm mdi mdi-loading"></i>`
                 )}
                 tickets
@@ -170,47 +176,49 @@ export class VoteAlbumDialog extends ThemeElement('') {
             ><span class="text-sm text-gray-500">Vote price <i class="text-sm mdi mdi-help-circle-outline"></i></span
           ></span>
         </p>
-        <div
-          class="mt-8 grid divide-x divide-blue-400/20 ${classMap(
-            this.$c([this.hasVoted && !this.pending ? 'grid-cols-2' : 'grid-cols-1'])
-          )}"
-        >
+        <div class="mt-8">
           ${when(
             !this.pending,
-            () =>
-              html`<div class="flex flex-col justify-center items-center px-4">
-                  <div>
-                    <span class="text-2xl text-"
-                      >${until(this.price, html`<i class="text-sm mdi mdi-loading"></i>`)}
-                      <span class="text-sm ml-0.5 opacity-70">ST</span></span
+            () => html`
+              ${when(
+                this.ts && this.action === 'vote',
+                () => html`
+                  <div class="flex flex-col justify-center items-center px-4">
+                    <div>
+                      <span class="text-2xl">${until(this.price, html`<i class="text-sm mdi mdi-loading"></i>`)}</span>
+                    </div>
+                    <ui-button
+                      class="mt-3 w-full"
+                      ?disabled=${this.pending}
+                      ?pending=${this.pending}
+                      @click=${this.vote}
+                      >Vote</ui-button
                     >
                   </div>
-                  <ui-button class="mt-3 w-full" ?disabled=${this.pending} ?pending=${this.pending} @click=${this.vote}
-                    >Vote</ui-button
-                  >
-                </div>
-                ${when(
-                  this.ts && this.hasVoted,
-                  () => html`
-                    <div class="flex flex-col justify-center items-center px-4 border-white/12">
-                      <div class="text-2xl">
-                        ${until(this.retreatPrice, html`<i class="text-sm mdi mdi-loading"></i>`)}
-                        <span class="text-sm ml-0.5 opacity-70">ST</span>
-                      </div>
-
-                      <ui-button
-                        class="mt-3 w-full outlined"
-                        ?disabled=${this.retreatDisabled}
-                        ?pending=${this.retreatDisabled}
-                        @click=${this.retreat}
-                        >Retreat</ui-button
-                      >
+                `
+              )}
+              ${when(
+                this.ts && this.hasVoted && this.action === 'retreat',
+                () => html`
+                  <div class="flex flex-col justify-center items-center px-4 border-white/12">
+                    <div class="text-2xl">
+                      ${until(this.retreatPrice, html`<i class="text-sm mdi mdi-loading"></i>`)}
                     </div>
-                  `
-                )}
-                <!-- <div class="text-sm text-gray-500">
+
+                    <ui-button
+                      class="mt-3 w-full"
+                      ?disabled=${this.retreatDisabled}
+                      ?pending=${this.retreatDisabled}
+                      @click=${this.retreat}
+                      >Retreat</ui-button
+                    >
+                  </div>
+                `
+              )}
+              <!-- <div class="text-sm text-gray-500">
                 Retreat price: ${until(this.retreatPrice, html`<i class="text-sm mdi mdi-loading"></i>`)} FTM
-              </div> --> `,
+              </div> -->
+            `,
             () =>
               html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your vote has been submitted.' } }}
                 ><ui-button slot="view" @click=${this.close}>Close</ui-button></tx-state
