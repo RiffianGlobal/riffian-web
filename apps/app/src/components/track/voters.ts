@@ -72,62 +72,45 @@ export class TrackInfo extends ThemeElement(style) {
   }
 
   render() {
-    return html`<div>
+    return html`<div role="list" class="ui-list ${classMap(this.$c([this.pending ? 'loading' : 'hover']))}">
+        <div class="flex header">
+          <div class="w-16">Rank</div>
+          <div class="address flex-auto">Addr</div>
+          <div class="num flex-none">Comsumption</div>
+          <div class="num flex-none w-28">Earning</div>
+        </div>
         ${when(
-          this.pending && !this.subjectData,
+          this.pending,
           () =>
             html`<div name="Loading" class="doc-intro">
-              <div class="flex flex-col gap-8 m-8">
-                <loading-skeleton num="3"></loading-skeleton>
-                <loading-skeleton num="3"></loading-skeleton>
-                <loading-skeleton num="3"></loading-skeleton>
-              </div>
-            </div>`
-        )}
-        ${when(
-          this.subjectData,
-          () =>
-            html`<ul role="list" class="ui-list hover py-5">
-              <li class="flex header">
-                <div class="w-16">Rank</div>
-                <div class="address flex-auto">Addr</div>
-                <div class="num flex-none">Comsumption<span class="ml-1 text-xs opacity-70">(ST)</span></div>
-                <div class="num flex-none w-28">Earning<span class="ml-1 text-xs opacity-70">(ST)</span></div>
-                ${when(
-                  this.pending,
-                  () =>
-                    html`<div>
-                      <i class="text-sm mdi mdi-loading"></i>
-                      <div></div>
-                    </div>`
+              <div class="flex flex-col gap-8 m-6">
+                ${repeat(
+                  [...Array(3).keys()],
+                  () => html`<div name="Loading" class="doc-intro"><loading-skeleton num="4"></loading-skeleton></div>`
                 )}
-              </li>
-              ${repeat(
-                this.voteList,
-                (item: any, i) =>
-                  html`<li
-                    class="item flex py-2.5"
-                    @click=${() => this.go2(item)}
-                  >
-                    <div class="flex-none w-16 pl-4 text-sm font-light opacity-70">${i + 1}</div>
-                    <div class="flex-auto">
-                      <ui-address .address="${item.user.address}" short avatar class="text-base"></ui-address>
-                    </div>
-                    <div class="num flex-none">
-                      <p class="name truncate mt-2">${formatUnits(item.volumeVote, 18)}</p>
-                      
-                      </p>
-                    </div>
-                    <div class="num flex-none w-28"><p class="name truncate mt-2">${formatUnits(
-                      item.user.rewardClaimed,
-                      18
-                    )}</p></div>
-                  </li> `
-              )}
-            </ul>`
+              </div>
+            </div>`,
+          () =>
+            html` ${repeat(
+              this.voteList,
+              (item, i) => html`
+                <div class="item flex py-2.5" @click=${() => this.go2(item)}>
+                  <div class="flex-none w-16 pl-4 text-sm font-light opacity-70">${i + 1}</div>
+                  <div class="flex-auto">
+                    <ui-address .address="${item.user.address}" short avatar class="text-base"></ui-address>
+                  </div>
+                  <div class="num flex-none">
+                    <p class="name truncate mt-2">${formatUnits(item.volumeVote, 18)}</p>
+                  </div>
+                  <div class="num flex-none w-28">
+                    <p class="name truncate mt-2">${formatUnits(item.user.rewardClaimed, 18)}</p>
+                  </div>
+                </div>
+              `
+            )}`
         )}
       </div>
       <!-- Prompt -->
-      ${when(this.prompt, () => html`<p class="text-center text-orange-600">${this.promptMessage}</p> `)}`
+      ${when(this.prompt, () => html`<p class="text-center text-orange-600">${this.promptMessage}</p>`)}`
   }
 }

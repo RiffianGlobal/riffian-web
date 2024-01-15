@@ -61,6 +61,6 @@ export class RewardTasks extends ThemeElement(style) {
         )}
       </ul>
       <p class="text-center text-orange-600">${this.err}</p>
-    </div> `
+    </div>`
   }
 }

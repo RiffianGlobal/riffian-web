@@ -1,6 +1,16 @@
-import { ThemeElement, customElement, html, property, repeat, state, when } from '@riffian-web/ui/shared/theme-element'
+import {
+  ThemeElement,
+  customElement,
+  html,
+  property,
+  repeat,
+  state,
+  when,
+  classMap
+} from '@riffian-web/ui/shared/theme-element'
 import '@riffian-web/ui/loading/skeleton'
 
+import { screenStore } from '@lit-web3/base/screen'
 import { latestVote } from './actions'
 import { formatUnits } from 'ethers'
 import style from './votes.css?inline'
@@ -15,6 +25,14 @@ export class LatestVotes extends ThemeElement(style) {
   @state() albumToVote = { id: '', voter: 0, time: 0, value: 0 }
   @state() pending = false
 
+  get isMobi() {
+    return screenStore.screen.isMobi
+  }
+
+  get skeletonLen() {
+    return this.isMobi ? 2 : 3
+  }
+
   connectedCallback() {
     super.connectedCallback()
     this.init()
@@ -27,8 +45,9 @@ export class LatestVotes extends ThemeElement(style) {
       this.latestVotes = result.voteLogs
     } catch (e: any) {
       console.error(e)
+    } finally {
+      this.pending = false
     }
-    this.pending = false
   }
 
   timeAgo = async function* (timestamp: bigint) {
@@ -38,16 +57,15 @@ export class LatestVotes extends ThemeElement(style) {
         days = timeAgo / 86400n,
         ret = ''
       // if (days > 0) ret += days.toString() + (days < 7 ? 'd ' : 'days ')
-
+      // show 'd/h/m ago' if less than 24h, show 'day/days ago'
       if (days > 0)
-        ret +=
-          days < 2 ? `${days.toString()}d ` : days > 14 ? '2 weeks ' : days < 7 ? `${days.toString()} days ` : `7 days `
+        ret += days < 1 ? '' : days > 14 ? '2 weeks ' : `${days > 7 ? 7 : days.toString()}${days > 1 ? 'days' : 'day'} `
 
       if (days < 7) {
         const hours = (timeAgo - days * 86400n) / 3600n,
           minutes = (timeAgo - days * 86400n - hours * 3600n) / 60n
-        if (hours > 0) days < 2 ? (ret += +hours.toString() + 'h ') : ''
-        if (minutes > 0) days < 2 ? (ret += minutes.toString() + 'm ') : ''
+        if (hours > 0) days < 1 ? (ret += +hours.toString() + 'h ') : ''
+        if (minutes > 0) days < 1 ? (ret += minutes.toString() + 'm ') : ''
       }
       if (!ret) ret = '<1m'
       else ret += 'ago'
@@ -57,16 +75,20 @@ export class LatestVotes extends ThemeElement(style) {
   }
 
   render() {
-    return html` <div role="list" class="ui-list hover gap-2 bidders">
+    return html` <div
+      role="list"
+      class="ui-list gap-2 bidders ${classMap(this.$c([this.pending ? 'loading' : 'hover']))}"
+    >
       <div class="flex header border-bottom"><div class="w-full">Bidders</div></div>
       ${when(
         this.pending && this.latestVotes.length == 0,
         () => html`
           <div name="Loading" class="doc-intro">
-            <div class="flex flex-col gap-8 m-4">
-              <loading-skeleton num="3"></loading-skeleton>
-              <loading-skeleton num="3"></loading-skeleton>
-              <loading-skeleton num="3"></loading-skeleton>
+            <div class="w-full flex flex-col gap-8">
+              ${repeat(
+                [...Array(this.skeletonLen).keys()],
+                () => html`<loading-skeleton num="3" class="${this.isMobi ? '' : 'sm'}"></loading-skeleton>`
+              )}
             </div>
           </div>
         `,
@@ -86,7 +108,7 @@ export class LatestVotes extends ThemeElement(style) {
                     </p>
                   </div>
                 </div>
-              </div> `
+              </div>`
           )}
         `
       )}

@@ -38,7 +38,7 @@ export class RewardBtn extends ThemeElement(style) {
         >
       </ui-button>
       <!-- Dialog -->
-      ${when(this.dialog, () => html`<reward-dialog @close=${this.close}></reward-dialog> `)}
+      ${when(this.dialog, () => html`<reward-dialog @close=${this.close}></reward-dialog>`)}
     `
   }
 }

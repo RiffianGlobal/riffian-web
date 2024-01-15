@@ -110,7 +110,7 @@ export class CreateSocailDialog extends ThemeElement('') {
                     <ui-input-text value=${item[2]} readonly>
                       <span slot="label">${item[0]}</span>
                     </ui-input-text>
-                  </li> `
+                  </li>`
               )}
             </ul>
           </div>`

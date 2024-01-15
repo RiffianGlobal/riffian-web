@@ -1,4 +1,13 @@
-import { ThemeElement, customElement, html, property, state, when, until } from '@riffian-web/ui/shared/theme-element'
+import {
+  ThemeElement,
+  customElement,
+  html,
+  property,
+  state,
+  when,
+  until,
+  keyed
+} from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { subjectInfo } from './action'
@@ -20,7 +29,7 @@ export class TrackDetail extends ThemeElement(style) {
   @property({ type: String }) trackAddress = ''
   @property({ type: Promise<any> }) votes: Promise<any> | undefined
   @state() myVotes: Promise<any> | undefined
-  @state() retreatDisabled = true
+  // @state() retreatDisabled = true
   @state() social: Social | undefined
   @state() subject: any = { totalVoteValue: '0' }
   @state() voteList: any = []
@@ -29,9 +38,18 @@ export class TrackDetail extends ThemeElement(style) {
   @state() dialog = false
   @state() promptMessage: string = ''
   @state() err = defErr()
+  @state({ type: String }) actionType = ''
+  @state() ts = 0
 
   get disabled() {
     return !bridgeStore.bridge.account
+  }
+
+  get voteEnable() {
+    return this.ts && !this.disabled
+  }
+  get retreatEnable() {
+    return this.ts && +formatUnits(this.myVotes, 0) > 0
   }
 
   connectedCallback() {
@@ -53,8 +71,8 @@ export class TrackDetail extends ThemeElement(style) {
   async getPrice() {
     try {
       this.votes = albumData(this.trackAddress).then((result) => result[4])
-      this.myVotes = myVotes(this.trackAddress).then((votes) => {
-        if (votes > 0) this.retreatDisabled = false
+      this.myVotes = await myVotes(this.trackAddress).then((votes) => {
+        // if (votes > 0) this.retreatDisabled = false
         return votes
       })
       // this.price = votePrice(this.trackAddress).then((price) => formatUnits(price, 18))
@@ -70,13 +88,13 @@ export class TrackDetail extends ThemeElement(style) {
     try {
       let result = await subjectInfo(this.trackAddress)
       this.subject = result.subject
-      this.getPrice()
-      this.readFromTwitter()
+      await this.getPrice()
+      await this.readFromTwitter()
     } catch (e: any) {
       this.promptMessage = e
       this.prompt = true
-      return
     } finally {
+      this.ts++
       this.pending = false
     }
   }
@@ -85,6 +103,15 @@ export class TrackDetail extends ThemeElement(style) {
     this.dialog = false
     this.init()
   }
+
+  setAction = (action) => (this.actionType = action)
+
+  popAction = (action: String = 'vote') => {
+    if (action == this.actionType && this.dialog) return
+    this.setAction(action)
+    this.dialog = true
+  }
+  open = () => window.open(`${this.subject.uri}`, '_blank')
 
   render() {
     return html`<div>
@@ -95,10 +122,7 @@ export class TrackDetail extends ThemeElement(style) {
               <div class="flex flex-col gap-8 m-8">
                 <loading-skeleton num="3"></loading-skeleton>
               </div>
-            </div>`
-        )}
-        ${when(
-          this.subject,
+            </div>`,
           () =>
             html`<div class="grid lg_grid-cols-13 gap-2">
               <!-- meta info -->
@@ -127,26 +151,48 @@ export class TrackDetail extends ThemeElement(style) {
                         >`,
                     () => html`-`
                   )}
-
-                  <div class="mt-2">
-                    <ui-button
-                      sm
-                      class="outlined"
-                      ?disabled="${this.disabled}"
-                      @click=${() => {
-                        this.dialog = true
-                      }}
-                      >VOTE</ui-button
-                    >
+                  ${when(
+                    this.subject.uri,
+                    () => html`
+                      <div class="my-1">
+                        <ui-button icon lg @click=${this.open}><i class="mdi mdi-play-circle-outline"></i></ui-button>
+                      </div>
+                    `
+                  )}
+                  <div class="mt-2 flex gap-3">
+                    ${when(
+                      this.voteEnable,
+                      () => html`
+                        <ui-button
+                          sm
+                          class="outlined"
+                          ?disabled="${!this.voteEnable}"
+                          @click=${() => this.popAction('vote')}
+                          >VOTE</ui-button
+                        >
+                      `
+                    )}
+                    ${when(
+                      this.retreatEnable,
+                      () =>
+                        html` <ui-button
+                          sm
+                          class="outlined"
+                          ?disabled="${!this.retreatEnable}"
+                          @click=${() => this.popAction('retreat')}
+                          >RETREAT</ui-button
+                        >`
+                    )}
                     ${when(
                       this.dialog,
                       () =>
                         html`<vote-album-dialog
+                          action=${this.actionType}
                           album=${this.subject.id}
                           url=${this.subject.image}
                           name=${this.subject.name}
                           votes=${this.subject.supply}
-                          author=${this.subject.creator.address}
+                          author=${this.subject.creator?.address}
                           @close=${this.close}
                         ></vote-album-dialog>`
                     )}
@@ -173,9 +219,7 @@ export class TrackDetail extends ThemeElement(style) {
                   class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
                 >
                   <div class="text-base text-gray-500 align-center">Total Vote Value</div>
-                  <div class="text-4xl align-center lining-nums">
-                    ${formatUnits(this.subject.totalVoteValue, 18)}<span class="ml-2 text-lg">ST</span>
-                  </div>
+                  <div class="text-4xl align-center lining-nums">${formatUnits(this.subject.totalVoteValue, 18)}</div>
                 </div>
               </div>
             </div>`

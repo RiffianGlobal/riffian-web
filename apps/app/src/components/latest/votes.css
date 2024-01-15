@@ -6,12 +6,12 @@ svg {
   }
 }
 .ui-list {
-  & li.header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  }
   &.bidders {
     @apply grid grid-cols-3 md_grid-cols-1 gap-4 place-items-end min-h-60;
-    & li.header {
+    &.loading {
+      @apply !grid-cols-1;
+    }
+    & .header {
       @apply col-span-3 md_col-span-1;
     }
   }

@@ -1,4 +1,13 @@
-import { ThemeElement, customElement, html, property, repeat, state, when } from '@riffian-web/ui/shared/theme-element'
+import {
+  ThemeElement,
+  classMap,
+  customElement,
+  html,
+  property,
+  repeat,
+  state,
+  when
+} from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { albumList, weekList } from './action'
@@ -50,8 +59,9 @@ export class TopAlbum extends ThemeElement(style) {
       this.promptMessage = e
       this.prompt = true
       return
+    } finally {
+      this.pending = false
     }
-    this.pending = false
 
     let urls = [
       'https://cdn.shopify.com/app-store/listing_images/a82167e02b45cadf681efc6c17c35f3a/icon/CMmMjb30lu8CEAE=.jpg'
@@ -100,7 +110,7 @@ export class TopAlbum extends ThemeElement(style) {
   }
 
   render() {
-    return html`<div role="list" class="ui-list hover gap-2">
+    return html`<div role="list" class="ui-list gap-2 ${classMap(this.$c([this.pending ? 'loading' : 'hover']))}">
         <div class="flex header border-bottom">
           <div class="w-8 md_w-10">Rank</div>
           <div class="flex-shrink">Collection</div>
@@ -109,13 +119,13 @@ export class TopAlbum extends ThemeElement(style) {
         </div>
         ${when(
           this.pending && !this.subjectList,
-          () => html` <loading-skeleton num="4"></loading-skeleton> `,
+          () => html`<div name="loading" class="doc-intro"></div><loading-skeleton num="4"></loading-skeleton></div>`,
           () =>
             html`${repeat(
               this.subjectList,
               (item: any, i) => html`
                 <div class="item flex items-center">
-                  <div class="flex-none w-8 md_w-10 pl-2 text-sm font-light opacity-70">${i + 1}</div>
+                  <div class="flex-none w-8 md_pl-3 text-sm font-light opacity-70">${i + 1}</div>
                   <div class="flex-shrink">
                     <img-loader
                       @click=${() => this.go2(item)}
@@ -125,7 +135,9 @@ export class TopAlbum extends ThemeElement(style) {
                   </div>
                   <div class="flex-auto truncate">
                     <p class="name truncate cursor-pointer" @click=${() => this.go2(item)}>${item.name}</p>
-                    <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
+                    <a href=${item.uri} target="_blank">
+                      <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
+                    </a>
                   </div>
                   <div class="num flex-initial flex flex-col !w-18 text-sm items-end">
                     <span>${this.weekly ? formatUnits(item.volumeTotal, 18) : (Number(item.supply) + 1) / 10}</span>
@@ -137,6 +149,6 @@ export class TopAlbum extends ThemeElement(style) {
         )}
       </div>
       <!-- Prompt -->
-      ${when(this.prompt, () => html`<p class="text-center text-orange-600">${this.promptMessage}</p> `)}`
+      ${when(this.prompt, () => html`<p class="text-center text-orange-600">${this.promptMessage}</p>`)}`
   }
 }
