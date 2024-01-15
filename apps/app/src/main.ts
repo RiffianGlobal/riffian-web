@@ -14,6 +14,8 @@ import '@riffian-web/ui/block-number'
 import '~/components/createAlbum/btn'
 import '~/components/reward/btn'
 
+import '~/global.css'
+
 @customElement('app-main')
 export class AppMain extends ThemeElement('') {
   bindScreen: any = new StateController(this, screenStore)
