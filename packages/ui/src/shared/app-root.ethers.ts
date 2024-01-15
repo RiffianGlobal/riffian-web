@@ -4,6 +4,8 @@ import emitter from '@lit-web3/base/emitter'
 import { Router, routerGuard, type RouteConfig, fallbackRender, fallbackEnter } from '@lit-web3/router'
 import { ThemeElement, html, customElement, keyed } from './theme-element'
 import { debounce } from '@riffian-web/ethers/src/utils'
+// Global Components
+import '../toast'
 
 import '~/variables-override.css' // -> /apps/*/src/variables-override.css
 import '../c/g.css'
@@ -33,7 +35,11 @@ export default function ({ routes = <RouteConfig[]>[], hashMode = false } = {}) 
     }
 
     render() {
-      return html`${keyed(bridgeStore.key, html`<app-main>${this._router.outlet()}</app-main>`)}`
+      return html`
+        ${keyed(bridgeStore.key, html`<app-main>${this._router.outlet()}</app-main>`)}
+        <!-- Global components -->
+        <ui-toast></ui-toast>
+      `
     }
   }
   return AppRoot

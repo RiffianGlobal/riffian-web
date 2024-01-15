@@ -19,6 +19,7 @@
     "./network-warning": "./src/network-warning/index.ts",
     "./pagination": "./src/pagination/index.ts",
     "./tx-state": "./src/tx-state/index.ts",
+    "./toast": "./src/toast/index.ts",
     "./tip": "./src/tip/index.ts"
   },
   "publicConfig": {
@@ -35,6 +36,7 @@
       "./network-warning": "./dist/network-warning/index.js",
       "./pagination": "./dist/pagination/index.js",
       "./tx-state": "./dist/tx-state/index.js",
+      "./toast": "./dist/toast/index.js",
       "./tip": "./dist/tip/index.js"
     }
   },

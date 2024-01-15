@@ -1,10 +1,9 @@
 .ui-link {
-  @apply no-underline;
+  @apply inline-flex items-center no-underline hover_underline;
   color: var(--a_color);
   &:hover {
     @apply underline;
     color: var(--a_color);
-    text-decoration: underline;
   }
   &:not([disabled]) {
     @apply cursor-pointer;
@@ -16,14 +15,12 @@
     @apply text-current;
     &:hover {
       @apply text-current;
-      text-decoration: underline;
     }
   }
   &.link {
     color: var(--colorSecondary);
     &:hover {
       color: var(--colorSecondary);
-      text-decoration: underline;
     }
   }
   &.router-active {
