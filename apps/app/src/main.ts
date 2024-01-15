@@ -3,6 +3,7 @@ import { routerPathroot } from '@lit-web3/router'
 import { StateController, screenStore } from '@lit-web3/base/screen'
 import { routes } from '~/router'
 import { ThemeElement, html, customElement, state, when } from '@riffian-web/ui/shared/theme-element'
+import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
 // Components
 import AppRoot from '@riffian-web/ui/shared/app-root.ethers'
 import '@riffian-web/ui/network-warning/menu'
@@ -12,7 +13,6 @@ import '@riffian-web/ui/nav/nav'
 import '@riffian-web/ui/block-number'
 import '~/components/createAlbum/btn'
 import '~/components/reward/btn'
-import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
 
 @customElement('app-main')
 export class AppMain extends ThemeElement('') {

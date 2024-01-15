@@ -13,6 +13,7 @@ import '~/components/top/dialog'
 import { albumList, weekList } from './action'
 import { goto } from '@lit-web3/router'
 import { isImage } from '@lit-web3/base/MIMETypes'
+import { weeklyStore } from '~/store/weekly'
 // Components
 import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
@@ -22,11 +23,13 @@ import '@riffian-web/ui/dialog/prompt'
 import emitter from '@lit-web3/base/emitter'
 
 import style from './list.css?inline'
-import { getWeek } from '../rewards/action'
 import { formatUnits } from 'ethers'
+
 @customElement('top-album')
 export class TopAlbum extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
+  bindWeekly: any = new StateController(this, weeklyStore)
+
   @property({ type: Boolean }) weekly = false
   @state() subjectList: any
   @state() showAlbumVote = false
@@ -52,7 +55,7 @@ export class TopAlbum extends ThemeElement(style) {
   fetch = async () => {
     this.pending = true
     try {
-      let result = this.weekly ? await weekList(10, await getWeek()) : await albumList(10)
+      let result = this.weekly ? await weekList(10, await weeklyStore.getLatest()) : await albumList(10)
       this.subjectList = this.weekly ? result.subjectWeeklyVotes : result.subjects
     } catch (e: any) {
       console.error(e)

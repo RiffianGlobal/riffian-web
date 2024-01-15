@@ -6,13 +6,14 @@ import {
   getContracts,
   getNetwork
 } from '@riffian-web/ethers/src/useBridge'
-import { StateController, rewardStore, getRewardContract } from './store'
+import { StateController, rewardStore } from './store'
 import { normalizeTxErr } from '@riffian-web/ethers/src/parseErr'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { emitter } from '@lit-web3/base'
 import { getSocials } from '~/components/createAlbum/action'
 import { userVotes } from '~/components/uservotes/action'
 import { nowTs } from '@riffian-web/ethers/src/utils'
+import { getRewardContract } from '~/lib/riffutils'
 // Components
 import {
   ThemeElement,
@@ -28,6 +29,7 @@ import '@riffian-web/ui/input/text'
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/dialog'
 import '~/components/referral/bind'
+import { toast } from '@riffian-web/ui/toast'
 
 // Style
 import style from './claim.css?inline'
@@ -50,11 +52,14 @@ export class RewardClaim extends ThemeElement(style) {
   get isSocial() {
     return this.reward.key === 'social'
   }
+  get isVotes() {
+    return this.reward.key === 'votes'
+  }
   get claimed() {
     return this.reward.claimed
   }
   get claimable() {
-    return this.reward.claimable && !this.reward.claimed
+    return this.reward.claimable && !this.reward.claimed && !this.reward.closed
   }
   get processing() {
     return this.pending || this.txPending
@@ -71,7 +76,7 @@ export class RewardClaim extends ThemeElement(style) {
 
   claim = async () => {
     if (this.isSocial && !this._claimable) return this.bindSocial()
-    if (this.reward.key === 'votes') return this.claimVotes()
+    if (this.isVotes) return this.claimVotes()
     this.pending = true
     try {
       const contract = await getRewardContract()
@@ -172,12 +177,12 @@ export class RewardClaim extends ThemeElement(style) {
             >${this.reward.closed || this.claimed ? '' : this.reward.amnt}</span
           >
           <!-- Button -->
-          <div class="flex justify-end items-center w-[4em] h-[2em]">
+          <div class="flex justify-end items-center w-[6em] h-[2em]">
             <ui-button
               @click=${this.claim}
               .disabled=${!this.claimable || this.reward.closed}
               .pending=${this.processing}
-              class="outlined"
+              class=""
               text
               xs
               >${when(
@@ -186,6 +191,19 @@ export class RewardClaim extends ThemeElement(style) {
                 () => html`${this.reward.closed ? '-' : this.claimed ? 'Claimed' : 'Claim'}`
               )}</ui-button
             >
+            <!-- Icon -->
+            ${when(
+              this.isVotes,
+              () =>
+                html`<ui-button icon sm ?disabled=${this.claimed}
+                  ><i
+                    class="mdi ${classMap({
+                      'mdi-chevron-right text-xl': this.isVotes,
+                      'mdi-check': this.claimed && !this.reward.closed
+                    })}"
+                  ></i
+                ></ui-button>`
+            )}
           </div>
         </div>
       </div>

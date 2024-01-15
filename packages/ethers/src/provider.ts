@@ -2,7 +2,6 @@ import { JsonRpcProvider, BrowserProvider, WebSocketProvider } from 'ethers'
 import Network from './networks'
 import { walletStore } from './bridge'
 import { State, property } from './state'
-import { EtherNetworks } from './constants/networks'
 import emitter from '@lit-web3/base/emitter'
 
 export class Provider extends State {
@@ -30,9 +29,8 @@ export class Provider extends State {
     if (this.provider) {
       this.provider.removeAllListeners()
     }
-    if (!chainId || !EtherNetworks.includes(chainId)) {
-      chainId = Network.defaultChainId
-      this.network.chainId = chainId
+    if (!chainId) {
+      this.network.chainId = chainId = Network.defaultChainId
     }
     if (!persistent) this.storage = sessionStorage.setItem('chainId', chainId)
     if (!persistent && wallet) {

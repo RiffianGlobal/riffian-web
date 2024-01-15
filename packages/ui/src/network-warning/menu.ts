@@ -10,7 +10,7 @@ import style from './menu.css?inline'
 
 @customElement('network-menu')
 export class NetworkMenu extends ThemeElement(style) {
-  bindBridge = new StateController(this, bridgeStore.bridge.network)
+  bindBridge = new StateController(this, bridgeStore)
   @state() pending = false
   @state() menu = false
   @state() promptMsg = ''

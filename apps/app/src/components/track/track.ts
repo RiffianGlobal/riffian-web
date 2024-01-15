@@ -107,8 +107,9 @@ export class TrackDetail extends ThemeElement(style) {
   setAction = (action) => (this.actionType = action)
 
   popAction = (action: String = 'vote') => {
-    if (action == this.actionType && this.dialog) return
+    if ((action == this.actionType && this.dialog) || !this[`${action}Enable`]) return
     this.setAction(action)
+
     this.dialog = true
   }
   open = () => window.open(`${this.subject.uri}`, '_blank')
