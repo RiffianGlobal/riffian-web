@@ -34,7 +34,7 @@ export const AllNetworks = {
   }
 }
 
-export const EtherNetworks = ['0xdddd', '0xfa2']
+export const SupportNetworks = ['0xdddd', '0xfa2']
 
 export const unknownNetwork = {
   title: 'Unsupported Network',

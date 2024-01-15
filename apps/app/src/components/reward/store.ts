@@ -1,9 +1,11 @@
-import { getAccount, getSigner, getContract, assignOverrides } from '@riffian-web/ethers/src/useBridge'
+import { getAccount, getSigner, assignOverrides } from '@riffian-web/ethers/src/useBridge'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { formatUnits, FixedNumber } from 'ethers'
 import getMultiCall, { getMultiCallContract } from '@riffian-web/ethers/src/multiCall'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
+import dayjs from '~/lib/dayjs'
+import { getRewardContract } from '~/lib/riffutils'
 
 import { State, property } from '@lit-web3/base/state'
 export { StateController } from '@lit-web3/base/state'
@@ -50,7 +52,7 @@ class RewardStore extends State {
   @property({ value: [] }) rewards!: bigint[]
   @property({ value: [] }) tasks!: bigint[]
   @property({ value: [] }) rewardsClaimed!: boolean[]
-  @property({ value: [] }) weeklies!: UserWeekly[]
+  @property({ value: [] }) userWeeklyRewards!: UserWeekly[]
   @property({ value: [] }) weeklyPools!: bigint[]
 
   inited = false
@@ -72,12 +74,14 @@ class RewardStore extends State {
     const [pool] = this.weeklyPools
     return pool ? formatUnits(pool) : ''
   }
-  get total() {
-    const weeklies = this.weeklies.reduce((cur, next) => cur + (next?.reward ?? 0n), 0n)
-    return this.rewards.reduce((cur, next) => next + cur, weeklies)
+  get votesTotal() {
+    return this.userWeeklyRewards.reduce((cur, next) => cur + (next?.reward ?? 0n), 0n)
   }
-  get totalHumanized() {
-    if (!this.inited) return 0
+  get total() {
+    return this.rewards.reduce((cur, next) => next + cur, this.votesTotal)
+  }
+  get totalHumanized(): string | undefined {
+    if (!this.inited) return
     return (+formatUnits(this.total)).toFixed(4)
   }
 
@@ -86,7 +90,7 @@ class RewardStore extends State {
     this.pending = true
     try {
       const account = await getAccount()
-      rewardStore.weeklies = await userWeeklyRewards()
+      rewardStore.userWeeklyRewards = await getUserWeeklyRewards()
 
       const { MultiCallContract: rewardContract, MultiCallProvider } = await getMultiCall('Reward')
       // Aggregated calls
@@ -109,9 +113,6 @@ class RewardStore extends State {
   }
 }
 export const rewardStore = new RewardStore()
-
-export const getRewardContract = async (account?: string) =>
-  getContract('Reward', { account: account ?? (await getAccount()) })
 
 export const claim = async () => {
   const signer = await getSigner()
@@ -136,37 +137,57 @@ export const claim = async () => {
 export type UserWeekly = {
   week: number
   votes: string
-  reward?: bigint
+  claimed: string | number
+  cooked: {
+    week: number
+    year: number
+    past: boolean
+    pastYear: boolean
+    claimed: boolean
+    claimable: boolean
+    reward?: string | number
+  }
+  reward: bigint
 }
-export const getUserWeeklies = async (account?: string): Promise<UserWeekly[]> => {
+export const getUserWeeklyVotes = async (account?: string): Promise<UserWeekly[]> => {
   account ||= await getAccount()
-  const { userWeeklyVotes } = await graphQuery(
-    'MediaBoard',
-    `{ userWeeklyVotes( where: {user_: {address: "${account}"}} ) { week votes } }`
-  )
-  return userWeeklyVotes
+  const req = `{
+    userWeeklyVotes( orderBy: "week" orderDirection: "desc" where: {user_: {address: "${account}"}} ) { week votes claimed }
+  }`
+  const { userWeeklyVotes } = await graphQuery('MediaBoard', req)
+  const [curYear] = [dayjs().year()]
+  let curWeek = dayjs().week()
+  return userWeeklyVotes.map((weekly: UserWeekly, i: number) => {
+    const weekday = dayjs(weekly.week * 1000)
+    const [week, year, claimed] = [weekday.week(), weekday.year(), +weekly.claimed > 0]
+    if (i === 0 && curWeek !== weekly.week) curWeek = week
+    const [past, pastYear] = [curWeek > week, true || curYear > year]
+    weekly.cooked = { week, year, past, pastYear, claimed, claimable: !claimed && past }
+    return weekly
+  })
 }
 
-export const userWeeklyRewards = async (account?: string): Promise<UserWeekly[]> => {
-  const userWeeklies = await getUserWeeklies(account || (await getAccount()))
+export const getUserWeeklyRewards = async (account?: string): Promise<UserWeekly[]> => {
+  const userWeeklyVotes = await getUserWeeklyVotes(account || (await getAccount()))
   const { MultiCallContract: contract, MultiCallProvider } = await getMultiCall('MediaBoard')
   // Aggregated calls
   const calls = []
   // weekly total votes
-  calls.push(...userWeeklies.map(({ week }) => contract.weeklyVotes(week)))
+  calls.push(...userWeeklyVotes.map(({ week }) => contract.weeklyVotes(week)))
   // weekly total rewards
-  calls.push(...userWeeklies.map(({ week }) => contract.weeklyReward(week)))
+  calls.push(...userWeeklyVotes.map(({ week }) => contract.weeklyReward(week)))
   const [data] = await MultiCallProvider.all(calls)
   // Aggregated res
   // weekly total votes
-  const weeklyVotes = data.splice(0, userWeeklies.length)
+  const weeklyVotes = data.splice(0, userWeeklyVotes.length)
   // weekly total rewards
-  rewardStore.weeklyPools = data.splice(0, userWeeklies.length)
+  rewardStore.weeklyPools = data.splice(0, userWeeklyVotes.length)
   //
-  const res = userWeeklies.map((weekly, i) => {
-    const { votes } = weekly
-    const reward = (rewardStore.weeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
-    return { ...weekly, reward }
+  const res = userWeeklyVotes.map((weekly, i) => {
+    const { votes, cooked } = weekly
+    weekly.reward = (rewardStore.weeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
+    cooked.reward = (+formatUnits(weekly.reward)).toFixed(4)
+    return weekly
   })
   return res
 }

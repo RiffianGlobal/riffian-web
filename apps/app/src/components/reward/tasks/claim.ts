@@ -6,14 +6,13 @@ import {
   getContracts,
   getNetwork
 } from '@riffian-web/ethers/src/useBridge'
-import { StateController, rewardStore } from './store'
+import { StateController, rewardStore, getRewardContract } from './store'
 import { normalizeTxErr } from '@riffian-web/ethers/src/parseErr'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { emitter } from '@lit-web3/base'
 import { getSocials } from '~/components/createAlbum/action'
 import { userVotes } from '~/components/uservotes/action'
 import { nowTs } from '@riffian-web/ethers/src/utils'
-import { getRewardContract } from '~/lib/riffutils'
 // Components
 import {
   ThemeElement,

@@ -1,12 +1,12 @@
 import { walletStore } from './bridge'
-import { AllNetworks, unknownNetwork, EtherNetworks } from './constants/networks'
+import { AllNetworks, unknownNetwork, SupportNetworks } from './constants/networks'
 import { State, property, reflectProperty, reflectSubProperty } from './state'
 
 const isProd = import.meta.env.MODE === 'production'
 const mainnetOffline = !!import.meta.env.VITE_DISABLE_MAINNET
 export const Networks: Networks = AllNetworks
 
-export const [mainnetChainId, testnet] = EtherNetworks
+export const [mainnetChainId, testnet] = SupportNetworks
 export const defaultChainId = isProd && !mainnetOffline ? mainnetChainId : import.meta.env.VITE_DEF_TESTNET ?? testnet
 
 // This may return wrong network value if no req provided
