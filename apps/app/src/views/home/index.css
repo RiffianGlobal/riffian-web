@@ -6,7 +6,7 @@
 .home-board {
   @apply lg_flex-initial w-full lg_w-[30rem];
   & .home-board-header {
-    @apply h-20 p-1.5 flex justify-between;
+    @apply h-16 md_h-20 p-1.5 flex justify-between;
     & .home-board-lead {
       @apply flex flex-col gap-1.5;
       & h5 {
@@ -27,7 +27,7 @@
     width: var(--homeBoardHalf);
   }
   &:nth-of-type(3) {
-    @apply shrink grow-0 lg_w-24;
+    @apply shrink grow-0 lg_w-28;
   }
 }
 

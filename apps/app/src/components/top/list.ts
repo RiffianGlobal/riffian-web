@@ -1,13 +1,4 @@
-import {
-  ThemeElement,
-  classMap,
-  customElement,
-  html,
-  property,
-  repeat,
-  state,
-  when
-} from '@riffian-web/ui/shared/theme-element'
+import { ThemeElement, customElement, html, property, repeat, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { albumList, weekList } from './action'
@@ -112,66 +103,40 @@ export class TopAlbum extends ThemeElement(style) {
   }
 
   render() {
-    return html`<div>
+    return html`<div role="list" class="ui-list hover gap-2">
+        <div class="flex header border-bottom">
+          <div class="w-8 md_w-10">Rank</div>
+          <div class="flex-shrink">Collection</div>
+          <div class="flex-auto"></div>
+          <div class="num flex-auto w-32">${this.weekly ? `Volume` : html`Price`}</div>
+        </div>
         ${when(
           this.pending && !this.subjectList,
+          () => html` <loading-skeleton num="4"></loading-skeleton> `,
           () =>
-            html`<div name="Loading" class="doc-intro">
-              <div class="flex flex-col gap-8 m-8">
-                <loading-skeleton num="3"></loading-skeleton>
-                <loading-skeleton num="3"></loading-skeleton>
-                <loading-skeleton num="3"></loading-skeleton>
-              </div>
-            </div>`
-        )}
-        ${when(
-          this.subjectList,
-          () =>
-            html`<ul role="list" class="ui-list hover gap-2">
-                <li class="flex header">
-                  <div class="w-10">Rank</div>
-                  <div class="flex-shrink">Collection</div>
-                  <div class="flex-auto"></div>
-                  <div class="num flex-auto w-32">
-                    <!-- <native-symbol class="ml-0.5 text-xs opacity-70" bracket></native-symbol> -->
-                    ${this.weekly ? 'Volume' : html`Price`}
+            html`${repeat(
+              this.subjectList,
+              (item: any, i) => html`
+                <div class="item flex items-center">
+                  <div class="flex-none w-8 md_w-10 pl-2 text-sm font-light opacity-70">${i + 1}</div>
+                  <div class="flex-shrink">
+                    <img-loader
+                      @click=${() => this.go2(item)}
+                      .src=${item.image}
+                      class="w-[3rem] h-[3rem] md_w-[3.75rem] md_h-[3.75rem] rounded-lg cursor-pointer"
+                    ></img-loader>
                   </div>
-                </li>
-                ${repeat(
-                  this.subjectList,
-                  (item: any, i) =>
-                    html`<li class="item flex items-center">
-                      <div class="flex-none w-10 pl-2 text-sm font-light opacity-70">${i + 1}</div>
-                      <div class="flex-shrink">
-                        <img-loader
-                          @click=${() => this.go2(item)}
-                          .src=${item.image}
-                          class="w-[3.75rem] h-[3.75rem] rounded-lg cursor-pointer"
-                        ></img-loader>
-                      </div>
-                      <div class="flex-auto truncate">
-                        <p class="name truncate cursor-pointer" @click=${() => this.go2(item)}>${item.name}</p>
-                        <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
-                      </div>
-                      <div class="num flex-initial flex flex-col !w-18 text-sm items-end">
-                        <span>${this.weekly ? formatUnits(item.volumeTotal, 18) : (Number(item.supply) + 1) / 10}</span>
-                        <span class="text-xs" style="color: #34C77B">${TopAlbum.dayChange(item)}</span>
-                      </div>
-                    </li> `
-                )}
-              </ul>
-              ${when(
-                this.showAlbumVote,
-                () =>
-                  html`<vote-album-dialog
-                    album=${this.albumToVote.id}
-                    url=${this.albumToVote.image}
-                    name=${this.albumToVote.name}
-                    votes=${this.albumToVote.supply}
-                    author=${this.albumToVote.creator.address}
-                    @close=${this.close}
-                  ></vote-album-dialog>`
-              )} `
+                  <div class="flex-auto truncate">
+                    <p class="name truncate cursor-pointer" @click=${() => this.go2(item)}>${item.name}</p>
+                    <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
+                  </div>
+                  <div class="num flex-initial flex flex-col !w-18 text-sm items-end">
+                    <span>${this.weekly ? formatUnits(item.volumeTotal, 18) : (Number(item.supply) + 1) / 10}</span>
+                    <span class="text-xs" style="color: #34C77B">${TopAlbum.dayChange(item)}</span>
+                  </div>
+                </div>
+              `
+            )}`
         )}
       </div>
       <!-- Prompt -->
