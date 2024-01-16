@@ -8,7 +8,7 @@ import style from './index.css?inline'
 export class UIDocs extends ThemeElement(style) {
   override render() {
     return html`
-      <div class="border p-4 rounded-md sticky top-4">
+      <div class="border px-2 rounded-md sticky top-4 border-gray-600">
         <ul class="doc-nav">
           ${repeat(
             names,

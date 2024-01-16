@@ -1,4 +1,4 @@
 :host {
-  @apply fixed w-full left-0 p-2 lg_p-3 bottom-0 invisible text-center box-border pointer-events-none;
-  z-index: 99;
+  @apply fixed block w-full left-0 p-2 lg_p-3 bottom-0 invisible text-center box-border;
+  z-index: 999;
 }

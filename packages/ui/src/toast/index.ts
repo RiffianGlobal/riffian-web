@@ -56,7 +56,7 @@ export class UIToast extends ThemeElement(style) {
           () => html`<div class="mt-2 break-normal break-all">${toastStore.msg?.detail}</div>`
         )}
         <!-- Close -->
-        <ui-button @click=${toastStore.close} icon class="absolute right-1 top-1"
+        <ui-button @click=${toastStore.close} icon class="z-10 absolute right-1 top-1 cursor-pointer"
           ><i class="mdi mdi-close text-white"></i
         ></ui-button>
       </div>
@@ -72,7 +72,7 @@ export type ToastMsg = {
 }
 
 export const toast = {
-  add: ({ severity = 'info', summary = '', detail = '', life = 5000 } = <ToastMsg>{}) => {
+  add: ({ severity = 'info', summary = '', detail = '', life } = <ToastMsg>{}) => {
     toastStore.show({ severity, summary, detail, life })
   }
 }

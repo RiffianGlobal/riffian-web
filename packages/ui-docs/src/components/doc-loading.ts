@@ -8,7 +8,9 @@ export class DocLoading extends ThemeElement('') {
   override render() {
     return html`
       <div class="flex gap-4">
+        <i>icon:</i>
         <loading-icon></loading-icon>
+        <i>skeleton:</i>
         <loading-skeleton num="3"></loading-skeleton>
       </div>
     `

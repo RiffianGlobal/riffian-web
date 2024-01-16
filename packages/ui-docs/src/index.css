@@ -1,7 +1,7 @@
 .doc-nav {
   & > li {
     &:not(:first-of-type) {
-      @apply my-2 pt-2 border-t border-dashed;
+      @apply border-t border-dashed border-gray-700;
     }
   }
 }
