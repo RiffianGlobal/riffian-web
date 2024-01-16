@@ -31,7 +31,7 @@ export class UIComponents extends ThemeElement(style) {
   }
 
   override render() {
-    return html` <div class="border p-4 rounded-md ${this.class}">
+    return html` <div class="border p-4 rounded-md border-gray-600 ${this.class}">
       ${repeat(
         cmps,
         (cmp, i) =>

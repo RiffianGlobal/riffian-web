@@ -1,6 +1,7 @@
 import { State, property } from '@lit-web3/base/state'
 import fetchJsonP from 'fetch-jsonp'
 import { ttlStorage } from '@riffian-web/ethers/src/utils'
+import { weekSeconds } from '~/constants'
 
 export const readTweet = async (uri: string): Promise<Tweet | undefined> => {
   let res
@@ -22,38 +23,46 @@ export const getTwitter = async (uri: string) => {
   }
 }
 
+export type TweetCache = {
+  [uri: string]: Social
+}
+
+// TODO: merge to ttlStore
 class Tweets extends State {
-  key = ''
+  @property({ value: {} }) tweets!: TweetCache
+
   constructor() {
     super()
-    this.key = 'tweets'
-    this.sync()
-  }
-  @property({ value: {} }) tweets!: Record<string, Social>
-  sync = () => {
-    let cached = JSON.parse(ttlStorage.getItem(this.key) || '{}')
     // TODO: remove this after mainnet launched
-    if (new Date().getTime() < 1704798753768) {
-      ttlStorage.removeItem(this.key)
-      cached = {}
-    }
-    this.tweets = cached
+    ttlStorage.removeItem('tweets')
   }
-  save = () => {
-    this.tweets = { ...this.tweets }
-    ttlStorage.setItem(this.key, JSON.stringify(this.tweets), 86400 * 7 * 1000)
+
+  key = (uri: string) => `tweet.${uri}`
+
+  set = (uri: string, twitter: Social, save = false) => {
+    this.tweets = { ...this.tweets, [uri]: twitter }
+    if (save) ttlStorage.setItem(this.key(uri), JSON.stringify(twitter), weekSeconds * 1000)
+    return twitter
   }
-  set = (uri: string, twitter: Social) => {
-    this.tweets[uri] = twitter
-    this.save()
-  }
-  async get(uri: string) {
-    let res: Social | undefined = this.tweets[uri]
-    if (!res) {
-      res = await getTwitter(uri)
-      if (res) this.set(uri, res)
-    }
-    return res
+
+  promises: any = {} // debounce promise
+  get = async (uri: string) => {
+    // 1. from state
+    let twitter: Social | null | undefined = this.tweets[uri]
+    if (twitter) return twitter
+    // 2. from ttlStorage
+    const storaged: string | null = ttlStorage.getItem(this.key(uri))
+    if (storaged) return this.set(uri, (twitter = JSON.parse(storaged)))
+    // 3. from api
+    const promise = this.promises[uri]
+    if (promise) return promise
+    return (this.promises[uri] = new Promise(async (resolve) => {
+      twitter = await getTwitter(uri)
+      if (twitter) {
+        this.set(uri, twitter, true)
+        resolve(twitter)
+      } else resolve(undefined)
+    }).finally(() => delete this.promises[uri]))
   }
 }
 export const tweetStore = new Tweets()

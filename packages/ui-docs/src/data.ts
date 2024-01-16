@@ -9,6 +9,7 @@ export const cmps = [
   'doc-switch',
   'doc-text',
   'doc-form',
+  'doc-toast',
   'doc-tip',
   'doc-image',
   'doc-menu',

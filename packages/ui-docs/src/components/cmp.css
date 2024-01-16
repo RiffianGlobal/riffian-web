@@ -1,17 +1,19 @@
 .doc-intro {
   &:not(:first-of-type) {
-    @apply my-2;
+    @apply my-0 mt-0;
   }
   &:not(:first-of-type) {
-    @apply pt-1 border-t border-dashed;
+    @apply pt-2 border-t border-dashed border-gray-700;
   }
   &.active {
-    & h6::before {
-      @apply text-xl;
+    & h6 {
+      &::before {
+        @apply text-xl;
+      }
     }
   }
   & h6 {
-    @apply flex w-full items-center h-6 leading-6 mb-2;
+    @apply flex w-full items-center h-8 leading-8 mb-2 transition-all;
     &::before {
       content: attr(name);
       @apply mr-4 font-bold capitalize transition-all;

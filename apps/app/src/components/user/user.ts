@@ -1,5 +1,6 @@
 import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { formatUnits } from 'ethers'
 import '~/components/top/dialog'
 import { user } from './action'
 import '@riffian-web/ui/loading/icon'
@@ -113,7 +114,10 @@ export class TrackDetail extends ThemeElement(style) {
                     >Holding <span class="ml-1 text-blue-300">${this.user.holding ?? '-'}</span></span
                   >
                   <span class="text-base text-white/70"
-                    >Reward Claimed <span class="ml-1 text-blue-300">${this.user.rewardClaimed ?? '-'}</span></span
+                    >Reward Claimed
+                    <span class="ml-1 text-blue-300"
+                      >${this.user.rewardClaimed ? (+formatUnits(this.user.rewardClaimed)).toFixed(4) : '-'}</span
+                    ></span
                   >
                 </div>
               </div>`
