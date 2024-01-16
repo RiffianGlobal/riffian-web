@@ -82,7 +82,7 @@ export class NewAlbum extends ThemeElement('') {
         this.submit && !this.result,
         () =>
           html` <i class="text-5xl mdi mdi-loading"></i>
-            <p>Submiting txn to Fantom Network...</p>`
+            <p>Submiting txn to blockchain...</p>`
       )}
       ${when(
         this.submit && this.result,

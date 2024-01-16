@@ -3,13 +3,8 @@ import Network from '../networks'
 import http, { Jsonish } from '@lit-web3/base/http'
 
 export const SubGraph: ChainConf = {
-  main: {
-    '0x1': 'https://api.studio.thegraph.com/query/',
-    '0xaa36a7': 'https://api.studio.thegraph.com/query/',
-    '0x5': 'https://api.studio.thegraph.com/query/'
-  },
   MediaBoard: {
-    '0xfa2': 'https://api.thegraph.com/subgraphs/name/pho360360/riffianboard',
+    // '0xfa2': 'https://api.thegraph.com/subgraphs/name/pho360360/riffianboard',
     '0xdddd': 'https://graph.testnet.doid.tech/subgraphs/name/riffian/board'
   }
 }
@@ -23,7 +18,7 @@ export const getGraphUri = (name: string) => {
   return uri
 }
 
-export const graphQuery = async (name = 'main', query: string, variables?: {}, operationName?: string) =>
+export const graphQuery = async (name = 'MediaBoard', query: string, variables?: {}, operationName?: string) =>
   http.post(getGraphUri(name), { query, variables, operationName })
 
 export const genWhere = (params: Jsonish = {}): string => {

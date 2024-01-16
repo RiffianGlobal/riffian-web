@@ -20,21 +20,21 @@ export const AllNetworks = {
     providerWs: 'ws://rpc.testnet.doid.tech/ws',
     scan: 'https://scan.testnet.doid.tech',
     icon: ''
-  },
-  '0xfa2': {
-    chainId: '0xfa2',
-    title: 'Fantom Testnet',
-    name: 'FantomTestnet',
-    native: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
-    provider: 'https://rpc.testnet.fantom.network',
-    providerWs: '',
-    scan: 'https://testnet.ftmscan.com',
-    ens: { address: '', network: 4002 },
-    icon: ''
   }
+  // '0xfa2': {
+  //   chainId: '0xfa2',
+  //   title: 'Fantom Testnet',
+  //   name: 'FantomTestnet',
+  //   native: { name: 'Fantom', symbol: 'FTM', decimals: 18 },
+  //   provider: 'https://rpc.testnet.fantom.network',
+  //   providerWs: '',
+  //   scan: 'https://testnet.ftmscan.com',
+  //   ens: { address: '', network: 4002 },
+  //   icon: ''
+  // }
 }
 
-export const SupportNetworks = ['0xdddd', '0xfa2']
+export const SupportNetworks = ['0xdddd']
 
 export const unknownNetwork = {
   title: 'Unsupported Network',
