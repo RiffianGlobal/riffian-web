@@ -65,6 +65,11 @@ export class RewardClaim extends ThemeElement(style) {
   get processing() {
     return this.pending || this.txPending
   }
+  get claimBtnTxt() {
+    if (this.reward.closed) return '-'
+    if (this.isSocial) return 'Bind'
+    return this.claimed ? 'Claimed' : 'Claim'
+  }
 
   personalSign = async () => {
     const [signer, { chainId }] = [await getSigner(), await getNetwork()]
@@ -189,12 +194,7 @@ export class RewardClaim extends ThemeElement(style) {
               >${when(
                 this.processing,
                 () => html`<i class="mdi mdi-loading"></i>`,
-                () =>
-                  html`${when(
-                    this.claimed,
-                    () => html`Claimed`,
-                    () => html`${this.reward.closed ? '-' : this.isSocial ? 'Bind' : 'Claim'}`
-                  )}`
+                () => html`${this.claimBtnTxt}`
               )}</ui-button
             >
             <!-- Icon -->
