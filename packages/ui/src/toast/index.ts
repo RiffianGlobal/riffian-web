@@ -1,6 +1,7 @@
 import { ThemeElement, when, customElement, html, classMap } from '../shared/theme-element'
 import { State, StateController, property } from '@lit-web3/base/state'
 import { animate } from '@lit-labs/motion'
+import { sleep } from '@riffian-web/ethers/src/utils'
 // Components
 import '../button'
 // Style
@@ -13,15 +14,18 @@ class ToastStore extends State {
 
   close = () => {
     this.model = false
-    this.msg = null
     clearTimeout(this.timer)
     this.timer = null
+    this.msg = null
   }
-  show = (msg?: ToastMsg) => {
-    this.close()
+  show = async (msg?: ToastMsg) => {
+    if (this.model) {
+      this.close()
+      await sleep(200)
+    }
     if (msg) this.msg = msg
     this.model = true
-    setTimeout(this.close, this.msg?.life ?? 5000)
+    this.timer = setTimeout(this.close, this.msg?.life ?? 5000)
   }
 }
 export const toastStore = new ToastStore()
@@ -39,7 +43,7 @@ export class UIToast extends ThemeElement(style) {
       ${animate({
         guard: () => toastStore.model,
         properties: ['opacity', 'visibility'],
-        keyframeOptions: { duration: 300 }
+        keyframeOptions: { duration: 200 }
       })}
     >
       <!-- Icon -->

@@ -2,8 +2,7 @@ import { State, property } from '@lit-web3/base/state'
 import dayjs from '~/lib/dayjs'
 export { StateController } from '@lit-web3/base/state'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
-
-export const weekSeconds = 604800
+import { weekSeconds } from '~/constants'
 
 class WeeklyStore extends State {
   @property({ value: '' }) latest!: number
