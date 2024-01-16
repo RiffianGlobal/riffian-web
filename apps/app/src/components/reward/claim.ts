@@ -191,9 +191,9 @@ export class RewardClaim extends ThemeElement(style) {
                 () => html`<i class="mdi mdi-loading"></i>`,
                 () =>
                   html`${when(
-                    this.isSocial,
-                    () => html`<span @click=${this.bindSocial} icon sm>Bind</span>`,
-                    () => html`${this.reward.closed ? '-' : this.claimed ? 'Claimed' : 'Claim'}`
+                    this.claimed,
+                    () => html`Claimed`,
+                    () => html`${this.reward.closed ? '-' : this.isSocial ? 'Bind' : 'Claim'}`
                   )}`
               )}</ui-button
             >
