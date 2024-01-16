@@ -33,7 +33,7 @@ export class RewardBtn extends ThemeElement(style) {
     return html`
       <!-- Unboound tip -->
       ${when(
-        !rewardStore.isSocialClaimed,
+        rewardStore.socialNotClaimed,
         () =>
           html`<span @click=${this.open} class="twTip absolute top-1.5 whitespace-nowrap right-full cursor-pointer">
             <span class="border text-gray-200 bg-gray-700 rounded-md border-gray-800 p-1 px-2"

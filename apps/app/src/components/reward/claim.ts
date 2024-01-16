@@ -59,7 +59,7 @@ export class RewardClaim extends ThemeElement(style) {
     return this.reward.claimed
   }
   get claimable() {
-    if (this.isSocial && !rewardStore.isSocialClaimed) return true
+    if (this.isSocial && rewardStore.socialNotClaimed) return true
     return this.reward.claimable && !this.reward.claimed && !this.reward.closed
   }
   get processing() {
