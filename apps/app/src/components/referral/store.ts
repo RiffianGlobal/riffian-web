@@ -32,7 +32,8 @@ export const getAlbumContract = async (readonly = false) =>
 export const getReferral = async () => {
   const contract = await getAlbumContract()
   try {
-    referralStore.address = (await contract.agentAddress(await getAccount())) ?? ''
+    const res = await contract.agentAddress(await getAccount())
+    if (res && +res !== 0) referralStore.address = res
   } catch {}
   return referralStore.address
 }

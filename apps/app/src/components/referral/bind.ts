@@ -24,7 +24,7 @@ export class referralBind extends ThemeElement(style) {
   @state() err = 'fff'
 
   get addr() {
-    return referralStore.address ?? this.address
+    return referralStore.address || this.address
   }
 
   bind = async () => {
@@ -33,6 +33,7 @@ export class referralBind extends ThemeElement(style) {
     try {
       referralStore.tx = await setReferral(this.address)
       await referralStore.tx.wait()
+      await referralStore.check()
     } catch (err: any) {
       let msg = err.message || err.code
       if (err.code === 4001) return
@@ -60,7 +61,10 @@ export class referralBind extends ThemeElement(style) {
         ></ui-input-text>
         <i
           class="mdi ${classMap(
-            this.$c([referralStore.pending ? 'mdi-loading' : 'mdi-check-circle-outline text-green-600'])
+            this.$c([
+              referralStore.pending ? 'mdi-loading' : 'mdi-check-circle-outline invisible',
+              referralStore.bound ? 'mdi-check-circle-outline text-green-600 !visible' : ''
+            ])
           )}"
         ></i>
       </div>
