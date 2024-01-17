@@ -14,8 +14,8 @@ export class TrackPage extends ThemeElement(style) {
       <!-- user profile -->
       <user-detail .address=${this.addr} class="mx-auto"></user-detail>
 
-      <div class="w-full inline-flex pb-6 border-b border-slate-50/10">
-        <div class="py-1.5 px-3 text-base font-normal bg-sky-300/10  text-white/70 rounded-md">Tracks</div>
+      <div class="w-full inline-flex pb-2 border-b border-slate-50/10">
+        <div class="py-1.5 px-3 text-base font-normal text-white/70 rounded-md">Tracks</div>
       </div>
 
       <track-list .address=${this.addr}></track-list>

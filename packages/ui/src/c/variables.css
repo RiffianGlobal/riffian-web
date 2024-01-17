@@ -24,14 +24,15 @@
   --colorDark: var(--color-dark, #373737);
   /* Buttons */
   --btnBg: var(--btn-bg, #3d82db);
-  --btnBgHover: var(--btn-bg-hover, #93c5fd);
-  --btnBgActive: var(--btn-bg-active, #bfdbfe);
+  --btnBgHover: var(--btn-bg-hover, #519dff);
+  --btnBgActive: var(--btn-bg-active, #438dec);
   --btnBgSecondary: var(--btn-bg-secondary, #94a3b8);
   --btnBgSecondaryHover: var(--btn-bg-secondary-hover, #cbd5e1);
   --btnBgSecondaryActive: var(--btn-bg-secondary-active, #e2e8f0);
   --btnBgSuccess: var(--btn-bg-success, #4ade80);
   --btnBgSuccessHover: var(--btn-bg-success-hover, #86efac);
   --btnBgSuccessActive: var(--btn-bg-success-active, #bbf7d0);
+  --btnBgDisabled: var(--btn-bg-disabled, #2a61a7);
   /* Forms */
   /* --formBorder: #ced4da; */
   --formBorderFocus: var(--btnBg);

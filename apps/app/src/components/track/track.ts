@@ -156,7 +156,9 @@ export class TrackDetail extends ThemeElement(style) {
                     this.subject.uri,
                     () => html`
                       <div class="my-1">
-                        <ui-button icon lg @click=${this.open}><i class="mdi mdi-play-circle-outline"></i></ui-button>
+                        <ui-button icon lg @click=${this.open}
+                          ><i class="mdi mdi-play-circle-outline text-white"></i
+                        ></ui-button>
                       </div>
                     `
                   )}
@@ -166,10 +168,9 @@ export class TrackDetail extends ThemeElement(style) {
                       () => html`
                         <ui-button
                           sm
-                          class="outlined"
-                          ?disabled="${!this.voteEnable}"
+                          ?disabled="${this.dialog || !this.voteEnable}"
                           @click=${() => this.popAction('vote')}
-                          >VOTE</ui-button
+                          >Vote</ui-button
                         >
                       `
                     )}
@@ -178,10 +179,9 @@ export class TrackDetail extends ThemeElement(style) {
                       () =>
                         html` <ui-button
                           sm
-                          class="outlined"
-                          ?disabled="${!this.retreatEnable}"
+                          ?disabled="${this.dialog || !this.retreatEnable}"
                           @click=${() => this.popAction('retreat')}
-                          >RETREAT</ui-button
+                          >Retreat</ui-button
                         >`
                     )}
                     ${when(

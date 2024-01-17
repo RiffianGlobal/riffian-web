@@ -51,7 +51,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
         return this.close()
       }
     } finally {
-      // this.pending = false
+      this.pending = false
     }
   }
 
