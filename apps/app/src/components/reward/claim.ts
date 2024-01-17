@@ -67,7 +67,7 @@ export class RewardClaim extends ThemeElement(style) {
   }
   get claimBtnTxt() {
     if (this.reward.closed) return '-'
-    if (this.isSocial) return 'Bind'
+    if (this.isSocial && rewardStore.socialNotClaimed) return 'Bind'
     return this.claimed ? 'Claimed' : 'Claim'
   }
 
