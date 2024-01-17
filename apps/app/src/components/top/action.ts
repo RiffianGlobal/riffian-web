@@ -1,9 +1,9 @@
 import { getAccount, getContract, assignOverrides, bridgeStore } from '@riffian-web/ethers/src/useBridge'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
-import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 import fetchJsonP from 'fetch-jsonp'
 import { userSubjectVotes } from '../uservotes/action'
+import { subjectWeeklyVotesQuery as weeklyVotes, subjectsQuery } from '~/query'
 
 export const getAlbumContract = async (readonly = false) =>
   getContract('MediaBoard', { account: readonly ? undefined : await getAccount() })
@@ -101,50 +101,14 @@ export const votePriceWithFee = async (album: string) => {
   return await contract[method](...parameters)
 }
 
-export const weekList = async (count: Number, week: BigInt) => {
+export const weekList = async (week: BigInt, { first, skip } = {}) => {
   const daySeconds = 24n * 60n * 60n
   let time = BigInt(new Date().getTime()) / 1000n - daySeconds
-  let queryJSON = `{
-      subjectWeeklyVotes(first: ${count}, where:{week:${week}}, orderBy: volumeTotal, orderDirection:desc) {
-        id
-        volumeTotal
-        subject {
-          id
-          name
-          image
-          uri
-          supply
-          creator {
-            address
-          }
-          voteLogs(first:1, where:{time_lt:${time}} orderBy:time, orderDirection:desc){
-            supply
-          }
-        }
-      }
-    }`
-  let result = await graphQuery('MediaBoard', queryJSON)
-  return result
+  return weeklyVotes(week, time, { first, skip })
 }
 
-export const albumList = async (count: Number) => {
+export const albumList = async ({ first = 0, skip = 0 } = {}) => {
   const daySeconds = 24n * 60n * 60n
   let time = BigInt(new Date().getTime()) / 1000n - daySeconds
-  let queryJSON = `{
-      subjects(first: ${count}, orderBy:supply, orderDirection:desc, where: {creator_starts_with: "0x"}) {
-        id
-        image
-        name
-        uri
-        supply
-        creator {
-          address
-        }
-        voteLogs(first:1, where:{time_lt:${time}} orderBy:time, orderDirection:desc){
-          supply
-        }
-      }
-    }`
-  let result = await graphQuery('MediaBoard', queryJSON)
-  return result
+  return subjectsQuery(time, { first, skip })
 }
