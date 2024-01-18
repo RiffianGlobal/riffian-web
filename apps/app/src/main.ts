@@ -13,6 +13,7 @@ import '@riffian-web/ui/nav/nav'
 import '@riffian-web/ui/block-number'
 import '~/components/createAlbum/btn'
 import '~/components/reward/btn'
+import '~/components/user/balance'
 
 import '~/global.css'
 
@@ -54,6 +55,17 @@ export class AppMain extends ThemeElement('') {
           <div class="inline-flex items-center gap-4">
             ${when(bridgeStore.bridge.account, () => html`<reward-btn></reward-btn>`)}
             <network-menu></network-menu>
+          </div>
+        </div>
+        <div slot="balance">
+          <account-balance class="ui-em"></account-balance>
+        </div>
+        <div slot="submenu">
+          <div class="mx-4 pt-3 border-t border-white/15">
+            <div class="flex justify-between">
+              <span class="text-xs text-white/60">DOID Balance:</span>
+              <account-balance class="ui-em text-xs"></account-balance>
+            </div>
           </div>
         </div>
         <div slot="left" class="flex justify-start items-center gap-4">

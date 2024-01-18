@@ -126,7 +126,7 @@ export type Social = {
   url: string
   id: string
   gid: string
-  verified?: boolean
+  verified: boolean
 }
 
 export const genTweet = async () => `Verifying my account for ${Official}

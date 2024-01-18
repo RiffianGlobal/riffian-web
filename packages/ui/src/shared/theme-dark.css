@@ -54,7 +54,7 @@
       }
     }
     & .num {
-      @apply w-24 text-right;
+      @apply w-24 text-right opacity-90;
     }
     &:not(.dense) .header + .item {
       @apply !mt-2;

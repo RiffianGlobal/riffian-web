@@ -42,7 +42,6 @@ export class BindSocial extends ThemeElement('') {
     const [uri] = await Promise.all(reqs)
     this.tweetURI = uri
     this.ts++
-    if (tweetStore.selfTwitter?.verified) this.emit('change')
   }
 
   get account() {
@@ -106,6 +105,7 @@ export class BindSocial extends ThemeElement('') {
       this.tx = await bindSocial(this.platform, '', this.inputURL)
       this.success = await this.tx.wait()
       await this.check()
+      this.chgMode = false
     } catch (err: any) {
       if (err.code !== 4001) {
         toast.add({ summary: 'Error', detail: err.message })
@@ -138,10 +138,11 @@ export class BindSocial extends ThemeElement('') {
                 tweetStore.selfTwitter,
                 () =>
                   html`<p class="text-lg">
-                      ${tweetStore.selfTwitter.name}<i
+                      ${tweetStore.selfTwitter.name}
+                      <i
                         class="mdi ${classMap({
-                          'text-green-600': this.verified,
-                          'mdi-check-decagram': this.verified
+                          'text-green-600': tweetStore.selfTwitter.verified,
+                          'mdi-check-decagram': tweetStore.selfTwitter.verified
                         })}"
                       ></i>
                     </p>
@@ -198,16 +199,10 @@ export class BindSocial extends ThemeElement('') {
                     >
                     <span slot="right"
                       ><i
-                        class="mdi ${classMap(
-                          this.$c([
-                            this.inputPending
-                              ? 'mdi-loading'
-                              : {
-                                  'text-green-600': this.verified,
-                                  'mdi-check-decagram': this.verified
-                                }
-                          ])
-                        )}"
+                        class="mdi ${classMap({
+                          'mdi-loading': this.inputPending,
+                          'mdi-check-decagram': this.verified
+                        })}"
                       ></i
                     ></span>
                   </ui-input-text>
@@ -222,7 +217,10 @@ export class BindSocial extends ThemeElement('') {
               ></ui-button>
               ${when(
                 this.chgMode,
-                () => html`<ui-link @click=${this.cancel} class="absolute -mt-1.5 -mr-32">Cancel</ui-link>`
+                () =>
+                  html`<ui-link @click=${this.cancel} ?disabled=${this.btnDisabled} class="absolute -mt-1.5 -mr-32"
+                    >Cancel</ui-link
+                  >`
               )}
             </p>`
       )}

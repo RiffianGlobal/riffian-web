@@ -100,10 +100,10 @@ export class TrackInfo extends ThemeElement(style) {
                     <ui-address .address="${item.user.address}" short avatar class="text-base"></ui-address>
                   </div>
                   <div class="num flex-none">
-                    <p class="name truncate mt-2">${formatUnits(item.volumeVote, 18)}</p>
+                    <p class="num truncate mt-2">${formatUnits(item.volumeVote, 18)}</p>
                   </div>
                   <div class="num flex-none w-28">
-                    <p class="name truncate mt-2">${formatUnits(item.user.rewardClaimed, 18)}</p>
+                    <p class="num truncate mt-2">${formatUnits(item.user.rewardClaimed, 18)}</p>
                   </div>
                 </div>
               `

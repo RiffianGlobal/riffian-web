@@ -62,9 +62,9 @@ export class UIHeader extends ThemeElement(style) {
             <slot name="right"></slot>
             <slot name="wallet"
               ><connect-wallet-btn hideAddr dropable>
-                <div slot="submenu">
-                  <slot name="submenu"></slot></div></connect-wallet-btn
+                <div slot="submenu"><slot name="submenu"></slot></div></connect-wallet-btn
             ></slot>
+            <slot name="balance"></slot>
             ${when(
               this.asMenu,
               () =>

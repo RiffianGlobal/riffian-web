@@ -1,15 +1,17 @@
 import { ThemeElement, html, customElement, until, state, when } from '@riffian-web/ui/shared/theme-element'
 import { StateController, rewardStore } from '~/store/reward'
+import { screenStore } from '@lit-web3/base/screen'
 import { weeklyStore } from '~/store/weekly'
 // Components
+import '~/components/top/weekly'
 import '~/components/top/list'
 import '~/components/createAlbum/btn'
 import '~/components/createAlbum/socialbtn'
 import '~/components/latest/votes'
+import '@riffian-web/ui/link'
 
 // Style
 import style from './index.css?inline'
-import { screenStore } from '@lit-web3/base/screen'
 
 @customElement('view-home')
 export class ViewHome extends ThemeElement(style) {
@@ -54,7 +56,7 @@ export class ViewHome extends ThemeElement(style) {
             )}
           </div>
         </div>
-        <top-album weekly></top-album>
+        <weekly-top></weekly-top>
       </div>
       ${when(
         true,
@@ -63,7 +65,10 @@ export class ViewHome extends ThemeElement(style) {
           <div class="home-board">
             <div class="home-board-header">
               <div class="home-board-lead">
-                <div class="text-xl">Top 10</div>
+                <div class="text-xl">
+                  Top 10
+                  <ui-link text class="ml-1 text-xs text-blue-300" href=${'/top'}>View all</ui-link>
+                </div>
               </div>
             </div>
             <top-album></top-album>

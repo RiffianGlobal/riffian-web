@@ -38,7 +38,7 @@ export class TrackDetail extends ThemeElement(style) {
   @state() dialog = false
   @state() promptMessage: string = ''
   @state() err = defErr()
-  @state({ type: String }) actionType = ''
+  @state() actionType = ''
   @state() ts = 0
 
   get disabled() {
