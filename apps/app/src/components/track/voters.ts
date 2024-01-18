@@ -103,7 +103,7 @@ export class TrackInfo extends ThemeElement(style) {
                     <p class="num truncate mt-2">${formatUnits(item.volumeVote, 18)}</p>
                   </div>
                   <div class="num flex-none w-28">
-                    <p class="num truncate mt-2">${formatUnits(item.user.rewardClaimed, 18)}</p>
+                    <p class="num truncate mt-2">${(+formatUnits(item.user.rewardClaimed, 18)).toFixed(2)}</p>
                   </div>
                 </div>
               `
