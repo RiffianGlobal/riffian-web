@@ -1,5 +1,5 @@
 import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
-import { StateController, rewardStore, rewardTasks } from '../store'
+import { StateController, rewardStore, rewardTasks } from '~/store/reward'
 import { formatUnits, FixedNumber } from 'ethers'
 // Components
 import {

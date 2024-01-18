@@ -1,0 +1,12 @@
+:host {
+  --appMaxW: 100rem !important;
+}
+
+::part(dialog-container) {
+  width: 136rem;
+  max-width: none;
+  & ::part(dialog-container) {
+    width: 136rem;
+    max-width: none;
+  }
+}

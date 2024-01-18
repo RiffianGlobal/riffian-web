@@ -1,6 +1,7 @@
 import { html } from 'lit'
 import emitter from '@lit-web3/base/emitter'
 import type { RouteConfig } from '@lit-web3/router'
+import { isAddress } from 'ethers'
 
 export const routes: RouteConfig[] = [
   {
@@ -34,7 +35,11 @@ export const routes: RouteConfig[] = [
     name: 'referral',
     path: '/referral/:address?',
     render: ({ address = '' }) => html`<view-referral .address=${address}></view-referral>`,
-    enter: async () => {
+    enter: async ({ address = '' }) => {
+      if (!isAddress(address)) {
+        emitter.emit('router-goto', '/')
+        return false
+      }
       await import('~/views/referral')
       return true
     }

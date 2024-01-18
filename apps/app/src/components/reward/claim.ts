@@ -6,7 +6,7 @@ import {
   getContracts,
   getNetwork
 } from '@riffian-web/ethers/src/useBridge'
-import { StateController, rewardStore } from './store'
+import { StateController, rewardStore } from '~/store/reward'
 import { normalizeTxErr } from '@riffian-web/ethers/src/parseErr'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { emitter } from '@lit-web3/base'
@@ -137,8 +137,10 @@ export class RewardClaim extends ThemeElement(style) {
   // }
 
   bindSocial = () => {
-    emitter.emit('ui-bindsocial')
-    setTimeout(() => this.emit('close'), 300)
+    this.emit('scene', 'social')
+    // Old
+    // emitter.emit('ui-bindsocial')
+    // setTimeout(() => this.emit('close'), 300)
   }
   claimVotes = () => {
     this.votesDialog = true
@@ -169,13 +171,7 @@ export class RewardClaim extends ThemeElement(style) {
         <!-- Name -->
         <span
           >${this.reward.title}
-          ${when(
-            this.isSocial,
-            () =>
-              html`<ui-button @click=${this.bindSocial} icon sm
-                ><i class="i mdi mdi-twitter text-blue-500"></i
-              ></ui-button>`
-          )}
+          ${when(this.isSocial, () => html`<ui-link @click=${this.bindSocial} icon sm>view</ui-link>`)}
         </span>
         <div class="flex gap-2 items-center text-right">
           <!-- Amnt -->

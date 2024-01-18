@@ -7,7 +7,7 @@ import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/img/loader'
 import '@riffian-web/ui/dialog/prompt'
-import { tweetStore, type Social } from '~/components/top/tweet'
+import { tweetStore, type Social } from '~/store/tweet'
 import style from './user.css?inline'
 
 const defErr = () => ({ loading: '', tx: '' })
@@ -46,9 +46,7 @@ export class TrackDetail extends ThemeElement(style) {
 
   async readFromTwitter() {
     let { uri } = this.user.socials[0] ?? {}
-    const social = await tweetStore.get(uri)
-    if (social) Object.assign(social, { verified: this.user.address })
-    this.social = social
+    this.social = await tweetStore.fromUri(uri, this.user.address)
   }
 
   updateErr = (err = {}) => (this.err = Object.assign({}, this.err, err))

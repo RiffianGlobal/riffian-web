@@ -4,9 +4,7 @@ import { nowTs } from '@riffian-web/ethers/src/utils'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 import fetchJsonP from 'fetch-jsonp'
 import { userSubjectVotes } from '../uservotes/action'
-
-export const getAlbumContract = async (readonly = false) =>
-  getContract('MediaBoard', { account: readonly ? undefined : await getAccount() })
+import { getAlbumContract } from '~/lib/riffutils'
 
 export const vote = async (album: string, amount: number, price: object) => {
   const contract = await getAlbumContract()

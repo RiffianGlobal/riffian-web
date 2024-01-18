@@ -30,6 +30,7 @@ export class CreateSocailDialog extends ThemeElement('') {
 
   connectedCallback() {
     super.connectedCallback()
+    throw new Error('Deprecated, plase use <bind-social>')
     this.getSocialUrl()
   }
 

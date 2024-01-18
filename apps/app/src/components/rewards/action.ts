@@ -2,8 +2,7 @@ import { getAccount, getContract, assignOverrides } from '@riffian-web/ethers/sr
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
-
-export const getAlbumContract = async () => getContract('MediaBoard', { account: await getAccount() })
+import { getAlbumContract } from '~/lib/riffutils'
 
 /**
  * claim weekly rewards

@@ -1,5 +1,5 @@
 import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
-import { StateController, rewardStore, rewardTasks } from '../store'
+import { StateController, rewardStore, rewardTasks } from '~/store/reward'
 import { formatUnits, FixedNumber } from 'ethers'
 // Components
 import {
@@ -18,6 +18,7 @@ import '@riffian-web/ui/link'
 import { toast } from '@riffian-web/ui/toast'
 import './task'
 import './task-weeklyvotes'
+import './task-social'
 
 // Style
 import style from './tasks.css?inline'
@@ -51,9 +52,10 @@ export class RewardTasks extends ThemeElement(style) {
   }
 
   chgScene = (e?: CustomEvent) => this.emit('scene', e?.detail ?? e ?? '')
+  back = () => this.emit('back')
 
   render() {
-    return html`<div class="h-72 -mt-2 overflow-y-auto canScroll">
+    return html`<div class="h-80 -mt-2 overflow-y-auto canScroll">
       ${choose(this.scene, [
         [
           '', // Tasks
@@ -69,6 +71,7 @@ export class RewardTasks extends ThemeElement(style) {
                   (reward) => html`
                     <li>
                       <reward-claim
+                        @scene=${this.chgScene}
                         @error=${this.showErr}
                         @click=${() => (this.err = '')}
                         @close=${this.close}
@@ -81,7 +84,11 @@ export class RewardTasks extends ThemeElement(style) {
         ],
         [
           'votes', // Weekly votes
-          () => html`<task-weeklyvotes></task-weeklyvotes>`
+          () => html`<task-weeklyvotes @back=${this.back}></task-weeklyvotes>`
+        ],
+        [
+          'social', // Bind social
+          () => html`<task-social @back=${this.back}></task-social>`
         ]
       ])}
     </div> `

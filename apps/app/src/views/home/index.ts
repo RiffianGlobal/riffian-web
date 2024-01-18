@@ -1,5 +1,5 @@
 import { ThemeElement, html, customElement, until, state, when } from '@riffian-web/ui/shared/theme-element'
-import { StateController, rewardStore } from '~/components/reward/store'
+import { StateController, rewardStore } from '~/store/reward'
 import { weeklyStore } from '~/store/weekly'
 // Components
 import '~/components/top/list'

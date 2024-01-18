@@ -11,7 +11,7 @@ import {
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { vote, albumData, votePrice, votePriceWithFee, myVotes, retreatPrice, retreat, getSocials } from './action'
 import { formatUnits } from 'ethers'
-import { tweetStore, type Social } from './tweet'
+import { tweetStore, type Social } from '~/store/tweet'
 
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/input/text'
@@ -54,10 +54,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
   }
 
   async readFromTwitter() {
-    const uri = await getSocials(this.author)
-    const social = await tweetStore.get(uri)
-    if (social) Object.assign(social, { verified: social.address.includes(this.author) })
-    this.social = social
+    this.social = await tweetStore.fromAddress(this.author)
   }
 
   async getPrice() {

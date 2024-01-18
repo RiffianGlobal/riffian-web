@@ -1,5 +1,5 @@
 import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
-import { StateController, rewardStore } from './store'
+import { StateController, rewardStore } from '~/store/reward'
 // Components
 import { ThemeElement, html, customElement, state, when } from '@riffian-web/ui/shared/theme-element'
 import '@riffian-web/ui/input/text'
