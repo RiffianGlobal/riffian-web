@@ -218,7 +218,7 @@ export class BindSocial extends ThemeElement('') {
               ${when(
                 this.chgMode,
                 () =>
-                  html`<ui-link @click=${this.cancel} ?disabled=${this.btnDisabled} class="absolute -mt-1.5 -mr-32"
+                  html`<ui-link @click=${this.cancel} ?disabled=${this.btnPending} class="absolute -mt-1.5 -mr-32"
                     >Cancel</ui-link
                   >`
               )}
