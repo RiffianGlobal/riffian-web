@@ -2,6 +2,7 @@ import { getAccount, bridgeStore, getContract, getContracts, assignOverrides } f
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { solidityPackedKeccak256 } from 'ethers'
+import { getAlbumContract } from '~/lib/riffutils'
 
 import { State, property } from '@lit-web3/base/state'
 export { StateController } from '@lit-web3/base/state'
@@ -25,9 +26,6 @@ class ReferralStore extends State {
   }
 }
 export const referralStore = new ReferralStore()
-
-export const getAlbumContract = async (readonly = false) =>
-  getContract('MediaBoard', { account: readonly ? undefined : await getAccount() })
 
 export const getReferral = async () => {
   const contract = await getAlbumContract()
