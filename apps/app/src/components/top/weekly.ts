@@ -42,7 +42,7 @@ export class WeeklyTop extends ThemeElement(style) {
   @state() pending = false
   @state() err = ''
   @state() ts = 0
-  @state() pagination = paginationDef() as Paging
+  @state() pagination = paginationDef() as Pagination
   @state() hasMore = true
 
   get disabled() {
@@ -53,6 +53,9 @@ export class WeeklyTop extends ThemeElement(style) {
   }
   get scrollMode() {
     return this.isMobi ? 'click' : 'scroll'
+  }
+  get empty() {
+    return this.pending && !this.collections?.length
   }
 
   fetch = async (force = false) => {
@@ -84,9 +87,9 @@ export class WeeklyTop extends ThemeElement(style) {
       } else {
         this.collections = [..._collections]
       }
-    } catch (e) {
+    } catch (e: any) {
       let msg = e.message || e.code || e
-      console.error(e)
+      console.error(msg)
     } finally {
       this.pending = false
       this.ts++
@@ -132,7 +135,7 @@ export class WeeklyTop extends ThemeElement(style) {
         <div class="num flex-auto w-32">Volume</div>
       </div>
       ${when(
-        this.pending && !this.collections?.length,
+        this.empty,
         () => html`<div name="loading" class="doc-intro"></div><loading-skeleton num="4"></loading-skeleton></div>`,
         () =>
           html`${repeat(

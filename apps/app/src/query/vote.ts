@@ -1,6 +1,6 @@
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 
-export const subjectWeeklyVotesQuery = (week, voteTime, { first = 0, skip = 0, orderBy } = {}): Promise<any> => {
+export const subjectWeeklyVotesQuery = (week: String, voteTime: String, { first = 0, skip = 0 } = {}): Promise<any> => {
   let query = `{
     subjectWeeklyVotes(
       where: { week: ${week} }${first > 0 ? ` ,first: ${first}` : ''}${skip > 0 ? ` ,skip: ${skip}` : ''}

@@ -8,6 +8,7 @@ import '~/components/top/list'
 import '~/components/createAlbum/btn'
 import '~/components/createAlbum/socialbtn'
 import '~/components/latest/votes'
+import '@riffian-web/ui/link'
 
 // Style
 import style from './index.css?inline'
@@ -55,7 +56,7 @@ export class ViewHome extends ThemeElement(style) {
             )}
           </div>
         </div>
-        <weekly-top paging></weekly-top>
+        <weekly-top></weekly-top>
       </div>
       ${when(
         true,
@@ -64,10 +65,13 @@ export class ViewHome extends ThemeElement(style) {
           <div class="home-board">
             <div class="home-board-header">
               <div class="home-board-lead">
-                <div class="text-xl">Top</div>
+                <div class="text-xl">
+                  Top 10
+                  <ui-link text class="ml-1 text-xs text-blue-300" href=${'/top'}>View all</ui-link>
+                </div>
               </div>
             </div>
-            <top-album paging></top-album>
+            <top-album></top-album>
           </div>
           <!-- Votes -->
           <div class="home-board">

@@ -89,7 +89,7 @@ export class UserVotesList extends ThemeElement(style) {
         () => html`
           ${repeat(
             this.uVotes,
-            (item: any, i) => html`
+            (item: any) => html`
               <div class="item flex items-center pr-0.5" @click=${() => this.go2(item)}>
                 <div class="flex-auto flex items-center">
                   <img-loader .src=${item.subject.image} class="w-[3.25rem] h-[3.25rem] rounded-lg mr-4"></img-loader>

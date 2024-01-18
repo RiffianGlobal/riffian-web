@@ -1,7 +1,6 @@
-import { getAccount, getContract, assignOverrides, bridgeStore } from '@riffian-web/ethers/src/useBridge'
+import { getAccount, getContract, assignOverrides } from '@riffian-web/ethers/src/useBridge'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
-import fetchJsonP from 'fetch-jsonp'
 import { userSubjectVotes } from '../uservotes/action'
 import { subjectWeeklyVotesQuery as weeklyVotes, subjectsQuery } from '~/query'
 
