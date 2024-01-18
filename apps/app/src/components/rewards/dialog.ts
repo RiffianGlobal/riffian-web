@@ -118,7 +118,7 @@ export class ClaimRewardDialog extends ThemeElement('') {
                     </tx-state>`,
                   () =>
                     html`<div class="text-base inline-flex items-center">
-                        <span class="text-2xl text-yellow-500 mr-2">${formatUnits(this.userWeeklyReward, 18)}</span>
+                        <span class="text-2xl text-yellow-500 mr-2">${formatUnits(this.userWeeklyReward)}</span>
                         rewards to claim.
                       </div>
                       ${when(

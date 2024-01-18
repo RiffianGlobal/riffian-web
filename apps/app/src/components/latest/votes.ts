@@ -102,7 +102,7 @@ export class LatestVotes extends ThemeElement(style) {
                     <ui-address class="text-xl" .address=${item.voter.address} avatar hideAddr></ui-address>
                   </ui-link>
                   <div class="flex flex-col justify-center items-end">
-                    <p class="opacity-95 text-base">${formatUnits(item.value, 18)}</p>
+                    <p class="opacity-95 text-base">${formatUnits(item.value)}</p>
                     <p class="text-right text-xs leading-none text-neutral-400 whitespace-nowrap">
                       ${asyncReplace(this.timeAgo(BigInt(item.time)))}
                     </p>

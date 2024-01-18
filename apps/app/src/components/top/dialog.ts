@@ -64,8 +64,8 @@ export class VoteAlbumDialog extends ThemeElement('') {
         if (votes > 0) this.retreatDisabled = false
         return votes
       })
-      this.price = votePrice(this.album).then((price) => formatUnits(price, 18))
-      this.retreatPrice = await retreatPrice(this.album).then((price) => formatUnits(price, 18))
+      this.price = votePrice(this.album).then((price) => formatUnits(price))
+      this.retreatPrice = await retreatPrice(this.album).then((price) => formatUnits(price))
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })

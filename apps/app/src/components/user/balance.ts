@@ -8,6 +8,7 @@ import {
   when
 } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController, getNativeBalance } from '@riffian-web/ethers/src/useBridge'
+import { formatUnits } from 'ethers'
 
 @customElement('account-balance')
 export class AccountBalance extends ThemeElement('') {
@@ -17,6 +18,9 @@ export class AccountBalance extends ThemeElement('') {
 
   get account() {
     return bridgeStore.bridge.account
+  }
+  get showBalance() {
+    return this.balance === '' ? this.balance : (+this.balance).toFixed(4)
   }
 
   getBalance = async () => {
@@ -31,7 +35,7 @@ export class AccountBalance extends ThemeElement('') {
   render() {
     return html`${when(
       this.account,
-      () => html` <span class=${classMap(this.$c([this.class]))}>${this.account ? this.balance : ''}</span> `
+      () => html` <span class=${classMap(this.$c([this.class]))}>${this.showBalance}</span> `
     )} `
   }
 }

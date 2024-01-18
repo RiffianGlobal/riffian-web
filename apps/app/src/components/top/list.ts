@@ -71,7 +71,7 @@ export class TopAlbum extends ThemeElement(style) {
       let { subjects } = await albumList(opts)
       const _subjects = subjects.map((item: any) => ({
         ...item,
-        totalVal: +formatUnits(item.totalVoteValue, 18).toString(),
+        totalVal: +formatUnits(item.totalVoteValue).toString(),
         image: item.image?.startsWith(`http`) ? item.image : MEDIA_URL_DEFAULTS[0]
       }))
       if (this.paging) {

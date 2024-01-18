@@ -157,7 +157,7 @@ export class WeeklyTop extends ThemeElement(style) {
                     </a>
                   </div>
                   <div class="num flex-initial flex flex-col !w-18 text-sm items-end">
-                    <span>${formatUnits(item.volumeTotal, 18)}</span>
+                    <span>${formatUnits(item.volumeTotal)}</span>
                     <span class="text-xs" style="color: #34C77B">${WeeklyTop.dayChange(item)}</span>
                   </div>
                 </div>

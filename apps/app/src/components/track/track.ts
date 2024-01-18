@@ -74,8 +74,8 @@ export class TrackDetail extends ThemeElement(style) {
         // if (votes > 0) this.retreatDisabled = false
         return votes
       })
-      // this.price = votePrice(this.trackAddress).then((price) => formatUnits(price, 18))
-      // this.retreatPrice = retreatPrice(this.trackAddress).then((price) => formatUnits(price, 18))
+      // this.price = votePrice(this.trackAddress).then((price) => formatUnits(price))
+      // this.retreatPrice = retreatPrice(this.trackAddress).then((price) => formatUnits(price))
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })
@@ -219,7 +219,7 @@ export class TrackDetail extends ThemeElement(style) {
                   class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
                 >
                   <div class="text-base text-gray-500 align-center">Total Vote Value</div>
-                  <div class="text-4xl align-center lining-nums">${formatUnits(this.subject.totalVoteValue, 18)}</div>
+                  <div class="text-4xl align-center lining-nums">${formatUnits(this.subject.totalVoteValue)}</div>
                 </div>
               </div>
             </div>`

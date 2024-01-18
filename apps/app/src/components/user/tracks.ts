@@ -53,7 +53,7 @@ export class TrackInfo extends ThemeElement(style) {
       } = await tracks(this.address)
       this.trackList = subjects.map((item: any) => {
         const { totalVoteValue: totalVal } = item
-        return { ...item, totalVal: formatUnits(totalVal, 18) }
+        return { ...item, totalVal: formatUnits(totalVal) }
       })
     } catch (e: any) {
       this.err = e.message || e.msg || e

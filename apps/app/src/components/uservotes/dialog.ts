@@ -92,7 +92,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
           this.price && !this.pending,
           () => html`
             <p class="font-bold">Estimated returned value</p>
-            <p class="text-xl text-sky-500">${formatUnits(this.price, 18)} FTM</p>
+            <p class="text-xl text-sky-500">${formatUnits(this.price)} FTM</p>
             <p>Your Votes:${this.votes}</p>
             <ui-button class="m-1" @click=${this.retreat}> RETREAT </ui-button>
           `

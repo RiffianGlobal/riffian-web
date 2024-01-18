@@ -57,7 +57,7 @@ export class ClaimRewards extends ThemeElement(style) {
                   ><i class="mdi mdi-hand-coin-outline"></i></ui-button
                 ><span class="">
                   <span class="text-base text-gray-300">Pool: </span>
-                  <span class="ui-em text-xl">${formatUnits(this.rewards, 18)}</span></span
+                  <span class="ui-em text-xl">${formatUnits(this.rewards)}</span></span
                 >`
           )}
         </div>
