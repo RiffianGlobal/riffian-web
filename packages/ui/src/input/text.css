@@ -1,18 +1,22 @@
 .ui-input-text {
   @apply flex w-full mx-auto relative py-5;
-  & input[type] {
+  & input[type],
+  & textarea {
     font-family: var(--fontFamily);
     @apply h-8 relative inline-flex w-full sm_py-6 py-5 px-3 rounded-md text-sm sm_text-base bg-[#111827] transition-all;
     border: 1px solid #424b57;
+    &:hover,
+    &:focus {
+      border-color: var(--formBorderFocus) !important;
+    }
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(96, 165, 250, 0.2);
+      outline: 0 none;
+      outline-offset: 0;
+    }
   }
-  & input[type]:hover,
-  & input[type]:focus {
-    border-color: var(--formBorderFocus) !important;
-  }
-  & input[type]:focus {
-    box-shadow: 0 0 0 0.2rem rgba(96, 165, 250, 0.2);
-    outline: 0 none;
-    outline-offset: 0;
+  & textarea {
+    @apply h-24 block resize-none;
   }
   &[disabled],
   &[readonly] {
@@ -23,7 +27,8 @@
   }
   &.sm {
     @apply py-0;
-    & input[type] {
+    & input[type],
+    & textarea {
       @apply h-5 sm_h-6 text-sm py-4;
     }
     & .ui-input-right,
@@ -76,19 +81,30 @@
     }
   }
   &[rightSlotted] {
-    & input[type] {
-      @apply pr-20;
-    }
-    &.sm input[type] {
+    & input[type],
+    & textarea {
       @apply pr-10;
+    }
+    &.sm {
+      & input[type],
+      & textarea {
+        @apply pr-5;
+      }
     }
   }
   &[leftSlotted] {
-    & input[type] {
+    & input[type],
+    & textarea {
       @apply pl-11;
     }
-    &.sm input[type] {
-      @apply pl-8;
+    &.sm {
+      & input[type],
+      & textarea {
+        @apply pl-8;
+      }
     }
   }
+}
+
+.ui-input-text.ui-input-textarea {
 }

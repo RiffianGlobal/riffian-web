@@ -1,7 +1,7 @@
 import { bridgeStore, assignOverrides } from '@riffian-web/ethers/src/useBridge'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
-import { StateController, type UserWeekly, rewardStore, rewardTasks } from '../store'
+import { StateController, type UserWeekly, rewardStore, rewardTasks } from '~/store/reward'
 import { weeklyStore } from '~/store/weekly'
 // Components
 import { ThemeElement, html, customElement, repeat, state, when, property } from '@riffian-web/ui/shared/theme-element'
@@ -14,7 +14,7 @@ import '@riffian-web/ui/loading/skeleton'
 import { toast, getAlbumContract } from '~/lib/riffutils'
 
 // Style
-import style from './tasks.css?inline'
+import style from './task-weeklyvotes.css?inline'
 
 @customElement('task-weeklyvotes')
 export class TaskWeeklyvotes extends ThemeElement(style) {

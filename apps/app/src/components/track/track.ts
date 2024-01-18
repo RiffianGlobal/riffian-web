@@ -18,7 +18,7 @@ import '@riffian-web/ui/dialog/prompt'
 import style from './list.css?inline'
 import { formatUnits } from 'ethers'
 import { albumData, myVotes } from '~/components/top/action'
-import { tweetStore, type Social } from '~/components/top/tweet'
+import { tweetStore, type Social } from '~/store/tweet'
 
 const defErr = () => ({ tx: '' })
 @customElement('track-detail')
@@ -62,10 +62,9 @@ export class TrackDetail extends ThemeElement(style) {
   }
 
   async readFromTwitter() {
-    const { uri } = this.subject.creator.socials[0] ?? {}
-    const social = await tweetStore.get(uri)
-    if (social) Object.assign(social, { verified: social.address.includes(this.subject.creator.address) })
-    this.social = social
+    const { address, socials = [] } = this.subject.creator
+    const { uri } = socials[0] ?? {}
+    this.social = await tweetStore.fromUri(uri, address)
   }
 
   async getPrice() {

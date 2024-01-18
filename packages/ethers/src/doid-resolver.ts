@@ -27,8 +27,8 @@ class DOIDNameStore extends State {
     let name: string | null | undefined = this.DOIDs[address]
     if (name) return name
     // 2. from ttlStorage
-    const storaged: string | null = ttlStorage.getItem(this.key(address))
-    if (storaged) return this.set(address, (name = storaged))
+    const stored: string | null = ttlStorage.getItem(this.key(address))
+    if (stored) return this.set(address, (name = stored))
     // 3. from api
     if (!this.promises[address])
       this.promises[address] = new Promise(async (resolve) => {

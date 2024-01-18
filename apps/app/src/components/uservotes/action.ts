@@ -2,9 +2,7 @@ import { getAccount, getContract, assignOverrides } from '@riffian-web/ethers/sr
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
-
-export const getAlbumContract = async (readonly = false) =>
-  getContract('MediaBoard', { account: readonly ? undefined : await getAccount() })
+import { getAlbumContract } from '~/lib/riffutils'
 
 export const retreatPrice = async (album: string, amount: number) => {
   const contract = await getAlbumContract(true)

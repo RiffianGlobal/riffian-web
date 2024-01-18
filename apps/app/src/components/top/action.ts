@@ -1,11 +1,9 @@
-import { getAccount, getContract, assignOverrides } from '@riffian-web/ethers/src/useBridge'
+import { getAccount, assignOverrides } from '@riffian-web/ethers/src/useBridge'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { userSubjectVotes } from '../uservotes/action'
 import { subjectWeeklyVotesQuery as weeklyVotes, subjectsQuery } from '~/query'
-
-export const getAlbumContract = async (readonly = false) =>
-  getContract('MediaBoard', { account: readonly ? undefined : await getAccount() })
+import { getAlbumContract } from '~/lib/riffutils'
 
 export const vote = async (album: string, amount: number, price: object) => {
   const contract = await getAlbumContract()

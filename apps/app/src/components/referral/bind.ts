@@ -1,4 +1,6 @@
 import { StateController, referralStore, setReferral } from './store'
+import { getAccount } from '@riffian-web/ethers/src/useBridge'
+import emitter from '@lit-web3/base/emitter'
 // Components
 import {
   ThemeElement,
@@ -11,6 +13,7 @@ import {
 } from '@riffian-web/ui/shared/theme-element'
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/tx-state'
+import { toast } from '@riffian-web/ui/toast'
 
 // Style
 import style from './bind.css?inline'
@@ -21,23 +24,22 @@ export class referralBind extends ThemeElement(style) {
 
   @property() address = ''
 
-  @state() err = 'fff'
-
   get addr() {
     return referralStore.address || this.address
   }
 
   bind = async () => {
-    if (referralStore.address) return
+    if (!(await getAccount())) return emitter.emit('connect-wallet')
     referralStore.pending = true
+    if (referralStore.address) return
     try {
       referralStore.tx = await setReferral(this.address)
       await referralStore.tx.wait()
       await referralStore.check()
     } catch (err: any) {
-      let msg = err.message || err.code
-      if (err.code === 4001) return
-      this.err = msg
+      if (err.code !== 4001) {
+        toast.add({ summary: 'Set Failed', detail: err.message })
+      }
     } finally {
       referralStore.pending = false
     }
@@ -56,7 +58,7 @@ export class referralBind extends ThemeElement(style) {
           .value=${this.addr}
           readonly
           ?disabled=${referralStore.bound}
-          class="w-[25em]"
+          class="w-[26em]"
           sm
         ></ui-input-text>
         <i
@@ -71,16 +73,9 @@ export class referralBind extends ThemeElement(style) {
       <!-- Button -->
       <div class="flex gap-4 items-center justify-center">
         ${when(
-          !referralStore.pending && !referralStore.bound,
-          () => html`<ui-button @click=${this.bind} .pending=${referralStore.pending}>Bind</ui-button>`
+          !referralStore.bound,
+          () => html`<ui-button @click=${() => this.bind()} .pending=${referralStore.pending}>Set</ui-button>`
         )}
-        <!-- TxState -->
-        <div>
-          ${when(
-            referralStore.txPending,
-            () => html`<tx-state .tx=${referralStore.tx} .opts=${{ state: { success: 'Success.' } }}></tx-state>`
-          )}
-        </div>
       </div>
     </div>`
   }

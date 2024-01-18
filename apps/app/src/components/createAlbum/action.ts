@@ -1,9 +1,7 @@
-import { getAccount, getContract, assignOverrides } from '@riffian-web/ethers/src/useBridge'
+import { getAccount, assignOverrides } from '@riffian-web/ethers/src/useBridge'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
-
-export const getAlbumContract = async (readonly = false) =>
-  getContract('MediaBoard', { account: readonly ? undefined : await getAccount() })
+import { getAlbumContract } from '~/lib/riffutils'
 
 export const createAlbum = async (name: string, image: string, url: string) => {
   const contract = await getAlbumContract()
@@ -47,9 +45,7 @@ export const bindSocial = async (platform: string, id: string, uri: string) => {
 
 export const getSocials = async (address?: string) => {
   const contract = await getAlbumContract(true)
-  const method = 'getSocials'
-  const parameters = [address ?? (await getAccount())]
-  return await contract[method](...parameters)
+  return await contract.getSocials(address || (await getAccount()))
 }
 
 export const albumData = async (album: string) => {
