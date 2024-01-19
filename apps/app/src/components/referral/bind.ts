@@ -18,8 +18,8 @@ import { toast } from '@riffian-web/ui/toast'
 // Style
 import style from './bind.css?inline'
 
-@customElement('referral-bind')
-export class referralBind extends ThemeElement(style) {
+@customElement('bind-referral')
+export class bindReferral extends ThemeElement(style) {
   bindReferral: any = new StateController(this, referralStore)
 
   @property() address = ''
@@ -51,8 +51,8 @@ export class referralBind extends ThemeElement(style) {
   }
 
   render() {
-    return html`<div class="flex flex-col gap-8 mt-20">
-      <div class="flex gap-3 items-center">
+    return html`<div class="flex flex-col gap-8 w-full">
+      <div class="flex gap-3 items-center mx-auto">
         <b>Referral:</b>
         <ui-input-text
           .value=${this.addr}
@@ -74,7 +74,7 @@ export class referralBind extends ThemeElement(style) {
       <div class="flex gap-4 items-center justify-center">
         ${when(
           !referralStore.bound,
-          () => html`<ui-button @click=${() => this.bind()} .pending=${referralStore.pending}>Set</ui-button>`
+          () => html`<ui-button @click=${() => this.bind()} .pending=${referralStore.pending}>Accept</ui-button>`
         )}
       </div>
     </div>`

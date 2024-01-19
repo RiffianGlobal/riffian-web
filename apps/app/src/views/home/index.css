@@ -3,9 +3,9 @@
   --homeBoardHalf: calc((100% - var(--homeBoardWidth)) / 2 - 3rem);
 }
 
-.home-board {
+.ui-board {
   @apply lg_flex-initial w-full lg_w-[30rem];
-  & .home-board-header {
+  /* & .home-board-header {
     @apply h-16 md_h-20 p-1.5 flex justify-between;
     & .home-board-lead {
       @apply flex flex-col gap-1.5;
@@ -16,14 +16,14 @@
         @apply text-neutral-400;
       }
     }
-  }
+  } */
   /* Weekly */
   &:nth-of-type(1) {
-    @apply shrink grow-0 lg_w-full;
+    @apply grow lg_w-full;
     width: var(--homeBoardHalf);
   }
   &:nth-of-type(2) {
-    @apply shrink grow-0;
+    @apply grow;
     width: var(--homeBoardHalf);
   }
   &:nth-of-type(3) {
@@ -32,7 +32,7 @@
 }
 
 @media (max-width: 1024px) {
-  .home-board {
+  .ui-board {
     /* Weekly */
     &:nth-of-type(1),
     &:nth-of-type(2) {

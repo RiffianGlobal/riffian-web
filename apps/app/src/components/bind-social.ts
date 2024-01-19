@@ -106,6 +106,7 @@ export class BindSocial extends ThemeElement('') {
       this.success = await this.tx.wait()
       await this.check()
       this.chgMode = false
+      if (rewardStore.socialNotClaimed) rewardStore.update()
     } catch (err: any) {
       if (err.code !== 4001) {
         toast.add({ summary: 'Error', detail: err.message })

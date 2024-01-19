@@ -11,17 +11,19 @@ class ReferralStore extends State {
   @property({ value: null }) tx?: any
   @property({ value: false }) pending!: boolean
   @property({ value: '' }) address!: string
+  @property({ value: false }) inited!: boolean
 
   get txPending() {
     return this.tx && !this.tx.ignored
   }
   get bound() {
-    return !!bridgeStore.bridge.account && !!this.address
+    return this.inited && !!bridgeStore.bridge.account && !!this.address
   }
 
   check = async () => {
     this.pending = true
     await getReferral()
+    this.inited = true
     this.pending = false
   }
 }

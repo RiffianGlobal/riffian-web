@@ -34,11 +34,9 @@ class WeeklyStore extends State {
   cd = () => {
     const end = dayjs.unix(this.latestEnd)
     var diff = dayjs.duration(end.diff(dayjs()))
-    const [h, m, s] = [
-      diff.days() * 24 + diff.hours(),
-      diff.minutes().toString().padStart(2, '0'),
-      diff.seconds().toString().padStart(2, '0')
-    ]
+    const [h, m, s] = [diff.days() * 24 + diff.hours(), diff.minutes(), diff.seconds()].map((r) =>
+      r.toString().padStart(2, '0')
+    )
     this.latestLeft = `${h}:${m}:${s}`
     setTimeout(this.cd, 1000)
   }

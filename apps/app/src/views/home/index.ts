@@ -28,15 +28,13 @@ export class ViewHome extends ThemeElement(style) {
   }
 
   render() {
-    return html` <div
-      class="ui-container flex flex-col lg_flex-row lg_mt-8 px-2 lg_px-8 gap-4 lg_gap-12 place-content-center"
-    >
+    return html` <div class="ui-pageview ui-container flex-col lg_flex-row place-content-center">
       <!-- Weekly -->
-      <div class="home-board">
-        <div class="home-board-header">
-          <div class="home-board-lead">
+      <div class="ui-board">
+        <div class="ui-board-header">
+          <div class="ui-board-lead">
             <h5>Weekly</h5>
-            <div class="home-board-subtitle">
+            <div class="ui-board-subtitle">
               ${when(
                 weeklyStore.latest,
                 () =>
@@ -44,7 +42,7 @@ export class ViewHome extends ThemeElement(style) {
               )}
             </div>
           </div>
-          <div class="home-board-lead">
+          <div class="ui-board-lead">
             ${when(
               rewardStore.inited,
               () =>
@@ -62,9 +60,9 @@ export class ViewHome extends ThemeElement(style) {
         true,
         () => html`
           <!-- Top 10 -->
-          <div class="home-board">
-            <div class="home-board-header">
-              <div class="home-board-lead">
+          <div class="ui-board">
+            <div class="ui-board-header">
+              <div class="ui-board-lead">
                 <div class="text-xl">
                   Top 10
                   <ui-link text class="ml-1 text-xs text-blue-300" href=${'/top'}>View all</ui-link>
@@ -74,8 +72,8 @@ export class ViewHome extends ThemeElement(style) {
             <top-album></top-album>
           </div>
           <!-- Votes -->
-          <div class="home-board">
-            <div class="home-board-header">
+          <div class="ui-board">
+            <div class="ui-board-header">
               <div class="text-xl">Votes</div>
             </div>
             <latest-votes></latest-votes>

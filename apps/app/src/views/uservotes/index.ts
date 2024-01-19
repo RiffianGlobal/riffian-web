@@ -7,13 +7,15 @@ import style from './index.css?inline'
 @customElement('user-votes')
 export class ViewTop extends ThemeElement(style) {
   render() {
-    return html`<div class="ui-container mx-auto flex flex-col place-content-center pt-12">
-      <div>
-        <div class="w-full inline-flex pb-2 border-b border-slate-50/10">
-          <div class="py-1.5 px-3 text-base font-normal text-white/70 rounded-md">My Votes</div>
+    return html`<div class="ui-pageview ui-container">
+      <div class="ui-board">
+        <div class="ui-board-header">
+          <div class="ui-board-lead">
+            <h5>My Votes</h5>
+          </div>
         </div>
+        <user-votes-list by="id"></user-votes-list>
       </div>
-      <user-votes-list by="id"></user-votes-list>
     </div>`
   }
 }

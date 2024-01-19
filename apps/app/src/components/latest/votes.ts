@@ -15,6 +15,7 @@ import { latestVote } from './actions'
 import { formatUnits } from 'ethers'
 import style from './votes.css?inline'
 import { asyncReplace } from 'lit/directives/async-replace.js'
+import { timeAgo } from '~/lib/dayjs'
 // components
 import '@riffian-web/ui/address'
 
@@ -50,26 +51,9 @@ export class LatestVotes extends ThemeElement(style) {
     }
   }
 
-  timeAgo = async function* (timestamp: bigint) {
+  timeAgo = async function* (timestamp: number | string) {
     while (true) {
-      let tsNow = BigInt(new Date().getTime()) / 1000n,
-        timeAgo = tsNow - timestamp,
-        days = timeAgo / 86400n,
-        ret = ''
-      // if (days > 0) ret += days.toString() + (days < 7 ? 'd ' : 'days ')
-      // show 'd/h/m ago' if less than 24h, show 'day/days ago'
-      if (days > 0)
-        ret += days < 1 ? '' : days > 14 ? '2 weeks ' : `${days > 7 ? 7 : days.toString()}${days > 1 ? 'days' : 'day'} `
-
-      if (days < 7) {
-        const hours = (timeAgo - days * 86400n) / 3600n,
-          minutes = (timeAgo - days * 86400n - hours * 3600n) / 60n
-        if (hours > 0) days < 1 ? (ret += +hours.toString() + 'h ') : ''
-        if (minutes > 0) days < 1 ? (ret += minutes.toString() + 'm ') : ''
-      }
-      if (!ret) ret = '<1m'
-      else ret += 'ago'
-      yield ret
+      yield timeAgo(timestamp)
       await new Promise((r) => setTimeout(r, 1000))
     }
   }
@@ -104,7 +88,7 @@ export class LatestVotes extends ThemeElement(style) {
                   <div class="flex flex-col justify-center items-end">
                     <p class="opacity-95 text-base">${formatUnits(item.value)}</p>
                     <p class="text-right text-xs leading-none text-neutral-400 whitespace-nowrap">
-                      ${asyncReplace(this.timeAgo(BigInt(item.time)))}
+                      ${asyncReplace(this.timeAgo(item.time))}
                     </p>
                   </div>
                 </div>

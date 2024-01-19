@@ -14,6 +14,7 @@ import { albumList } from './action'
 import { screenStore } from '@lit-web3/base/screen'
 import { weeklyStore } from '~/store/weekly'
 import { goto } from '@lit-web3/router'
+import { format } from '~/lib/dayjs'
 // import { isImage } from '@lit-web3/base/MIMETypes'
 // Components
 import '@riffian-web/ui/loading/icon'
@@ -175,9 +176,7 @@ export class TopAlbum extends ThemeElement(style) {
                 <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
               </div>
             </div>
-            <div class="flex-none w-40 text-xs text-gray-300/60">
-              ${new Date(item.createdAt * 1000).toLocaleString()}
-            </div>
+            <div class="flex-none w-40 text-xs text-gray-300/60">${format(item.createdAt)}</div>
             <div class="flex-none w-24 text-right text-sm"><span>${item.totalVal}</span></div>
             <div class="flex-none w-24 text-right text-sm">
               <span>${(Number(item.supply) + 1) / 10}</span>

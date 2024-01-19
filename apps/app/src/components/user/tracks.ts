@@ -9,6 +9,7 @@ import {
   when
 } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { format } from '~/lib/dayjs'
 
 import { tracks } from './action'
 import { formatUnits } from 'ethers'
@@ -108,9 +109,7 @@ export class TrackInfo extends ThemeElement(style) {
                     <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
                   </div>
                 </div>
-                <div class="flex-none w-40 text-xs text-gray-300/60">
-                  ${new Date(item.createdAt * 1000).toLocaleString()}
-                </div>
+                <div class="flex-none w-40 text-xs text-gray-300/60">${format(item.createdAt)}</div>
                 <div class="flex-none w-20 text-right text-sm">
                   <p class="num truncate mt-2">${item.fansNumber}</p>
                 </div>
