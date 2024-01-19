@@ -12,7 +12,6 @@ import {
   property
 } from '@riffian-web/ui/shared/theme-element'
 import '../claim'
-import '~/components/rewards/dialog'
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/link'
 import { toast } from '@riffian-web/ui/toast'

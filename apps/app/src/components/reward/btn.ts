@@ -4,7 +4,6 @@ import { StateController, rewardStore } from '~/store/reward'
 import { ThemeElement, html, customElement, state, when } from '@riffian-web/ui/shared/theme-element'
 import '@riffian-web/ui/input/text'
 import '@riffian-web/ui/button'
-import '~/components/referral/bind'
 import './dialog'
 
 // Style

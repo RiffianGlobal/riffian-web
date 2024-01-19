@@ -32,8 +32,8 @@ export const routes: RouteConfig[] = [
   },
   {
     name: 'referral',
-    path: '/referral/:referral?',
-    render: ({ referral = '' }) => html`<view-referral .referral=${referral}></view-referral>`,
+    path: '/referral/:referrer?',
+    render: ({ referrer = '' }) => html`<view-referral .referrer=${referrer}></view-referral>`,
     enter: async () => {
       await import('~/views/referral')
       return true

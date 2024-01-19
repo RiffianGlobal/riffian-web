@@ -2,7 +2,7 @@ import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 
 export const subjectInfo = async (addr: string) => {
   let queryJSON = `{
-    subject ( id: "${addr}" ) {
+    subject ( id: "${addr.toLowerCase()}" ) {
       address createdAt
       fansNumber id image lastVoteAt name supply totalVoteValue
       uri volumeRetreat volumeTotal volumeVote
@@ -18,7 +18,7 @@ export const subjectInfo = async (addr: string) => {
 
 export const voters = async (addr: string) => {
   let queryJSON = `{
-    subject ( id: "${addr}" ) {
+    subject ( id: "${addr.toLowerCase()}" ) {
       address createdAt volumeTotal volumeVote
       fansNumber id image lastVoteAt name supply totalVoteValue uri volumeRetreat 
       creator {

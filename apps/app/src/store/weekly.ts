@@ -19,10 +19,9 @@ class WeeklyStore extends State {
   getLatest = async () => {
     if (!this.promise)
       this.promise = new Promise(async (resolve) => {
-        const req = `{ statistic (id: "riffian") { week } }`
         const {
           statistic: { week }
-        } = await graphQuery('MediaBoard', req)
+        } = await graphQuery('MediaBoard', `{ statistic (id: "riffian") { week } }`)
         this.latestEnd = week + weekSeconds
         const [start, end] = [dayjs.unix(week), dayjs.unix(this.latestEnd)]
         this.latestRange = `${start.format('MMM')}${start.format('D')}-${end.format('D')} ${end.format('YYYY')}`

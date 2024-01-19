@@ -35,6 +35,7 @@ export const getTwitter = async (uri: string, verifyAddress?: string) => {
     id: (url.match(/([^/]+?)$/) ?? [])[1] ?? '',
     verified: verifyAddress && gid ? gid === genGid(verifyAddress) : false
   }
+  if (res.verified && verifyAddress) res.address = verifyAddress
   return res
 }
 
@@ -83,13 +84,6 @@ class Tweets extends State {
     }).finally(() => delete this.promises[uri]))
   }
 
-  verify = async (uri: string, address: string, save = true) => {
-    const twitter = await this.fromUri(uri)
-    twitter.verified = twitter?.gid === genGid(address)
-    this.set(uri, twitter, save)
-    return twitter
-  }
-
   fetchSelf = async () => {
     const address = await getAccount()
     this.selfTweetURI = await this.addressToUri(address)
@@ -127,6 +121,7 @@ export type Social = {
   id: string
   gid: string
   verified: boolean
+  address?: string
 }
 
 export const genTweet = async () => `Verifying my account for ${Official}

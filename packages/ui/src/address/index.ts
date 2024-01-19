@@ -34,19 +34,21 @@ export class UIAddress extends ThemeElement(style) {
   get showAddr() {
     return this.short || screenStore.screen.isMobi ? shortAddress(this.addr) : this.addr
   }
-  get showAddrHTML() {
-    if (this.doid === '') return this.showAddr
+
+  showAddrHTML = () => {
+    if (this.doid === '') return this.wrapLink(this.showAddr)
     return html`${when(
         !this.doid,
         () => html`<i class="mdi mdi-loading"></i>`,
-        () => this.doid
+        () => this.wrapLink(this.doid)
       )}<q class="q">${this.showAddr}</q>`
   }
+  wrapLink = (_html: unknown) => (this.isLink ? html`<ui-link href=${this.href}>${_html}</ui-link>` : _html)
 
   solveDOID = async () => {
     if (this.doid || !this.addr) return
     try {
-      this.doid = (await DOIDStore.get(this.addr)) ?? ''
+      this.doid = (await DOIDStore.getDOID(this.addr)) ?? ''
     } catch {}
   }
 
@@ -64,9 +66,7 @@ export class UIAddress extends ThemeElement(style) {
       <!-- Avatar -->
       ${when(this.avatar, () => html`<ui-address-avatar .address=${this.addr}></ui-address-avatar>`)}
       <!-- Address -->
-      ${when(!this.hideAddr, () =>
-        this.isLink ? html`<ui-link href=${this.href}>${this.showAddrHTML}</ui-link>` : html`${this.showAddrHTML}`
-      )}
+      ${when(!this.hideAddr, () => this.showAddrHTML())}
       <!-- Copy -->
       ${when(this.copy, () => html`<ui-copy-icon .value=${this.addr}></ui-copy-icon>`)}
     `

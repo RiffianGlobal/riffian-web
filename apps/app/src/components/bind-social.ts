@@ -30,7 +30,7 @@ export class BindSocial extends ThemeElement('') {
   @state() inputURL = ''
   @state() inputErr = ''
   @state() inputPending = false
-  @state() chgMode = false
+  @state() inChangeMode = false
 
   connectedCallback() {
     super.connectedCallback()
@@ -63,7 +63,7 @@ export class BindSocial extends ThemeElement('') {
     return !this.inputValid || this.btnPending
   }
   get txt() {
-    const title = `${this.bound ? (this.chgMode ? 'Change' : 'Your') : 'Bind'} Social Account`
+    const title = `${this.bound ? (this.inChangeMode ? 'Change' : 'Your') : 'Bind'} Social Account`
     return {
       title,
       btn: `${this.bound ? 'Change' : 'Confirm'}`
@@ -75,7 +75,7 @@ export class BindSocial extends ThemeElement('') {
     return html`<b>${name}</b> @${id}`
   }
   get verified() {
-    return !!this.twitter?.verified
+    return !!this.twitter?.verified && this.twitter?.address === this.account
   }
 
   onInput = async (e: CustomEvent) => {
@@ -96,7 +96,7 @@ export class BindSocial extends ThemeElement('') {
     }
     if (this.inputErr) return
     this.twitter = await tweetStore.fromUri(this.inputURL, this.account)
-    if (!this.twitter?.verified) this.inputErr = 'Malformed Tweet'
+    if (!this.verified) this.inputErr = 'Malformed Tweet'
   }
 
   async set() {
@@ -105,7 +105,8 @@ export class BindSocial extends ThemeElement('') {
       this.tx = await bindSocial(this.platform, '', this.inputURL)
       this.success = await this.tx.wait()
       await this.check()
-      this.chgMode = false
+      this.inChangeMode = false
+      this.tx = null
       if (rewardStore.socialNotClaimed) rewardStore.update()
     } catch (err: any) {
       if (err.code !== 4001) {
@@ -117,10 +118,10 @@ export class BindSocial extends ThemeElement('') {
   }
 
   chg = () => {
-    this.chgMode = true
+    this.inChangeMode = true
   }
   cancel = () => {
-    this.chgMode = false
+    this.inChangeMode = false
   }
   back = () => {
     this.emit('back')
@@ -132,7 +133,7 @@ export class BindSocial extends ThemeElement('') {
       <h5 class="text-base text-center mt-3 mb-8">${this.txt.title}</h5>
       <!-- Bound info -->
       ${when(
-        this.bound && !this.chgMode,
+        this.bound && !this.inChangeMode,
         () =>
           html`<div class="my-8 text-center">
               ${when(
@@ -217,7 +218,7 @@ export class BindSocial extends ThemeElement('') {
                 >Confirm<i class="mdi ${classMap({ 'mdi-loading': this.txPending })}"></i
               ></ui-button>
               ${when(
-                this.chgMode,
+                this.inChangeMode,
                 () =>
                   html`<ui-link @click=${this.cancel} ?disabled=${this.btnPending} class="absolute -mt-1.5 -mr-32"
                     >Cancel</ui-link

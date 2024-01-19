@@ -142,6 +142,7 @@ export type UserWeekly = {
   claimed: string | number
   cooked: {
     week: number
+    weekOrdinal: string
     year: number
     past: boolean
     pastYear: boolean
@@ -154,17 +155,24 @@ export type UserWeekly = {
 export const getUserWeeklyVotes = async (account?: string): Promise<UserWeekly[]> => {
   account ||= await getAccount()
   const req = `{
-    userWeeklyVotes( orderBy: "week" orderDirection: "desc" where: {user_: {address: "${account}"}} ) { week votes claimed }
+    userWeeklyVotes( orderBy: "week" orderDirection: "desc" where: {user_: {address: "${account!.toLowerCase()}"}} ) { week votes claimed }
   }`
   const { userWeeklyVotes } = await graphQuery('MediaBoard', req)
   const [curYear] = [dayjs().year()]
   let curWeek = dayjs().week()
   return userWeeklyVotes.map((weekly: UserWeekly, i: number) => {
-    const weekday = dayjs(weekly.week * 1000)
+    const weekday = dayjs.unix(weekly.week)
     const [week, year, claimed] = [weekday.week(), weekday.year(), +weekly.claimed > 0]
-    if (i === 0 && curWeek !== weekly.week) curWeek = week
     const [past, pastYear] = [curWeek > week, true || curYear > year]
-    weekly.cooked = { week, year, past, pastYear, claimed, claimable: !claimed && past }
+    weekly.cooked = {
+      week,
+      weekOrdinal: weekday.format('wo'),
+      year,
+      past,
+      pastYear,
+      claimed,
+      claimable: !claimed && past
+    }
     return weekly
   })
 }

@@ -7,7 +7,6 @@ import {
   getNetwork
 } from '@riffian-web/ethers/src/useBridge'
 import { StateController, rewardStore } from '~/store/reward'
-import { normalizeTxErr } from '@riffian-web/ethers/src/parseErr'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { emitter } from '@lit-web3/base'
 import { getSocials } from '~/components/createAlbum/action'
@@ -21,14 +20,12 @@ import {
   customElement,
   state,
   classMap,
-  repeat,
   property,
   when
 } from '@riffian-web/ui/shared/theme-element'
 import '@riffian-web/ui/input/text'
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/dialog'
-import '~/components/referral/bind'
 import { toast } from '@riffian-web/ui/toast'
 
 // Style
@@ -105,7 +102,6 @@ export class RewardClaim extends ThemeElement(style) {
       await this.tx.wait()
       await rewardStore.update()
     } catch (err: any) {
-      err = await normalizeTxErr(err)
       if (err.code !== 4001) {
         this.emit('error', err.message)
         console.error(err)

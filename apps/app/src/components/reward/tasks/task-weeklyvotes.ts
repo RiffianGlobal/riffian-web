@@ -6,7 +6,6 @@ import { weeklyStore } from '~/store/weekly'
 // Components
 import { ThemeElement, html, customElement, repeat, state, when, property } from '@riffian-web/ui/shared/theme-element'
 import '../claim'
-import '~/components/rewards/dialog'
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/link'
 import '@riffian-web/ui/loading/skeleton'
@@ -76,7 +75,8 @@ export class TaskWeeklyvotes extends ThemeElement(style) {
           (weekly, i) =>
             html`<li class="flex w-full gap-4">
               <p class="w-20">
-                ${weekly.cooked.week}${when(weekly.cooked.pastYear, () => html`<q class="q">${weekly.cooked.year}</q>`)}
+                <span class="inline-block w-[1.5em]">${weekly.cooked.weekOrdinal}</span>
+                ${when(weekly.cooked.pastYear, () => html`<q class="q">${weekly.cooked.year}</q>`)}
               </p>
               <p class="w-10 text-right">${weekly.votes}</p>
               <p class="grow text-right">${weekly.cooked.reward}</p>

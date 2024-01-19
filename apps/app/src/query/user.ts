@@ -7,7 +7,7 @@ export const userBasicInfo = (account: String): Promise<any> => graphQuery('Medi
 
 // query strings
 export const basicInfoQuery = (account: String): string => `{
-  user(id: "${account}") {
+  user(id: "${account.toLowerCase()}") {
     address, holding, rewardClaimed
     socials {
       id, pid, uri, platform
@@ -15,7 +15,7 @@ export const basicInfoQuery = (account: String): string => `{
   }
 }`
 export const createdSubjectsQuery = (account: String, { first = 0, skip = 0 } = {}): string => `{
-  user(id: "${account}") {
+  user(id: "${account.toLowerCase()}") {
     subjectsCreated(orderBy: supply, orderDirection: desc${first > 0 ? `, first: ${first}` : ''}${
       skip > 0 ? `, ${skip}` : ''
     }) {
