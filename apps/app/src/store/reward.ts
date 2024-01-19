@@ -1,11 +1,13 @@
 import { getAccount, getSigner, assignOverrides } from '@riffian-web/ethers/src/useBridge'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
-import { formatUnits, FixedNumber } from 'ethers'
-import getMultiCall, { getMultiCallContract } from '@riffian-web/ethers/src/multiCall'
+import { formatUnits } from 'ethers'
+import getMultiCall from '@riffian-web/ethers/src/multiCall'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 import dayjs from '~/lib/dayjs'
 import { getRewardContract } from '~/lib/riffutils'
+import { weeklyStore } from '~/store/weekly'
+import { tweetStore } from '~/store/tweet'
 
 import { State, property } from '@lit-web3/base/state'
 export { StateController } from '@lit-web3/base/state'
@@ -16,6 +18,7 @@ export const rewardMap = [
     title: 'Bind a social account',
     read: 'RewardSocialVerify',
     write: 'claimSocialVerify',
+    requireSig: true,
     check: 'isSocialVerifyClaimed',
     once: true,
     closed: false
@@ -29,8 +32,24 @@ export const rewardMap = [
     once: true,
     closed: false
   },
-  { key: 'follow', title: 'Follow', read: 'RewardFollow', write: 'claimFollow', check: 'followClaimed', closed: true },
-  { key: 'share', title: 'Share', read: 'RewardShare', write: 'claimShare', check: 'shareClaimed', closed: true }
+  {
+    key: 'follow',
+    title: 'Follow',
+    read: 'RewardFollow',
+    write: 'claimFollow',
+    requireSig: true,
+    check: 'followClaimed',
+    closed: true
+  },
+  {
+    key: 'share',
+    title: 'Share',
+    read: 'RewardShare',
+    write: 'claimShare',
+    requireSig: true,
+    check: 'shareClaimed',
+    closed: true
+  }
 ]
 
 export const rewardTasks = [
@@ -54,7 +73,8 @@ class RewardStore extends State {
   @property({ value: [] }) tasks!: bigint[]
   @property({ value: [] }) rewardsClaimed!: boolean[]
   @property({ value: [] }) userWeeklyRewards!: UserWeekly[]
-  @property({ value: [] }) weeklyPools!: bigint[]
+  @property({ value: [] }) userWeeklyPools!: bigint[]
+  @property({ value: 0n }) weeklyPool!: bigint // current weekly pool
 
   get txPending() {
     return this.tx && !this.tx.ignored
@@ -69,9 +89,8 @@ class RewardStore extends State {
       }))
       .sort((r) => (r.claimed ? 1 : -1))
   }
-  get weeklyPool() {
-    const [pool] = this.weeklyPools
-    return pool ? formatUnits(pool) : ''
+  get weeklyPoolHumanized() {
+    return this.weeklyPool ? formatUnits(this.weeklyPool) : ''
   }
   get votesTotal() {
     return this.userWeeklyRewards.reduce((cur, next) => cur + (next?.reward ?? 0n), 0n)
@@ -90,9 +109,10 @@ class RewardStore extends State {
   // AKA: getRewards
   update = async () => {
     this.pending = true
+    tweetStore.fetchSelf()
     try {
       const account = await getAccount()
-      rewardStore.userWeeklyRewards = await getUserWeeklyRewards()
+      rewardStore.userWeeklyRewards = await getUserWeeklyRewards(account)
 
       const { MultiCallContract: rewardContract, MultiCallProvider } = await getMultiCall('Reward')
       // Aggregated calls
@@ -178,24 +198,29 @@ export const getUserWeeklyVotes = async (account?: string): Promise<UserWeekly[]
 }
 
 export const getUserWeeklyRewards = async (account?: string): Promise<UserWeekly[]> => {
+  const currentWeek = await weeklyStore.getLatest()
   const userWeeklyVotes = await getUserWeeklyVotes(account || (await getAccount()))
+  const weekN = userWeeklyVotes.length
   const { MultiCallContract: contract, MultiCallProvider } = await getMultiCall('MediaBoard')
   // Aggregated calls
-  const calls = []
-  // weekly total votes
+  // 0: current weekly pool
+  const calls = [contract.weeklyReward(currentWeek)]
+  // 0-weekN: weekly total votes
   calls.push(...userWeeklyVotes.map(({ week }) => contract.weeklyVotes(week)))
-  // weekly total rewards
+  // 0-weekN: weekly total rewards
   calls.push(...userWeeklyVotes.map(({ week }) => contract.weeklyReward(week)))
   const [data] = await MultiCallProvider.all(calls)
   // Aggregated res
+  // 0: current weekly pool
+  rewardStore.weeklyPool = data.shift()
   // weekly total votes
-  const weeklyVotes = data.splice(0, userWeeklyVotes.length)
+  const weeklyVotes = data.splice(0, weekN)
   // weekly total rewards
-  rewardStore.weeklyPools = data.splice(0, userWeeklyVotes.length)
+  rewardStore.userWeeklyPools = data.splice(0, weekN)
   //
   const res = userWeeklyVotes.map((weekly, i) => {
     const { votes, cooked } = weekly
-    weekly.reward = (rewardStore.weeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
+    weekly.reward = (rewardStore.userWeeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
     cooked.reward = (+formatUnits(weekly.reward)).toFixed(4)
     return weekly
   })

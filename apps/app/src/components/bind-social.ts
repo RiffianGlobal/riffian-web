@@ -96,14 +96,14 @@ export class BindSocial extends ThemeElement('') {
     }
     if (this.inputErr) return
     this.twitter = await tweetStore.fromUri(this.inputURL, this.account)
-    if (!this.verified) this.inputErr = 'Malformed Tweet'
+    if (!this.verified && import.meta.env.MODE !== 'development') this.inputErr = 'Malformed Tweet'
   }
 
   async set() {
     this.pending = true
     try {
       this.tx = await bindSocial(this.platform, '', this.inputURL)
-      this.success = await this.tx.wait()
+      this.success = await this.tx.wait(true)
       await this.check()
       this.inChangeMode = false
       this.tx = null

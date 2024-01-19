@@ -7,8 +7,8 @@ import {
   getNetwork
 } from '@riffian-web/ethers/src/useBridge'
 import { StateController, rewardStore } from '~/store/reward'
+import { tweetStore } from '~/store/tweet'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
-import { emitter } from '@lit-web3/base'
 import { getSocials } from '~/components/createAlbum/action'
 import { userVotes } from '~/components/uservotes/action'
 import { nowTs } from '@riffian-web/ethers/src/utils'
@@ -26,7 +26,6 @@ import {
 import '@riffian-web/ui/input/text'
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/dialog'
-import { toast } from '@riffian-web/ui/toast'
 
 // Style
 import style from './claim.css?inline'
@@ -35,6 +34,7 @@ import style from './claim.css?inline'
 export class RewardClaim extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   bindStore: any = new StateController(this, rewardStore)
+  bindTweet: any = new StateController(this, tweetStore)
 
   @property() reward?: any
 
@@ -64,17 +64,18 @@ export class RewardClaim extends ThemeElement(style) {
   }
   get claimBtnTxt() {
     if (this.reward.closed) return '-'
-    if (this.isSocial && rewardStore.socialNotClaimed) return 'Bind'
+    if (this.isSocial && !tweetStore.selfTweetURI) return 'Bind'
     return this.claimed ? 'Claimed' : 'Claim'
   }
 
-  personalSign = async () => {
-    const [signer, { chainId }] = [await getSigner(), await getNetwork()]
-    return await signer.signTypedData(
-      { name: 'RiffianAirdrop', version: '1.0.0', chainId, verifyingContract: getContracts('Reward') },
-      { Account: [{ name: 'account', type: 'address' }] },
-      { account: await getAccount() }
-    )
+  personalSign3rd = async (method: string) => {
+    // const [signer, { chainId }] = [await getSigner(), await getNetwork()]
+    // return await signer.signTypedData(
+    //   { name: 'RiffianAirdrop', version: '1.0.0', chainId, verifyingContract: getContracts('Reward') },
+    //   { Account: [{ name: 'account', type: 'address' }] },
+    //   { account: await getAccount() }
+    // )
+    throw new Error(`[${method}] is temporarily closed`)
   }
 
   claim = async () => {
@@ -86,7 +87,7 @@ export class RewardClaim extends ThemeElement(style) {
 
       const [method, overrides] = [this.reward.write, {}]
       const parameters: any[] = []
-      if (this.reward.key !== 'vote') parameters.push(await this.personalSign())
+      if (this.reward.requireSig) parameters.push(await this.personalSign3rd(method))
       if (['share', 'follow'].includes(this.reward.key)) parameters.unshift(await getAccount())
       await assignOverrides(overrides, contract, method, parameters)
       const call = contract[method](...parameters)
@@ -99,7 +100,7 @@ export class RewardClaim extends ThemeElement(style) {
           overrides
         }
       })
-      await this.tx.wait()
+      await this.tx.wait(true)
       await rewardStore.update()
     } catch (err: any) {
       if (err.code !== 4001) {

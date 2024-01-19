@@ -12,7 +12,7 @@ export { StateController } from '@lit-web3/base/state'
 class BridgeStore extends State {
   @property({ skipReset: true }) blockNumber!: number
   @property({ skipReset: true }) bridge!: Bridge
-  @property({ skipReset: true }) private _account: string = ''
+  @property({ skipReset: true }) _account: string = ''
   constructor() {
     super()
     emitter.on('wallet-changed', async () => {

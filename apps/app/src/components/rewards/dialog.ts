@@ -52,7 +52,7 @@ export class ClaimRewardDialog extends ThemeElement('') {
     this.pendingTx = true
     try {
       this.tx = await claimRewards()
-      this.success = await this.tx.wait()
+      this.success = await this.tx.wait(true)
     } catch (err: any) {
       console.log(err)
       let msg = err.message || err.code

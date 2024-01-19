@@ -82,7 +82,7 @@ export class CreateSocailDialog extends ThemeElement('') {
     this.pending = true
     try {
       this.tx = await bindSocial(SOCIAL_TYPE.TWI, '', this.form.url)
-      this.success = await this.tx.wait()
+      this.success = await this.tx.wait(true)
     } catch (err: any) {
       let msg = err.message || err.code
       if (err.code === 4001) {

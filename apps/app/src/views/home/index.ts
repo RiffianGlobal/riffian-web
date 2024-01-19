@@ -48,7 +48,7 @@ export class ViewHome extends ThemeElement(style) {
               () =>
                 html`<h5>
                   <span class="text-base text-gray-300">Pool: </span>
-                  <span class="ui-em text-xl">${rewardStore.weeklyPool || 0}</span>
+                  <span class="ui-em text-xl">${rewardStore.weeklyPoolHumanized || '-'}</span>
                 </h5>`,
               () => html`<i class="mdi mdi-loading"></i>`
             )}
