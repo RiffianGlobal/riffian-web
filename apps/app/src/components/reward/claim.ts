@@ -180,8 +180,8 @@ export class RewardClaim extends ThemeElement(style) {
               @click=${this.claim}
               .disabled=${!this.claimable || this.reward.closed}
               .pending=${this.processing}
-              class=""
-              text
+              class="min-w-16"
+              ?text=${this.reward.closed}
               xs
               >${when(
                 this.processing,
@@ -193,7 +193,7 @@ export class RewardClaim extends ThemeElement(style) {
             ${when(
               this.isVotes,
               () =>
-                html`<ui-button icon sm ?disabled=${this.claimed}
+                html`<ui-button class="min-w-16" icon sm ?disabled=${this.claimed}
                   ><i
                     class="mdi ${classMap({
                       'mdi-chevron-right text-xl': this.isVotes,

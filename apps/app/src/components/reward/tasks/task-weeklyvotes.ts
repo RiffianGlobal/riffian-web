@@ -82,12 +82,12 @@ export class TaskWeeklyvotes extends ThemeElement(style) {
               <p class="grow text-right">${weekly.cooked.reward}</p>
               <p class="w-20 text-right">
                 <ui-button
+                  class="min-w-16"
                   @click=${() => this.claim(weekly)}
                   ?disabled=${!weekly.cooked.claimable}
                   ?pending=${this.pendings[weekly.week]}
                   xs
-                  text
-                  class="outlined"
+                  ?text=${!weekly.cooked.past}
                   >${when(
                     weekly.cooked.past,
                     () => (weekly.cooked.claimable ? 'Claim' : 'Claimed'),
