@@ -65,7 +65,10 @@ export class NetworkMenu extends ThemeElement(style) {
           ${repeat(
             this.networks,
             (network) =>
-              html`<li @click="${() => this.switch(network)}" class="text-base">
+              html`<li
+                @click="${() => this.switch(network)}"
+                class="text-base ${classMap({ active: network.chainId === this.current.chainId })}"
+              >
                 <i class="ui-network-icon ${classMap(this.$c([network.native?.symbol]))}"></i>
                 ${network.title}
               </li>`
