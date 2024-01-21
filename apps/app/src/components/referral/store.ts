@@ -46,7 +46,7 @@ class ReferralStore extends State {
           overrides
         }
       })
-      await tx.wait(true)
+      await tx.wait()
       this.address = agentAddress
     } catch (err) {
       throw err

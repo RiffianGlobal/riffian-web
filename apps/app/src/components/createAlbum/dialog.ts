@@ -58,7 +58,7 @@ export class CreateAlbumDialog extends ThemeElement('') {
     this.pending = true
     try {
       this.tx = await createAlbum(this.form.album, this.form.image, this.form.url)
-      this.success = await this.tx.wait(true)
+      this.success = await this.tx.wait()
     } catch (err: any) {
       let msg = err.message || err.code
       if (err.code === 4001) {

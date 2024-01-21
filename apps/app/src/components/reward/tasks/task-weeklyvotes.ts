@@ -46,7 +46,7 @@ export class TaskWeeklyvotes extends ThemeElement(style) {
           overrides
         }
       }))
-      await tx.wait(true)
+      await tx.wait()
       rewardStore.update()
     } catch (err: any) {
       if (err.code !== 4001) {

@@ -1,11 +1,4 @@
-import {
-  bridgeStore,
-  assignOverrides,
-  getSigner,
-  getAccount,
-  getContracts,
-  getNetwork
-} from '@riffian-web/ethers/src/useBridge'
+import { bridgeStore, assignOverrides, getAccount, getNetwork } from '@riffian-web/ethers/src/useBridge'
 import { StateController, rewardStore } from '~/store/reward'
 import { tweetStore } from '~/store/tweet'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
@@ -13,6 +6,7 @@ import { getSocials } from '~/components/createAlbum/action'
 import { userVotes } from '~/components/uservotes/action'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { getRewardContract } from '~/lib/riffutils'
+import { http } from '@lit-web3/base'
 // Components
 import {
   ThemeElement,
@@ -68,14 +62,12 @@ export class RewardClaim extends ThemeElement(style) {
     return this.claimed ? 'Claimed' : 'Claim'
   }
 
-  personalSign3rd = async (method: string) => {
-    // const [signer, { chainId }] = [await getSigner(), await getNetwork()]
-    // return await signer.signTypedData(
-    //   { name: 'RiffianAirdrop', version: '1.0.0', chainId, verifyingContract: getContracts('Reward') },
-    //   { Account: [{ name: 'account', type: 'address' }] },
-    //   { account: await getAccount() }
-    // )
-    throw new Error(`[${method}] is temporarily closed`)
+  personalSign = async (acc: string) => {
+    const params = { acc }
+    const [, chain = ''] = (await getNetwork()).name.match(/(\w+)$/) ?? []
+    if (chain) Object.assign(params, { chain })
+    const { sig } = await http.get(`/api/sign`, params)
+    return sig
   }
 
   claim = async () => {
@@ -83,12 +75,12 @@ export class RewardClaim extends ThemeElement(style) {
     if (this.isVotes) return this.claimVotes()
     this.pending = true
     try {
-      const contract = await getRewardContract()
+      const [contract, account] = await Promise.all([getRewardContract(), getAccount()])
 
       const [method, overrides] = [this.reward.write, {}]
       const parameters: any[] = []
-      if (this.reward.requireSig) parameters.push(await this.personalSign3rd(method))
-      if (['share', 'follow'].includes(this.reward.key)) parameters.unshift(await getAccount())
+      if (this.reward.requireSig) parameters.push(await this.personalSign(account))
+      if (['share', 'follow'].includes(this.reward.key)) parameters.unshift(account)
       await assignOverrides(overrides, contract, method, parameters)
       const call = contract[method](...parameters)
       this.tx = new txReceipt(call, {
@@ -100,8 +92,8 @@ export class RewardClaim extends ThemeElement(style) {
           overrides
         }
       })
-      await this.tx.wait(true)
-      await rewardStore.update()
+      await this.tx.wait()
+      rewardStore.update()
     } catch (err: any) {
       if (err.code !== 4001) {
         this.emit('error', err.message)

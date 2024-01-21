@@ -103,11 +103,11 @@ export class BindSocial extends ThemeElement('') {
     this.pending = true
     try {
       this.tx = await bindSocial(this.platform, '', this.inputURL)
-      this.success = await this.tx.wait(true)
+      this.success = await this.tx.wait()
       await this.check()
-      this.inChangeMode = false
       this.tx = null
-      if (rewardStore.socialNotClaimed) rewardStore.update()
+      if (rewardStore.socialNotClaimed) await rewardStore.update()
+      this.inChangeMode = false
     } catch (err: any) {
       if (err.code !== 4001) {
         toast.add({ summary: 'Error', detail: err.message })

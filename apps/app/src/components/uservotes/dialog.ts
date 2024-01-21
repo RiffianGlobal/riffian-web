@@ -43,7 +43,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
     this.pending = true
     try {
       this.tx = await retreat(this.album, this.votes)
-      this.success = await this.tx.wait(true)
+      this.success = await this.tx.wait()
     } catch (err: any) {
       let msg = err.message || err.code
       if (err.code === 4001) {

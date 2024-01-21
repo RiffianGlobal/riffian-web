@@ -27,10 +27,6 @@ export class AppMain extends ThemeElement('') {
     return screenStore.isMobi
   }
 
-  get faucetLink() {
-    return bridgeStore.bridge.network.chainId == '0xdddd' ? 'https://faucet.testnet.doid.tech' : ''
-  }
-
   chkView = () => {
     this.inRoot = routerPathroot() === '/'
   }
@@ -97,7 +93,6 @@ export class AppMain extends ThemeElement('') {
       <ui-footer full>
         <div slot="block"></div>
         <div slot="right" class="flex gap-6 text-xs">
-          <ui-link href=${this.faucetLink}>Faucet</ui-link>
           ${when(!(import.meta.env.MODE === 'production'), () => html`<ui-link href="/docs">Components</ui-link>`)}
           <block-number></block-number>
         </div>
