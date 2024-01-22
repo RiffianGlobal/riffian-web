@@ -4,7 +4,7 @@ import http, { Jsonish } from '@lit-web3/base/http'
 
 export const SubGraph: ChainConf = {
   MediaBoard: {
-    '0xd01d': 'https://graph.doid.tech/subgraphs/name/riffian/board',
+    '0xd01d': 'http://gql.riffian.global/subgraphs/name/riffian/board',
     '0xdddd': 'https://graph.testnet.doid.tech/subgraphs/name/riffian/board'
   }
 }
