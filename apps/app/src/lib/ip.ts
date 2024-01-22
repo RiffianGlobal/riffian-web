@@ -48,7 +48,7 @@ export const blocked = async () => {
     try {
       geo = (await detect()).geo
     } catch {}
-    blocked = [undefined, '', 'CN'].includes(geo)
+    if (geo) blocked = ['CN'].includes(geo)
     if (blocked) sessionStorage.setItem('blocked', '1')
     resolve(blocked)
   }))

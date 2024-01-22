@@ -84,7 +84,6 @@ export class TopAlbum extends ThemeElement(style) {
       }
     } catch (e: any) {
       this.err = e.message || e.msg || e
-      if (!this.ts) toast.add({ summary: 'Fetch failed', detail: this.err })
     } finally {
       this.pending = false
       this.ts++
@@ -207,6 +206,7 @@ export class TopAlbum extends ThemeElement(style) {
             this.paging,
             () => html`
               <ui-pagination
+                .nomore=${this.err}
                 mode=${this.scrollMode}
                 .firstLoad=${false}
                 .pending=${this.pending}

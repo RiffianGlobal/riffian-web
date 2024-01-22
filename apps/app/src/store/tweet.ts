@@ -127,7 +127,6 @@ export type Social = {
 export const genTweet =
   async () => `I am using Riffian to get rewards, you can also get more rewards, come and participate ${Subject} ${Official}
 Gid: ${genGid(await getAccount())}
-
 ${Domain}`
 
 export const genTweetURI = async () => `https://twitter.com/intent/tweet?text=${encodeURIComponent(await genTweet())}`

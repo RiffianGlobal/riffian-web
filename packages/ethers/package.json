@@ -11,7 +11,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@doid/connect-ethers": "^0.6.4",
+    "@doid/connect-ethers": "^1.0.1",
     "@ensdomains/address-encoder": "^0.2.22",
     "@lit-web3/base": "^0.4.7",
     "tr46": "^5.0.0"

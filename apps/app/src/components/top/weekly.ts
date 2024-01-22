@@ -89,6 +89,7 @@ export class WeeklyTop extends ThemeElement(style) {
       }
     } catch (e: any) {
       let msg = e.message || e.code || e
+      this.err = e.message || e.msg || e
       console.error(msg)
     } finally {
       this.pending = false
@@ -164,6 +165,7 @@ export class WeeklyTop extends ThemeElement(style) {
               `
             )}
             <ui-pagination
+              .nomore=${this.err}
               mode=${this.scrollMode}
               .firstLoad=${false}
               .pending=${this.pending}
