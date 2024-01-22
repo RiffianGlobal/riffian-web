@@ -16,7 +16,7 @@ export class DoidWallet extends State implements Wallet {
   private async init() {
     let { doid, doidTestnet, DOIDConnectorEthers } = await import('@doid/connect-ethers')
     this.connector = new DOIDConnectorEthers()
-    this.connector.updateChains([doidTestnet, doid])
+    this.connector.updateChains([doid, doidTestnet])
     this.connector.updateOptions({
       themeMode: 'dark',
       web3AuthEnabled: true,
@@ -41,7 +41,8 @@ export class DoidWallet extends State implements Wallet {
       if (!value) return
       this.chainId = value ? chainIdStr(value) : ''
       this.doid = this.connector.doid ?? ''
-      if (value == doidTestnet.id) this.connector.updateOptions({ doidNetwork: doidTestnet })
+      if (value == doid.id) this.connector.updateOptions({ doidNetwork: doid })
+      else if (value == doidTestnet.id) this.connector.updateOptions({ doidNetwork: doidTestnet })
       this.updateProvider(this.chainId)
     }, 'chainId')
     this.resolved = true

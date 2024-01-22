@@ -66,7 +66,7 @@ export class RewardClaim extends ThemeElement(style) {
     const params = { acc }
     const [, chain = ''] = (await getNetwork()).name.match(/(\w+)$/) ?? []
     if (chain) Object.assign(params, { chain })
-    const { sig } = await http.get(`/api/sign`, params)
+    const { sig } = await http.get(`https://svc.riffian.global/api/sign`, params)
     return sig
   }
 

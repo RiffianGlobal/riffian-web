@@ -9,8 +9,8 @@ export function chainIdStr(chainId: number): string {
 export const AllNetworks = {
   '0xd01d': {
     chainId: '0xd01d',
-    title: 'DOID Mainnet',
-    name: 'doid-mainnet',
+    title: 'DOID',
+    name: 'doid',
     native: {
       decimals: 18,
       name: 'DOID',
