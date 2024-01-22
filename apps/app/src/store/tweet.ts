@@ -7,7 +7,7 @@ import { toGid } from '@riffian-web/ethers/src/uuid'
 import { getAlbumContract } from '~/lib/riffutils'
 
 import { getAccount } from '@riffian-web/ethers/src/useBridge'
-import { weekSeconds, Official, Domain } from '~/constants'
+import { weekSeconds, Official, Domain, Subject } from '~/constants'
 
 export const readTweet = async (uri: string): Promise<Tweet | undefined> => {
   let res
@@ -124,7 +124,8 @@ export type Social = {
   address?: string
 }
 
-export const genTweet = async () => `Verifying my account for ${Official}
+export const genTweet =
+  async () => `I am using Riffian to get rewards, you can also get more rewards, come and participate ${Subject} ${Official}
 Gid: ${genGid(await getAccount())}
 
 ${Domain}`

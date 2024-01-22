@@ -1,2 +1,2 @@
 export const weekSeconds = 604800
-export const [Official, Domain] = ['@RiffianClub', 'riffian.global']
+export const [Official, Domain, Subject] = ['@RiffianClub', 'riffian.global', '#riffian']
