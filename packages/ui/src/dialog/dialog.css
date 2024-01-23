@@ -5,7 +5,7 @@
   @apply z-50 fixed flex justify-center items-center left-0 top-0 w-full h-full invisible px-4 lg_px-0;
   @apply flex flex-col w-full;
   &::part(dialog-container) {
-    @apply w-full;
+    @apply w-full visible;
     max-width: var(--appMaxW, 28rem);
     min-height: var(--dialogMinH);
     background-color: #212145;
@@ -13,6 +13,7 @@
     background-clip: padding-box, border-box;
     background-origin: padding-box, border-box;
     background-image: linear-gradient(to right, #212145, #212145), linear-gradient(90deg, #bd47ff, #2c73b1);
+    animation: slideY 0.3s ease-out;
   }
   &::part(dialog-close) {
   }
@@ -25,11 +26,7 @@
   &::part(dialog-footer) {
     min-height: var(--dialogFooterH);
   }
-}
-.dialog-container {
-  @apply flex flex-col w-full;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-.dialog-header-icons {
-  @apply text-xl;
+  &::part(dialog-overlay) {
+    animation: frozen 0.3s ease-out;
+  }
 }

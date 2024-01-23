@@ -9,6 +9,7 @@
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
   background-image: linear-gradient(to right, #212145, #212145), linear-gradient(90deg, #bd47ff, #2c73b1);
+  animation: bounceY 0.3s ease;
 }
 
 .ui-drop-toggle {

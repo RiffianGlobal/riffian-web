@@ -1,7 +1,5 @@
 // Todo: ShadowRoot should be created as childNodes of document.body
 import { customElement, ThemeElement, html, state, property, classMap } from '../shared/theme-element'
-import { sleep } from '@riffian-web/ethers/src/utils'
-import { animate } from '@lit-labs/motion'
 
 import style from './dialog.css?inline'
 
@@ -14,7 +12,6 @@ export class UIDialog extends ThemeElement(style) {
   close = async () => {
     this.model = false
     this.unlisten()
-    await sleep(160) // Anamition timeout
     this.emit('close')
     this.remove()
   }
@@ -35,6 +32,7 @@ export class UIDialog extends ThemeElement(style) {
   connectedCallback() {
     super.connectedCallback()
     if (!this.persistent) this.listen()
+    this.model = true
   }
   disconnectedCallback() {
     super.disconnectedCallback()
@@ -42,20 +40,12 @@ export class UIDialog extends ThemeElement(style) {
   }
 
   override render() {
-    setTimeout(() => {
-      this.model = true
-    })
     return html`
       <div
         part="dialog-container"
         class="relative !origin-center z-10 bg-neutral-900 border-neutral-800 border shadow-md shadow-neutral-900 rounded-md ${classMap(
-          this.$c([this.wrapperClass, this.model ? 'scale-100 opacity-100 visible' : 'scale-75 opacity-0 invisible'])
+          this.$c([this.wrapperClass])
         )}"
-        ${animate({
-          guard: () => this.model,
-          properties: ['opacity', 'visibility', 'margin', 'transform'],
-          keyframeOptions: { duration: 200 }
-        })}
       >
         <slot name="top">
           <i
@@ -79,8 +69,7 @@ export class UIDialog extends ThemeElement(style) {
       <div
         @click="${() => !this.persistent && this.close()}"
         part="dialog-overlay"
-        class="z-0 absolute left-0 top-0 w-full h-full visible bg-black ${this.model ? 'opacity-30' : 'opacity-0'}"
-        ${animate({ guard: () => this.model })}
+        class="z-0 absolute left-0 top-0 w-full h-full visible transition-all bg-black opacity-30"
       ></div>
     `
   }

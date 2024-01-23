@@ -1,13 +1,9 @@
 // Todo: ShadowRoot should be created as childNodes of document.body
 import { customElement, ThemeElement, html, property, state, classMap, when } from '../shared/theme-element'
-import { animate } from '@lit-labs/motion'
 // Components
 import '../button'
 
 import style from './drop.css?inline'
-import { sleep } from '@riffian-web/ethers/src/utils'
-
-const duration = 133
 
 @customElement('ui-drop')
 export class UIDrop extends ThemeElement(style) {
@@ -44,7 +40,6 @@ export class UIDrop extends ThemeElement(style) {
     this.model = false
     this.emit('close')
     this.emit('change', this.model)
-    await sleep(duration)
     this.delayedModel = false
   }
   open = async () => {
@@ -134,15 +129,10 @@ export class UIDrop extends ThemeElement(style) {
           this.$c([
             this._align.left ? 'left-0' : 'right-0',
             this._align.top ? 'bottom-full' : 'top-full',
-            this.model ? 'mt-auto opacity-100 visible' : '-mt-4 opacity-0 invisible hidden',
+            this.model ? 'mt-0.5 opacity-100 visible' : '-mt-4 opacity-0 invisible hidden',
             this.dropClass
           ])
         )}"
-        ${animate({
-          guard: () => this.model,
-          properties: ['opacity', 'visibility', 'margin', 'display'],
-          keyframeOptions: { duration }
-        })}
       >
         ${when(this.model, () => html`<slot></slot>`)}
       </div>

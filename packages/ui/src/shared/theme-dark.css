@@ -184,4 +184,40 @@
       }
     }
   }
+  /* animations */
+  @keyframes bounceY {
+    0% {
+      transform: translateY(-3px);
+    }
+    30% {
+      transform: translateY(2px);
+    }
+    85% {
+      transform: translateY(-1px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  @keyframes slideY {
+    0% {
+      @apply opacity-0;
+      transform: translateY(-9px);
+    }
+    50% {
+      @apply opacity-60;
+    }
+    to {
+      @apply opacity-100;
+      transform: translateY(0);
+    }
+  }
+  @keyframes frozen {
+    0% {
+      @apply opacity-0;
+    }
+    to {
+      @apply opacity-30;
+    }
+  }
 }

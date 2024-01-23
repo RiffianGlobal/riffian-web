@@ -13,6 +13,7 @@ export class UIButton extends ThemeElement(style) {
   @property() href?: string
   @property({ type: Boolean }) disabled = false
   @property({ type: Boolean }) pending = false
+  @property({ type: Boolean }) pendingIcon = false
   @property({ type: Boolean }) icon = false
   @property({ type: Boolean }) text = false
   @property({ type: Boolean }) sm = false
@@ -41,10 +42,13 @@ export class UIButton extends ThemeElement(style) {
   get blocked() {
     return this.disabled || this.pending
   }
-
+  get showPendingIcon() {
+    return this.pendingIcon && this.pending
+  }
   get iconLeft() {
     return ['both', 'left'].includes(this.iconPos)
   }
+
   render() {
     // const { slot } = this
 
@@ -62,6 +66,7 @@ export class UIButton extends ThemeElement(style) {
             ?dense=${this.dense}
             ?disabled=${this.blocked}
             ?pending=${this.pending}
+            ?pendingIcon=${this.showPendingIcon}
             ?text=${this.text}
             ?sm=${this.sm}
             ?xs=${this.xs}
@@ -69,6 +74,7 @@ export class UIButton extends ThemeElement(style) {
             theme=${this.theme}
           >
             <slot></slot>
+            ${when(this.showPendingIcon, () => html`<i class="absolute mdi mdi-loading"></i>`)}
           </a>`,
         () =>
           html`<button
@@ -79,6 +85,7 @@ export class UIButton extends ThemeElement(style) {
             ?dense=${this.dense}
             ?disabled=${this.blocked}
             ?pending=${this.pending}
+            ?pendingIcon=${this.showPendingIcon}
             ?text=${this.text}
             ?sm=${this.sm}
             ?xs=${this.xs}
@@ -86,6 +93,7 @@ export class UIButton extends ThemeElement(style) {
             theme=${this.theme}
           >
             <slot></slot>
+            ${when(this.showPendingIcon, () => html`<i class="absolute mdi mdi-loading"></i>`)}
           </button>`
       )}
     `

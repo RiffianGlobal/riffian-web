@@ -83,6 +83,7 @@ export class TaskWeeklyvotes extends ThemeElement(style) {
               <p class="w-20 text-right">
                 <ui-button
                   class="min-w-16"
+                  pendingIcon
                   @click=${() => this.claim(weekly)}
                   ?disabled=${!weekly.cooked.claimable}
                   ?pending=${this.pendings[weekly.week]}

@@ -130,6 +130,11 @@
       background: rgba(96, 165, 250, 0.16) !important;
     }
   }
+  &[pendingIcon] {
+    & > *:not(.mdi) {
+      @apply invisible;
+    }
+  }
   &[icon] {
     border-radius: 50%;
     @apply justify-center w-8 h-8 text-xl;

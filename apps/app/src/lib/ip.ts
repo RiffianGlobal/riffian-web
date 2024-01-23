@@ -1,4 +1,5 @@
 import http from '@lit-web3/base/http'
+import { nowTs } from '@riffian-web/ethers/src/utils'
 
 // const ip2geo = (ipv4: string) => {}
 type APIRes = {
@@ -7,7 +8,7 @@ type APIRes = {
 }
 export const API: Record<string, () => Promise<APIRes>> = {
   cloudflare: async () => {
-    const res = await http.get('https://www.cloudflare.com/cdn-cgi/trace')
+    const res = await http.get(`https://www.cloudflare.com/cdn-cgi/trace?ts=${nowTs}`)
     const [, ip, geo] = res.match(/ip=([0-9.]+)?.*?loc=([A-Z]+)?/s)
     return { ip, geo }
   }

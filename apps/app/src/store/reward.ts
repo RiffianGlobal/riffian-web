@@ -179,7 +179,7 @@ export const getUserWeeklyVotes = async (account?: string): Promise<UserWeekly[]
   }`
   const { userWeeklyVotes } = await graphQuery('MediaBoard', req)
   const [curYear] = [dayjs().year()]
-  let curWeek = dayjs().week()
+  let curWeek = dayjs.unix(await weeklyStore.getLatest()).week()
   return userWeeklyVotes.map((weekly: UserWeekly, i: number) => {
     const weekday = dayjs.unix(weekly.week)
     const [week, year, claimed] = [weekday.week(), weekday.year(), +weekly.claimed > 0]
@@ -198,13 +198,13 @@ export const getUserWeeklyVotes = async (account?: string): Promise<UserWeekly[]
 }
 
 export const getUserWeeklyRewards = async (account?: string): Promise<UserWeekly[]> => {
-  const currentWeek = await weeklyStore.getLatest()
+  const curWeek = await weeklyStore.getLatest()
   const userWeeklyVotes = await getUserWeeklyVotes(account || (await getAccount()))
   const weekN = userWeeklyVotes.length
   const { MultiCallContract: contract, MultiCallProvider } = await getMultiCall('MediaBoard')
   // Aggregated calls
   // 0: current weekly pool
-  const calls = [contract.weeklyReward(currentWeek)]
+  const calls = [contract.weeklyReward(curWeek)]
   // 0-weekN: weekly total votes
   calls.push(...userWeeklyVotes.map(({ week }) => contract.weeklyVotes(week)))
   // 0-weekN: weekly total rewards
