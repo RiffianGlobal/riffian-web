@@ -11,6 +11,7 @@ import '@riffian-web/ui/nav/header'
 import '@riffian-web/ui/nav/footer'
 import '@riffian-web/ui/nav/nav'
 import '@riffian-web/ui/block-number'
+import '@riffian-web/ui/ui-ver'
 import '~/components/createAlbum/btn'
 import '~/components/reward/btn'
 import '~/components/user/balance'
@@ -92,6 +93,7 @@ export class AppMain extends ThemeElement('') {
       </main>
       <ui-footer full>
         <div slot="block"></div>
+        <div slot="center"><ui-ver></ui-ver></div>
         <div slot="right" class="flex gap-6 text-xs">
           ${when(!(import.meta.env.MODE === 'production'), () => html`<ui-link href="/docs">Components</ui-link>`)}
           <block-number></block-number>
