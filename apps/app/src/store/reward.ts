@@ -105,6 +105,11 @@ class RewardStore extends State {
   get socialNotClaimed() {
     return this.inited && this.rewardsClaimed[0] === false
   }
+  get rewardHumanized() {
+    return {
+      tweet: (+formatUnits(this.rewards[0])).toFixed(0)
+    }
+  }
 
   // AKA: getRewards
   update = async () => {

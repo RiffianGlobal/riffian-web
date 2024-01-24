@@ -1,2 +1,6 @@
 :host {
+  @apply inline-flex items-center leading-none;
+  & ui-address-avatar {
+    @apply mr-1;
+  }
 }

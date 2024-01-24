@@ -129,7 +129,7 @@ export class UIDrop extends ThemeElement(style) {
           this.$c([
             this._align.left ? 'left-0' : 'right-0',
             this._align.top ? 'bottom-full' : 'top-full',
-            this.model ? 'mt-0.5 opacity-100 visible' : '-mt-4 opacity-0 invisible hidden',
+            this.model ? 'mt-1 opacity-100 visible' : '-mt-4 opacity-0 invisible hidden',
             this.dropClass
           ])
         )}"

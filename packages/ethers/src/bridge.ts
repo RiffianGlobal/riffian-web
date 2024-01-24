@@ -123,6 +123,7 @@ export class Bridge extends State {
             walletStore.wallets[0].app ??
             (await walletStore.wallets[0].import())) as DoidWallet
           if (wallet.state == WalletState.CONNECTED) return
+          // TODO: only show signup dialog
           this.connectedAccounts = await wallet.getAddresses()
           if (this.connectedAccounts[0]) await this.select(0, false)
         }
@@ -147,7 +148,7 @@ export class Bridge extends State {
       this.selected = undefined
     }
   }
-  async select(i: number = 0, force = true, connect = true) {
+  select = async (i: number = 0, force = true, connect = true) => {
     const selected = (this.selected = walletStore.wallets[i])
     if (!this.promise)
       this.promise = (async () => {
@@ -161,7 +162,7 @@ export class Bridge extends State {
         }
         // if (wallet.state === WalletState.CONNECTED) this.wallet = walletStore.wallet = wallet
         walletStore.wallet = wallet
-        emitWalletChange()
+        if (!walletStore.wallet || force) emitWalletChange()
         return this.wallet
       })()
     return this.promise

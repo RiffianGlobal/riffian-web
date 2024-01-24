@@ -13,7 +13,7 @@ export class DoidWallet extends State implements Wallet {
   }
   private connector: any
   resolved = false
-  private async init() {
+  private init = async () => {
     let { doid, doidTestnet, DOIDConnectorEthers } = await import('@doid/connect-ethers')
     this.connector = new DOIDConnectorEthers()
     this.connector.updateChains([doid, doidTestnet])
@@ -35,6 +35,10 @@ export class DoidWallet extends State implements Wallet {
     this.doid = this.connector.doid
     this.connector.subscribe((_: any, value: any) => {
       this.doid = value
+      if (this.doid && !value) {
+        this.account = ''
+        this.disconnect()
+      }
     }, 'doid')
     if (this.connector.chainId) this.chainId = chainIdStr(this.connector.chainId)
     this.connector.subscribe((_: any, value: number | undefined) => {
@@ -74,8 +78,13 @@ export class DoidWallet extends State implements Wallet {
     this.inited = true
     this.state = WalletState.CONNECTING
     try {
-      await this.connector.connect({ noModal: !force })
+      const wallet = await this.connector.connect({ noModal: !force })
       localStorage.setItem(injectedKey, '1')
+      if (wallet.doid) localStorage.setItem(injectedKey, '1')
+      else {
+        localStorage.removeItem(injectedKey)
+        this.disconnect()
+      }
     } catch (err: any) {
       this.state = WalletState.DISCONNECTED
       console.info('Connect failed')
@@ -83,7 +92,7 @@ export class DoidWallet extends State implements Wallet {
     } finally {
     }
   }
-  async disconnect() {
+  disconnect = async () => {
     await this.connector.disconnect()
     localStorage.removeItem(injectedKey)
     this.state = WalletState.DISCONNECTED

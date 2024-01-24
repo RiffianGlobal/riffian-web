@@ -19,7 +19,7 @@ export const retreatPrice = async (album: string, amount: number) => {
  * @param address user address
  * @returns
  */
-export const userSubjectVotes = async (subject: string, address: string) => {
+export const userSubjectVotes = async (subject: string, address: string): Promise<bigint> => {
   const contract = await getAlbumContract(true)
   return await contract.userSubjectVotes(subject, address)
 }

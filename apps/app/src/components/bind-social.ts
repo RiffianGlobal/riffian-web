@@ -167,7 +167,7 @@ export class BindSocial extends ThemeElement('') {
               () =>
                 html`<p class="mt-8 text-center">
                   <a @click=${this.back} class="text-base hover_underline ui-em cursor-pointer"
-                    >You can claim your <b class="text-lg ui-em">40</b> rewards now
+                    >You can claim your <b class="text-lg ui-em">${rewardStore.rewardHumanized.tweet}</b> rewards now
                     <i class="text-base mdi mdi-arrow-right"></i
                   ></a>
                 </p>`

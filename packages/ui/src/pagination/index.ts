@@ -23,9 +23,10 @@ export class UIPagination extends LazyElement(ThemeElement(style), { persistent:
   get scrollMode() {
     return this.mode === 'scroll'
   }
-  loadmore() {
+  loadmore = () => {
     if (!this.canLoad) return
     const { pageSize, page, mode } = this
+    this.emit('cc')
     this.emit('loadmore', { pageSize, page, mode })
   }
   connectedCallback() {
@@ -39,7 +40,14 @@ export class UIPagination extends LazyElement(ThemeElement(style), { persistent:
   render() {
     return html`<div
       class="ui-pagination w-full flex justify-center items-center mt-4 ${classMap(
-        this.$c([{ nomore: this.nomore, 'pointer-events-none': !this.canLoad }, this.class])
+        this.$c([
+          {
+            nomore: this.nomore,
+            'pointer-events-none !bg-transparent': !this.canLoad || this.scrollMode,
+            scrollMode: this.scrollMode
+          },
+          this.class
+        ])
       )}"
     >
       <div part="inner" @click="${this.loadmore}">

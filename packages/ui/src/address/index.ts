@@ -23,6 +23,7 @@ export class UIAddress extends ThemeElement(style) {
   @property({ type: Boolean }) copy = false
   @property({ type: Boolean }) short = false // if false, auto short address
   @property() href?: string
+
   @state() doid?: string
 
   get addr() {
@@ -34,11 +35,14 @@ export class UIAddress extends ThemeElement(style) {
   get showAddr() {
     return this.short || screenStore.screen.isMobi ? shortAddress(this.addr) : this.addr
   }
+  get pending() {
+    return this.doid === undefined
+  }
 
-  showAddrHTML = () => {
-    if (this.doid === '') return this.wrapLink(this.showAddr)
+  renderAddr = () => {
+    // if (this.doid === '') return this.wrapLink(this.showAddr)
     return html`${when(
-        !this.doid,
+        this.pending,
         () => html`<i class="mdi mdi-loading"></i>`,
         () => this.wrapLink(this.doid)
       )}<q class="q">${this.showAddr}</q>`
@@ -47,9 +51,7 @@ export class UIAddress extends ThemeElement(style) {
 
   solveDOID = async () => {
     if (this.doid || !this.addr) return
-    try {
-      this.doid = (await DOIDStore.getDOID(this.addr)) ?? ''
-    } catch {}
+    this.doid = (await DOIDStore.getDOID(this.addr)) ?? ''
   }
 
   willUpdate(props: PropertyValues<this>) {
@@ -58,7 +60,7 @@ export class UIAddress extends ThemeElement(style) {
 
   connectedCallback() {
     super.connectedCallback()
-    this.solveDOID
+    this.solveDOID()
   }
 
   override render() {
@@ -66,7 +68,7 @@ export class UIAddress extends ThemeElement(style) {
       <!-- Avatar -->
       ${when(this.avatar, () => html`<ui-address-avatar .address=${this.addr}></ui-address-avatar>`)}
       <!-- Address -->
-      ${when(!this.hideAddr, () => this.showAddrHTML())}
+      ${when(!this.hideAddr, this.renderAddr)}
       <!-- Copy -->
       ${when(this.copy, () => html`<ui-copy-icon .value=${this.addr}></ui-copy-icon>`)}
     `

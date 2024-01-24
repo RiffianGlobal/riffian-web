@@ -25,13 +25,14 @@ const defErr = () => ({ tx: '' })
 export class TrackDetail extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   bindTweets: any = new StateController(this, tweetStore)
+
   @property({ type: Boolean }) weekly = false
   @property({ type: String }) trackAddress = ''
-  @property({ type: Promise<any> }) votes: Promise<any> | undefined
-  @state() myVotes: Promise<any> | undefined
+  // @property({ type: Promise<any> }) votes: Promise<any> | undefined
+  @state() myVotes: bigint | undefined
   // @state() retreatDisabled = true
   @state() social: Social | undefined
-  @state() subject: any = { totalVoteValue: '0' }
+  @state() subject: any = null
   @state() voteList: any = []
   @state() pending = false
   @state() prompt = false
@@ -49,12 +50,16 @@ export class TrackDetail extends ThemeElement(style) {
     return this.ts && !this.disabled
   }
   get retreatEnable() {
+    if (!this.myVotes) return false
     return this.ts && +formatUnits(this.myVotes, 0) > 0
+  }
+  get creatorAddr() {
+    return this.subject?.creator?.address
   }
 
   connectedCallback() {
     super.connectedCallback()
-    this.init()
+    this.fetch()
   }
 
   getRandomInt(max: number) {
@@ -69,26 +74,21 @@ export class TrackDetail extends ThemeElement(style) {
 
   async getPrice() {
     try {
-      this.votes = albumData(this.trackAddress).then((result) => result[4])
-      this.myVotes = await myVotes(this.trackAddress).then((votes) => {
-        // if (votes > 0) this.retreatDisabled = false
-        return votes
-      })
+      // this.votes = albumData(this.trackAddress).then((result) => result[4])
+      this.myVotes = await myVotes(this.trackAddress)
       // this.price = votePrice(this.trackAddress).then((price) => formatUnits(price))
-      // this.retreatPrice = retreatPrice(this.trackAddress).then((price) => formatUnits(price))
     } catch (err: any) {
-      let msg = err.message || err.code
-      this.updateErr({ tx: msg })
+      this.updateErr({ tx: err.message || err.code })
     }
   }
   updateErr = (err = {}) => (this.err = Object.assign({}, this.err, err))
-  init = async () => {
+  fetch = async () => {
     this.pending = true
     try {
-      let result = await subjectInfo(this.trackAddress)
-      this.subject = result.subject
-      await this.getPrice()
-      await this.readFromTwitter()
+      let result = await Promise.all([subjectInfo(this.trackAddress)])
+      this.subject = result[0].subject
+      this.getPrice()
+      this.readFromTwitter()
     } catch (e: any) {
       this.promptMessage = e
       this.prompt = true
@@ -100,18 +100,16 @@ export class TrackDetail extends ThemeElement(style) {
 
   close = () => {
     this.dialog = false
-    this.init()
+    this.fetch()
   }
 
-  setAction = (action) => (this.actionType = action)
+  setAction = (action: string) => (this.actionType = action)
 
-  popAction = (action: String = 'vote') => {
+  popAction = (action: string = 'vote') => {
     if ((action == this.actionType && this.dialog) || !this[`${action}Enable`]) return
     this.setAction(action)
-
     this.dialog = true
   }
-  open = () => window.open(`${this.subject.uri}`, '_blank')
 
   render() {
     return html`<div>
@@ -124,49 +122,53 @@ export class TrackDetail extends ThemeElement(style) {
               </div>
             </div>`,
           () =>
-            html`<div class="grid lg_grid-cols-13 gap-2">
+            html`<div class="grid lg_grid-cols-13 gap-8">
               <!-- meta info -->
-              <div class="lg_col-span-6 flex gap-6">
-                <div class="w-32 h-32 rounded-xl bg-white/10">
-                  <img-loader src=${this.subject.image} class="w-32 h-32 rounded-xl"></img-loader>
-                </div>
-                <div class="flex flex-col justify-start ml-4">
-                  <div class="text-xl mb-1.5">${this.subject.name ?? '-'}</div>
-                  <!-- Author -->
-                  ${when(
-                    this.social,
-                    () =>
-                      html`<div class="inline-flex text-base font-normal mb-0.5">
-                          ${this.social?.name}
-                          ${when(
-                            this.social?.verified,
-                            () =>
-                              html`<span class="ml-0.5"
-                                ><i class="mdi mdi-check-decagram text-sm text-green-600"></i
-                              ></span>`
-                          )}
-                        </div>
-                        <a class="text-base font-normal text-blue-300" href="${this.social?.url}" target="_blank"
-                          >@${this.social?.id}</a
-                        >`,
-                    () => html`-`
-                  )}
+              <div class="lg_col-span-6 h-44 flex gap-8">
+                <!-- Cover -->
+                <div class="relative w-44 h-full rounded-xl bg-white/10">
+                  <img-loader src=${this.subject.image} class="w-44 h-full rounded-xl"></img-loader>
                   ${when(
                     this.subject.uri,
                     () => html`
-                      <div class="my-1">
-                        <ui-button icon lg @click=${this.open}
+                      <div class="absolute right-1 bottom-1">
+                        <ui-button icon lg href=${this.subject.uri}
                           ><i class="mdi mdi-play-circle-outline text-white"></i
                         ></ui-button>
                       </div>
                     `
                   )}
-                  <div class="mt-2 flex gap-3">
+                </div>
+                <!-- Details -->
+                <div class="flex flex-col h-full justify-between gap-4">
+                  <div>
+                    <div class="text-xl mb-2.5">${this.subject.name ?? '-'}</div>
+                    <!-- Author DOID -->
+                    <div class="text-base min-h-6 leading-6">
+                      <ui-address .address=${this.creatorAddr} short doid avatar></ui-address>
+                    </div>
+                    <!-- Author social name -->
+                    <div class="text-base min-h-6 leading-6">
+                      ${when(
+                        this.social,
+                        () => html`
+                          ${this.social?.name}<a
+                            class="text-xs leading-none text-blue-300/60"
+                            href="${this.social?.url}"
+                            target="_blank"
+                            >@${this.social?.id}</a
+                          >
+                        `,
+                        () => html`-`
+                      )}
+                    </div>
+                  </div>
+                  <div class="mt-2 flex gap-4">
                     ${when(
                       this.voteEnable,
                       () => html`
                         <ui-button
-                          sm
+                          class="w-24"
                           ?disabled="${this.dialog || !this.voteEnable}"
                           @click=${() => this.popAction('vote')}
                           >Vote</ui-button
@@ -176,8 +178,8 @@ export class TrackDetail extends ThemeElement(style) {
                     ${when(
                       this.retreatEnable,
                       () =>
-                        html` <ui-button
-                          sm
+                        html`<ui-button
+                          class="w-24"
                           ?disabled="${this.dialog || !this.retreatEnable}"
                           @click=${() => this.popAction('retreat')}
                           >Retreat</ui-button
@@ -192,8 +194,9 @@ export class TrackDetail extends ThemeElement(style) {
                           url=${this.subject.image}
                           name=${this.subject.name}
                           votes=${this.subject.supply}
-                          author=${this.subject.creator?.address}
+                          author=${this.creatorAddr}
                           @close=${this.close}
+                          @change=${this.fetch}
                         ></vote-album-dialog>`
                     )}
                   </div>
@@ -201,25 +204,32 @@ export class TrackDetail extends ThemeElement(style) {
               </div>
               <!-- statistic -->
               <div
-                class="lg_col-start-7 lg_col-span-7 grid grid-cols-6 lg_grid-cols-8 gap-4 place-items-center items-center"
+                class="lg_col-start-7 lg_col-span-8 grid grid-cols-6 lg_grid-cols-8 gap-4 place-items-center items-center shrink grow-0"
               >
                 <div
-                  class="lg_col-start-3 col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
+                  class="lg_col-start-1 col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
                 >
-                  <div class="text-base text-gray-500 align-center">Voters</div>
+                  <div class="text-gray-500 align-center">Voters</div>
                   <div class="text-4xl align-center lining-nums">${this.subject.fansNumber}</div>
                 </div>
                 <div
                   class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
                 >
-                  <div class="text-base text-gray-500 align-center">Tickets</div>
+                  <div class="text-gray-500 align-center">Tickets</div>
                   <div class="text-4xl align-center lining-nums">${this.subject.supply}</div>
                 </div>
                 <div
                   class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
                 >
-                  <div class="text-base text-gray-500 align-center">Total Vote Value</div>
+                  <div class="text-gray-500 align-center">Total Vote Value</div>
                   <div class="text-4xl align-center lining-nums">${formatUnits(this.subject.totalVoteValue)}</div>
+                </div>
+                <!--  -->
+                <div
+                  class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
+                >
+                  <div class="text-gray-500 align-center">Price</div>
+                  <div class="text-4xl align-center lining-nums">${(+this.subject.supply + 1) / 10}</div>
                 </div>
               </div>
             </div>`

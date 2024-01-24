@@ -9,13 +9,11 @@ import {
   when
 } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-// import '~/components/top/dialog'
 import { albumList } from './action'
 import { screenStore } from '@lit-web3/base/screen'
 import { weeklyStore } from '~/store/weekly'
 import { goto } from '@lit-web3/router'
 import { format } from '~/lib/dayjs'
-// import { isImage } from '@lit-web3/base/MIMETypes'
 // Components
 import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
@@ -24,8 +22,7 @@ import '@riffian-web/ui/pagination'
 import { toast } from '@riffian-web/ui/toast'
 
 import emitter from '@lit-web3/base/emitter'
-import { MEDIA_URL_DEFAULTS, paginationDef } from '~/utils'
-import type { Pagination } from '~/utils'
+import { emptyCover, paginationDef } from '~/utils'
 
 import style from './list.css?inline'
 import { formatUnits } from 'ethers'
@@ -38,11 +35,12 @@ export class TopAlbum extends ThemeElement(style) {
   @property({ type: Boolean }) paging = false
   @property({ type: Boolean }) brief = true
   @property({ type: Number }) pageSize = 10
+
   @state() subjectList: any = []
   @state() pending = false
   @state() ts = 0
   @state() err = ''
-  @state() pagination = Object.assign(paginationDef(), { pageSize: this.pageSize }) as Pagination
+  @state() pagination = paginationDef({ pageSize: this.pageSize })
   @state() hasMore = true
 
   get disabled() {
@@ -52,7 +50,7 @@ export class TopAlbum extends ThemeElement(style) {
     return screenStore.isMobi
   }
   get scrollMode() {
-    return this.isMobi ? 'click' : 'scroll'
+    return 'scroll'
   }
   get empty() {
     return this.pending && !this.subjectList.length
@@ -73,7 +71,7 @@ export class TopAlbum extends ThemeElement(style) {
       const _subjects = subjects.map((item: any) => ({
         ...item,
         totalVal: +formatUnits(item.totalVoteValue).toString(),
-        image: item.image?.startsWith(`http`) ? item.image : MEDIA_URL_DEFAULTS[0]
+        image: item.image?.startsWith(`http`) ? item.image : emptyCover
       }))
       if (this.paging) {
         this.subjectList.push(..._subjects)
@@ -90,7 +88,7 @@ export class TopAlbum extends ThemeElement(style) {
     }
   }
 
-  loaded = () => {
+  loadmore = () => {
     this.fetch()
   }
 
@@ -210,7 +208,7 @@ export class TopAlbum extends ThemeElement(style) {
                 mode=${this.scrollMode}
                 .firstLoad=${false}
                 .pending=${this.pending}
-                @loadmore=${this.loaded}
+                @loadmore=${this.loadmore}
               ></ui-pagination>
             `
           )} `

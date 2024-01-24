@@ -67,9 +67,7 @@ export const albumData = async (album: string) => {
   return await contract[method](...parameters)
 }
 
-export const myVotes = async (album: string) => {
-  return userSubjectVotes(album, await getAccount())
-}
+export const myVotes = async (album: string) => userSubjectVotes(album, await getAccount())
 
 export const retreatPrice = async (album: string) => {
   try {

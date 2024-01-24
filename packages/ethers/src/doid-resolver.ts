@@ -17,6 +17,8 @@ export type AddressCache = {
 
 const ttl = 604800 * 1000
 
+const addressLike = (str: string) => /^[0-9]/.test(str)
+
 // TODO: merge to ttlStore
 class DOIDNameStore extends State {
   @property({ value: {} }) DOIDs!: DOIDCache
@@ -37,7 +39,10 @@ class DOIDNameStore extends State {
   get = async (req: DOID | Address): Promise<Address | DOID | undefined> => {
     const isAddr = isAddress(req)
     // Assign value
-    const assign = (res: Address | DOID) => (isAddr ? (address = res) : (name = res))
+    const assign = (res: Address | DOID) => {
+      address = isAddr ? req : res
+      name = isAddr ? res : req
+    }
     let name, address
     assign(req)
     // 1. from memcache
@@ -53,7 +58,10 @@ class DOIDNameStore extends State {
     // 3. from api
     if (!this.promises[req]) {
       this.promises[req] = new Promise(async (resolve) => {
-        const res = await bridgeStore.bridge.provider?.[isAddr ? 'lookupAddress' : 'resolveName'](req)
+        let res
+        try {
+          res = await bridgeStore.bridge.provider?.[isAddr ? 'lookupAddress' : 'resolveName'](req)
+        } catch {}
         if (res) {
           assign(res)
           this.set(address!, name!, true)
@@ -61,11 +69,12 @@ class DOIDNameStore extends State {
         } else resolve(undefined)
       }).finally(() => delete this.promises[req])
     }
-    return this.promises[req]
+    return await this.promises[req]
   }
 
-  getDOID = async (req: DOID | Address): Promise<DOID | undefined> => (isAddress(req) ? await this.get(req) : req)
+  getDOID = async (req: DOID | Address): Promise<DOID | undefined> => (addressLike(req) ? await this.get(req) : req)
 
-  getAddress = async (req: DOID | Address): Promise<Address | undefined> => (isAddress(req) ? req : await this.get(req))
+  getAddress = async (req: DOID | Address): Promise<Address | undefined> =>
+    addressLike(req) ? req : await this.get(req)
 }
 export const DOIDStore = new DOIDNameStore()

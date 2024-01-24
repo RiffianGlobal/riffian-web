@@ -14,11 +14,9 @@ import { screenStore } from '@lit-web3/base/screen'
 import { weeklyStore } from '~/store/weekly'
 import { weekList } from './action'
 import { goto } from '@lit-web3/router'
-import { isImage } from '@lit-web3/base/MIMETypes'
 
 import { formatUnits } from 'ethers'
-import { MEDIA_URL_DEFAULTS, paginationDef } from '~/utils'
-import type { Pagination } from '~/utils'
+import { emptyCover, paginationDef } from '~/utils'
 
 // Components
 import '@riffian-web/ui/loading/icon'
@@ -42,7 +40,7 @@ export class WeeklyTop extends ThemeElement(style) {
   @state() pending = false
   @state() err = ''
   @state() ts = 0
-  @state() pagination = paginationDef() as Pagination
+  @state() pagination = paginationDef()
   @state() hasMore = true
 
   get disabled() {
@@ -77,7 +75,7 @@ export class WeeklyTop extends ThemeElement(style) {
         return {
           ...subject,
           volumeTotal,
-          image: subject.image?.startsWith(`http`) ? subject.image : MEDIA_URL_DEFAULTS[0]
+          image: subject.image?.startsWith(`http`) ? subject.image : emptyCover
         }
       })
       if (this.paging) {
@@ -97,7 +95,7 @@ export class WeeklyTop extends ThemeElement(style) {
     }
   }
 
-  loaded = () => {
+  loadmore = () => {
     this.fetch()
   }
 
@@ -140,37 +138,41 @@ export class WeeklyTop extends ThemeElement(style) {
         () => html`<div name="loading" class="doc-intro"></div><loading-skeleton num="4"></loading-skeleton></div>`,
         () =>
           html`${repeat(
-              this.collections,
-              (item: any, i) => html`
-                <div class="item flex items-center">
-                  <div class="flex-none w-8 md_pl-3 text-sm font-light opacity-70">${i + 1}</div>
-                  <div class="flex-shrink">
-                    <img-loader
-                      @click=${() => this.go2(item)}
-                      .src=${item.image}
-                      class="w-[3rem] h-[3rem] md_w-[3.75rem] md_h-[3.75rem] rounded-lg cursor-pointer"
-                    ></img-loader>
-                  </div>
-                  <div class="flex-auto truncate">
-                    <p class="name truncate cursor-pointer" @click=${() => this.go2(item)}>${item.name}</p>
-                    <a href=${item.uri} target="_blank">
-                      <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
-                    </a>
-                  </div>
-                  <div class="num flex-initial flex flex-col !w-18 text-sm items-end">
-                    <span>${formatUnits(item.volumeTotal)}</span>
-                    <span class="text-xs" style="color: #34C77B">${WeeklyTop.dayChange(item)}</span>
-                  </div>
+            this.collections,
+            (item: any, i) => html`
+              <div class="item flex items-center">
+                <div class="flex-none w-8 md_pl-3 text-sm font-light opacity-70">${i + 1}</div>
+                <div class="flex-shrink">
+                  <img-loader
+                    @click=${() => this.go2(item)}
+                    .src=${item.image}
+                    class="w-[3rem] h-[3rem] md_w-[3.75rem] md_h-[3.75rem] rounded-lg cursor-pointer"
+                  ></img-loader>
                 </div>
-              `
-            )}
-            <ui-pagination
-              .nomore=${this.err}
-              mode=${this.scrollMode}
-              .firstLoad=${false}
-              .pending=${this.pending}
-              @loadmore=${this.loaded}
-            ></ui-pagination>`
+                <div class="flex-auto truncate">
+                  <p class="name truncate cursor-pointer" @click=${() => this.go2(item)}>${item.name}</p>
+                  <a href=${item.uri} target="_blank">
+                    <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
+                  </a>
+                </div>
+                <div class="num flex-initial flex flex-col !w-18 text-sm items-end">
+                  <span>${formatUnits(item.volumeTotal)}</span>
+                  <span class="text-xs" style="color: #34C77B">${WeeklyTop.dayChange(item)}</span>
+                </div>
+              </div>
+            `
+          )}
+          ${when(
+            this.paging,
+            () =>
+              html`<ui-pagination
+                .nomore=${this.err}
+                mode=${this.scrollMode}
+                .firstLoad=${false}
+                .pending=${this.pending}
+                @loadmore=${this.loadmore}
+              ></ui-pagination>`
+          )}`
       )}
     </div>`
   }

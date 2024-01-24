@@ -1,4 +1,5 @@
 :host {
+  @apply !bg-transparent;
   &::part(inner) {
     @apply w-full flex justify-center items-center h-8 lg_h-10;
   }

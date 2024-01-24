@@ -8,6 +8,7 @@ import {
   when,
   classMap
 } from '@riffian-web/ui/shared/theme-element'
+import emitter from '@lit-web3/base/emitter'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { vote, albumData, votePrice, votePriceWithFee, myVotes, retreatPrice, retreat, getSocials } from './action'
 import { formatUnits } from 'ethers'
@@ -77,6 +78,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
     try {
       this.tx = await vote(this.album, 1, { value: (await votePriceWithFee(this.album))[0] })
       this.success = await this.tx.wait()
+      await this.emitChange()
     } catch (err: any) {
       let msg = err.message || err.code
       if (err.code === 4001) {
@@ -96,6 +98,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
     try {
       this.tx = await retreat(this.album, 1)
       this.success = await this.tx.wait()
+      await this.emitChange()
     } catch (err: any) {
       let msg = err.message || err.code
       if (err.code === 4001) {
@@ -117,6 +120,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
     this.price = undefined
     this.votes = undefined
   }
+  emitChange = () => this.emit('change')
   close = async () => {
     this.tx = null
     this.resetState()
