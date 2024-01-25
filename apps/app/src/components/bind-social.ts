@@ -1,8 +1,9 @@
 import { ThemeElement, customElement, html, when, state, classMap } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
+import { bridgeStore, getAccount } from '@riffian-web/ethers/src/useBridge'
 import { bindSocial } from '~/components/createAlbum/action'
 import { rewardStore } from '~/store/reward'
-import { StateController, tweetStore, type Social, genTweetURI } from '~/store/tweet'
+import { StateController, tweetStore, type Social, genGid, genTweetURI } from '~/store/tweet'
+import { Official, Domain, Subject } from '~/constants'
 // Components
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/input/text'
@@ -11,6 +12,11 @@ import '@riffian-web/ui/link'
 import '@riffian-web/ui/input/textarea'
 import '@riffian-web/ui/tx-state'
 import { toast } from '@riffian-web/ui/toast'
+
+export const genTweet = async () => `Get ${
+  rewardStore.taskHumanized.tweet ?? 100
+} $DOID at ${Domain} ${Official} ${Subject}
+Gid: ${genGid(await getAccount())}`
 
 @customElement('bind-social')
 export class BindSocial extends ThemeElement('') {
@@ -25,7 +31,7 @@ export class BindSocial extends ThemeElement('') {
   @state() tx: any = null
   @state() ts = 0
 
-  @state() tweetURI = ''
+  @state() tweetURI: string | undefined
   @state() twitter: Social | undefined
   @state() inputURL = ''
   @state() inputErr = ''
@@ -38,7 +44,7 @@ export class BindSocial extends ThemeElement('') {
   }
 
   check = async () => {
-    const reqs = [genTweetURI(), tweetStore.fetchSelf()]
+    const reqs = [genTweetURI(await genTweet()), tweetStore.fetchSelf()]
     const [uri] = await Promise.all(reqs)
     this.tweetURI = uri
     this.ts++
@@ -167,7 +173,7 @@ export class BindSocial extends ThemeElement('') {
               () =>
                 html`<p class="mt-8 text-center">
                   <a @click=${this.back} class="text-base hover_underline ui-em cursor-pointer"
-                    >You can claim your <b class="text-lg ui-em">${rewardStore.rewardHumanized.tweet}</b> rewards now
+                    >You can claim your <b class="text-lg ui-em">${rewardStore.taskHumanized.tweet}</b> rewards now
                     <i class="text-base mdi mdi-arrow-right"></i
                   ></a>
                 </p>`

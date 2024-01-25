@@ -23,11 +23,13 @@ class WeeklyStore extends State {
         let {
           statistic: { week }
         } = await graphQuery('MediaBoard', `{ statistic (id: "riffian") { week } }`)
-        const now = nowTs()
-        if (now > week) week += weekSeconds // GraphData maybe not update if not new events
+        const nextStart = week + weekSeconds
+        if (nowTs() > nextStart * 1000) week = nextStart // GraphData maybe not update if not new events
         this.latestEnd = week + weekSeconds
         const [start, end] = [dayjs.unix(week), dayjs.unix(this.latestEnd)]
-        this.latestRange = `${start.format('MMM')}${start.format('D')}-${end.format('D')} ${end.format('YYYY')}`
+        let [startMonth, endMonth] = [start.format('MMM'), end.format('MMM')]
+        if (startMonth === endMonth) endMonth = ''
+        this.latestRange = `${startMonth}${start.format('D')}-${endMonth}${end.format('D')} ${end.format('YYYY')}`
         resolve((this.latest = week))
         this.cd()
       })
