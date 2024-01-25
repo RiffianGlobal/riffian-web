@@ -3,6 +3,7 @@ import dayjs from '~/lib/dayjs'
 export { StateController } from '@lit-web3/base/state'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 import { weekSeconds } from '~/constants'
+import { nowTs } from '@riffian-web/ethers/src/utils'
 
 class WeeklyStore extends State {
   @property({ value: '' }) latest!: number
@@ -19,9 +20,11 @@ class WeeklyStore extends State {
   getLatest = async () => {
     if (!this.promise)
       this.promise = new Promise(async (resolve) => {
-        const {
+        let {
           statistic: { week }
         } = await graphQuery('MediaBoard', `{ statistic (id: "riffian") { week } }`)
+        const now = nowTs()
+        if (now > week) week += weekSeconds // GraphData maybe not update if not new events
         this.latestEnd = week + weekSeconds
         const [start, end] = [dayjs.unix(week), dayjs.unix(this.latestEnd)]
         this.latestRange = `${start.format('MMM')}${start.format('D')}-${end.format('D')} ${end.format('YYYY')}`

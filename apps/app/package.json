@@ -1,6 +1,6 @@
 {
   "name": "@riffian-web/app",
-  "version": "0.192.0",
+  "version": "0.193.1",
   "type": "module",
   "private": true,
   "scripts": {
