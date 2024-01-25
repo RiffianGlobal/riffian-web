@@ -186,7 +186,7 @@ export class TopAlbum extends ThemeElement(style) {
   async connectedCallback() {
     super.connectedCallback()
     this.fetch(true)
-    emitter.on('toplist-fetch', () => {
+    emitter.on('manual-change', () => {
       this.pagination = paginationDef()
       this.fetch(true)
     })

@@ -35,17 +35,11 @@ export class UserVotesList extends ThemeElement(style) {
     return !bridgeStore.bridge.account
   }
 
-  async connectedCallback() {
-    super.connectedCallback()
-    this.init()
-    bridgeStore.bridge.subscribe(this.init)
-  }
-
   getRandomInt(max: number) {
     return Math.floor(Math.random() * max)
   }
 
-  init = async () => {
+  fetch = async () => {
     if (this.disabled) return
     this.pending = true
     try {
@@ -65,6 +59,18 @@ export class UserVotesList extends ThemeElement(style) {
     } else {
       goto(`/track/${item.subject.id}`)
     }
+  }
+
+  async connectedCallback() {
+    super.connectedCallback()
+    this.fetch()
+    bridgeStore.bridge.subscribe(this.fetch)
+    emitter.on('manual-change', this.fetch)
+  }
+
+  async disconnectedCallback() {
+    super.disconnectedCallback()
+    emitter.off('manual-change', this.fetch)
   }
 
   render() {
