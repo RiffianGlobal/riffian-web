@@ -8,7 +8,7 @@ type APIRes = {
 }
 export const API: Record<string, () => Promise<APIRes>> = {
   cloudflare: async () => {
-    const res = await http.get(`https://www.cloudflare.com/cdn-cgi/trace?ts=${nowTs()}`)
+    const res = await http.get(`https://www.cloudflare.com/cdn-cgi/trace?t=${nowTs()}`)
     const [, ip, geo] = res.match(/ip=([0-9.]+)?.*?loc=([A-Z]+)?/s)
     return { ip, geo }
   }
@@ -41,6 +41,7 @@ export const detect = async () => {
 
 let promise: any
 export const blocked = async () => {
+  if (import.meta.env.MODE === 'development') return false
   if (promise) return promise
   return (promise = new Promise(async (resolve) => {
     let blocked = !!sessionStorage.getItem('blocked')

@@ -73,8 +73,12 @@ class RewardStore extends State {
   @property({ value: [] }) tasks!: bigint[]
   @property({ value: [] }) rewardsClaimed!: boolean[]
   @property({ value: [] }) userWeeklyRewards!: UserWeekly[]
-  @property({ value: [] }) userWeeklyPools!: bigint[]
-  @property({ value: 0n }) weeklyPool!: bigint // current weekly pool
+  @property({ value: null }) weeklyPool!: bigint | null // current weekly pool
+
+  constructor() {
+    super()
+    this.update()
+  }
 
   get txPending() {
     return this.tx && !this.tx.ignored
@@ -90,7 +94,8 @@ class RewardStore extends State {
       .sort((r) => (r.claimed ? 1 : -1))
   }
   get weeklyPoolHumanized() {
-    return this.weeklyPool ? formatUnits(this.weeklyPool) : ''
+    if (this.weeklyPool === null) return ''
+    return this.weeklyPool ? formatUnits(this.weeklyPool) : '0'
   }
   get votesTotal() {
     return this.userWeeklyRewards.reduce((cur, next) => cur + (next?.reward ?? 0n), 0n)
@@ -111,32 +116,52 @@ class RewardStore extends State {
     }
   }
 
-  // AKA: getRewards
   update = async () => {
     this.pending = true
     tweetStore.fetchSelf()
-    try {
-      const account = await getAccount()
-      rewardStore.userWeeklyRewards = await getUserWeeklyRewards(account)
+    await Promise.all([this.#fetchCommon(), this.#fetchUser()])
+    this.pending = false
+    this.inited = true
+  }
 
-      const { MultiCallContract: rewardContract, MultiCallProvider } = await getMultiCall('Reward')
+  #fetchCommon = async () => {
+    const curWeek = await weeklyStore.getLatest()
+    const { MultiCallContract: contract, MultiCallProvider } = await getMultiCall('MediaBoard')
+    // Aggregated calls
+    // 0: current weekly pool
+    const calls = [contract.weeklyReward(curWeek)]
+    const [data] = await MultiCallProvider.all(calls)
+    // 0: current weekly pool
+    this.weeklyPool = data.shift()
+  }
+
+  #fetchUser = async () => {
+    const [account, { MultiCallContract: contract, MultiCallProvider }] = await Promise.all([
+      getAccount(),
+      getMultiCall('Reward')
+    ])
+    if (!account) {
+      this.rewards = this.tasks = this.rewardsClaimed = []
+      return
+    }
+    try {
       // Aggregated calls
       // 0: claimable amnts
-      const calls = [rewardContract.claimable(account)]
+      const calls = [contract.claimable(account)]
       // 1-4: Task max amnts
-      calls.push(...rewardMap.map((r) => rewardContract[r.read]()))
+      calls.push(...rewardMap.map((r) => contract[r.read]()))
       // 5-8: isClaimed
-      calls.push(...rewardMap.map((r) => rewardContract[r.check](account)))
+      calls.push(...rewardMap.map((r) => contract[r.check](account)))
+
       const [res] = await MultiCallProvider.all(calls)
       // Aggregated res
       // 0: claimable amnts
-      rewardStore.rewards = res.shift().map((v: bigint, i: number) => (rewardMap[i].closed ? 0n : v))
+      this.rewards = res.shift().map((v: bigint, i: number) => (rewardMap[i].closed ? 0n : v))
       // 1-4: Task max amnts
-      rewardStore.tasks = res.splice(0, rewardMap.length)
+      this.tasks = res.splice(0, rewardMap.length)
       // 5-8: isClaimed
-      rewardStore.rewardsClaimed = res.splice(0, rewardMap.length)
-    } catch {}
-    rewardStore.inited = true
+      this.rewardsClaimed = res.splice(0, rewardMap.length)
+    } catch (err) {}
   }
 }
 export const rewardStore = new RewardStore()
@@ -144,7 +169,6 @@ export const rewardStore = new RewardStore()
 export const claim = async () => {
   const signer = await getSigner()
   const secret = await signer.signMessage('')
-
   const contract = await getRewardContract()
   const [method, overrides] = ['claimSocialVerify', {}]
   const parameters = [secret]
@@ -177,8 +201,9 @@ export type UserWeekly = {
   }
   reward: bigint
 }
-export const getUserWeeklyVotes = async (account?: string): Promise<UserWeekly[]> => {
+export const getUserAllVotes = async (account?: string): Promise<UserWeekly[]> => {
   account ||= await getAccount()
+  if (!account) return []
   const req = `{
     userWeeklyVotes( orderBy: "week" orderDirection: "desc" where: {user_: {address: "${account!.toLowerCase()}"}} ) { week votes claimed }
   }`
@@ -203,29 +228,28 @@ export const getUserWeeklyVotes = async (account?: string): Promise<UserWeekly[]
 }
 
 export const getUserWeeklyRewards = async (account?: string): Promise<UserWeekly[]> => {
-  const curWeek = await weeklyStore.getLatest()
-  const userWeeklyVotes = await getUserWeeklyVotes(account || (await getAccount()))
+  account ||= await getAccount()
+  const [userWeeklyVotes, { MultiCallContract: contract, MultiCallProvider }] = await Promise.all([
+    getUserAllVotes(account),
+    getMultiCall('MediaBoard')
+  ])
   const weekN = userWeeklyVotes.length
-  const { MultiCallContract: contract, MultiCallProvider } = await getMultiCall('MediaBoard')
   // Aggregated calls
-  // 0: current weekly pool
-  const calls = [contract.weeklyReward(curWeek)]
-  // 0-weekN: weekly total votes
+  const calls = []
+  // 0-weekN: common weekly total votes
   calls.push(...userWeeklyVotes.map(({ week }) => contract.weeklyVotes(week)))
-  // 0-weekN: weekly total rewards
+  // 0-weekN: common weekly total rewards
   calls.push(...userWeeklyVotes.map(({ week }) => contract.weeklyReward(week)))
   const [data] = await MultiCallProvider.all(calls)
   // Aggregated res
-  // 0: current weekly pool
-  rewardStore.weeklyPool = data.shift()
-  // weekly total votes
+  // 0-weekN: common weekly total votes
   const weeklyVotes = data.splice(0, weekN)
-  // weekly total rewards
-  rewardStore.userWeeklyPools = data.splice(0, weekN)
+  // 0-weekN: common weekly total rewards
+  const weeklyPools = data.splice(0, weekN)
   //
   const res = userWeeklyVotes.map((weekly, i) => {
     const { votes, cooked } = weekly
-    weekly.reward = (rewardStore.userWeeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
+    weekly.reward = (weeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
     cooked.reward = (+formatUnits(weekly.reward)).toFixed(4)
     return weekly
   })

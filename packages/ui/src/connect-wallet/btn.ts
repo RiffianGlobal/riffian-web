@@ -66,8 +66,7 @@ export class ConnectWalletBtn extends ThemeElement(style) {
         <div class="flex w-full justify-between items-center gap-4 py-3 px-3">
           <div class="flex items-center">
             <span class="inline-flex items-center gap-2">
-              <ui-address-avatar></ui-address-avatar>
-              <span>${this.doid}<q class="q text-xs">${this.addr}</q></span>
+              <ui-address short doid avatar></ui-address>
             </span>
             <span class="inline-flex items-center">
               <ui-copy-icon title="Copy" .value=${this.account}></ui-copy-icon>

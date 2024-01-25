@@ -33,12 +33,13 @@ export class Provider extends State {
       this.network.chainId = chainId = Network.defaultChainId
     }
     if (!persistent) this.storage = sessionStorage.setItem('chainId', chainId)
-    if (!persistent && wallet) {
+    if (!persistent && wallet?.injected()) {
       this.provider = await wallet.getProvider()
     } else {
-      const _provider = provider || (this.network.providerWs ? WebSocketProvider : JsonRpcProvider)
-      const _rpc = rpc || (this.network.providerWs ? this.network.providerWs : this.network.provider)
-      this.provider = new _provider(_rpc)
+      this.provider = provider || (await wallet?.getProvider())
+      // const _provider = provider || JsonRpcProvider
+      // const _rpc = rpc || this.network.provider
+      // this.provider = new _provider(_rpc)
     }
     emitter.emit('network-change', '')
   }

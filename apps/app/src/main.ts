@@ -45,7 +45,7 @@ export class AppMain extends ThemeElement('') {
   render() {
     return html`<ui-header full>
         <div slot="logo" class="inline-flex justify-center items-center mr-4">
-          <a class="inline-flex justify-center items-center font-bold" href="/"><i class="ui-logo"></i></a>
+          <a class="inline-flex justify-center items-center font-bold" href="/"><i class="ui-logo beta"></i></a>
         </div>
 
         <div slot="right">
@@ -65,7 +65,7 @@ export class AppMain extends ThemeElement('') {
             </div>
           </div>
         </div>
-        <div slot="left" class="flex justify-start items-center gap-4">
+        <div slot="left" class="flex justify-start items-center gap-4 ml-4">
           ${when(
             !this.isMobi,
             () =>

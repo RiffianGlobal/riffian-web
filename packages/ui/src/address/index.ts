@@ -44,7 +44,7 @@ export class UIAddress extends ThemeElement(style) {
     return html`${when(
         this.pending,
         () => html`<i class="mdi mdi-loading"></i>`,
-        () => this.wrapLink(this.doid)
+        () => this.wrapLink(html`<span class="name">${this.doid}</span>`)
       )}<q class="q">${this.showAddr}</q>`
   }
   wrapLink = (_html: unknown) => (this.isLink ? html`<ui-link href=${this.href}>${_html}</ui-link>` : _html)

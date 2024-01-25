@@ -1,7 +1,6 @@
 import { ThemeElement, customElement, html, state, when } from '@riffian-web/ui/shared/theme-element'
-import { asyncReplace } from 'lit/directives/async-replace.js'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { getWeek, weekStatistic, weeklyReward } from './action'
+import { weekStatistic, weeklyReward } from './action'
 import { formatUnits } from 'ethers'
 import { weeklyStore } from '~/store/weekly'
 // Components
@@ -27,8 +26,9 @@ export class ClaimRewards extends ThemeElement(style) {
     this.weeklyRewards()
   }
 
-  async weeklyRewards() {
+  weeklyRewards = async () => {
     try {
+      console.log('h1')
       this.pending = true
       try {
         this.rewards = await weeklyReward()
@@ -36,9 +36,11 @@ export class ClaimRewards extends ThemeElement(style) {
         let week = await weekStatistic(await weeklyStore.getLatest())
         this.rewards = (BigInt(week.weeklyStatistic?.volumeVote ?? 0) * 4n) / 100n
       }
-      this.pending = false
     } catch (err: any) {
       console.error('claim', err)
+    } finally {
+      console.log('h2')
+      this.pending = false
     }
   }
 

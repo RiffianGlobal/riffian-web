@@ -86,6 +86,7 @@ class Tweets extends State {
 
   fetchSelf = async () => {
     const address = await getAccount()
+    if (!address) return
     this.selfTweetURI = await this.addressToUri(address)
     if (this.selfTweetURI) await this.fromUri(this.selfTweetURI, address)
     return this.selfTweetURI

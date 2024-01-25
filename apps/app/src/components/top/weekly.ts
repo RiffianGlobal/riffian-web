@@ -52,8 +52,11 @@ export class WeeklyTop extends ThemeElement(style) {
   get scrollMode() {
     return this.isMobi ? 'click' : 'scroll'
   }
-  get empty() {
+  get loading() {
     return this.pending && !this.collections?.length
+  }
+  get empty() {
+    return this.ts && !this.collections?.length
   }
 
   fetch = async (force = false) => {
@@ -127,53 +130,56 @@ export class WeeklyTop extends ThemeElement(style) {
 
   render() {
     return html`<div role="list" class="ui-list gap-2 ${classMap(this.$c([this.pending ? 'loading' : 'hover']))}">
-      <div class="flex header border-bottom">
-        <div class="w-8 md_w-10">Rank</div>
-        <div class="flex-shrink">Collection</div>
-        <div class="flex-auto"></div>
-        <div class="num flex-auto w-32">Volume</div>
+        <div class="flex header border-bottom">
+          <div class="w-8 md_w-10">Rank</div>
+          <div class="flex-shrink">Collection</div>
+          <div class="flex-auto"></div>
+          <div class="num flex-auto w-32">Volume</div>
+        </div>
+        ${when(
+          this.loading,
+          () => html`<div name="loading" class="doc-intro"></div><loading-skeleton num="4"></loading-skeleton></div>`,
+          () =>
+            html`${repeat(
+              this.collections,
+              (item: any, i) => html`
+                <div class="item flex items-center">
+                  <div class="flex-none w-8 md_pl-3 text-sm font-light opacity-70">${i + 1}</div>
+                  <div class="flex-shrink">
+                    <img-loader
+                      @click=${() => this.go2(item)}
+                      .src=${item.image}
+                      class="w-[3rem] h-[3rem] md_w-[3.75rem] md_h-[3.75rem] rounded-lg cursor-pointer"
+                    ></img-loader>
+                  </div>
+                  <div class="flex-auto truncate">
+                    <p class="name truncate cursor-pointer" @click=${() => this.go2(item)}>${item.name}</p>
+                    <a href=${item.uri} target="_blank">
+                      <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
+                    </a>
+                  </div>
+                  <div class="num flex-initial flex flex-col !w-18 text-sm items-end">
+                    <span>${formatUnits(item.volumeTotal)}</span>
+                    <span class="text-xs" style="color: #34C77B">${WeeklyTop.dayChange(item)}</span>
+                  </div>
+                </div>
+              `
+            )}`
+        )}
       </div>
+      <!-- Empty -->
+      ${when(this.empty, () => html`<p class="p-2 opacity-60">No votes yet.</p>`)}
+      <!-- Pagination -->
       ${when(
-        this.empty,
-        () => html`<div name="loading" class="doc-intro"></div><loading-skeleton num="4"></loading-skeleton></div>`,
+        this.paging,
         () =>
-          html`${repeat(
-            this.collections,
-            (item: any, i) => html`
-              <div class="item flex items-center">
-                <div class="flex-none w-8 md_pl-3 text-sm font-light opacity-70">${i + 1}</div>
-                <div class="flex-shrink">
-                  <img-loader
-                    @click=${() => this.go2(item)}
-                    .src=${item.image}
-                    class="w-[3rem] h-[3rem] md_w-[3.75rem] md_h-[3.75rem] rounded-lg cursor-pointer"
-                  ></img-loader>
-                </div>
-                <div class="flex-auto truncate">
-                  <p class="name truncate cursor-pointer" @click=${() => this.go2(item)}>${item.name}</p>
-                  <a href=${item.uri} target="_blank">
-                    <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
-                  </a>
-                </div>
-                <div class="num flex-initial flex flex-col !w-18 text-sm items-end">
-                  <span>${formatUnits(item.volumeTotal)}</span>
-                  <span class="text-xs" style="color: #34C77B">${WeeklyTop.dayChange(item)}</span>
-                </div>
-              </div>
-            `
-          )}
-          ${when(
-            this.paging,
-            () =>
-              html`<ui-pagination
-                .nomore=${this.err}
-                mode=${this.scrollMode}
-                .firstLoad=${false}
-                .pending=${this.pending}
-                @loadmore=${this.loadmore}
-              ></ui-pagination>`
-          )}`
-      )}
-    </div>`
+          html`<ui-pagination
+            .nomore=${this.err}
+            mode=${this.scrollMode}
+            .firstLoad=${false}
+            .pending=${this.pending}
+            @loadmore=${this.loadmore}
+          ></ui-pagination>`
+      )}`
   }
 }

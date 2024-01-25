@@ -14,7 +14,7 @@ export class TrackPage extends ThemeElement(style) {
       <track-detail trackAddress=${this.addr}> </track-detail>
       <div class="mt-14">
         <div class="w-full inline-flex pb-2 border-b border-slate-50/10">
-          <div class="py-1.5 px-3 text-base font-normal text-white/70 rounded-md">Voters</div>
+          <div class="py-1.5 px-3 text-base font-normal text-white/70 rounded-md">History</div>
         </div>
         <voter-list trackAddress=${this.addr}></voter-list>
       </div>

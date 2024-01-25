@@ -17,7 +17,7 @@ export const AllNetworks = {
       symbol: 'DOID'
     },
     provider: 'https://rpc.doid.tech/',
-    providerWs: 'ws://rpc.doid.tech/ws',
+    providerWs: 'wss://rpc.doid.tech/ws',
     scan: 'https://scan.doid.tech',
     icon: ''
   },
@@ -31,7 +31,7 @@ export const AllNetworks = {
       symbol: 'DOID'
     },
     provider: 'https://rpc.testnet.doid.tech/',
-    providerWs: 'ws://rpc.testnet.doid.tech/ws',
+    providerWs: 'wss://rpc.testnet.doid.tech/ws',
     scan: 'https://scan.testnet.doid.tech',
     icon: ''
   }
