@@ -4,11 +4,13 @@ import { bindSocial } from '~/components/createAlbum/action'
 import { rewardStore } from '~/store/reward'
 import { StateController, tweetStore, type Social, genGid, genTweetURI } from '~/store/tweet'
 import { Official, Domain, Subject } from '~/constants'
+import tweetImg from '~/assets/tweet.png?inline'
 // Components
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/input/text'
 import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/link'
+import '@riffian-web/ui/tip'
 import '@riffian-web/ui/input/textarea'
 import '@riffian-web/ui/tx-state'
 import { toast } from '@riffian-web/ui/toast'
@@ -203,7 +205,11 @@ export class BindSocial extends ThemeElement('') {
                   >
                     <span slot="label"></span>
                     <span slot="msg" class="${classMap({ 'text-red-500': this.inputErr })}"
-                      >${this.inputErr ? this.inputErr : ''}</span
+                      >${this.inputErr ||
+                      html`<ui-tip
+                        ><ui-link slot="button">How to find?</ui-link>
+                        <img-loader .src=${tweetImg} class=""></img-loader>
+                      </ui-tip>`}</span
                     >
                     <span slot="right"
                       ><i
@@ -219,7 +225,7 @@ export class BindSocial extends ThemeElement('') {
               </div>
             </div>
             <!-- Actions -->
-            <p class="relative flex gap-4 justify-center items-center">
+            <p class="mt-6 relative flex gap-4 justify-center items-center">
               <ui-button @click=${this.set} ?disabled=${this.btnDisabled} ?pending=${this.btnPending}
                 >Confirm<i class="mdi ${classMap({ 'mdi-loading': this.txPending })}"></i
               ></ui-button>
