@@ -75,7 +75,7 @@ export class TrackInfo extends ThemeElement(style) {
     return html`<div role="list" class="ui-list ${classMap(this.$c([this.pending ? 'loading' : 'hover']))}">
         <div class="flex header">
           <div class="w-16">Rank</div>
-          <div class="address flex-auto">Addr</div>
+          <div class="address flex-auto">Address</div>
           <div class="num flex-none">Comsumption</div>
           <div class="num flex-none w-28">Earning</div>
         </div>
@@ -100,10 +100,10 @@ export class TrackInfo extends ThemeElement(style) {
                     <ui-address .address="${item.user.address}" short avatar class="text-base"></ui-address>
                   </div>
                   <div class="num flex-none">
-                    <p class="num truncate mt-2">${formatUnits(item.volumeVote)}</p>
+                    <p class="num truncate mt-2">${parseFloat((+formatUnits(item.volumeVote)).toFixed(4))}</p>
                   </div>
                   <div class="num flex-none w-28">
-                    <p class="num truncate mt-2">${(+formatUnits(item.user.rewardClaimed)).toFixed(4)}</p>
+                    <p class="num truncate mt-2">${parseFloat((+formatUnits(item.user.rewardClaimed)).toFixed(4))}</p>
                   </div>
                 </div>
               `

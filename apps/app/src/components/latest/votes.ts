@@ -59,10 +59,7 @@ export class LatestVotes extends ThemeElement(style) {
   }
 
   render() {
-    return html` <div
-      role="list"
-      class="ui-list gap-2 bidders ${classMap(this.$c([this.pending ? 'loading' : 'hover']))}"
-    >
+    return html` <div role="list" class="ui-list bidders ${classMap(this.$c([this.pending ? 'loading' : 'hover']))}">
       <div class="flex header border-bottom"><div class="w-full">Bidders</div></div>
       ${when(
         this.pending && this.latestVotes.length == 0,

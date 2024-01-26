@@ -19,7 +19,6 @@ import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/img/loader'
 import '@riffian-web/ui/pagination'
-import { toast } from '@riffian-web/ui/toast'
 
 import emitter from '@lit-web3/base/emitter'
 import { emptyCover, paginationDef } from '~/utils'
@@ -125,12 +124,12 @@ export class TopAlbum extends ThemeElement(style) {
       ? html` <div class="w-8 md_w-10">Rank</div>
           <div class="flex-shrink">Collection</div>
           <div class="flex-auto"></div>
-          <div class="num flex-auto w-32">Price</div>`
+          <div class="num flex-auto w-32">Volume</div>`
       : html`
           <div class="w-16">Index</div>
           <div class="flex-auto">Name</div>
           <div class="flex-none w-40">Created</div>
-          <div class="num flex-none w-24">Vote Value</div>
+          <div class="num flex-none w-24">Volume</div>
           <div class="num flex-none w-24">Price</div>
           <div class="num flex-none w-24">24H</div>
         `
@@ -140,22 +139,36 @@ export class TopAlbum extends ThemeElement(style) {
     return this.brief
       ? html`<div class="item flex items-center">
           <div class="flex-none w-8 md_pl-3 text-sm font-light opacity-70">${i + 1}</div>
-          <div class="flex-shrink">
+          <div class="flex-shrink flex justify-center">
             <img-loader
               @click=${(e: CustomEvent) => this.go2(e, item)}
               .src=${item.image}
               class="w-[3rem] h-[3rem] md_w-[3.75rem] md_h-[3.75rem] rounded-lg cursor-pointer"
             ></img-loader>
           </div>
-          <div class="flex-auto truncate">
-            <p class="name truncate cursor-pointer" @click=${(e: CustomEvent) => this.go2(e, item)}>${item.name}</p>
-            <a href=${item.uri} target="_blank">
-              <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
-            </a>
+          <div class="flex-auto flex-col">
+            <div class="inline-flex">
+              <p
+                class="name truncate cursor-pointer ${this.brief ? 'lg_max-w-64' : ''}"
+                @click=${(e: CustomEvent) => this.go2(e, item)}
+              >
+                ${item.name}
+              </p>
+              <a href=${item.uri} class="flex-none ml-2" target="_blank">
+                <span class="icon mt-1"><i class="mdi mdi-play-circle opacity-85 hover_opacity-100"></i></span>
+              </a>
+            </div>
+            ${when(
+              this.brief,
+              () =>
+                html`<div class="text-xs text-gray-400/70">
+                  <span class="mr-1.5">Price:</span>${(Number(item.supply) + 1) / 10}
+                </div>`
+            )}
           </div>
-          <div class="num flex-initial flex flex-col !w-18 text-sm items-end">
-            <span>${(Number(item.supply) + 1) / 10}</span>
-            <span class="text-xs" style="color: #34C77B">${TopAlbum.dayChange(item)}</span>
+          <div class="num flex-initial flex flex-col !w-12 text-sm items-end">
+            <span>${item.totalVal}</span>
+            <span class="text-xs mt-1.5" style="color: #34C77B">${TopAlbum.dayChange(item)}</span>
           </div>
         </div>`
       : html`
@@ -170,7 +183,7 @@ export class TopAlbum extends ThemeElement(style) {
               </div>
               <div>
                 <p class="name truncate">${item.name}</p>
-                <span class="icon mt-1"><i class="mdi mdi-play-circle-outline"></i></span>
+                <span class="icon mt-1"><i class="mdi mdi-play-circle opacity-85 hover_opacity-100"></i></span>
               </div>
             </div>
             <div class="flex-none w-40 text-xs text-gray-300/60">${format(item.createdAt)}</div>

@@ -210,26 +210,28 @@ export class TrackDetail extends ThemeElement(style) {
                   class="lg_col-start-1 col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
                 >
                   <div class="text-gray-500 align-center">Voters</div>
-                  <div class="text-4xl align-center lining-nums">${this.subject.fansNumber}</div>
+                  <div class="text-4xl font-light align-center lining-nums">${this.subject.fansNumber}</div>
                 </div>
                 <div
                   class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
                 >
                   <div class="text-gray-500 align-center">Tickets</div>
-                  <div class="text-4xl align-center lining-nums">${this.subject.supply}</div>
+                  <div class="text-4xl font-light align-center lining-nums">${this.subject.supply}</div>
                 </div>
                 <div
                   class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
                 >
-                  <div class="text-gray-500 align-center">Total Vote Value</div>
-                  <div class="text-4xl align-center lining-nums">${formatUnits(this.subject.totalVoteValue)}</div>
+                  <div class="text-gray-500 align-center">Volume</div>
+                  <div class="text-4xl font-light align-center lining-nums">
+                    ${formatUnits(this.subject.totalVoteValue)}
+                  </div>
                 </div>
                 <!--  -->
                 <div
                   class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
                 >
                   <div class="text-gray-500 align-center">Price</div>
-                  <div class="text-4xl align-center lining-nums">${(+this.subject.supply + 1) / 10}</div>
+                  <div class="text-4xl font-light align-center lining-nums">${(+this.subject.supply + 1) / 10}</div>
                 </div>
               </div>
             </div>`
