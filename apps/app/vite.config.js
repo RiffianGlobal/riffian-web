@@ -5,9 +5,6 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default ({ mode = '' }) => {
   return viteAppConfig({
     server: { port: 3000 },
-    build: {
-      emptyOutDir: mode === 'development'
-    },
     // S TODO: remove this after app@^1.0.0
     viteAppConfig: { pwa: false },
     plugins: [
