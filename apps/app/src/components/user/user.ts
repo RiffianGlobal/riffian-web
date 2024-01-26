@@ -112,7 +112,9 @@ export class TrackDetail extends ThemeElement(style) {
                   <span class="text-base text-white/70"
                     >Reward Claimed
                     <span class="ml-1 text-blue-300"
-                      >${this.user.rewardClaimed ? (+formatUnits(this.user.rewardClaimed)).toFixed(4) : '-'}</span
+                      >${this.user.rewardClaimed
+                        ? parseFloat((+formatUnits(this.user.rewardClaimed)).toFixed(4))
+                        : '-'}</span
                     ></span
                   >
                 </div>
