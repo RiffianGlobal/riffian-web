@@ -39,7 +39,8 @@ const multicallAddresses: Record<string, string> = {
   1: '0xcA11bde05977b3631167028862bE2a173976CA11',
   5: '0xcA11bde05977b3631167028862bE2a173976CA11',
   4002: '0xcA11bde05977b3631167028862bE2a173976CA11',
-  56797: '0x32A668a6bAAe81AF97e6527F1d114910f838350E'
+  53277: '0xcA11bde05977b3631167028862bE2a173976CA11',
+  56797: '0xcA11bde05977b3631167028862bE2a173976CA11'
 }
 
 export function setMulticallAddress(chainId: number, address: string) {

@@ -3,6 +3,7 @@ import dayjs from '~/lib/dayjs'
 export { StateController } from '@lit-web3/base/state'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 import { weekSeconds } from '~/constants'
+import { getAlbumContract } from '~/lib/riffutils'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 
 class WeeklyStore extends State {
@@ -20,9 +21,15 @@ class WeeklyStore extends State {
   getLatest = async () => {
     if (!this.promise)
       this.promise = new Promise(async (resolve) => {
-        let {
-          statistic: { week }
-        } = await graphQuery('MediaBoard', `{ statistic (id: "riffian") { week } }`)
+        let week
+        const { statistic } = await graphQuery('MediaBoard', `{ statistic (id: "riffian") { week } }`)
+        week = statistic?.week
+        // Add week offset due to initial time elapsed too long
+        if (!week) {
+          const weekBigInt = await (await getAlbumContract()).startTimeStamp()
+          const tsNow = BigInt(dayjs().unix())
+          week = Number(tsNow - ((tsNow - weekBigInt) % BigInt(weekSeconds)))
+        }
         const nextStart = week + weekSeconds
         if (nowTs() > nextStart * 1000) week = nextStart // GraphData maybe not update if not new events
         this.latestEnd = week + weekSeconds
