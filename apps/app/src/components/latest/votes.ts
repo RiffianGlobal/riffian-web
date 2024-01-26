@@ -80,12 +80,17 @@ export class LatestVotes extends ThemeElement(style) {
               html`<div class="item flex items-center pr-0.5">
                 <div class="w-full flex items-center justify-between gap-2">
                   <ui-link href=${`/user/${item.voter.address}`}>
-                    <ui-address class="text-xl" .address=${item.voter.address} avatar hideAddr></ui-address>
+                    <ui-address
+                      class="relative -top-1 text-xl"
+                      .address=${item.voter.address}
+                      avatar
+                      hideAddr
+                    ></ui-address>
                   </ui-link>
-                  <div class="flex flex-col justify-center items-end">
+                  <div class="flex flex-col justify-center items-end text-right">
                     <p class="opacity-95 text-base">${formatUnits(item.value)}</p>
-                    <p class="text-right text-xs leading-none text-neutral-400 whitespace-nowrap">
-                      ${asyncReplace(this.timeAgo(item.time))}
+                    <p class="relative text-right text-xs leading-none text-neutral-400 whitespace-nowrap h-3">
+                      <span class="absolute right-0">${asyncReplace(this.timeAgo(item.time))}</span>
                     </p>
                   </div>
                 </div>
