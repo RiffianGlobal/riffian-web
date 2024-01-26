@@ -137,23 +137,17 @@ export class TopAlbum extends ThemeElement(style) {
 
   itemEle = (item: any, i: number) => {
     return this.brief
-      ? html`<div class="item flex items-center">
+      ? html`<div class="item flex items-center" @click=${(e: CustomEvent) => this.go2(e, item)}>
           <div class="flex-none w-8 md_pl-3 text-sm font-light opacity-70">${i + 1}</div>
           <div class="flex-shrink flex justify-center">
             <img-loader
-              @click=${(e: CustomEvent) => this.go2(e, item)}
               .src=${item.image}
               class="w-[3rem] h-[3rem] md_w-[3.75rem] md_h-[3.75rem] rounded-lg cursor-pointer"
             ></img-loader>
           </div>
           <div class="flex-auto flex-col">
             <div class="inline-flex">
-              <p
-                class="name truncate cursor-pointer ${this.brief ? 'lg_max-w-64' : ''}"
-                @click=${(e: CustomEvent) => this.go2(e, item)}
-              >
-                ${item.name}
-              </p>
+              <p class="name truncate cursor-pointer ${this.brief ? 'lg_max-w-64' : ''}">${item.name}</p>
               <a href=${item.uri} class="flex-none ml-2" target="_blank">
                 <span class="icon mt-1"><i class="mdi mdi-play-circle opacity-85 hover_opacity-100"></i></span>
               </a>

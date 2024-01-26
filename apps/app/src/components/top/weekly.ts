@@ -102,11 +102,18 @@ export class WeeklyTop extends ThemeElement(style) {
     this.fetch()
   }
 
-  go2 = (item: any) => {
+  go2 = (e: CustomEvent, item: any) => {
+    e.preventDefault()
+    e.stopPropagation()
     if (this.disabled) {
       emitter.emit('connect-wallet')
     } else {
-      goto(`/track/${item.id}`)
+      const tag = e.target?.tagName
+      if (tag == 'I') {
+        window.open(item.uri, '_blank')
+      } else {
+        goto(`/track/${item.id}`)
+      }
     }
   }
 
@@ -143,23 +150,17 @@ export class WeeklyTop extends ThemeElement(style) {
             html`${repeat(
               this.collections,
               (item: any, i) => html`
-                <div class="item flex items-center">
+                <div class="item flex items-center" @click=${(e: CustomEvent) => this.go2(e, item)}>
                   <div class="flex-none w-8 md_pl-3 text-sm font-light opacity-70">${i + 1}</div>
                   <div class="flex-shrink flex justify-center">
                     <img-loader
-                      @click=${() => this.go2(item)}
                       .src=${item.image}
                       class="w-[3rem] h-[3rem] md_w-[3.75rem] md_h-[3.75rem] rounded-lg cursor-pointer"
                     ></img-loader>
                   </div>
                   <div class="flex-auto flex-col">
                     <div class="inline-flex">
-                      <p
-                        class="name truncate cursor-pointer ${this.brief ? 'lg_max-w-64' : ''}"
-                        @click=${() => this.go2(item)}
-                      >
-                        ${item.name}
-                      </p>
+                      <p class="name truncate cursor-pointer ${this.brief ? 'lg_max-w-64' : ''}">${item.name}</p>
                       <a href=${item.uri} class="flex-none ml-2" target="_blank">
                         <span class="icon mt-1"><i class="mdi mdi-play-circle  opacity-85 hover_opacity-100"></i></span>
                       </a>
