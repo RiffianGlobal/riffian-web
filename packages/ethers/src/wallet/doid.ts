@@ -18,6 +18,7 @@ export class DoidWallet extends State implements Wallet {
     this.connector = new DOIDConnectorEthers()
     this.connector.updateChains([doid, doidTestnet])
     this.connector.updateOptions({
+      appName: 'Riffian',
       themeMode: 'dark',
       web3AuthEnabled: true,
       walletConnectEnabled: true,
