@@ -28,7 +28,6 @@ export class ClaimRewards extends ThemeElement(style) {
 
   weeklyRewards = async () => {
     try {
-      console.log('h1')
       this.pending = true
       try {
         this.rewards = await weeklyReward()
@@ -39,7 +38,6 @@ export class ClaimRewards extends ThemeElement(style) {
     } catch (err: any) {
       console.error('claim', err)
     } finally {
-      console.log('h2')
       this.pending = false
     }
   }

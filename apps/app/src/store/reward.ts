@@ -110,16 +110,16 @@ class RewardStore extends State {
   get socialNotClaimed() {
     return this.inited && this.rewardsClaimed[0] === false
   }
-  get rewardHumanized() {
+  get taskHumanized() {
     return {
-      tweet: (+formatUnits(this.rewards[0])).toFixed(0)
+      tweet: (+formatUnits(this.tasks[0])).toFixed(0)
     }
   }
 
   update = async () => {
     this.pending = true
     tweetStore.fetchSelf()
-    await Promise.all([this.#fetchCommon(), this.#fetchUser()])
+    await Promise.all([this.#fetchCommon(), this.#fetchUser(), this.#fetchUserVotes()])
     this.pending = false
     this.inited = true
   }
@@ -162,6 +162,34 @@ class RewardStore extends State {
       // 5-8: isClaimed
       this.rewardsClaimed = res.splice(0, rewardMap.length)
     } catch (err) {}
+  }
+  #fetchUserVotes = async (account?: string) => {
+    account ||= await getAccount()
+    const [userWeeklyVotes, { MultiCallContract: contract, MultiCallProvider }] = await Promise.all([
+      getUserAllVotes(account),
+      getMultiCall('MediaBoard')
+    ])
+    const weekN = userWeeklyVotes.length
+    // Aggregated calls
+    const calls = []
+    // 0-weekN: common weekly total votes
+    calls.push(...userWeeklyVotes.map(({ week }) => contract.weeklyVotes(week)))
+    // 0-weekN: common weekly total rewards
+    calls.push(...userWeeklyVotes.map(({ week }) => contract.weeklyReward(week)))
+    const [data] = await MultiCallProvider.all(calls)
+    // Aggregated res
+    // 0-weekN: common weekly total votes
+    const weeklyVotes = data.splice(0, weekN)
+    // 0-weekN: common weekly total rewards
+    const weeklyPools = data.splice(0, weekN)
+    //
+    const res = userWeeklyVotes.map((weekly, i) => {
+      const { votes, cooked } = weekly
+      weekly.reward = (weeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
+      cooked.reward = (+formatUnits(weekly.reward)).toFixed(4)
+      return weekly
+    })
+    this.userWeeklyRewards = res
   }
 }
 export const rewardStore = new RewardStore()

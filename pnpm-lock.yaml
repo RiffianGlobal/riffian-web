@@ -75,6 +75,9 @@ importers:
       '@riffian-web/ui-docs':
         specifier: workspace:latest
         version: link:../../packages/ui-docs
+      '@sentry/browser':
+        specifier: ^7.98.0
+        version: 7.98.0
       dayjs:
         specifier: 1.11.10
         version: 1.11.10
@@ -88,8 +91,8 @@ importers:
   packages/ethers:
     dependencies:
       '@doid/connect-ethers':
-        specifier: ^1.1.2
-        version: 1.1.2(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(lit@3.1.0)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
+        specifier: ^1.1.3
+        version: 1.1.3(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(lit@3.1.0)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       '@ensdomains/address-encoder':
         specifier: ^0.2.22
         version: 0.2.22
@@ -1811,10 +1814,10 @@ packages:
     engines: {node: '>=14'}
     dev: false
 
-  /@doid/connect-ethers@1.1.2(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(lit@3.1.0)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0):
-    resolution: {integrity: sha512-Hk9uQnWAsMIvQSjqWGpE1Y4cwy4ZQL67P6KkxYeVcbXM33+AhH5/VqI98IgD/bonVsaY6rui1I6rHBj9Awny6g==}
+  /@doid/connect-ethers@1.1.3(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(lit@3.1.0)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0):
+    resolution: {integrity: sha512-ugQ0BfcnlXYTe1wvi5TneIljAZEJTjv900YX07RU4UVF+4Tp6LxICZPvmGeDdA1S46HNpsRncCxXw9WTuJqh4w==}
     dependencies:
-      '@doid/connect': 1.1.2(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
+      '@doid/connect': 1.1.3(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       '@lit-web3/base': 0.4.7(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       '@wagmi/core': 1.4.13(@types/react@18.2.46)(react@18.2.0)(typescript@5.3.3)(viem@1.21.4)
       ethers: 6.9.2
@@ -1856,8 +1859,8 @@ packages:
       - zod
     dev: false
 
-  /@doid/connect@1.1.2(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0):
-    resolution: {integrity: sha512-q3qslP73F64tuj4GeSej9l2MUeGsL6kOGvVllN/ggTy7IujcxhBotOUsyjHcmvpDkTndD9ca/Cr2Ym2xIg/tmg==}
+  /@doid/connect@1.1.3(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0):
+    resolution: {integrity: sha512-xIMb8M1P4KLxrlxTh8dWGiMVqwJBzDaHn+Y8WBYOLLarp1xUeLYMPyu5NiyI2K1vwROlVyLTTYy0PKJy9zk2Ww==}
     dependencies:
       '@doid/name-validator': 0.0.3
       '@lit-app/state': 1.0.0
@@ -3138,6 +3141,77 @@ packages:
     dependencies:
       '@noble/hashes': 1.3.3
       '@scure/base': 1.1.5
+    dev: false
+
+  /@sentry-internal/feedback@7.98.0:
+    resolution: {integrity: sha512-t/mATvwkLcQLKRlx8SO5vlUjaadF6sT3lfR0PdWYyBy8qglbMTHDW4KP6JKh1gdzTVQGnwMByy+/4h9gy4AVzw==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@sentry/core': 7.98.0
+      '@sentry/types': 7.98.0
+      '@sentry/utils': 7.98.0
+    dev: false
+
+  /@sentry-internal/replay-canvas@7.98.0:
+    resolution: {integrity: sha512-vAR6KIycyazaY9HwxG5UONrPTe8jeKtZr6k04svPC8OvcoI0xF+l1jMEYcarffuzKpZlPfssYb5ChHtKuXCB+Q==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@sentry/core': 7.98.0
+      '@sentry/replay': 7.98.0
+      '@sentry/types': 7.98.0
+      '@sentry/utils': 7.98.0
+    dev: false
+
+  /@sentry-internal/tracing@7.98.0:
+    resolution: {integrity: sha512-FnhD2uMLIAJvv4XsYPv3qsTTtxrImyLxiZacudJyaWFhxoeVQ8bKKbWJ/Ar68FAwqTtjXMeY5evnEBbRMcQlaA==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/core': 7.98.0
+      '@sentry/types': 7.98.0
+      '@sentry/utils': 7.98.0
+    dev: false
+
+  /@sentry/browser@7.98.0:
+    resolution: {integrity: sha512-/MzTS31N2iM6Qwyh4PSpHihgmkVD5xdfE5qi1mTlwQZz5Yz8t7MdMriX8bEDPlLB8sNxl7+D6/+KUJO8akX0nQ==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry-internal/feedback': 7.98.0
+      '@sentry-internal/replay-canvas': 7.98.0
+      '@sentry-internal/tracing': 7.98.0
+      '@sentry/core': 7.98.0
+      '@sentry/replay': 7.98.0
+      '@sentry/types': 7.98.0
+      '@sentry/utils': 7.98.0
+    dev: false
+
+  /@sentry/core@7.98.0:
+    resolution: {integrity: sha512-baRUcpCNGyk7cApQHMfqEZJkXdvAKK+z/dVWiMqWc5T5uhzMnPE8/gjP1JZsMtJSQ8g5nHimBdI5TwOyZtxPaA==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.98.0
+      '@sentry/utils': 7.98.0
+    dev: false
+
+  /@sentry/replay@7.98.0:
+    resolution: {integrity: sha512-CQabv/3KnpMkpc2TzIquPu5krpjeMRAaDIO0OpTj5SQeH2RqSq3fVWNZkHa8tLsADxcfLFINxqOg2jd1NxvwxA==}
+    engines: {node: '>=12'}
+    dependencies:
+      '@sentry-internal/tracing': 7.98.0
+      '@sentry/core': 7.98.0
+      '@sentry/types': 7.98.0
+      '@sentry/utils': 7.98.0
+    dev: false
+
+  /@sentry/types@7.98.0:
+    resolution: {integrity: sha512-pc034ziM0VTETue4bfBcBqTWGy4w0okidtoZJjGVrYAfE95ObZnUGVj/XYIQ3FeCYWIa7NFN2MvdsCS0buwivQ==}
+    engines: {node: '>=8'}
+    dev: false
+
+  /@sentry/utils@7.98.0:
+    resolution: {integrity: sha512-0/LY+kpHxItVRY0xPDXPXVsKRb95cXsGSQf8sVMtfSjz++0bLL1U4k7PFz1c5s2/Vk0B8hS6duRrgMv6dMIZDw==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@sentry/types': 7.98.0
     dev: false
 
   /@shoelace-style/animations@1.1.0:
