@@ -20,15 +20,9 @@ export class DoidWallet extends State implements Wallet {
     this.connector.updateOptions({
       appName: 'Riffian',
       themeMode: 'dark',
-      web3AuthEnabled: true,
       walletConnectEnabled: true,
       walletConnectId: 'b9850e108fc2d1e587dd41ce1fea0a16'
     })
-    if (import.meta.env.MODE !== 'production') {
-      this.connector.updateOptions({
-        web3AuthClientId: 'BNJiGOMfJH5myW47e6KudQGuWPYMBAyu4i7S5ZuEWiam2qDhokXmn0lmsfL9J4RZcT7W2epBrc8EEtUg2J_ACbM'
-      })
-    }
     this.account = this.connector.account
     this.connector.subscribe((_: any, value: any) => {
       this.account = value
@@ -46,8 +40,6 @@ export class DoidWallet extends State implements Wallet {
       if (!value) return
       this.chainId = value ? chainIdStr(value) : ''
       this.doid = this.connector.doid ?? ''
-      if (value == doid.id) this.connector.updateOptions({ doidNetwork: doid })
-      else if (value == doidTestnet.id) this.connector.updateOptions({ doidNetwork: doidTestnet })
       this.updateProvider(this.chainId)
     }, 'chainId')
     this.resolved = true
