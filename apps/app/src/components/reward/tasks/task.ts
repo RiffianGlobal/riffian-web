@@ -39,7 +39,7 @@ export class RewardTask extends ThemeElement(style) {
 
       <div class="flex gap-2 items-center text-right">
         <!-- Reward Amnt -->
-        <span class="${classMap({ 'text-green-600 font-bold': +this.reward.amnt > 0 })}"
+        <span class="${classMap({ 'text-green-600': +this.reward.amnt > 0, 'font-bold': +this.reward.amnt > 0 })}"
           >${this.reward.closed || this.reward?.claimed ? '' : this.reward.amnt}</span
         >
         <!-- Reward Action -->
