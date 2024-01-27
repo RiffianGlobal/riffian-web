@@ -61,14 +61,13 @@ export class UserVotesList extends ThemeElement(style) {
     }
   }
 
-  async connectedCallback() {
+  connectedCallback() {
     super.connectedCallback()
     this.fetch()
     bridgeStore.bridge.subscribe(this.fetch)
     emitter.on('manual-change', this.fetch)
   }
-
-  async disconnectedCallback() {
+  disconnectedCallback() {
     super.disconnectedCallback()
     emitter.off('manual-change', this.fetch)
   }

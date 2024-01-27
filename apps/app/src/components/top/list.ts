@@ -190,13 +190,19 @@ export class TopAlbum extends ThemeElement(style) {
         `
   }
 
+  listen = () => {
+    this.pagination = paginationDef()
+    this.fetch(true)
+  }
+
   async connectedCallback() {
     super.connectedCallback()
     this.fetch(true)
-    emitter.on('manual-change', () => {
-      this.pagination = paginationDef()
-      this.fetch(true)
-    })
+    emitter.on('manual-change', this.listen)
+  }
+  disconnectedCallback(): void {
+    super.disconnectedCallback()
+    emitter.off('manual-change', this.listen)
   }
 
   render() {

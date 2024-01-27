@@ -78,7 +78,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
     try {
       this.tx = await vote(this.album, 1, { value: (await votePriceWithFee(this.album))[0] })
       this.success = await this.tx.wait()
-      await this.emitChange()
+      this.emitChange()
     } catch (err: any) {
       let msg = err.message || err.code
       if (err.code === 4001) {
@@ -120,7 +120,10 @@ export class VoteAlbumDialog extends ThemeElement('') {
     this.price = undefined
     this.votes = undefined
   }
-  emitChange = () => this.emit('change')
+  emitChange = () => {
+    this.emit('change')
+    emitter.emit('manual-change')
+  }
   close = async () => {
     this.tx = null
     this.resetState()

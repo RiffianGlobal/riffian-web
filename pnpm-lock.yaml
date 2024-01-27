@@ -91,8 +91,8 @@ importers:
   packages/ethers:
     dependencies:
       '@doid/connect-ethers':
-        specifier: ^1.2.0
-        version: 1.2.0(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(lit@3.1.0)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
+        specifier: ^1.2.2
+        version: 1.2.2(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(lit@3.1.0)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       '@ensdomains/address-encoder':
         specifier: ^0.2.22
         version: 0.2.22
@@ -1814,10 +1814,10 @@ packages:
     engines: {node: '>=14'}
     dev: false
 
-  /@doid/connect-ethers@1.2.0(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(lit@3.1.0)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0):
-    resolution: {integrity: sha512-z9ep0LkRQ2YMj9pY7vz24hnQoOaoi6KeHMqVpfg2pmnsSqgGAan81XNvcS0dNvQ+ZvpGX1A/NGuN6fgzYlFzZg==}
+  /@doid/connect-ethers@1.2.2(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(lit@3.1.0)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0):
+    resolution: {integrity: sha512-ZAw8fLCtrr9U70dtRpq3AZAJyrxDX9iL1XAuh7WD8IIOcqv0PV4B3bql/7WvU+lAtwQnaPqBnS9NCJP8XwM6Nw==}
     dependencies:
-      '@doid/connect': 1.2.0(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
+      '@doid/connect': 1.2.2(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       '@lit-web3/base': 0.4.7(lit@3.1.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
       '@wagmi/core': 1.4.13(@types/react@18.2.46)(react@18.2.0)(typescript@5.3.3)(viem@1.21.4)
       ethers: 6.9.2
@@ -1859,8 +1859,8 @@ packages:
       - zod
     dev: false
 
-  /@doid/connect@1.2.0(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0):
-    resolution: {integrity: sha512-FtdQAHzuXxD3TTui9fXnAu1Md4qdCHFvVeTWbPt4vDEsjxal6INsj/QAPl/UaawNVkHhJjD1WPBbrnPab+YX6g==}
+  /@doid/connect@1.2.2(@babel/runtime@7.23.7)(@solana/web3.js@1.87.6)(@types/react@18.2.46)(react@18.2.0)(rollup@2.79.1)(terser@5.26.0)(typescript@5.3.3)(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0):
+    resolution: {integrity: sha512-TXdNV/W7rOiswB5gKqQBLBPSrTh/BkBCzHkQw2WkeJnV44T8XmpBtNH+zAoToxByU7SK//DWk2ZX4vx5VzL2Ew==}
     dependencies:
       '@doid/name-validator': 0.0.3
       '@lit-app/state': 1.0.0

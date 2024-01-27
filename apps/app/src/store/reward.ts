@@ -8,6 +8,7 @@ import dayjs from '~/lib/dayjs'
 import { getRewardContract } from '~/lib/riffutils'
 import { weeklyStore } from '~/store/weekly'
 import { tweetStore } from '~/store/tweet'
+import { emitter } from '@lit-web3/base'
 
 import { State, property } from '@lit-web3/base/state'
 export { StateController } from '@lit-web3/base/state'
@@ -78,6 +79,7 @@ class RewardStore extends State {
   constructor() {
     super()
     this.update()
+    emitter.on('manual-change', this.update)
   }
 
   get txPending() {

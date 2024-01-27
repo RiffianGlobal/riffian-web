@@ -72,7 +72,6 @@ export class CreateAlbumDialog extends ThemeElement('') {
   }
   connectedCallback() {
     super.connectedCallback()
-    emitter.emit('manual-change')
   }
 
   render() {

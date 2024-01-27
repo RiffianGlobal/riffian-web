@@ -73,11 +73,6 @@ export class DoidWallet extends State implements Wallet {
     try {
       const wallet = await this.connector.connect({ noModal: !force })
       localStorage.setItem(injectedKey, '1')
-      if (wallet.doid) localStorage.setItem(injectedKey, '1')
-      else {
-        localStorage.removeItem(injectedKey)
-        this.disconnect()
-      }
     } catch (err: any) {
       this.state = WalletState.DISCONNECTED
       console.info('Connect failed')
