@@ -23,6 +23,7 @@ export class DoidWallet extends State implements Wallet {
       walletConnectEnabled: true,
       walletConnectId: 'b9850e108fc2d1e587dd41ce1fea0a16'
     })
+    if (import.meta.env.MODE === 'development') this.connector.updateOptions({ doidNetwork: doidTestnet })
     this.account = this.connector.account
     this.connector.subscribe((_: any, value: any) => {
       this.account = value
