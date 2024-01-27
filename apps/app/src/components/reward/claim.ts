@@ -164,7 +164,7 @@ export class RewardClaim extends ThemeElement(style) {
         </span>
         <div class="flex gap-2 items-center text-right">
           <!-- Amnt -->
-          <span class="${classMap({ 'text-green-600 font-bold': +this.reward.amnt > 0 })}"
+          <span class="${classMap({ 'text-green-600': +this.reward.amnt > 0, 'font-bold': +this.reward.amnt > 0 })}"
             >${this.reward.closed || this.claimed ? '' : this.reward.amnt}</span
           >
           <!-- Button -->
