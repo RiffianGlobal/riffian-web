@@ -28,8 +28,8 @@ export class Network extends State {
   @property() chainId?: ChainId
   constructor(chainId?: ChainId, opts = {}) {
     super()
-    this.chainId = Network.chainId = chainId ?? walletStore.wallet?.chainId ?? Network.defaultChainId
-    // ensure this.chainId=walletStore.wallet?.chainId ?? undefined
+    this.chainId = Network.chainId = chainId ?? walletStore.walletChainId ?? Network.defaultChainId
+    // ensure this.chainId=walletStore.walletChainId ?? undefined
     reflectSubProperty(walletStore, 'wallet', 'chainId', this)
     // ensure Network.chainId=this.chainId
     reflectProperty(this, 'chainId', Network)

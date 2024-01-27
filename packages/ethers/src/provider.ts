@@ -12,19 +12,15 @@ export class Provider extends State {
     super()
     const { chainId, persistent } = options
     if (!persistent) this.storage = sessionStorage.getItem('chainId')
-    let wallet = walletStore.wallet ?? walletStore.wallets[0].app
-    this.network = new Network(chainId ?? wallet?.chainId ?? this.storage)
-    if (walletStore.wallet) this.update(options)
+    this.network = new Network(chainId ?? walletStore.walletChainId ?? this.storage)
+    if (walletStore.curWallet) this.update(options)
     walletStore.subscribe(() => this.update(options), 'wallet')
     this.network.subscribe(() => this.update(options), 'chainId')
   }
   update = async (options: useBridgeOptions = {}) => {
     let { chainId } = this.network
     const { persistent, provider, rpc } = options
-    let wallet = walletStore.wallet ?? walletStore.wallets[0].app
-    if (!persistent && wallet?.chainId) {
-      chainId = wallet.chainId
-    }
+    if (!persistent && walletStore.walletChainId) chainId = walletStore.walletChainId
     // TODO: Allow update when options.rpc changed
     if (this.provider) {
       this.provider.removeAllListeners()
@@ -33,6 +29,7 @@ export class Provider extends State {
       this.network.chainId = chainId = Network.defaultChainId
     }
     if (!persistent) this.storage = sessionStorage.setItem('chainId', chainId)
+    let wallet = walletStore.curWallet
     if (!persistent && wallet?.injected()) {
       this.provider = await wallet.getProvider()
     } else {

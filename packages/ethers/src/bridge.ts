@@ -33,6 +33,12 @@ class WalletStore extends State {
       else reflectProperty(value, 'account', this)
     }, 'wallet')
   }
+  get curWallet() {
+    return this.wallet ?? this.wallets[0].app
+  }
+  get walletChainId() {
+    return this.curWallet?.injected() ? this.curWallet.chainId : undefined
+  }
 }
 /** Singleton wallet store, to keep current selected wallet. */
 export const walletStore = new WalletStore()
