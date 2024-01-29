@@ -1,16 +1,7 @@
-import {
-  ThemeElement,
-  customElement,
-  html,
-  property,
-  state,
-  until,
-  when,
-  classMap
-} from '@riffian-web/ui/shared/theme-element'
+import { ThemeElement, customElement, html, property, state, until, when } from '@riffian-web/ui/shared/theme-element'
 import emitter from '@lit-web3/base/emitter'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { vote, albumData, votePrice, votePriceWithFee, myVotes, retreatPrice, retreat, getSocials } from './action'
+import { vote, votePriceWithFee, myVotes, retreatPrice, retreat } from './action'
 import { formatUnits } from 'ethers'
 import { tweetStore, type Social } from '~/store/tweet'
 
@@ -32,9 +23,9 @@ export class VoteAlbumDialog extends ThemeElement('') {
   @property({ type: String }) author = ''
   @property({ type: Promise<any> }) votes: Promise<any> | undefined
   @state() myVotes: any = 0
-  @state() price: Promise<any> | undefined
+  @state() votePrice: any = 0
+  @state() voteFee: any = 0
   @state() retreatPrice: any = 0
-  @state() retreatDisabled = true
   @state() social: Social | undefined
   @state() tx: any = null
   @state() success = false
@@ -60,13 +51,16 @@ export class VoteAlbumDialog extends ThemeElement('') {
 
   async getPrice() {
     try {
-      this.votes = albumData(this.album).then((result) => result[4])
-      this.myVotes = await myVotes(this.album).then((votes) => {
-        if (votes > 0) this.retreatDisabled = false
-        return votes
-      })
-      this.price = votePrice(this.album).then((price) => formatUnits(price))
-      this.retreatPrice = await retreatPrice(this.album).then((price) => formatUnits(price))
+      const [[voteSum, votePri], retreatPri, votes] = await Promise.all([
+        votePriceWithFee(this.album),
+        retreatPrice(this.album),
+        myVotes(this.album)
+      ])
+
+      this.votePrice = formatUnits(votePri).toString()
+      this.voteFee = formatUnits(voteSum - votePri).toString()
+      this.retreatPrice = formatUnits(retreatPri)
+      this.myVotes = votes
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })
@@ -117,7 +111,8 @@ export class VoteAlbumDialog extends ThemeElement('') {
     this.err = defErr()
     this.pending = false
     this.success = false
-    this.price = undefined
+    this.votePrice = 0
+    this.retreatPrice = 0
     this.votes = undefined
   }
   emitChange = () => {
@@ -199,7 +194,13 @@ export class VoteAlbumDialog extends ThemeElement('') {
                 () => html`
                   <div class="flex flex-col justify-center items-center px-4">
                     <div>
-                      <span class="text-2xl">${until(this.price, html`<i class="text-sm mdi mdi-loading"></i>`)}</span>
+                      ${when(
+                        this.votePrice > 0,
+                        () =>
+                          html`<span class="text-2xl ml-4">${this.votePrice}</span>
+                            <span class="opacity-80 ml-2">(${this.voteFee} fee included)</span>`,
+                        () => html`<i class="text-sm mdi mdi-loading"></i>`
+                      )}
                     </div>
                     <ui-button
                       class="mt-3 w-full"
@@ -221,8 +222,8 @@ export class VoteAlbumDialog extends ThemeElement('') {
 
                     <ui-button
                       class="mt-3 w-full"
-                      ?disabled=${this.retreatDisabled}
-                      ?pending=${this.retreatDisabled}
+                      ?disabled=${this.pending}
+                      ?pending=${this.pending}
                       @click=${this.retreat}
                       >Retreat</ui-button
                     >
