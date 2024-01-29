@@ -1,13 +1,4 @@
-import {
-  ThemeElement,
-  customElement,
-  html,
-  property,
-  state,
-  when,
-  until,
-  keyed
-} from '@riffian-web/ui/shared/theme-element'
+import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import '~/components/top/dialog'
 import { subjectInfo } from './action'
@@ -18,7 +9,7 @@ import '@riffian-web/ui/dialog/prompt'
 import style from './list.css?inline'
 import { formatUnits } from 'ethers'
 import { albumData, myVotes } from '~/components/top/action'
-import { tweetStore, type Social } from '~/store/tweet'
+import { tweetStore, genTweetURI, type Social } from '~/store/tweet'
 
 const defErr = () => ({ tx: '' })
 @customElement('track-detail')
@@ -111,6 +102,16 @@ export class TrackDetail extends ThemeElement(style) {
     this.dialog = true
   }
 
+  share = async (e: CustomEvent, item: any) => {
+    e.stopPropagation()
+    const { id = '', name = '' } = item
+    const subjectUrl = id ? `(https://app.riffian.global/${id ? 'track/' + id : ''})` : ``
+    const url = await genTweetURI(
+      `stay tuned with me. I\'m at Riffian.global${subjectUrl}!${name ? ' Check: "' + name + '"' : ''}`
+    )
+    window.open(url, '_blank')
+  }
+
   render() {
     return html`<div>
         ${when(
@@ -163,7 +164,7 @@ export class TrackDetail extends ThemeElement(style) {
                       )}
                     </div>
                   </div>
-                  <div class="mt-2 flex gap-4">
+                  <div class="mt-2 flex gap-4 items-center">
                     ${when(
                       this.voteEnable,
                       () => html`
@@ -199,6 +200,14 @@ export class TrackDetail extends ThemeElement(style) {
                           @change=${this.fetch}
                         ></vote-album-dialog>`
                     )}
+
+                    <ui-button
+                      icon
+                      class="!lg_w-10 !lg_h-10 outlined !border-white !rounded-md"
+                      @click=${(e: CustomEvent) => this.share(e, this.subject)}
+                      ><slot name="icon"
+                        ><i class="mdi mdi-share-variant-outline cursor-pointer text-2xl text-white"></i></slot
+                    ></ui-button>
                   </div>
                 </div>
               </div>
