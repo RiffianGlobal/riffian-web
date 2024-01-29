@@ -1,6 +1,7 @@
 import { Wallet, WalletState, emitWalletChange } from '../wallet'
 import { State, property } from '../state'
 import { JsonRpcApiProvider, JsonRpcSigner } from 'ethers'
+import getProvider from '../provider'
 import { chainIdStr } from '../constants/networks'
 
 const injectedKey = 'doid-connect.injected'
@@ -67,6 +68,8 @@ export class DoidWallet extends State implements Wallet {
 
   switchChain = (chainId: string) => this.connector.switchChain(Number(chainId))
   updateProvider(chainId: string) {
+    this.connector.updateChainId(chainId)
+    getProvider().update({ chainId })
     emitWalletChange()
   }
   async connect({ force = false } = {}) {

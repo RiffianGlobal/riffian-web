@@ -32,7 +32,8 @@ export const AllNetworks = {
     provider: 'https://rpc.testnet.doid.tech/',
     providerWs: 'wss://rpc.testnet.doid.tech/ws',
     scan: 'https://scan.testnet.doid.tech',
-    icon: ''
+    icon: '',
+    testnet: true
   }
 }
 

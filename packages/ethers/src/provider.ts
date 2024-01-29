@@ -25,9 +25,8 @@ export class Provider extends State {
     if (this.provider) {
       this.provider.removeAllListeners()
     }
-    if (!chainId) {
-      this.network.chainId = chainId = Network.defaultChainId
-    }
+    if (!chainId) chainId = Network.defaultChainId
+    this.network.chainId = chainId
     if (!persistent) this.storage = sessionStorage.setItem('chainId', chainId)
     let wallet = walletStore.curWallet
     if (!persistent && wallet?.injected()) {

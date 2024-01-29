@@ -60,11 +60,7 @@ export const retreat = async (album: string, amount: number) => {
 
 export const albumData = async (album: string) => {
   const contract = await getAlbumContract(true)
-  const method = 'subjectToData'
-  const overrides = {}
-  const parameters = [album]
-  await assignOverrides(overrides, contract, method, parameters)
-  return await contract[method](...parameters)
+  return await contract.subjectToData(album)
 }
 
 export const myVotes = async (album: string) => userSubjectVotes(album, await getAccount())

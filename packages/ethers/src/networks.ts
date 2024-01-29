@@ -1,6 +1,6 @@
 import { walletStore } from './bridge'
 import { AllNetworks, unknownNetwork, SupportNetworks } from './constants/networks'
-import { State, property, reflectProperty, reflectSubProperty } from './state'
+import { State, property } from './state'
 
 const isProd = import.meta.env.MODE === 'production'
 const mainnetOffline = !!import.meta.env.VITE_DISABLE_MAINNET
@@ -29,10 +29,6 @@ export class Network extends State {
   constructor(chainId?: ChainId, opts = {}) {
     super()
     this.chainId = Network.chainId = chainId ?? walletStore.walletChainId ?? Network.defaultChainId
-    // ensure this.chainId=walletStore.walletChainId ?? undefined
-    reflectSubProperty(walletStore, 'wallet', 'chainId', this)
-    // ensure Network.chainId=this.chainId
-    reflectProperty(this, 'chainId', Network)
     Object.assign(this.opts, opts)
   }
   get Networks() {

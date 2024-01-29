@@ -72,8 +72,8 @@ export class Bridge extends State {
   }
 
   async switchNetwork(chainId: ChainId) {
-    if (this.wallet) return this.wallet.switchChain(chainId)
-    else this.network.chainId = chainId
+    if (this.wallet) this.wallet.switchChain(chainId)
+    this.network.chainId = chainId
     this.Provider.update({ chainId })
   }
   async regToken(token: Tokenish, { alt = false, ext = 'svg' } = {}) {
