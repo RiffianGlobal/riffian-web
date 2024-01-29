@@ -82,9 +82,7 @@ export class AppMain extends ThemeElement('') {
         ${when(
           screenStore.isMobi,
           () =>
-            html`<ui-nav
-              class="fixed bottom-2 left-2 right-2 z-50 border border-neutral-800 bg-indigo-950 rounded-2xl space-x-2"
-            >
+            html`<ui-nav class="fixed bottom-0 left-0 right-0 z-50 border border-neutral-800 bg-indigo-950 space-x-2">
               <ui-link href="/" nav alias="/"><i class="mdi mdi-home-outline text-3xl"></i></ui-link>
               <create-album-btn icon></create-album-btn>
               <ui-link href="/uservotes" nav><i class="mdi mdi-account-outline text-3xl"></i></ui-link>

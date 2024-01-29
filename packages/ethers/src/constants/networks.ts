@@ -1,5 +1,4 @@
 // All Networks
-const apiKeyInfura = import.meta.env.VITE_KEY_INFURA
 export function chainIdStr(chainId: number): string {
   return '0x' + chainId.toString(16)
 }
@@ -37,7 +36,7 @@ export const AllNetworks = {
   }
 }
 
-export const SupportNetworks = ['0xd01d', '0xdddd']
+export const SupportNetworks = import.meta.env.MODE === 'production' ? ['0xd01d'] : ['0xd01d', '0xdddd']
 
 export const unknownNetwork = {
   title: 'Unsupported Network',

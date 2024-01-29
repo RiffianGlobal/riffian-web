@@ -110,7 +110,7 @@ class RewardStore extends State {
     return (+formatUnits(this.total)).toFixed(4)
   }
   get socialNotClaimed() {
-    return this.inited && this.rewardsClaimed[0] === false
+    return this.inited && tweetStore.selfTwitter?.verified && this.rewardsClaimed[0] === false
   }
   get taskHumanized() {
     return {

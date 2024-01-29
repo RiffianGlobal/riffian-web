@@ -17,13 +17,14 @@ export class DoidWallet extends State implements Wallet {
     let { doid, doidTestnet, DOIDConnectorEthers } = await import('@doid/connect-ethers')
     this.connector = new DOIDConnectorEthers()
     this.connector.updateChains([doid, doidTestnet])
-    this.connector.updateOptions({
+    const connectorOptions = {
       appName: 'Riffian',
       themeMode: 'dark',
       walletConnectEnabled: true,
       walletConnectId: 'b9850e108fc2d1e587dd41ce1fea0a16'
-    })
-    if (import.meta.env.MODE === 'development') this.connector.updateOptions({ doidNetwork: doidTestnet })
+    }
+    if (import.meta.env.MODE === 'development') Object.assign(connectorOptions, { doidNetwork: doidTestnet })
+    this.connector.updateOptions(connectorOptions)
     this.account = this.connector.account
     this.connector.subscribe((_: any, value: any) => {
       this.account = value

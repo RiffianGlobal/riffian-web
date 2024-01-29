@@ -83,7 +83,7 @@ export class BindSocial extends ThemeElement('') {
     return html`<b>${name}</b> @${id}`
   }
   get verified() {
-    return !!this.twitter?.verified && this.twitter?.address === this.account
+    return tweetStore.selfTwitter?.verified
   }
 
   onInput = async (e: CustomEvent) => {
@@ -145,14 +145,14 @@ export class BindSocial extends ThemeElement('') {
         () =>
           html`<div class="my-8 text-center">
               ${when(
-                tweetStore.selfTwitter,
+                this.verified,
                 () =>
                   html`<p class="text-lg">
                       ${tweetStore.selfTwitter.name}
                       <i
                         class="mdi ${classMap({
-                          'text-green-600': tweetStore.selfTwitter.verified,
-                          'mdi-check-decagram': tweetStore.selfTwitter.verified
+                          'text-green-600': this.verified,
+                          'mdi-check-decagram': this.verified
                         })}"
                       ></i>
                     </p>
