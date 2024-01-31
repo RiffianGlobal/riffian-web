@@ -123,12 +123,12 @@ export class TrackDetail extends ThemeElement(style) {
               </div>
             </div>`,
           () =>
-            html`<div class="grid lg_grid-cols-13 gap-8">
+            html`<div class="grid lg_grid-cols-13 gap-6 lg_gap-8">
               <!-- meta info -->
-              <div class="lg_col-span-6 h-44 flex gap-8">
+              <div class="lg_col-span-6 h-32 md_h-44 flex gap-4 md_gap-8">
                 <!-- Cover -->
-                <div class="relative w-44 h-full rounded-xl bg-white/10">
-                  <img-loader src=${this.subject.image} class="w-44 h-full rounded-xl"></img-loader>
+                <div class="relative w-32 md_w-44 h-full rounded-xl bg-white/10">
+                  <img-loader src=${this.subject.image} class="w-32 md_w-44 h-full rounded-xl"></img-loader>
                   ${when(
                     this.subject.uri,
                     () => html`
@@ -141,15 +141,15 @@ export class TrackDetail extends ThemeElement(style) {
                   )}
                 </div>
                 <!-- Details -->
-                <div class="flex flex-col h-full justify-between gap-4">
+                <div class="flex flex-col h-full justify-between gap-2 md_gap-4">
                   <div>
-                    <div class="text-xl mb-2.5">${this.subject.name ?? '-'}</div>
+                    <div class="text-lg md_text-xl mb-1.5 md_mb-2.5">${this.subject.name ?? '-'}</div>
                     <!-- Author DOID -->
-                    <div class="text-base min-h-6 leading-6">
+                    <div class="text-sm md_text-base min-h-6 leading-6">
                       <ui-address .address=${this.creatorAddr} short doid avatar></ui-address>
                     </div>
                     <!-- Author social name -->
-                    <div class="text-base min-h-6 leading-6">
+                    <div class="text-sm md_text-base md_min-h-6 md_leading-6">
                       ${when(
                         this.social,
                         () => html`
@@ -164,12 +164,12 @@ export class TrackDetail extends ThemeElement(style) {
                       )}
                     </div>
                   </div>
-                  <div class="mt-2 flex gap-4 items-center">
+                  <div class="flex gap-3 md_gap-4 items-center mt-2">
                     ${when(
                       this.voteEnable,
                       () => html`
                         <ui-button
-                          class="w-24"
+                          class="w-20 md_w-24"
                           ?disabled="${this.dialog || !this.voteEnable}"
                           @click=${() => this.popAction('vote')}
                           >Vote</ui-button
@@ -180,7 +180,7 @@ export class TrackDetail extends ThemeElement(style) {
                       this.retreatEnable,
                       () =>
                         html`<ui-button
-                          class="w-24"
+                          class="w-20 md_w-24"
                           ?disabled="${this.dialog || !this.retreatEnable}"
                           @click=${() => this.popAction('retreat')}
                           >Retreat</ui-button
@@ -213,34 +213,36 @@ export class TrackDetail extends ThemeElement(style) {
               </div>
               <!-- statistic -->
               <div
-                class="lg_col-start-7 lg_col-span-8 grid grid-cols-6 lg_grid-cols-8 gap-4 place-items-center items-center shrink grow-0"
+                class="lg_col-start-7 lg_col-span-8 grid grid-cols-8 lg_gap-4 divide-x divide-white/20 md_divide-x-0 place-items-center items-center shrink grow-0"
               >
                 <div
-                  class="lg_col-start-1 col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
+                  class="lg_col-start-1 col-span-2 flex flex-col justify-center items-center w-full lg_h-4/5 lg_bg-white/5 lg_rounded-xl lg_gap-1.5"
                 >
-                  <div class="text-gray-500 align-center">Voters</div>
-                  <div class="text-4xl font-light align-center lining-nums">${this.subject.fansNumber}</div>
+                  <div class="text-xs md_text-base text-gray-500 align-center">Voters</div>
+                  <div class="text-xl lg_text-4xl font-light align-center lining-nums">${this.subject.fansNumber}</div>
                 </div>
                 <div
-                  class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
+                  class="col-span-2 flex flex-col justify-center items-center w-full lg_h-4/5 lg_bg-white/5 lg_rounded-xl lg_gap-1.5"
                 >
-                  <div class="text-gray-500 align-center">Tickets</div>
-                  <div class="text-4xl font-light align-center lining-nums">${this.subject.supply}</div>
+                  <div class="text-xs md_text-base text-gray-500 align-center">Tickets</div>
+                  <div class="text-xl lg_text-4xl font-light align-center lining-nums">${this.subject.supply}</div>
                 </div>
                 <div
-                  class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
+                  class="col-span-2 flex flex-col justify-center items-center w-full lg_h-4/5 lg_bg-white/5 lg_rounded-xl lg_gap-1.5"
                 >
-                  <div class="text-gray-500 align-center">Volume</div>
-                  <div class="text-4xl font-light align-center lining-nums">
+                  <div class="text-xs md_text-base text-gray-500 align-center">Volume</div>
+                  <div class="text-xl lg_text-4xl font-light align-center lining-nums">
                     ${formatUnits(this.subject.totalVoteValue)}
                   </div>
                 </div>
                 <!--  -->
                 <div
-                  class="col-span-2 flex flex-col justify-center items-center w-full h-4/5 bg-white/5 rounded-xl gap-1.5"
+                  class="col-span-2 flex flex-col justify-center items-center w-full lg_h-4/5 lg_bg-white/5 lg_rounded-xl lg_gap-1.5"
                 >
-                  <div class="text-gray-500 align-center">Price</div>
-                  <div class="text-4xl font-light align-center lining-nums">${(+this.subject.supply + 1) / 10}</div>
+                  <div class="text-xs md_text-base text-gray-500 align-center">Price</div>
+                  <div class="text-xl lg_text-4xl font-light align-center lining-nums">
+                    ${(+this.subject.supply + 1) / 10}
+                  </div>
                 </div>
               </div>
             </div>`

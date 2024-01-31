@@ -133,9 +133,9 @@ export class VoteAlbumDialog extends ThemeElement('') {
         this.close()
       }}
     >
-      <p slot="header" class="w-full text-base mr-2">Vote Track</p>
+      <p slot="header" class="w-full text-base mr-2">Vote</p>
       <div slot="center" class="flex mx-4 my-6">
-        <div class="flex grow justify-between p-4 bg-black/20">
+        <div class="flex grow justify-between p-4 border border-white/15 rounded-xl">
           <!-- meta info -->
           <div class="flex gap-6">
             <div class="w-24 h-24 rounded-lg bg-white/10">
@@ -169,10 +169,8 @@ export class VoteAlbumDialog extends ThemeElement('') {
             </div>
           </div>
           <!-- Tickets -->
-          <div class="text-right">
-            <span class="text-lg text-sky-500"
-              >${until(this.votes, html`<i class="text-sm mdi mdi-loading"></i>`)}</span
-            >
+          <div class="flex flex-col justify-center items-center">
+            <span class="text-xl font-medium">${until(this.votes, html`<i class="text-sm mdi mdi-loading"></i>`)}</span>
             <div class="text-sm text-gray-500">Tickets</div>
           </div>
         </div>
@@ -180,7 +178,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
       </div>
       <div slot="bottom" class="mx-4 pb-8">
         <p class="w-full flex justify-between items-center">
-          It will cost
+          Price
           <span class="text-right"
             ><span class="text-sm text-gray-500">Vote price <i class="text-sm mdi mdi-help-circle-outline"></i></span
           ></span>
@@ -193,17 +191,17 @@ export class VoteAlbumDialog extends ThemeElement('') {
                 this.ts && this.action === 'vote',
                 () => html`
                   <div class="flex flex-col justify-center items-center px-4">
-                    <div>
+                    <div class="flex flex-col justify-center items-center">
                       ${when(
                         this.votePrice > 0,
                         () =>
-                          html`<span class="text-2xl ml-4">${this.votePrice}</span>
+                          html`<span class="text-3xl ml-4 text-yellow-500">${this.votePrice}</span>
                             <span class="opacity-80 ml-2">(${this.voteFee} fee included)</span>`,
                         () => html`<i class="text-sm mdi mdi-loading"></i>`
                       )}
                     </div>
                     <ui-button
-                      class="mt-3 w-full"
+                      class="mt-3 w-full md_w-36"
                       ?disabled=${this.pending}
                       ?pending=${this.pending}
                       @click=${this.vote}
