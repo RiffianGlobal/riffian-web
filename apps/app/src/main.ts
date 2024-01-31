@@ -72,7 +72,7 @@ export class AppMain extends ThemeElement('') {
             () =>
               html`<ui-nav slot="right" class="text-lg">
                 <ui-link href="/" nav alias="/">Home</ui-link>
-                <ui-link href="/uservotes" nav>My Vote</ui-link>
+                <ui-link href="/profile" nav>Profile</ui-link>
                 <create-album-btn></create-album-btn>
               </ui-nav>`
           )}

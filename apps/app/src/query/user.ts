@@ -12,6 +12,9 @@ export const basicInfoQuery = (account: String): string => `{
     socials {
       id, pid, uri, platform
     }
+    subjectsCreated {
+      id
+    }
   }
 }`
 export const createdSubjectsQuery = (account: String, { first = 0, skip = 0 } = {}): string => `{

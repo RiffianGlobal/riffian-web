@@ -60,16 +60,6 @@ export const routes: RouteConfig[] = [
     }
   },
   {
-    name: 'uservotes',
-    path: '/uservotes',
-    render: () => html`<user-votes></user-votes>`,
-    enter: async () => {
-      if (await beforeEach()) return false
-      await import('~/views/uservotes')
-      return true
-    }
-  },
-  {
     name: 'track',
     path: '/track/:addr?',
     render: ({ addr = '' }) => html`<track-page addr="${addr}"></track-page>`,
@@ -86,6 +76,16 @@ export const routes: RouteConfig[] = [
     enter: async () => {
       if (await beforeEach()) return false
       await import('~/views/user')
+      return true
+    }
+  },
+  {
+    name: 'profile',
+    path: '/profile',
+    render: () => html`<profile-page></profile-page>`,
+    enter: async () => {
+      if (await beforeEach()) return false
+      await import('~/views/profile')
       return true
     }
   }
