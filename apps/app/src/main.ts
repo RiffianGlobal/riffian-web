@@ -79,7 +79,7 @@ export class AppMain extends ThemeElement('') {
             () =>
               html`<ui-nav slot="right" class="text-lg">
                 <ui-link href="/" nav alias="/">Home</ui-link>
-                <ui-link href="/uservotes" nav>My Vote</ui-link>
+                <ui-link href="/profile" nav>Profile</ui-link>
                 <create-album-btn></create-album-btn>
               </ui-nav>`
           )}
@@ -89,7 +89,10 @@ export class AppMain extends ThemeElement('') {
         ${when(
           screenStore.isMobi,
           () =>
-            html`<ui-nav class="fixed bottom-0 left-0 right-0 z-50 border border-neutral-800 bg-indigo-950 space-x-2">
+            html`<ui-nav
+              class="fixed bottom-0 left-0 right-0 z-50 space-x-2 border-t border-white/25"
+              style="background-color: rgba(22, 24, 49, 0.8)"
+            >
               <ui-link href="/" nav alias="/"><i class="mdi mdi-home-outline text-3xl"></i></ui-link>
               <create-album-btn icon></create-album-btn>
               <ui-link href="/uservotes" nav><i class="mdi mdi-account-outline text-3xl"></i></ui-link>

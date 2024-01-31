@@ -9,6 +9,7 @@ import {
   when
 } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { screenStore } from '@lit-web3/base/screen'
 import '~/components/top/dialog'
 import { voters } from './action'
 import { goto } from '@lit-web3/router'
@@ -22,6 +23,7 @@ import style from './list.css?inline'
 import { formatUnits } from 'ethers'
 @customElement('voter-list')
 export class TrackInfo extends ThemeElement(style) {
+  bindScreen: any = new StateController(this, screenStore)
   bindBridge: any = new StateController(this, bridgeStore)
   @property({ type: Boolean }) weekly = false
   @property({ type: String }) trackAddress = ''
@@ -31,6 +33,9 @@ export class TrackInfo extends ThemeElement(style) {
   @state() prompt = false
   @state() promptMessage: string = ''
 
+  get isMobi() {
+    return screenStore.isMobi
+  }
   get disabled() {
     return !bridgeStore.bridge.account
   }
@@ -74,10 +79,10 @@ export class TrackInfo extends ThemeElement(style) {
   render() {
     return html`<div role="list" class="ui-list ${classMap(this.$c([this.pending ? 'loading' : 'hover']))}">
         <div class="flex header">
-          <div class="w-16">Rank</div>
+          ${when(!this.isMobi, () => html`<div class="w-16">Rank</div>`)}
           <div class="address flex-auto">Address</div>
-          <div class="num flex-none">Comsumption</div>
-          <div class="num flex-none w-28">Earning</div>
+          <div class="num flex-none w-20 md_w-28">Comsumption</div>
+          <div class="num flex-none w-20 md_w-28">Earning</div>
         </div>
         ${when(
           this.pending,
@@ -95,15 +100,20 @@ export class TrackInfo extends ThemeElement(style) {
               this.voteList,
               (item, i) => html`
                 <div class="item flex py-2.5" @click=${() => this.go2(item)}>
-                  <div class="flex-none w-16 pl-4 text-sm font-light opacity-70">${i + 1}</div>
+                  ${when(
+                    !this.isMobi,
+                    () => html`<div class="flex-none w-16 pl-4 text-sm font-light opacity-70">${i + 1}</div>`
+                  )}
                   <div class="flex-auto">
-                    <ui-address .address="${item.user.address}" short avatar class="text-base"></ui-address>
+                    <ui-address .address="${item.user.address}" short avatar class="text-sm md_text-base"></ui-address>
                   </div>
                   <div class="num flex-none">
-                    <p class="num truncate mt-2">${parseFloat((+formatUnits(item.volumeVote)).toFixed(4))}</p>
+                    <p class="num truncate md_mt-2">${parseFloat((+formatUnits(item.volumeVote)).toFixed(2))}</p>
                   </div>
-                  <div class="num flex-none w-28">
-                    <p class="num truncate mt-2">${parseFloat((+formatUnits(item.user.rewardClaimed)).toFixed(4))}</p>
+                  <div class="num flex-none w-16 md_w-28">
+                    <p class="num truncate md_mt-2">
+                      ${parseFloat((+formatUnits(item.user.rewardClaimed)).toFixed(2))}
+                    </p>
                   </div>
                 </div>
               `

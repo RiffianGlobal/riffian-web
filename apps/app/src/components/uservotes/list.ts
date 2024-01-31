@@ -74,7 +74,7 @@ export class UserVotesList extends ThemeElement(style) {
 
   render() {
     return html`<div role="list" class="ui-list ${classMap(this.$c([this.pending ? 'loading' : 'hover']))}">
-      <div class="flex header border-bottom">
+      <div class="flex header">
         <div class="flex-auto">Collection</div>
         <div class="author flex-none w-32 text-right">Author</div>
         <div class="num flex-none">Tickets</div>

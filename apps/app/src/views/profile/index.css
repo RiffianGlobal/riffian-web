@@ -1,0 +1,7 @@
+.page {
+  min-height: calc(100vh - var(--headerH) - var(--footerH) - 1rem);
+}
+
+.page-profile {
+  display: flex gap-4;
+}
