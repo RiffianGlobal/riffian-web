@@ -107,8 +107,9 @@ export class TrackDetail extends ThemeElement(style) {
     const { id = '', name = '' } = item
     const subjectUrl = id ? `(https://app.riffian.global/${id ? 'track/' + id : ''})` : ``
     const url = await genTweetURI(
-      `stay tuned with me. I\'m at Riffian.global${subjectUrl}!${name ? ' Check: "' + name + '"' : ''}`
+      `Stay tuned with me. I\'m at Riffian.global! #riffian @RiffianClub \{${subjectUrl}}\}`
     )
+    console.info(url)
     window.open(url, '_blank')
   }
 
