@@ -4,6 +4,7 @@ import { StateController, screenStore } from '@lit-web3/base/screen'
 import { routes } from '~/router'
 import { ThemeElement, html, customElement, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
+import { init } from '~/lib/events-keeper'
 // Components
 import AppRoot from '@riffian-web/ui/shared/app-root.ethers'
 import '@riffian-web/ui/network-warning/menu'
@@ -23,6 +24,12 @@ import '~/global.css'
 export class AppMain extends ThemeElement('') {
   bindScreen: any = new StateController(this, screenStore)
   bindBridge: any = new StateController(this, bridgeStore)
+
+  constructor() {
+    super()
+    init()
+  }
+
   @state() inRoot = false
 
   get isMobi() {

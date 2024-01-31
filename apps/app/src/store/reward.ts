@@ -6,9 +6,9 @@ import getMultiCall from '@riffian-web/ethers/src/multiCall'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 import dayjs from '~/lib/dayjs'
 import { getRewardContract } from '~/lib/riffutils'
-import { weeklyStore } from '~/store/weekly'
-import { tweetStore } from '~/store/tweet'
-import { emitter } from '@lit-web3/base'
+import { emitter } from '@lit-web3/base/emitter'
+import { weeklyStore } from './weekly'
+import { tweetStore } from './tweet'
 
 import { State, property } from '@lit-web3/base/state'
 export { StateController } from '@lit-web3/base/state'
@@ -78,8 +78,7 @@ class RewardStore extends State {
 
   constructor() {
     super()
-    this.update()
-    emitter.on('manual-change', this.update)
+    this.init()
   }
 
   get txPending() {
@@ -124,6 +123,15 @@ class RewardStore extends State {
     await Promise.all([this.#fetchCommon(), this.#fetchUser(), this.#fetchUserVotes()])
     this.pending = false
     this.inited = true
+  }
+  init = async () => {
+    const contract = await getRewardContract()
+    emitter.on('block-world', this.listener)
+    ;['EventClaimVote', 'EventClaimSocial'].forEach((name) => contract.on(name, this.listener))
+    this.update()
+  }
+  listener = async (acc: string) => {
+    if (acc !== (await getAccount())) this.update()
   }
 
   #fetchCommon = async () => {

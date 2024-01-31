@@ -167,8 +167,9 @@ export class Bridge extends State {
           this.promise = undefined
         }
         // if (wallet.state === WalletState.CONNECTED) this.wallet = walletStore.wallet = wallet
+        const curWallet = walletStore.wallet
         walletStore.wallet = wallet
-        if (!walletStore.wallet || force) emitWalletChange()
+        if (!curWallet || force) emitWalletChange({ chainId: wallet.chainId })
         return this.wallet
       })()
     return this.promise

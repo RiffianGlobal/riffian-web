@@ -7,7 +7,7 @@ import { toGid } from '@riffian-web/ethers/src/uuid'
 import { getAlbumContract } from '~/lib/riffutils'
 
 import { getAccount } from '@riffian-web/ethers/src/useBridge'
-import { weekSeconds, Official, Domain, Subject } from '~/constants'
+import { weekSeconds, Official, Domain } from '~/constants'
 
 export const readTweet = async (uri: string): Promise<Tweet | undefined> => {
   let res
@@ -50,8 +50,7 @@ class Tweets extends State {
 
   constructor() {
     super()
-    // TODO: remove this after mainnet launched
-    ttlStorage.removeItem('tweets')
+    this.init()
   }
 
   key = (uri: string) => `tweet.${uri}`
@@ -107,6 +106,16 @@ class Tweets extends State {
   fromAddress = async (address: string) => {
     const uri = (await this.addressToUri(address)) ?? ''
     return await this.fromUri(uri, address)
+  }
+
+  init = async () => {
+    const contract = await getAlbumContract()
+    contract.on('EventBind', this.listener)
+    this.fetchSelf()
+  }
+  listener = async (acc: string) => {
+    console.log(acc, 'lis')
+    if (acc !== (await getAccount())) this.fetchSelf()
   }
 }
 export const tweetStore = new Tweets()

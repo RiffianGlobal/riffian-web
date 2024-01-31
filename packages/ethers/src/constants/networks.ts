@@ -18,7 +18,8 @@ export const AllNetworks = {
     provider: 'https://rpc.doid.tech/',
     providerWs: 'wss://rpc.doid.tech/ws',
     scan: 'https://scan.doid.tech',
-    icon: ''
+    icon: '',
+    mainnet: true
   },
   '0xdddd': {
     chainId: '0xdddd',
@@ -32,8 +33,7 @@ export const AllNetworks = {
     provider: 'https://rpc.testnet.doid.tech/',
     providerWs: 'wss://rpc.testnet.doid.tech/ws',
     scan: 'https://scan.testnet.doid.tech',
-    icon: '',
-    testnet: true
+    icon: ''
   }
 }
 

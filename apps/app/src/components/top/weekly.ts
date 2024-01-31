@@ -11,20 +11,18 @@ import {
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { screenStore } from '@lit-web3/base/screen'
 import { weeklyStore } from '~/store/weekly'
-import { weekList } from './action'
+import { chartsStore } from '~/store/charts'
+import { weeklySubjectsReq } from '~/query'
 import { goto } from '@lit-web3/router'
-
-import { formatUnits } from 'ethers'
-import { emptyCover, paginationDef } from '~/utils'
-
+import { paginationDef } from '~/utils'
+import emitter from '@lit-web3/base/emitter'
 // Components
 import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/img/loader'
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/pagination'
-
-import emitter from '@lit-web3/base/emitter'
+import '~/components/chg-stat'
 
 import style from './list.css?inline'
 @customElement('weekly-top')
@@ -32,15 +30,16 @@ export class WeeklyTop extends ThemeElement(style) {
   bindScreen: any = new StateController(this, screenStore)
   bindBridge: any = new StateController(this, bridgeStore)
   bindWeekly: any = new StateController(this, weeklyStore)
+  bindCharts: any = new StateController(this, chartsStore)
 
   @property({ type: Boolean }) paging = false
   @property({ type: Boolean }) brief = true
-  @property({ type: Number }) week = 1
-  @state() collections: any = []
-  @state() pending = false
+
+  @state() moreSubjects: any = []
+  @state() morePending = false
   @state() err = ''
   @state() ts = 0
-  @state() pagination = paginationDef()
+  @state() pagination = paginationDef({ pageNum: 2 })
   @state() hasMore = true
 
   get disabled() {
@@ -53,47 +52,42 @@ export class WeeklyTop extends ThemeElement(style) {
     return this.isMobi ? 'click' : 'scroll'
   }
   get loading() {
-    return this.pending && !this.collections?.length
+    return chartsStore.pending && !chartsStore.weeklySubjects.length
   }
   get empty() {
-    return this.ts && !this.collections?.length
+    return chartsStore.inited && !chartsStore.weeklySubjects.length
+  }
+  get subjects() {
+    return chartsStore.weeklySubjects.concat(this.moreSubjects)
   }
 
   fetch = async (force = false) => {
-    if (this.pending && !force) return
+    if (this.morePending && !force) return
     if (this.paging && !this.hasMore) return
     this.err = ''
-    this.pending = true
+    this.morePending = true
 
     try {
-      const time = await weeklyStore.getLatest()
-      const opts = {}
+      const week = await weeklyStore.getLatest()
+      const req: graphParams = { week }
       if (this.pagination) {
         const { pageSize, pageNum } = this.pagination
-        Object.assign(opts, { first: pageSize, skip: (pageNum - 1) * pageSize })
+        Object.assign(req, { first: pageSize, skip: (pageNum - 1) * pageSize })
       }
-      const { subjectWeeklyVotes: collections } = await weekList(time, opts)
-      const _collections = collections.map((item: any) => {
-        const { subject, volumeTotal, image } = item
-        return {
-          ...subject,
-          volumeTotal,
-          image: subject.image?.startsWith(`http`) ? subject.image : emptyCover
-        }
-      })
+      const { weeklySubjects } = await weeklySubjectsReq(req)
       if (this.paging) {
-        this.collections.push(..._collections)
-        this.hasMore = collections.length >= this.pagination.pageSize
+        this.moreSubjects = [...this.moreSubjects, ...weeklySubjects]
+        this.hasMore = weeklySubjects.length >= this.pagination.pageSize
         this.pagination.pageNum++
       } else {
-        this.collections = [..._collections]
+        this.moreSubjects = [...weeklySubjects]
       }
     } catch (e: any) {
       let msg = e.message || e.code || e
       this.err = e.message || e.msg || e
       console.error(msg)
     } finally {
-      this.pending = false
+      this.morePending = false
       this.ts++
     }
   }
@@ -117,28 +111,10 @@ export class WeeklyTop extends ThemeElement(style) {
     }
   }
 
-  static dayChange(item: any) {
-    if (item.voteLogs.length == 0) {
-      return 'New'
-    } else {
-      let before = item.voteLogs[0].supply,
-        end = item.supply,
-        diff = Math.abs(before - end),
-        change = ((diff * 100.0) / before).toFixed(1)
-      if (before > end) return html`<p class="text-red-500 ">-${change}%</p>`
-      else return html`<p class="text-green-500 ">+${change}%</p>`
-    }
-  }
-
-  connectedCallback() {
-    super.connectedCallback()
-    this.fetch(true)
-  }
-
   render() {
-    return html`<div role="list" class="ui-list gap-2 ${classMap(this.$c([this.pending ? 'loading' : 'hover']))}">
+    return html`<div role="list" class="ui-list gap-2 ${classMap(this.$c([this.morePending ? 'loading' : 'hover']))}">
         <div class="flex header border-bottom">
-          <div class="w-8 md_w-10">Rank</div>
+          <div class="w-8">Rank</div>
           <div class="flex-shrink">Collection</div>
           <div class="flex-auto"></div>
           <div class="num flex-auto w-32">Volume</div>
@@ -148,34 +124,31 @@ export class WeeklyTop extends ThemeElement(style) {
           () => html`<div name="loading" class="doc-intro"></div><loading-skeleton num="4"></loading-skeleton></div>`,
           () =>
             html`${repeat(
-              this.collections,
+              this.subjects,
               (item: any, i) => html`
                 <div class="item flex items-center" @click=${(e: CustomEvent) => this.go2(e, item)}>
-                  <div class="flex-none w-8 md_pl-3 text-sm font-light opacity-70">${i + 1}</div>
+                  <div class="flex-none w-8 text-center text-sm font-light opacity-70">${i + 1}</div>
                   <div class="flex-shrink flex justify-center">
-                    <img-loader
-                      .src=${item.image}
-                      class="w-[3rem] h-[3rem] md_w-[3.75rem] md_h-[3.75rem] rounded-lg cursor-pointer"
-                    ></img-loader>
+                    <img-loader .src=${item.cooked.src} class="subject-img"></img-loader>
                   </div>
-                  <div class="flex-auto flex-col">
-                    <div class="inline-flex">
-                      <p class="name truncate cursor-pointer ${this.brief ? 'lg_max-w-64' : ''}">${item.name}</p>
-                      <a href=${item.uri} class="flex-none ml-2" target="_blank">
-                        <span class="icon mt-1"><i class="mdi mdi-play-circle  opacity-85 hover_opacity-100"></i></span>
+                  <div class="subject-lines flex-auto">
+                    <div class="subject-line1">
+                      <p class="subject-name ${classMap({ limit: this.brief })}">${item.name}</p>
+                      <a href=${item.uri} class="flex-none ml-1.5" target="_blank">
+                        <i class="subject-play mdi mdi-play-circle"></i>
                       </a>
                     </div>
                     ${when(
                       this.brief,
                       () =>
-                        html`<div class="text-xs text-gray-400/70">
-                          <span class="mr-1.5">Price:</span>${(Number(item.supply) + 1) / 10}
+                        html`<div class="text-xs text-gray-400/80">
+                          <span class="mr-1 text-gray-400/60">Price:</span>${item.cooked.price}
                         </div>`
                     )}
                   </div>
-                  <div class="num flex-initial flex flex-col !w-18 text-sm items-end">
-                    <span>${formatUnits(item.volumeTotal)}</span>
-                    <span class="text-xs" style="color: #34C77B">${WeeklyTop.dayChange(item)}</span>
+                  <div class="subject-lines num flex-initial !w-18 text-sm items-end">
+                    <span class="subject-line1">${item.cooked.total}</span>
+                    <span class="text-xs"><chg-stat .chg=${item.cooked.chg}></chg-stat></span>
                   </div>
                 </div>
               `
@@ -192,7 +165,7 @@ export class WeeklyTop extends ThemeElement(style) {
             .nomore=${this.err}
             mode=${this.scrollMode}
             .firstLoad=${false}
-            .pending=${this.pending}
+            .pending=${this.morePending}
             @loadmore=${this.loadmore}
           ></ui-pagination>`
       )}`

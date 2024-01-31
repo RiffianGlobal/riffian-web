@@ -9,37 +9,38 @@ import {
   when
 } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { albumList } from './action'
+import { subjectsReq } from '~/query'
 import { screenStore } from '@lit-web3/base/screen'
 import { weeklyStore } from '~/store/weekly'
+import { chartsStore } from '~/store/charts'
 import { goto } from '@lit-web3/router'
 import { format } from '~/lib/dayjs'
+import emitter from '@lit-web3/base/emitter'
+import { paginationDef } from '~/utils'
 // Components
 import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/img/loader'
 import '@riffian-web/ui/pagination'
-
-import emitter from '@lit-web3/base/emitter'
-import { emptyCover, paginationDef } from '~/utils'
+import '~/components/chg-stat'
 
 import style from './list.css?inline'
-import { formatUnits } from 'ethers'
 @customElement('top-album')
 export class TopAlbum extends ThemeElement(style) {
-  indScreen: any = new StateController(this, screenStore)
+  bindScreen: any = new StateController(this, screenStore)
   bindBridge: any = new StateController(this, bridgeStore)
   bindWeekly: any = new StateController(this, weeklyStore)
+  bindCharts: any = new StateController(this, chartsStore)
 
   @property({ type: Boolean }) paging = false
   @property({ type: Boolean }) brief = true
   @property({ type: Number }) pageSize = 10
 
-  @state() subjectList: any = []
-  @state() pending = false
+  @state() moreSubjects: any = []
+  @state() morePending = false
   @state() ts = 0
   @state() err = ''
-  @state() pagination = paginationDef({ pageSize: this.pageSize })
+  @state() pagination = paginationDef({ pageNum: 2, pageSize: this.pageSize })
   @state() hasMore = true
 
   get disabled() {
@@ -52,56 +53,44 @@ export class TopAlbum extends ThemeElement(style) {
     return 'scroll'
   }
   get empty() {
-    return this.pending && !this.subjectList.length
+    return chartsStore.inited && !chartsStore.subjects.length
+  }
+  get loading() {
+    return chartsStore.pending && !chartsStore.subjects.length
+  }
+  get subjects() {
+    return chartsStore.subjects.concat(this.moreSubjects)
   }
 
   fetch = async (force = false) => {
-    if (this.pending && !force) return
+    if (this.morePending && !force) return
     if (this.paging && !this.hasMore) return
     this.err = ''
-    this.pending = true
+    this.morePending = true
     try {
-      const opts = {}
+      const req: graphParams = {}
       if (this.pagination) {
         const { pageSize, pageNum } = this.pagination
-        Object.assign(opts, { first: pageSize, skip: (pageNum - 1) * pageSize })
+        Object.assign(req, { first: pageSize, skip: (pageNum - 1) * pageSize })
       }
-      let { subjects } = await albumList(opts)
-      const _subjects = subjects.map((item: any) => ({
-        ...item,
-        totalVal: +formatUnits(item.totalVoteValue).toString(),
-        image: item.image?.startsWith(`http`) ? item.image : emptyCover
-      }))
+      const { subjects } = await subjectsReq(req)
       if (this.paging) {
-        this.subjectList.push(..._subjects)
+        this.moreSubjects = [...this.moreSubjects, ...subjects]
         this.hasMore = subjects.length >= this.pagination.pageSize
         this.pagination.pageNum++
       } else {
-        this.subjectList = [..._subjects]
+        this.moreSubjects = [...subjects]
       }
     } catch (e: any) {
       this.err = e.message || e.msg || e
     } finally {
-      this.pending = false
+      this.morePending = false
       this.ts++
     }
   }
 
   loadmore = () => {
     this.fetch()
-  }
-
-  static dayChange(item: any) {
-    if (item.voteLogs.length == 0) {
-      return 'New'
-    } else {
-      let before = item.voteLogs[0].supply,
-        end = item.supply,
-        diff = Math.abs(before - end),
-        change = ((diff * 100.0) / before).toFixed(1)
-      if (before > end) return html`<p class="text-red-500 ">-${change}%</p>`
-      else return html`<p class="text-green-500 ">+${change}%</p>`
-    }
   }
 
   go2 = (e: CustomEvent, item: any) => {
@@ -121,7 +110,7 @@ export class TopAlbum extends ThemeElement(style) {
 
   headerEle = () => {
     return this.brief
-      ? html` <div class="w-8 md_w-10">Rank</div>
+      ? html` <div class="w-8">Rank</div>
           <div class="flex-shrink">Collection</div>
           <div class="flex-auto"></div>
           <div class="num flex-auto w-32">Volume</div>`
@@ -138,81 +127,64 @@ export class TopAlbum extends ThemeElement(style) {
   itemEle = (item: any, i: number) => {
     return this.brief
       ? html`<div class="item flex items-center" @click=${(e: CustomEvent) => this.go2(e, item)}>
-          <div class="flex-none w-8 md_pl-3 text-sm font-light opacity-70">${i + 1}</div>
+          <div class="flex-none w-8 text-center text-sm font-light opacity-70">${i + 1}</div>
           <div class="flex-shrink flex justify-center">
-            <img-loader
-              .src=${item.image}
-              class="w-[3rem] h-[3rem] md_w-[3.75rem] md_h-[3.75rem] rounded-lg cursor-pointer"
-            ></img-loader>
+            <img-loader .src=${item.cooked.src} class="subject-img"></img-loader>
           </div>
-          <div class="flex-auto flex-col">
-            <div class="inline-flex">
-              <p class="name truncate cursor-pointer ${this.brief ? 'lg_max-w-64' : ''}">${item.name}</p>
-              <a href=${item.uri} class="flex-none ml-2" target="_blank">
-                <span class="icon mt-1"><i class="mdi mdi-play-circle opacity-85 hover_opacity-100"></i></span>
+          <div class="subject-lines flex-auto">
+            <div class="subject-line1">
+              <p class="subject-name ${classMap({ limit: this.brief })}">${item.name}</p>
+              <a href=${item.uri} class="flex-none ml-1.5" target="_blank">
+                <i class="subject-play mdi mdi-play-circle"></i>
               </a>
             </div>
             ${when(
               this.brief,
               () =>
-                html`<div class="text-xs text-gray-400/70">
-                  <span class="mr-1.5">Price:</span>${(Number(item.supply) + 1) / 10}
+                html`<div class="text-xs text-gray-400/80">
+                  <span class="mr-1 text-gray-400/60">Price:</span>${item.cooked.price}
                 </div>`
             )}
           </div>
-          <div class="num flex-initial flex flex-col !w-12 text-sm items-end">
-            <span>${item.totalVal}</span>
-            <span class="text-xs mt-1.5" style="color: #34C77B">${TopAlbum.dayChange(item)}</span>
+          <div class="subject-lines num flex-initial !w-12 text-sm items-end">
+            <span class="subject-line1">${item.cooked.total}</span>
+            <span class="text-xs"><chg-stat .chg=${item.cooked.chg}></chg-stat></span>
           </div>
         </div>`
       : html`
           <div class="item flex items-center hover_cursor-pointer" @click=${(e: CustomEvent) => this.go2(e, item)}>
             <div class="flex-none w-16 pl-4 text-sm font-light opacity-75">
-              ${i + 1}
-              ${when(this.subjectList.length > 3 && i < 3, () => html`<i class="mdi mdi-fire text-red-400"></i>`)}
+              ${i + 1} ${when(this.subjects.length > 3 && i < 3, () => html`<i class="mdi mdi-fire text-red-400"></i>`)}
             </div>
             <div class="flex-auto flex">
               <div class="w-[3.25rem] h-[3.25rem] mr-4 rounded-lg">
-                <img-loader src=${item.image} class="rounded-lg"></img-loader>
+                <img-loader src=${item.cooked.src} class="rounded-lg"></img-loader>
               </div>
               <div>
-                <p class="name truncate">${item.name}</p>
-                <span class="icon mt-1"><i class="mdi mdi-play-circle opacity-85 hover_opacity-100"></i></span>
+                <p class="subject-name subject-line1 lg_text-base truncate">${item.name}</p>
+                <i class="subject-play mdi mdi-play-circle"></i>
               </div>
             </div>
             <div class="flex-none w-40 text-xs text-gray-300/60">${format(item.createdAt)}</div>
-            <div class="flex-none w-24 text-right text-sm"><span>${item.totalVal}</span></div>
+            <div class="flex-none w-24 text-right text-sm"><span>${item.cooked.total}</span></div>
             <div class="flex-none w-24 text-right text-sm">
-              <span>${(Number(item.supply) + 1) / 10}</span>
+              <span>${item.cooked.price}</span>
             </div>
-            <div class="flex-none w-24 text-right text-sm"><span>${TopAlbum.dayChange(item)}</span></div>
+            <div class="flex-none w-24 text-right text-sm leading-none">
+              <span><chg-stat .chg=${item.cooked.chg}></chg-stat></span>
+            </div>
           </div>
         `
   }
 
-  listen = () => {
-    this.pagination = paginationDef()
-    this.fetch(true)
-  }
-
-  async connectedCallback() {
-    super.connectedCallback()
-    this.fetch(true)
-    emitter.on('manual-change', this.listen)
-  }
-  disconnectedCallback(): void {
-    super.disconnectedCallback()
-    emitter.off('manual-change', this.listen)
-  }
-
   render() {
-    return html`<div role="list" class="ui-list gap-2 ${classMap(this.$c([this.pending ? 'loading' : 'hover']))}">
+    return html`<div role="list" class="ui-list gap-2 ${classMap(this.$c([this.morePending ? 'loading' : 'hover']))}">
       <div class="flex header border-bottom">${this.headerEle()}</div>
       ${when(
-        this.empty,
+        this.loading,
         () => html`<div name="loading" class="doc-intro"></div><loading-skeleton num="4"></loading-skeleton></div>`,
         () =>
-          html`${repeat(this.subjectList, (item: any, i) => html`${this.itemEle(item, i)}`)}
+          html`${repeat(this.subjects, (item: any, i) => html`${this.itemEle(item, i)}`)}
           ${when(
             this.paging,
             () => html`
@@ -220,7 +192,7 @@ export class TopAlbum extends ThemeElement(style) {
                 .nomore=${this.err}
                 mode=${this.scrollMode}
                 .firstLoad=${false}
-                .pending=${this.pending}
+                .pending=${this.morePending}
                 @loadmore=${this.loadmore}
               ></ui-pagination>
             `

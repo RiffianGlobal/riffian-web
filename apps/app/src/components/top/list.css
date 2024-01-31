@@ -1,12 +1,18 @@
-.name {
-  @media (min-width: 500px) {
-    @apply text-base;
+.subject-name {
+  @apply lg_text-base truncate cursor-pointer;
+  &.limit {
+    @apply lg_max-w-40;
   }
 }
-
-.icon {
-  @apply text-xl;
-  @media (max-width: 500px) {
-    @apply text-2xl;
+.subject-img {
+  @apply w-12 h-12 md_w-14 md_h-14 rounded-lg cursor-pointer;
+}
+.subject-lines {
+  @apply flex flex-col gap-1 leading-none;
+  & .subject-line1 {
+    @apply flex h-6 leading-none items-center;
   }
+}
+.subject-play {
+  @apply text-xl leading-none opacity-85 hover_opacity-100;
 }

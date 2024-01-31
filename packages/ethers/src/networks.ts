@@ -37,7 +37,7 @@ export class Network extends State {
   get isMainnet() {
     return this.chainId ? [Network.mainnetChainId].includes(this.chainId) : false
   }
-  get current() {
+  get current(): NetworkInfo {
     return this.chainId ? this.Networks[this.chainId] ?? unknownNetwork : unknownNetwork
   }
   get default() {

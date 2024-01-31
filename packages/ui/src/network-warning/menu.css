@@ -15,9 +15,9 @@
   }
   &.testnet {
     &::after {
-      content: '';
-      @apply inline-flex w-full h-full text-orange-600 font-bold border rounded-full border-orange-600 bg-black/10 justify-center items-center not-italic;
+      content: attr(acronym);
+      @apply inline-flex w-full h-full rounded-full bg-gray-400 justify-center items-center not-italic text-gray-900 text-xs;
     }
-    background-size: 70% 70%;
+    @apply bg-none;
   }
 }

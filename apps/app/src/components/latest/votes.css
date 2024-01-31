@@ -7,7 +7,10 @@ svg {
 }
 .ui-list {
   &.bidders {
-    @apply grid grid-cols-3 md_grid-cols-1 gap-4 lg_gap-y-2.5 place-items-end min-h-60;
+    @apply grid grid-cols-3 md_grid-cols-1 gap-4 lg_gap-y-0 place-items-end min-h-80;
+    & > *:not(.header) {
+      @apply py-3;
+    }
     &.loading {
       @apply !grid-cols-1;
     }

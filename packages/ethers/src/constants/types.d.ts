@@ -16,7 +16,7 @@ declare interface NetworkInfo {
     decimals: number
   }
   domain?: string
-  testnet?: boolean
+  mainnet?: boolean
 }
 declare interface ChainType {
   [chainId: string]: any

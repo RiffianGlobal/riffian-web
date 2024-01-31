@@ -2,7 +2,7 @@ import { getAccount, assignOverrides } from '@riffian-web/ethers/src/useBridge'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { userSubjectVotes } from '../uservotes/action'
-import { subjectWeeklyVotesQuery as weeklyVotes, subjectsQuery } from '~/query'
+import { weeklySubjectsReq, subjectsReq } from '~/query'
 import { getAlbumContract } from '~/lib/riffutils'
 
 export const vote = async (album: string, amount: number, price: object) => {
@@ -90,16 +90,4 @@ export const votePriceWithFee = async (album: string) => {
   const parameters = [album, 1]
   await assignOverrides(overrides, contract, method, parameters)
   return await contract[method](...parameters)
-}
-
-export const weekList = async (week: BigInt, { first, skip } = {}) => {
-  const daySeconds = 24n * 60n * 60n
-  let time = BigInt(new Date().getTime()) / 1000n - daySeconds
-  return weeklyVotes(week, time, { first, skip })
-}
-
-export const albumList = async ({ first = 0, skip = 0 } = {}) => {
-  const daySeconds = 24n * 60n * 60n
-  let time = BigInt(new Date().getTime()) / 1000n - daySeconds
-  return subjectsQuery(time, { first, skip })
 }

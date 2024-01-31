@@ -32,8 +32,19 @@ export interface Wallet extends State {
   install: () => any
 }
 
-export const emitWalletChange = async () => {
-  emitter.emit('wallet-changed')
+export type WalletChangedParams = {
+  chainId?: string
+  chainChanged?: boolean
+}
+
+let curChainId = ''
+export const emitWalletChange = async (params: WalletChangedParams = {}) => {
+  const { chainId = '' } = params
+  if (chainId && chainId != curChainId) {
+    params.chainChanged = true
+    curChainId = chainId
+  }
+  emitter.emit('wallet-changed', params)
   await sleep(0)
   emitter.emit('force-request-update')
 }

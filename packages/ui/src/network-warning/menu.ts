@@ -32,6 +32,8 @@ export class NetworkMenu extends ThemeElement(style) {
     return Object.values(Networks)
   }
 
+  cut = (s: string) => s.substring(0, 1)
+
   async switch(network: NetworkInfo) {
     this.menu = false
     this.pending = true
@@ -60,7 +62,8 @@ export class NetworkMenu extends ThemeElement(style) {
       >
         <div slot="button" class="inline-flex justify-center items-center">
           <i
-            class="ui-network-icon ${classMap(this.$c([this.native?.symbol, { testnet: this.current?.testnet }]))}"
+            acronym=${this.cut(this.current.title)}
+            class="ui-network-icon ${classMap(this.$c([this.native?.symbol, { testnet: !this.current.mainnet }]))}"
           ></i>
         </div>
         <ul class="ui-option">
@@ -72,7 +75,8 @@ export class NetworkMenu extends ThemeElement(style) {
                 class="text-base ${classMap({ active: network.chainId === this.current.chainId })}"
               >
                 <i
-                  class="ui-network-icon ${classMap(this.$c([network.native?.symbol, { testnet: network.testnet }]))}"
+                  acronym=${this.cut(network.title)}
+                  class="ui-network-icon ${classMap(this.$c([network.native?.symbol, { testnet: !network.mainnet }]))}"
                 ></i>
                 ${network.title}
               </li>`

@@ -70,7 +70,7 @@ export class DoidWallet extends State implements Wallet {
   updateProvider(chainId: string) {
     this.connector.updateChainId(chainId)
     getProvider().update({ chainId })
-    emitWalletChange()
+    emitWalletChange({ chainId })
   }
   async connect({ force = false } = {}) {
     this.inited = true

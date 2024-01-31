@@ -19,7 +19,7 @@ class WeeklyStore extends State {
 
   promise: any
   getLatest = async () => {
-    if (!this.promise)
+    if (!this.promise) {
       this.promise = new Promise(async (resolve) => {
         let week
         const { statistic } = await graphQuery('MediaBoard', `{ statistic (id: "riffian") { week } }`)
@@ -40,11 +40,13 @@ class WeeklyStore extends State {
         resolve((this.latest = week))
         this.cd()
       })
+    }
     return this.promise
   }
   cd = () => {
-    const end = dayjs.unix(this.latestEnd)
-    var diff = dayjs.duration(end.diff(dayjs()))
+    const [end, now] = [dayjs.unix(this.latestEnd), dayjs()]
+    if (end <= now) this.getLatest()
+    var diff = dayjs.duration(end.diff(now))
     const [h, m, s] = [diff.days() * 24 + diff.hours(), diff.minutes(), diff.seconds()].map((r) =>
       r.toString().padStart(2, '0')
     )

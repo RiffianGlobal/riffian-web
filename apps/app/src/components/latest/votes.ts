@@ -8,47 +8,38 @@ import {
   when,
   classMap
 } from '@riffian-web/ui/shared/theme-element'
-import '@riffian-web/ui/loading/skeleton'
-
 import { screenStore } from '@lit-web3/base/screen'
-import { latestVote } from './actions'
 import { formatUnits } from 'ethers'
-import style from './votes.css?inline'
 import { asyncReplace } from 'lit/directives/async-replace.js'
 import { timeAgo } from '~/lib/dayjs'
+import { chartsStore, StateController } from '~/store/charts'
 // components
+import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/address'
 
+import style from './votes.css?inline'
 @customElement('latest-votes')
 export class LatestVotes extends ThemeElement(style) {
-  @property({ type: Boolean }) weekly = false
-  @state() latestVotes = []
+  bindCharts: any = new StateController(this, chartsStore)
+
   @state() albumToVote = { id: '', voter: 0, time: 0, value: 0 }
-  @state() pending = false
+  @state() moreVotes = []
+  @state() morePending = false
 
   get isMobi() {
     return screenStore.screen.isMobi
   }
-
   get skeletonLen() {
     return this.isMobi ? 2 : 3
   }
-
-  connectedCallback() {
-    super.connectedCallback()
-    this.init()
+  get loading() {
+    return chartsStore.pending && !chartsStore.votes.length
   }
-
-  init = async () => {
-    this.pending = true
-    try {
-      let result = await latestVote(12)
-      this.latestVotes = result.voteLogs
-    } catch (e: any) {
-      console.error(e)
-    } finally {
-      this.pending = false
-    }
+  get empty() {
+    return chartsStore.inited && !chartsStore.votes.length
+  }
+  get votes() {
+    return chartsStore.votes.concat(this.moreVotes)
   }
 
   timeAgo = async function* (timestamp: number | string) {
@@ -59,10 +50,15 @@ export class LatestVotes extends ThemeElement(style) {
   }
 
   render() {
-    return html` <div role="list" class="ui-list bidders ${classMap(this.$c([this.pending ? 'loading' : 'hover']))}">
-      <div class="flex header border-bottom"><div class="w-full">Bidders</div></div>
+    return html` <div
+      role="list"
+      class="ui-list bidders ${classMap(this.$c([this.morePending ? 'loading' : 'hover']))}"
+    >
+      <div class="flex header border-bottom">
+        <div class="w-full">Bidders</div>
+      </div>
       ${when(
-        this.pending && this.latestVotes.length == 0,
+        this.loading,
         () => html`
           <div name="Loading" class="doc-intro">
             <div class="w-full flex flex-col gap-8">
@@ -75,7 +71,7 @@ export class LatestVotes extends ThemeElement(style) {
         `,
         () => html`
           ${repeat(
-            this.latestVotes,
+            this.votes,
             (item: any) =>
               html`<div class="item flex items-center pr-0.5">
                 <div class="w-full flex items-center justify-between gap-2">
