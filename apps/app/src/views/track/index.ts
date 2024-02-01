@@ -1,6 +1,6 @@
 import { ThemeElement, html, customElement, property } from '@riffian-web/ui/shared/theme-element'
-import '~/components/track/voters'
-import '~/components/track/track'
+import '~/components/track/votes'
+import '~/components/track/detail'
 
 // Style
 import style from './index.css?inline'
@@ -16,7 +16,7 @@ export class TrackPage extends ThemeElement(style) {
         <div class="w-full inline-flex pb-2 border-b border-slate-50/10">
           <div class="py-1.5 px-3 text-base font-normal text-white/70 rounded-md">History</div>
         </div>
-        <voter-list trackAddress=${this.addr}></voter-list>
+        <track-votes trackAddress=${this.addr}></track-votes>
       </div>
     </div>`
   }

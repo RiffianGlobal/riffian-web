@@ -33,7 +33,7 @@ export class ViewHome extends ThemeElement(style) {
       <div class="ui-board">
         <div class="ui-board-header">
           <div class="ui-board-lead">
-            <h5>Weekly</h5>
+            <h5>Weekly Chart</h5>
             <div class="ui-board-subtitle">
               ${when(
                 weeklyStore.latest,
@@ -64,7 +64,7 @@ export class ViewHome extends ThemeElement(style) {
             <div class="ui-board-header">
               <div class="ui-board-lead">
                 <div class="text-xl">
-                  Top 10
+                  All Chart
                   <ui-link text class="ml-1 text-xs text-blue-300" href=${'/top'}>View all</ui-link>
                 </div>
               </div>

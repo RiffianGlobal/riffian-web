@@ -16,7 +16,7 @@ export const subjectInfo = async (addr: string) => {
   return result
 }
 
-export const voters = async (addr: string) => {
+export const trackVotes = async (addr: string) => {
   let queryJSON = `{
     subject ( id: "${addr.toLowerCase()}" ) {
       address createdAt volumeTotal volumeVote

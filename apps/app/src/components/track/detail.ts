@@ -1,17 +1,22 @@
 import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import '~/components/top/dialog'
 import { subjectInfo } from './action'
+import { formatUnits } from 'ethers'
+import { throttle } from '@riffian-web/ethers/src/utils'
+import { tweetStore, genTweetURI, type Social } from '~/store/tweet'
+import { myVotes } from '~/components/top/action'
+import emitter from '@lit-web3/base/emitter'
+// Components
+import '~/components/top/dialog'
 import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
 import '@riffian-web/ui/img/loader'
 import '@riffian-web/ui/dialog/prompt'
-import style from './list.css?inline'
-import { formatUnits } from 'ethers'
-import { albumData, myVotes } from '~/components/top/action'
-import { tweetStore, genTweetURI, type Social } from '~/store/tweet'
+
+import style from './detail.css?inline'
 
 const defErr = () => ({ tx: '' })
+
 @customElement('track-detail')
 export class TrackDetail extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
@@ -19,6 +24,7 @@ export class TrackDetail extends ThemeElement(style) {
 
   @property({ type: Boolean }) weekly = false
   @property({ type: String }) trackAddress = ''
+
   // @property({ type: Promise<any> }) votes: Promise<any> | undefined
   @state() myVotes: bigint | undefined
   // @state() retreatDisabled = true
@@ -31,39 +37,42 @@ export class TrackDetail extends ThemeElement(style) {
   @state() promptMessage: string = ''
   @state() err = defErr()
   @state() actionType = ''
-  @state() ts = 0
+  @state() inited = false
 
   get disabled() {
     return !bridgeStore.bridge.account
   }
 
   get voteEnable() {
-    return this.ts && !this.disabled
+    return this.inited && !this.disabled
   }
   get retreatEnable() {
     if (!this.myVotes) return false
-    return this.ts && +formatUnits(this.myVotes, 0) > 0
+    return this.inited && +formatUnits(this.myVotes, 0) > 0
   }
   get creatorAddr() {
     return this.subject?.creator?.address
   }
-
-  connectedCallback() {
-    super.connectedCallback()
-    this.fetch()
+  get empty() {
+    return this.inited && !this.subject
+  }
+  get loading() {
+    return !this.inited && this.pending
   }
 
   getRandomInt(max: number) {
     return Math.floor(Math.random() * max)
   }
 
-  async readFromTwitter() {
-    const { address, socials = [] } = this.subject.creator
+  readFromTwitter = async () => {
+    const { creator } = this.subject ?? {}
+    if (!creator) return
+    const { address, socials = [] } = creator
     const { uri } = socials[0] ?? {}
     this.social = await tweetStore.fromUri(uri, address)
   }
 
-  async getPrice() {
+  getPrice = async () => {
     try {
       // this.votes = albumData(this.trackAddress).then((result) => result[4])
       this.myVotes = await myVotes(this.trackAddress)
@@ -76,22 +85,21 @@ export class TrackDetail extends ThemeElement(style) {
   fetch = async () => {
     this.pending = true
     try {
-      let result = await Promise.all([subjectInfo(this.trackAddress)])
-      this.subject = result[0].subject
       this.getPrice()
+      const { subject } = await subjectInfo(this.trackAddress)
+      this.subject = subject
       this.readFromTwitter()
     } catch (e: any) {
       this.promptMessage = e
       this.prompt = true
     } finally {
-      this.ts++
+      this.inited = true
       this.pending = false
     }
   }
 
   close = () => {
     this.dialog = false
-    this.fetch()
   }
 
   setAction = (action: string) => (this.actionType = action)
@@ -112,20 +120,37 @@ export class TrackDetail extends ThemeElement(style) {
     window.open(url, '_blank')
   }
 
+  listener = throttle(this.fetch)
+  connectedCallback() {
+    super.connectedCallback()
+    this.fetch()
+    emitter.on('block-world', this.listener)
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback()
+    emitter.off('block-world', this.listener)
+  }
+
   render() {
-    return html`<div>
+    // Loading
+    if (this.loading)
+      return html`<div name="Loading" class="doc-intro">
+        <div class="flex flex-col gap-8 m-8">
+          <loading-skeleton num="3"></loading-skeleton>
+        </div>
+      </div>`
+    // Empty
+    return html`
+      <!-- Track Detail -->
+      <div class="grid lg_grid-cols-13 gap-6 lg_gap-8">
         ${when(
-          this.pending && !this.subject,
+          this.empty,
           () =>
-            html`<div name="Loading" class="doc-intro">
-              <div class="flex flex-col gap-8 m-8">
-                <loading-skeleton num="3"></loading-skeleton>
-              </div>
-            </div>`,
+            html`<p class="mx-4 h-full">No data found.</p>
+              <p></p>`,
           () =>
-            html`<div class="grid lg_grid-cols-13 gap-6 lg_gap-8">
-              <!-- meta info -->
-              <div class="lg_col-span-6 h-32 md_h-44 flex gap-4 md_gap-8">
+            html`<!-- meta info -->
+              <div class="lg_col-span-6 flex gap-4 md_gap-8">
                 <!-- Cover -->
                 <div class="relative w-32 md_w-44 h-full rounded-xl bg-white/10">
                   <img-loader src=${this.subject.image} class="w-32 md_w-44 h-full rounded-xl"></img-loader>
@@ -244,11 +269,11 @@ export class TrackDetail extends ThemeElement(style) {
                     ${(+this.subject.supply + 1) / 10}
                   </div>
                 </div>
-              </div>
-            </div>`
+              </div>`
         )}
       </div>
       <!-- Prompt -->
-      ${when(this.prompt, () => html`<p class="text-center text-orange-600">${this.promptMessage}</p> `)}`
+      ${when(this.prompt, () => html`<p class="text-center text-orange-600">${this.promptMessage}</p>`)}
+    `
   }
 }

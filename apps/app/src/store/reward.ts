@@ -109,7 +109,7 @@ class RewardStore extends State {
     return (+formatUnits(this.total)).toFixed(4)
   }
   get socialNotClaimed() {
-    return this.inited && tweetStore.selfTwitter?.verified && this.rewardsClaimed[0] === false
+    return this.inited && this.rewardsClaimed[0] === false
   }
   get taskHumanized() {
     return {
@@ -125,13 +125,12 @@ class RewardStore extends State {
     this.inited = true
   }
   init = async () => {
-    const contract = await getRewardContract()
-    emitter.on('block-world', this.listener)
-    ;['EventClaimVote', 'EventClaimSocial'].forEach((name) => contract.on(name, this.listener))
     this.update()
+    emitter.on('block-world', this.listener)
+    emitter.on('block-balance', this.listener)
   }
   listener = async (acc: string) => {
-    if (acc !== (await getAccount())) this.update()
+    if (acc === (await getAccount())) this.update()
   }
 
   #fetchCommon = async () => {

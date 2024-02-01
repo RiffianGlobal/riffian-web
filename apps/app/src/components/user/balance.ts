@@ -1,41 +1,18 @@
-import {
-  ThemeElement,
-  classMap,
-  customElement,
-  html,
-  property,
-  state,
-  when
-} from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController, getNativeBalance } from '@riffian-web/ethers/src/useBridge'
-import { formatUnits } from 'ethers'
+import { ThemeElement, classMap, customElement, html, property } from '@riffian-web/ui/shared/theme-element'
+import { balanceStore, StateController } from '~/store/balance'
 
 @customElement('account-balance')
 export class AccountBalance extends ThemeElement('') {
+  bindBalance: any = new StateController(this, balanceStore)
+
   @property({ type: String }) class = ''
-  bindBridge: any = new StateController(this, bridgeStore)
-  @state() balance = ''
 
-  get account() {
-    return bridgeStore.bridge.account
-  }
   get showBalance() {
-    return this.balance === '' ? this.balance : (+this.balance).toFixed(4)
+    if (!balanceStore.balance) return '-'
+    return (+balanceStore.balance).toFixed(4)
   }
 
-  getBalance = async () => {
-    if (!this.account) return
-    this.balance = await getNativeBalance(this.account)
-  }
-
-  async connectedCallback() {
-    super.connectedCallback()
-    await this.getBalance()
-  }
   render() {
-    return html`${when(
-      this.account,
-      () => html` <span class=${classMap(this.$c([this.class]))}>${this.showBalance}</span> `
-    )} `
+    return html`<span class=${classMap(this.$c([this.class]))}>${this.showBalance}</span>`
   }
 }

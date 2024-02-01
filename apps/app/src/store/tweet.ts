@@ -5,8 +5,9 @@ import fetchJsonP from 'fetch-jsonp'
 import { ttlStorage } from '@riffian-web/ethers/src/utils'
 import { toGid } from '@riffian-web/ethers/src/uuid'
 import { getAlbumContract } from '~/lib/riffutils'
+import { getAddress } from 'ethers'
 
-import { getAccount } from '@riffian-web/ethers/src/useBridge'
+import { getAccount, bridgeStore } from '@riffian-web/ethers/src/useBridge'
 import { weekSeconds, Official, Domain } from '~/constants'
 
 export const readTweet = async (uri: string): Promise<Tweet | undefined> => {
@@ -32,10 +33,10 @@ export const getTwitter = async (uri: string, verifyAddress?: string) => {
     name,
     url,
     gid,
-    id: (url.match(/([^/]+?)$/) ?? [])[1] ?? '',
-    verified: verifyAddress && gid ? gid === genGid(verifyAddress) : false
+    id: (url.match(/([^/]+?)$/) ?? [])[1] ?? ''
   }
-  if (res.verified && verifyAddress) res.address = verifyAddress
+  const verified = verifyAddress && gid ? gid === genGid(verifyAddress) : false
+  if (verified) res.address = verifyAddress
   return res
 }
 
@@ -84,14 +85,17 @@ class Tweets extends State {
   }
 
   fetchSelf = async () => {
-    const address = await getAccount()
-    if (!address) return
-    this.selfTweetURI = await this.addressToUri(address)
-    if (this.selfTweetURI) await this.fromUri(this.selfTweetURI, address)
+    const { account } = bridgeStore.bridge
+    if (!account) return
+    this.selfTweetURI = await this.addressToUri(account)
+    if (this.selfTweetURI) await this.fromUri(this.selfTweetURI, account)
     return this.selfTweetURI
   }
   get selfTwitter() {
     return this.tweets[this.selfTweetURI]
+  }
+  get selfValid() {
+    return this.selfTwitter?.address == bridgeStore.bridge.account
   }
 
   addressToUri = async (address: string) => {
@@ -109,12 +113,11 @@ class Tweets extends State {
   }
 
   init = async () => {
+    this.fetchSelf()
     const contract = await getAlbumContract()
     contract.on('EventBind', this.listener)
-    this.fetchSelf()
   }
   listener = async (acc: string) => {
-    console.log(acc, 'lis')
     if (acc !== (await getAccount())) this.fetchSelf()
   }
 }
@@ -130,7 +133,6 @@ export type Social = {
   url: string
   id: string
   gid: string
-  verified: boolean
   address?: string
 }
 

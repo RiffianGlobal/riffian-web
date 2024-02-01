@@ -56,7 +56,7 @@ export class BindSocial extends ThemeElement('') {
     return bridgeStore.bridge.account
   }
   get bound() {
-    return this.ts && !!tweetStore.selfTweetURI
+    return this.ts && tweetStore.selfValid
   }
   get inputValid() {
     return !this.inputErr && this.inputURL && !this.inputPending
@@ -82,9 +82,6 @@ export class BindSocial extends ThemeElement('') {
     const { name, id } = this.twitter
     return html`<b>${name}</b> @${id}`
   }
-  get verified() {
-    return tweetStore.selfTwitter?.verified
-  }
 
   onInput = async (e: CustomEvent) => {
     this.inputURL = e.detail
@@ -104,7 +101,7 @@ export class BindSocial extends ThemeElement('') {
     }
     if (this.inputErr) return
     this.twitter = await tweetStore.fromUri(this.inputURL, this.account)
-    if (!this.verified && import.meta.env.MODE !== 'development') this.inputErr = 'Malformed Tweet'
+    if (this.twitter?.address != this.account) this.inputErr = 'Malformed Tweet'
   }
 
   async set() {
@@ -145,17 +142,9 @@ export class BindSocial extends ThemeElement('') {
         () =>
           html`<div class="my-8 text-center">
               ${when(
-                this.verified,
+                tweetStore.selfValid,
                 () =>
-                  html`<p class="text-lg">
-                      ${tweetStore.selfTwitter.name}
-                      <i
-                        class="mdi ${classMap({
-                          'text-green-600': this.verified,
-                          'mdi-check-decagram': this.verified
-                        })}"
-                      ></i>
-                    </p>
+                  html`<p class="text-lg">${tweetStore.selfTwitter.name}</p>
                     <p><ui-link href=${tweetStore.selfTwitter.url}>@${tweetStore.selfTwitter.id}</ui-link></p>`,
                 () =>
                   html`<div class="w-96 mx-auto text-base">
@@ -171,7 +160,7 @@ export class BindSocial extends ThemeElement('') {
               <ui-link link text class="opacity-70 text-xs" @click=${this.chg}>Change</ui-link>
             </p>
             ${when(
-              rewardStore.socialNotClaimed,
+              rewardStore.socialNotClaimed && tweetStore.selfValid,
               () =>
                 html`<p class="mt-8 text-center">
                   <a @click=${this.back} class="text-base hover_underline ui-em cursor-pointer"
@@ -215,7 +204,7 @@ export class BindSocial extends ThemeElement('') {
                       ><i
                         class="mdi ${classMap({
                           'mdi-loading': this.inputPending,
-                          'mdi-check-decagram': this.verified
+                          'mdi-check': this.inputValid
                         })}"
                       ></i
                     ></span>
