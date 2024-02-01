@@ -23,6 +23,8 @@ import style from './list.css?inline'
 export class UserVotesList extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
 
+  @property() acc!: string
+
   @property() by = ''
   @property() dir = ''
 
@@ -43,7 +45,7 @@ export class UserVotesList extends ThemeElement(style) {
     if (this.disabled) return
     this.pending = true
     try {
-      const userSubjectVotes = await userVotes('', { orderBy: this.by })
+      const userSubjectVotes = await userVotes(this.acc, { orderBy: this.by })
       this.uVotes = userSubjectVotes
     } catch {
     } finally {

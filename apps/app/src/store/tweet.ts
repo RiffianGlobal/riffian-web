@@ -109,12 +109,11 @@ class Tweets extends State {
   }
 
   init = async () => {
+    this.fetchSelf()
     const contract = await getAlbumContract()
     contract.on('EventBind', this.listener)
-    this.fetchSelf()
   }
   listener = async (acc: string) => {
-    console.log(acc, 'lis')
     if (acc !== (await getAccount())) this.fetchSelf()
   }
 }

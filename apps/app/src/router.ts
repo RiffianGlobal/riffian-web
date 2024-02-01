@@ -2,6 +2,7 @@ import { html } from 'lit'
 import emitter from '@lit-web3/base/emitter'
 import type { RouteConfig } from '@lit-web3/router'
 import { blocked } from '~/lib/ip'
+import { getAccount } from '@riffian-web/ethers/src/useBridge'
 
 const beforeEach = async () => {
   const isBlocked = await blocked()
@@ -81,11 +82,15 @@ export const routes: RouteConfig[] = [
   },
   {
     name: 'profile',
-    path: '/profile',
-    render: () => html`<profile-page></profile-page>`,
-    enter: async () => {
+    path: '/profile/:acc?',
+    render: ({ acc = '' }) => html`<profile-page .acc="${acc}"></profile-page>`,
+    enter: async ({ acc = '' }) => {
       if (await beforeEach()) return false
-      await import('~/views/profile')
+      const req = [import('~/views/profile')]
+      if (!acc) req.push(getAccount())
+      const [, self] = await Promise.all(req)
+      if (self) emitter.emit('router-replace', `/profile/${self}`)
+      if (!acc && !self) return false
       return true
     }
   }
