@@ -93,13 +93,7 @@ export class TrackDetail extends ThemeElement(style) {
                   ${when(
                     this.social?.id,
                     () =>
-                      html`<span class="text-base font-light middle-dot-divider"
-                          >${this.social?.name}<span class="ml-0.5"
-                            >${when(
-                              this.social?.verified,
-                              () => html`<i class="text-green-600 text-sm mdi mdi-check-decagram"></i>`
-                            )}</span
-                          ></span
+                      html`<span class="text-base font-light middle-dot-divider">${this.social?.name}</span
                         ><span class="text-base font-light">
                           <a href="${this.social?.url}" class="text-blue-300" target="_blank">@${this.social?.id}</a>
                         </span>`

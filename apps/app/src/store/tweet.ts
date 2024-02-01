@@ -5,6 +5,7 @@ import fetchJsonP from 'fetch-jsonp'
 import { ttlStorage } from '@riffian-web/ethers/src/utils'
 import { toGid } from '@riffian-web/ethers/src/uuid'
 import { getAlbumContract } from '~/lib/riffutils'
+import { getAddress } from 'ethers'
 
 import { getAccount } from '@riffian-web/ethers/src/useBridge'
 import { weekSeconds, Official, Domain } from '~/constants'
@@ -32,10 +33,10 @@ export const getTwitter = async (uri: string, verifyAddress?: string) => {
     name,
     url,
     gid,
-    id: (url.match(/([^/]+?)$/) ?? [])[1] ?? '',
-    verified: verifyAddress && gid ? gid === genGid(verifyAddress) : false
+    id: (url.match(/([^/]+?)$/) ?? [])[1] ?? ''
   }
-  if (res.verified && verifyAddress) res.address = verifyAddress
+  const verified = verifyAddress && gid ? gid === genGid(verifyAddress) : false
+  if (verified) res.address = verifyAddress
   return res
 }
 
@@ -129,7 +130,6 @@ export type Social = {
   url: string
   id: string
   gid: string
-  verified: boolean
   address?: string
 }
 

@@ -31,7 +31,7 @@ export class RewardTask extends ThemeElement(style) {
   }
 
   render() {
-    return html` <div
+    return html`<div
       class="flex w-full justify-between items-center ${classMap({ 'text-gray-600': this.reward?.closed })}"
     >
       <!-- Reward Name -->

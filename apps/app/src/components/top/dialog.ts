@@ -143,12 +143,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
             </div>
             <div>
               <div class="text-lg mb-1.5">${this.name}</div>
-              <div class="text-sm">
-                ${when(
-                  this.social?.verified,
-                  () => html`<span><i class="text-green-600 text-sm mdi mdi-check-decagram"></i></span>`
-                )}${this.social?.name}
-              </div>
+              <div class="text-sm">${this.social?.name}</div>
               ${when(
                 this.social?.id,
                 () => html`

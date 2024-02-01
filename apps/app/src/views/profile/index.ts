@@ -94,12 +94,7 @@ export class ProfilePage extends ThemeElement(style) {
                     this.social?.id,
                     () => html`
                       <span class="text-base font-light middle-dot-divider">
-                        ${this.social?.name}<span class="ml-0.5">
-                          ${when(
-                            this.social?.verified,
-                            () => html`<i class="text-green-600 text-sm mdi mdi-check-decagram"></i>`
-                          )}</span
-                        >
+                        ${this.social?.name}
                         <span class="text-base font-light">
                           <a href="${this.social?.url}" target="_blank"
                             >${this.social?.id ? '@' : ''}${this.social?.id}</a
