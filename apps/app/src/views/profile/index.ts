@@ -68,7 +68,7 @@ export class ProfilePage extends ThemeElement(style) {
   }
 
   render() {
-    return html`<div class="page page-profile ui-container mx-auto pt-6 lg_pt-10">
+    return html`<div class="page page-profile ui-container mx-auto pt-4 lg_pt-10">
       <!-- basic info -->
       <div class="flex flex-col lg_flex-row gap-4 justify-between items-center">
         <div>
@@ -78,7 +78,7 @@ export class ProfilePage extends ThemeElement(style) {
               html`${when(
                 this.loading,
                 () =>
-                  html`<div>
+                  html`<div class="self-start lg_self-center">
                     <loading-skeleton num="2"></loading-skeleton>
                   </div>`
               )}`,
@@ -93,9 +93,14 @@ export class ProfilePage extends ThemeElement(style) {
                   ${when(
                     this.social?.id,
                     () => html`
-                      <span class="text-base font-light middle-dot-divider">
-                        ${this.social?.name}
-                        <span class="text-base font-light">
+                      <span class="text-sm font-light middle-dot-divider">
+                        ${this.social?.name}<span class="ml-0.5">
+                          ${when(
+                            this.social?.verified,
+                            () => html`<i class="text-green-600 text-sm mdi mdi-check-decagram"></i>`
+                          )}</span
+                        >
+                        <span class="text-sm text-blue-300 font-light">
                           <a href="${this.social?.url}" target="_blank"
                             >${this.social?.id ? '@' : ''}${this.social?.id}</a
                           >
@@ -108,31 +113,39 @@ export class ProfilePage extends ThemeElement(style) {
             `
           )}
         </div>
-        <div class="w-full lg_w-1/2 lg_h-32 grid grid-cols-2 lg_grid-cols-4 gap-4 items-center">
+        <div
+          class="w-full lg_w-1/2 lg_h-32 grid grid-cols-4 lg_gap-4 divide-x divide-white/20 md_divide-x-0 items-center border-x border-white/20 lg_border-none"
+        >
           <div
-            class="h-24 lg_h-full flex flex-col justify-center items-center rounded-xl gap-y-1.5 bg-white/5 text-white"
+            class="h-full lg_h-24 flex flex-col justify-center items-center lg_rounded-xl gapy-y-1 lg_gap-y-1.5 lg_bg-white/5"
           >
-            <span class="text-sm opacity-70">Create</span>
-            <div class="text-2xl font-light">${this.stat.own ?? '-'}</div>
+            <span class="text-xs md_text-base text-gray-500">Create</span>
+            <div class="text-xl lg_text-2xl font-light">${this.account ? this.stat.own : '-'}</div>
           </div>
-          <div class="h-24 lg_h-full flex flex-col justify-center items-center rounded-xl gap-y-1.5 bg-white/5">
-            <span class="text-sm opacity-70">Holding</span>
-            <div class="text-2xl font-light">${this.stat.holding ?? '-'}</div>
+          <div
+            class="h-full lg_h-24 flex flex-col justify-center items-center lg_rounded-xl gapy-y-1 lg_gap-y-1.5 lg_bg-white/5"
+          >
+            <span class="text-xs md_text-base text-gray-500">Holding</span>
+            <div class="text-xl lg_text-2xl font-light">${this.account ? this.stat.holding : '-'}</div>
           </div>
-          <div class="h-24 lg_h-full flex flex-col justify-center items-center rounded-xl gap-y-1.5 bg-white/5">
-            <span class="text-sm opacity-70">Rewards</span>
-            <div class="text-2xl font-light">
+          <div
+            class="h-full lg_h-24 flex flex-col justify-center items-center lg_rounded-xl gapy-y-1 lg_gap-y-1.5 lg_bg-white/5"
+          >
+            <span class="text-xs md_text-base text-gray-500">Rewards</span>
+            <div class="text-xl lg_text-2xl font-light">
               ${this.inited ? (rewardStore.totalHumanized ? rewardStore.totalHumanized : '0') : '-'}
             </div>
           </div>
-          <div class="h-24 lg_h-full flex flex-col justify-center items-center rounded-xl gap-y-1.5 bg-white/5">
-            <span class="text-sm opacity-70">Claimed</span>
-            <div class="text-2xl font-light">${this.stat.claimed ?? '-'}</div>
+          <div
+            class="h-full lg_h-24 flex flex-col justify-center items-center lg_rounded-xl gapy-y-1 lg_gap-y-1.5 lg_bg-white/55"
+          >
+            <span class="text-xs md_text-base text-gray-500">Claimed</span>
+            <div class="text-xl lg_text-2xl font-light">${this.stat.claimed ?? '-'}</div>
           </div>
         </div>
       </div>
       <!-- <div class="w-full h-full bg-yellow-700/50">Profile Page</div> -->
-      <div class="mt-8 lg_mt-14">
+      <div class="mt-6 lg_mt-14">
         <div class="w-full inline-flex pb-2 border-b border-slate-50/10">
           <div class="py-1.5 px-3 text-base font-normal text-white/70 rounded-md">Voted</div>
         </div>

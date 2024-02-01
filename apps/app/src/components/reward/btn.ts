@@ -1,3 +1,4 @@
+import emitter from '@lit-web3/base/emitter'
 import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
 import { StateController, rewardStore } from '~/store/reward'
 // Components
@@ -25,7 +26,12 @@ export class RewardBtn extends ThemeElement(style) {
 
   connectedCallback() {
     super.connectedCallback()
-    rewardStore.update()
+    emitter.on('reward-show', this.open)
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback()
+    emitter.off('reward-show', this.open)
   }
 
   render() {

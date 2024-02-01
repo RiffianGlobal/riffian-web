@@ -57,7 +57,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
         myVotes(this.album)
       ])
 
-      this.votePrice = formatUnits(votePri).toString()
+      this.votePrice = formatUnits(voteSum).toString()
       this.voteFee = formatUnits(voteSum - votePri).toString()
       this.retreatPrice = formatUnits(retreatPri)
       this.myVotes = votes
@@ -209,12 +209,12 @@ export class VoteAlbumDialog extends ThemeElement('') {
                 this.ts && this.hasVoted && this.action === 'retreat',
                 () => html`
                   <div class="flex flex-col justify-center items-center px-4 border-white/12">
-                    <div class="text-2xl">
+                    <div class="text-3xl text-yellow-500">
                       ${until(this.retreatPrice, html`<i class="text-sm mdi mdi-loading"></i>`)}
                     </div>
 
                     <ui-button
-                      class="mt-3 w-full"
+                      class="mt-3 w-full md_w-36"
                       ?disabled=${this.pending}
                       ?pending=${this.pending}
                       @click=${this.retreat}
@@ -223,9 +223,6 @@ export class VoteAlbumDialog extends ThemeElement('') {
                   </div>
                 `
               )}
-              <!-- <div class="text-sm text-gray-500">
-                Retreat price: ${until(this.retreatPrice, html`<i class="text-sm mdi mdi-loading"></i>`)} FTM
-              </div> -->
             `,
             () =>
               html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your vote has been submitted.' } }}

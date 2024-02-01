@@ -1,6 +1,7 @@
 import emitter from '@lit-web3/base/emitter'
 import { routerPathroot } from '@lit-web3/router'
 import { StateController, screenStore } from '@lit-web3/base/screen'
+import { rewardStore } from '~/store/reward'
 import { routes } from '~/router'
 import { ThemeElement, html, customElement, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
@@ -24,6 +25,7 @@ import '~/global.css'
 export class AppMain extends ThemeElement('') {
   bindScreen: any = new StateController(this, screenStore)
   bindBridge: any = new StateController(this, bridgeStore)
+  bindStore: any = new StateController(this, rewardStore)
 
   constructor() {
     super()
@@ -38,6 +40,9 @@ export class AppMain extends ThemeElement('') {
 
   chkView = () => {
     this.inRoot = routerPathroot() === '/'
+  }
+  openReward = () => {
+    emitter.emit('reward-show')
   }
 
   connectedCallback() {
@@ -78,14 +83,14 @@ export class AppMain extends ThemeElement('') {
             </div>
           </div>
         </div>
-        <div slot="left" class="flex justify-start items-center gap-4 ml-4">
+        <div slot="left" class="w-full flex justify-start items-center gap-4 ml-4">
           ${when(
             !this.isMobi,
             () =>
-              html`<ui-nav slot="right" class="text-lg">
+              html` <ui-nav slot="right" class="text-lg">
                 <ui-link href="/" nav alias="/">Home</ui-link>
                 <ui-link href="/profile" nav>Profile</ui-link>
-                <create-album-btn></create-album-btn>
+                <create-album-btn class="!opacity-60"></create-album-btn>
               </ui-nav>`
           )}
         </div>
@@ -95,12 +100,19 @@ export class AppMain extends ThemeElement('') {
           screenStore.isMobi,
           () =>
             html`<ui-nav
-              class="fixed bottom-0 left-0 right-0 z-50 space-x-2 border-t border-white/25"
-              style="background-color: rgba(22, 24, 49, 0.8)"
+              class="fixed bottom-0 left-0 right-0 z-50 border-t border-white/25"
+              style="background-color: rgba(22, 24, 49, 1)"
             >
-              <ui-link href="/" nav alias="/"><i class="mdi mdi-home-outline text-3xl"></i></ui-link>
-              <create-album-btn icon></create-album-btn>
-              <ui-link href="/uservotes" nav><i class="mdi mdi-account-outline text-3xl"></i></ui-link>
+              <div class="w-full grid grid-cols-4 justify-center items-center">
+                <ui-link href="/" nav alias="/" class="text-center"
+                  ><i class="mdi mdi-home-outline text-3xl"></i
+                ></ui-link>
+                <create-album-btn icon class="text-center !text-white"></create-album-btn>
+                <i class="mdi mdi-gift-outline text-3xl text-center" @click=${this.openReward}></i>
+                <ui-link href="/profile" nav class="text-center !opacity-100"
+                  ><i class="mdi mdi-account-outline text-3xl"></i
+                ></ui-link>
+              </div>
             </ui-nav>`
         )}
         <slot> </slot>

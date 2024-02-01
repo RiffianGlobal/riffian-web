@@ -1,5 +1,6 @@
 import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { screenStore } from '@lit-web3/base/screen'
 import { formatUnits } from 'ethers'
 import '~/components/top/dialog'
 import { user } from './action'
@@ -16,6 +17,7 @@ const defErr = () => ({ loading: '', tx: '' })
 export class TrackDetail extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   bindTweets: any = new StateController(this, tweetStore)
+  bindScreen: any = new StateController(this, screenStore)
   @property({ type: Boolean }) weekly = false
   @property({ type: String }) address = ''
   @property({ type: Promise<any> }) votes: Promise<any> | undefined
@@ -30,6 +32,10 @@ export class TrackDetail extends ThemeElement(style) {
   @state() promptMessage: string = ''
   @state() err = defErr()
   @state() ts = 0
+
+  get isMobi() {
+    return screenStore.screen.isMobi
+  }
 
   get disabled() {
     return !bridgeStore.bridge.account
@@ -73,7 +79,7 @@ export class TrackDetail extends ThemeElement(style) {
   }
 
   render() {
-    return html`<div class="m-4 text-center">
+    return html`<div class="mx-2 md_m-4 md_text-center">
       ${when(
         !this.ts && !this.err.loading,
         () =>
@@ -89,23 +95,33 @@ export class TrackDetail extends ThemeElement(style) {
             () =>
               html`<div class="py-4">
                 <ui-address class="text-lg" .address="${this.user.address}" short avatar></ui-address>
-                <div class="my-4">
+                <div class="md_my-4">
                   ${when(
                     this.social?.id,
                     () =>
-                      html`<span class="text-base font-light middle-dot-divider">${this.social?.name}</span
-                        ><span class="text-base font-light">
+                      html`<span class="text-sm md_text-base font-light middle-dot-divider"
+                          >${this.social?.name}<span class="ml-0.5"
+                            >${when(
+                              this.social?.verified,
+                              () => html`<i class="text-green-600 text-sm mdi mdi-check-decagram"></i>`
+                            )}</span
+                          ></span
+                        ><span class="text-sm md_text-base font-light">
                           <a href="${this.social?.url}" class="text-blue-300" target="_blank">@${this.social?.id}</a>
                         </span>`
                   )}
                 </div>
-                <div class="mt-0.5">
-                  <span class="text-base text-white/70 middle-dot-divider"
-                    >Holding <span class="ml-1 text-blue-300">${this.user.holding ?? '-'}</span></span
+                <div class="mt-4 md_mt-0.5 divide-x divide-white/20 md_divide-x-0">
+                  <span
+                    class="text-white/70 ${this.isMobi
+                      ? 'pr-6 inline-flex flex-col items-center'
+                      : 'middle-dot-divider'}"
+                    ><span class="text-xs md_text-base">Holding</span
+                    ><span class="ml-1 text-xl md_text-base text-blue-300">${this.user.holding ?? '-'}</span></span
                   >
-                  <span class="text-base text-white/70"
-                    >Reward Claimed
-                    <span class="ml-1 text-blue-300"
+                  <span class="text-white/70 ${this.isMobi ? 'pl-6 inline-flex flex-col items-center' : ''}"
+                    ><span class="text-xs md_text-base">Reward Claimed</span>
+                    <span class="ml-1 text-xl md_text-base text-blue-300"
                       >${this.user.rewardClaimed
                         ? parseFloat((+formatUnits(this.user.rewardClaimed)).toFixed(4))
                         : '-'}</span

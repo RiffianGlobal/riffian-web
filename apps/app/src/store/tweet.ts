@@ -85,7 +85,7 @@ class Tweets extends State {
   }
 
   fetchSelf = async () => {
-    const { account } = bridgeStore.bridge
+    const { account } = bridgeStore.bridge ?? {}
     if (!account) return
     this.selfTweetURI = await this.addressToUri(account)
     if (this.selfTweetURI) await this.fromUri(this.selfTweetURI, account)

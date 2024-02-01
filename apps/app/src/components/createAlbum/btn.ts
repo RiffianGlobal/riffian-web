@@ -49,11 +49,14 @@ export class CreateAlbumBtn extends ThemeElement(style) {
   }
 
   render() {
-    return html`<span ?disabled=${this.pending} ?icon=${this.icon} @click="${this.open}" title="Upload your track" class="opacity-60"
+    return html`<span ?disabled=${this.pending} ?icon=${this.icon} @click="${this.open}" title="Upload your track"
         >${when(
           this.pending,
           () => html`<i class="i mdi mdi-loading"></i>`,
-          () => (this.icon ? html`<i class="mdi mdi-file-upload-outline ${this.icon?"text-3xl":"!text-base"} text-white"></i>` : html`Upload`)
+          () =>
+            this.icon
+              ? html`<i class="mdi mdi-tray-arrow-up ${this.icon ? 'text-3xl' : '!text-base'} text-white"></i>`
+              : html`Upload`
         )}</span
       >
       <!-- Prompt -->
