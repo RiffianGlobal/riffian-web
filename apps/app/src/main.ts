@@ -62,9 +62,14 @@ export class AppMain extends ThemeElement('') {
             <network-menu></network-menu>
           </div>
         </div>
-        <div slot="balance">
-          <account-balance class="ui-em"></account-balance>
-        </div>
+        ${when(
+          bridgeStore.bridge.account,
+          () =>
+            html`<div slot="balance">
+              <account-balance class="ui-em"></account-balance>
+            </div>`
+        )}
+
         <div slot="submenu">
           <div class="mx-4 pt-3 border-t border-white/15">
             <div class="flex justify-between">

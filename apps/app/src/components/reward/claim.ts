@@ -50,7 +50,10 @@ export class RewardClaim extends ThemeElement(style) {
     return this.reward.claimed
   }
   get claimable() {
-    if (this.isSocial && rewardStore.socialNotClaimed) return true
+    if (this.isSocial) {
+      if (!tweetStore.selfValid) return true // Both unbound & notClaimed
+      if (rewardStore.socialNotClaimed) return true
+    }
     return this._claimable && !this.reward.claimed && !this.reward.closed
   }
   get processing() {
@@ -58,7 +61,7 @@ export class RewardClaim extends ThemeElement(style) {
   }
   get claimBtnTxt() {
     if (this.reward.closed) return '-'
-    if (this.isSocial && !tweetStore.selfTweetURI) return 'Bind'
+    if (this.isSocial && !tweetStore.selfValid) return 'Bind'
     return this.claimed ? 'Claimed' : 'Claim'
   }
 
@@ -71,7 +74,7 @@ export class RewardClaim extends ThemeElement(style) {
   }
 
   claim = async () => {
-    if (this.isSocial && !this._claimable) return this.bindSocial()
+    if (this.isSocial && (!this._claimable || !tweetStore.selfValid)) return this.bindSocial()
     if (this.isVotes) return this.claimVotes()
     this.pending = true
     try {

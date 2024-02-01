@@ -56,7 +56,7 @@ export class BindSocial extends ThemeElement('') {
     return bridgeStore.bridge.account
   }
   get bound() {
-    return this.ts && !!tweetStore.selfTweetURI
+    return this.ts && tweetStore.selfValid
   }
   get inputValid() {
     return !this.inputErr && this.inputURL && !this.inputPending
@@ -81,9 +81,6 @@ export class BindSocial extends ThemeElement('') {
     if (!this.twitter) return ''
     const { name, id } = this.twitter
     return html`<b>${name}</b> @${id}`
-  }
-  get selfValid() {
-    return !!tweetStore.selfTwitter?.address
   }
 
   onInput = async (e: CustomEvent) => {
@@ -145,7 +142,7 @@ export class BindSocial extends ThemeElement('') {
         () =>
           html`<div class="my-8 text-center">
               ${when(
-                this.selfValid,
+                tweetStore.selfValid,
                 () =>
                   html`<p class="text-lg">${tweetStore.selfTwitter.name}</p>
                     <p><ui-link href=${tweetStore.selfTwitter.url}>@${tweetStore.selfTwitter.id}</ui-link></p>`,
@@ -163,7 +160,7 @@ export class BindSocial extends ThemeElement('') {
               <ui-link link text class="opacity-70 text-xs" @click=${this.chg}>Change</ui-link>
             </p>
             ${when(
-              rewardStore.socialNotClaimed,
+              rewardStore.socialNotClaimed && tweetStore.selfValid,
               () =>
                 html`<p class="mt-8 text-center">
                   <a @click=${this.back} class="text-base hover_underline ui-em cursor-pointer"
