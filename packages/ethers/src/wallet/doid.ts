@@ -55,7 +55,7 @@ export class DoidWallet extends State implements Wallet {
   @property() public doid: string = ''
 
   getAddresses(): Promise<string[]> {
-    return this.connector.getAddresses()
+    return this.connector?.getAddresses()
   }
 
   getProvider(): Promise<JsonRpcApiProvider> {
@@ -66,9 +66,9 @@ export class DoidWallet extends State implements Wallet {
     return this.connector?.getSigner(this.chainId, account)
   }
 
-  switchChain = (chainId: string) => this.connector.switchChain(Number(chainId))
+  switchChain = (chainId: string) => this.connector?.switchChain(Number(chainId))
   updateProvider(chainId: string) {
-    this.connector.updateChainId(chainId)
+    this.connector?.updateChainId(chainId)
     getProvider().update({ chainId })
     emitWalletChange({ chainId })
   }
@@ -76,7 +76,7 @@ export class DoidWallet extends State implements Wallet {
     this.inited = true
     this.state = WalletState.CONNECTING
     try {
-      const wallet = await this.connector.connect({ noModal: !force })
+      const wallet = await this.connector?.connect({ noModal: !force })
       localStorage.setItem(injectedKey, '1')
     } catch (err: any) {
       this.state = WalletState.DISCONNECTED
@@ -86,7 +86,7 @@ export class DoidWallet extends State implements Wallet {
     }
   }
   disconnect = async () => {
-    await this.connector.disconnect()
+    await this.connector?.disconnect()
     localStorage.removeItem(injectedKey)
     this.state = WalletState.DISCONNECTED
     emitWalletChange()

@@ -21,6 +21,16 @@ export const getGraphUri = (name: string) => {
 export const graphQuery = async (name = 'MediaBoard', query: string, variables?: {}, operationName?: string) =>
   http.post(getGraphUri(name), { query, variables, operationName })
 
+export const graphSubscribe = async (
+  name = 'MediaBoard',
+  subscription: string,
+  variables?: {},
+  operationName?: string
+) => {
+  // event-stream
+  http.post(getGraphUri(name), { subscription, variables, operationName })
+}
+
 export const genWhere = (params: Jsonish = {}): string => {
   let conditions: string[] = []
   for (let k in params) {

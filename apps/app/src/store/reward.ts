@@ -242,7 +242,7 @@ export const getUserAllVotes = async (account?: string): Promise<UserWeekly[]> =
   account ||= await getAccount()
   if (!account) return []
   const req = `{
-    userWeeklyVotes( orderBy: "week" orderDirection: "desc" where: {user_: {address: "${account!.toLowerCase()}"}} ) { week votes claimed }
+    userWeeklyVotes ( orderBy: "week" orderDirection: "desc" where: {user_: {address: "${account!.toLowerCase()}"}} ) { week votes claimed }
   }`
   const { userWeeklyVotes } = await graphQuery('MediaBoard', req)
   const [curYear] = [dayjs().year()]

@@ -63,21 +63,13 @@ export const weeklyReward = async () => {
 var weekBegin = 0n
 
 export const latestWeek = async () => {
-  let queryJSON = `{
-      statistic(id:"riffian") {
-        week
-      }
-    }`
+  let queryJSON = `{ statistic(id:"riffian") { week } }`
   let result = await graphQuery('MediaBoard', queryJSON)
   return result
 }
 
 export const weekStatistic = async (week: any) => {
-  let queryJSON = `{
-      weeklyStatistic(id:"${week}") {
-        volumeVote
-      }
-    }`
+  let queryJSON = `{ weeklyStatistic(id:"${week}") { volumeVote } }`
   let result = await graphQuery('MediaBoard', queryJSON)
   return result
 }

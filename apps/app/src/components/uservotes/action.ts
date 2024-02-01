@@ -56,7 +56,7 @@ export const userVotes = async (addr?: string, { orderBy = '', dir = '' } = {}) 
   orderBy ||= 'holding'
   dir ||= 'desc'
   let queryJSON = `{
-    userSubjectVotes(where: { holding_gt: 0, user: "${addr.toLowerCase()}" } orderBy: "${orderBy}" orderDirection: "${dir}") {
+    userSubjectVotes ( where: { holding_gt: 0, user: "${addr.toLowerCase()}" } orderBy: "${orderBy}" orderDirection: "${dir}") {
       holding votes subject { id name image uri supply creator { address } }
     }
   }`

@@ -50,7 +50,6 @@ export class Bridge extends State {
   @property({ skipReset: true }) public readonly store: WalletStore
   @property({ skipReset: true }) public readonly network: Network
   @property({ skipReset: true }) public provider?: JsonRpcApiProvider
-  @property({ skipReset: true }) public wallet?: Wallet
   @property({ skipReset: true }) public doid?: string
   @property({ skipReset: true }) public account?: string
   @property({ value: false }) public alreadyTried!: boolean
@@ -62,13 +61,18 @@ export class Bridge extends State {
     this.selected = undefined
     this.promise = undefined
     this.store = walletStore
-    this.wallet = walletStore.wallet
     reflectProperty(walletStore, 'wallet', this)
     this.account = this.wallet?.account
     reflectSubProperty(walletStore, 'wallet', 'account', this)
     this.doid = this.wallet?.doid
     reflectSubProperty(walletStore, 'wallet', 'doid', this)
     this.network = this.Provider.network
+  }
+  get wallet() {
+    return walletStore.wallet
+  }
+  set wallet(val) {
+    walletStore.wallet = val
   }
 
   async switchNetwork(chainId: ChainId) {
@@ -124,10 +128,10 @@ export class Bridge extends State {
         // force select to doid-connect temporarily
         await this.select(0, false, false)
 
-        if (this.wallet?.injected()) {
-          let wallet = (this.wallet ??
-            walletStore.wallets[0].app ??
-            (await walletStore.wallets[0].import())) as DoidWallet
+        const wallet = (this.wallet ??
+          walletStore.wallets[0].app ??
+          (await walletStore.wallets[0].import())) as DoidWallet
+        if (wallet?.injected()) {
           if (wallet.state == WalletState.CONNECTED) return
           // TODO: only show signup dialog
           this.connectedAccounts = await wallet.getAddresses()
