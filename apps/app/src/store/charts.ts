@@ -18,28 +18,18 @@ class ChartsStore extends State {
     this.init()
   }
 
-  promise: any = null
   fetch = async () => {
-    if (!this.promise) {
-      this.promise = new Promise<void>(async (resolve) => {
-        this.pending = true
-        try {
-          const week = await weeklyStore.getLatest()
-          const { weeklySubjects, subjects, votes } = await chartsReq({ week })
-          this.weeklySubjects = weeklySubjects
-          this.subjects = subjects
-          this.votes = votes
-        } catch (err) {
-          console.error(err)
-        }
-        resolve()
-      }).finally(() => {
-        this.promise = null
-        this.pending = false
-        this.inited = true
-      })
+    try {
+      const week = await weeklyStore.getLatest()
+      const { weeklySubjects, subjects, votes } = await chartsReq({ week })
+      this.weeklySubjects = weeklySubjects
+      this.subjects = subjects
+      this.votes = votes
+    } catch (err) {
+      console.error(err)
     }
-    return this.promise
+    this.pending = false
+    this.inited = true
   }
 
   init = async () => {

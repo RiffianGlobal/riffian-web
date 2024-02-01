@@ -180,7 +180,7 @@ export const getBlockTimestamp = async ({ offset = 0, blockNumber = 0 } = {}) =>
 }
 
 export const getNativeBalance = async (address: string) =>
-  formatUnits(await (await getBridgeProvider()).getBalance(address))
+  address ? formatUnits(await (await getBridgeProvider()).getBalance(address)) : ''
 
 export const estimateGasLimit = async (
   contract: Contract,

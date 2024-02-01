@@ -8,7 +8,7 @@ export class AccountBalance extends ThemeElement('') {
   @property({ type: String }) class = ''
 
   get showBalance() {
-    if (!balanceStore.balance) return '-'
+    if (!balanceStore.balance) return ''
     return (+balanceStore.balance).toFixed(4)
   }
 

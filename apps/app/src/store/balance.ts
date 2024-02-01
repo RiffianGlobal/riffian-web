@@ -14,18 +14,13 @@ class BalanceStore extends State {
 
   promise: any = null
   fetch = async () => {
-    if (!this.promise) {
-      this.promise = new Promise<void>(async (resolve) => {
-        const acc = await getAccount()
-        const newBalance = await getNativeBalance(acc)
-        if (newBalance != this.balance) emitter.emit('block-balance', acc)
-        this.balance = acc ? newBalance : ''
-        resolve()
-      }).finally(() => {
-        this.promise = null
-      })
-    }
-    return this.promise
+    let newBalance = ''
+    try {
+      const acc = await getAccount()
+      if (acc) newBalance = await getNativeBalance(acc)
+      if (newBalance != this.balance) emitter.emit('block-balance', acc)
+    } catch {}
+    this.balance = newBalance
   }
 
   provider: any
@@ -39,6 +34,7 @@ class BalanceStore extends State {
     let unlisten = await this.listen()
     emitter.on('wallet-changed', async () => {
       unlisten()
+      this.fetch()
       unlisten = await this.listen()
     })
   }
