@@ -18,9 +18,9 @@
     @apply w-full flex lg_mt-8 px-4 lg_px-8 gap-4 lg_gap-12;
   }
   .ui-board {
-    @apply grow;
+    /* @apply grow; */
     & .ui-board-header {
-      @apply h-16 md_h-20 p-1.5 flex justify-between;
+      @apply h-auto md_h-20 p-1.5 flex justify-between;
       & .ui-board-lead {
         @apply flex flex-col gap-1.5;
         & h5 {

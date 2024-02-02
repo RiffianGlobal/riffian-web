@@ -110,12 +110,12 @@ export class TopAlbum extends ThemeElement(style) {
 
   headerEle = () => {
     return this.brief
-      ? html` <div class="w-8">Rank</div>
+      ? html` ${when(!this.isMobi, () => html`<div class="w-8">Rank</div>`)}
           <div class="flex-shrink">Collection</div>
           <div class="flex-auto"></div>
           <div class="num flex-auto w-32">Volume</div>`
       : html`
-          <div class="w-16">Index</div>
+          ${when(!this.isMobi, () => html`<div class="w-16">Index</div>`)}
           <div class="flex-auto">Name</div>
           <div class="flex-none w-40">Created</div>
           <div class="num flex-none w-24">Volume</div>
@@ -127,15 +127,19 @@ export class TopAlbum extends ThemeElement(style) {
   itemEle = (item: any, i: number) => {
     return this.brief
       ? html`<div class="item flex items-center" @click=${(e: CustomEvent) => this.go2(e, item)}>
-          <div class="flex-none w-8 text-center text-sm font-light opacity-70">${i + 1}</div>
-          <div class="flex-shrink flex justify-center">
-            <img-loader .src=${item.cooked.src} class="subject-img"></img-loader>
+          ${when(
+            !this.isMobi,
+            () => html`<div class="flex-none w-8 text-center text-sm font-light opacity-70">${i + 1}</div>`
+          )}
+
+          <div class="subject-img flex-shrink flex justify-center">
+            <img-loader .src=${item.cooked.src} class="w-14 rounded-lg"></img-loader>
           </div>
           <div class="subject-lines flex-auto">
             <div class="subject-line1">
               <p class="subject-name ${classMap({ limit: this.brief })}">${item.name}</p>
               <a href=${item.uri} class="flex-none ml-1.5" target="_blank">
-                <i class="subject-play mdi mdi-play-circle"></i>
+                <i class="subject-play mdi mdi-play-circle-outline"></i>
               </a>
             </div>
             ${when(
@@ -153,9 +157,15 @@ export class TopAlbum extends ThemeElement(style) {
         </div>`
       : html`
           <div class="item flex items-center hover_cursor-pointer" @click=${(e: CustomEvent) => this.go2(e, item)}>
-            <div class="flex-none w-16 pl-4 text-sm font-light opacity-75">
-              ${i + 1} ${when(this.subjects.length > 3 && i < 3, () => html`<i class="mdi mdi-fire text-red-400"></i>`)}
-            </div>
+            ${when(
+              !this.isMobi,
+              () =>
+                html`<div class="flex-none w-16 pl-4 text-sm font-light opacity-75">
+                  ${i + 1}
+                  ${when(this.subjects.length > 3 && i < 3, () => html`<i class="mdi mdi-fire text-red-400"></i>`)}
+                </div>`
+            )}
+
             <div class="flex-auto flex">
               <div class="w-[3.25rem] h-[3.25rem] mr-4 rounded-lg">
                 <img-loader src=${item.cooked.src} class="rounded-lg"></img-loader>

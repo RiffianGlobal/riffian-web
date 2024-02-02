@@ -42,6 +42,14 @@ export class LatestVotes extends ThemeElement(style) {
     return chartsStore.votes.concat(this.moreVotes)
   }
 
+  itemMobi = (item) => {
+    return html`
+      <ui-link class="flex justify-center items-center" href=${`/user/${item.voter.address}`}>
+        <ui-address class="relative -top-1 text-xl" .address=${item.voter.address} avatar hideAddr></ui-address>
+      </ui-link>
+    `
+  }
+
   timeAgo = async function* (timestamp: number | string) {
     while (true) {
       yield timeAgo(timestamp)
@@ -50,50 +58,55 @@ export class LatestVotes extends ThemeElement(style) {
   }
 
   render() {
-    return html` <div
-      role="list"
-      class="ui-list bidders ${classMap(this.$c([this.morePending ? 'loading' : 'hover']))}"
-    >
-      <div class="flex header border-bottom">
+    return html`<div class="w-full p-2 text-sm text-neutral-400 border-b" style="border-color: #2e3349">
         <div class="w-full">Bidders</div>
       </div>
-      ${when(
-        this.loading,
-        () => html`
-          <div name="Loading" class="doc-intro">
-            <div class="w-full flex flex-col gap-8">
-              ${repeat(
-                [...Array(this.skeletonLen).keys()],
-                () => html`<loading-skeleton num="3" class="${this.isMobi ? '' : 'sm'}"></loading-skeleton>`
-              )}
+      <div role="list" class="ui-list bidders ${classMap(this.$c([this.morePending ? 'loading' : 'hover']))}">
+        ${when(
+          this.loading,
+          () => html`
+            <div name="Loading" class="doc-intro">
+              <div class="w-full flex flex-col gap-8">
+                ${repeat(
+                  [...Array(this.skeletonLen).keys()],
+                  () => html`<loading-skeleton num="3" class="${this.isMobi ? '' : 'sm'}"></loading-skeleton>`
+                )}
+              </div>
             </div>
-          </div>
-        `,
-        () => html`
-          ${repeat(
-            this.votes,
-            (item: any) =>
-              html`<div class="item flex items-center pr-0.5">
-                <div class="w-full flex items-center justify-between gap-2">
-                  <ui-link href=${`/user/${item.voter.address}`}>
-                    <ui-address
-                      class="relative -top-1 text-xl"
-                      .address=${item.voter.address}
-                      avatar
-                      hideAddr
-                    ></ui-address>
-                  </ui-link>
-                  <div class="flex flex-col justify-center items-end text-right">
-                    <p class="opacity-95 text-base">${formatUnits(item.value)}</p>
-                    <p class="relative text-right text-xs leading-none text-neutral-400 whitespace-nowrap h-3">
-                      <span class="absolute right-0">${asyncReplace(this.timeAgo(item.time))}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>`
-          )}
-        `
-      )}
-    </div>`
+          `,
+          () =>
+            html`
+            ${repeat(
+              this.votes,
+              (item: any, idx) => html`
+                ${when(
+                  !this.isMobi,
+                  () => html`
+                    <div class="item flex items-center pr-0.5">
+                      <div class="w-full flex items-center justify-between gap-2">
+                        <ui-link href=${`/user/${item.voter.address}`}>
+                          <ui-address
+                            class="relative -top-1 text-xl"
+                            .address=${item.voter.address}
+                            avatar
+                            hideAddr
+                          ></ui-address>
+                        </ui-link>
+                        <div class="flex flex-col justify-center items-end text-right">
+                          <p class="opacity-95 text-base">${formatUnits(item.value)}</p>
+                          <p class="relative text-right text-xs leading-none text-neutral-400 whitespace-nowrap h-3">
+                            <span class="absolute right-0">${asyncReplace(this.timeAgo(item.time))}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  `,
+                  () => html`${when(idx < 5, () => html`${this.itemMobi(item)}`)}`
+                )}
+              `
+            )}
+          </div>`
+        )}
+      </div>`
   }
 }
