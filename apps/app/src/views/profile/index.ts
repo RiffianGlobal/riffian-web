@@ -25,8 +25,12 @@ export class ProfilePage extends ThemeElement(style) {
   @state() err = ''
   @state() inited = false
 
+  get account() {
+    return bridgeStore.bridge.account
+  }
+
   get itsMe() {
-    return this.acc == bridgeStore.bridge.account
+    return this.acc == this.account
   }
   get loading() {
     return !this.inited && this.pending

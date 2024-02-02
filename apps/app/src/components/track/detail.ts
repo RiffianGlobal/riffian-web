@@ -88,6 +88,7 @@ export class TrackDetail extends ThemeElement(style) {
       this.getPrice()
       const { subject } = await subjectInfo(this.trackAddress)
       this.subject = subject
+      this.emit('change', subject)
       this.readFromTwitter()
     } catch (e: any) {
       this.promptMessage = e

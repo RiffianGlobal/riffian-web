@@ -1,0 +1,16 @@
+:host {
+  @apply relative min-h-60;
+}
+.chart-container {
+  @apply rounded-2xl min-h-full;
+  border: 1px solid #30354d;
+}
+.tv-lightweight-charts {
+  @apply w-full;
+}
+.ticker-up {
+  color: #089981;
+}
+.ticker-down {
+  color: #f23645;
+}

@@ -1,6 +1,6 @@
 {
   "name": "@riffian-web/app",
-  "version": "0.199.4",
+  "version": "0.200.0",
   "type": "module",
   "private": true,
   "scripts": {
@@ -19,7 +19,11 @@
     "@sentry/browser": "^7.98.0",
     "dayjs": "1.11.10",
     "fetch-jsonp": "^1.3.0",
+    "lightweight-charts": "^4.1.2",
     "vite-plugin-pwa": "^0.17.4"
+  },
+  "devDependencies": {
+    "vite-plugin-commonjs": "^0.10.1"
   },
   "license": "MIT"
 }

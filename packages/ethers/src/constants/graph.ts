@@ -9,7 +9,8 @@ export const SubGraph: ChainConf = {
   }
 }
 
-export const getGraphUri = (name: string) => {
+export const getGraphUri = async (name: string) => {
+  await new Promise<void>((resolve) => setTimeout(resolve))
   let uri = SubGraph[name][Network.chainId]
   if (!uri) {
     console.error(`Not available for selected network(chain id ${Network.chainId}). Fallback to default chainid`)
@@ -19,7 +20,7 @@ export const getGraphUri = (name: string) => {
 }
 
 export const graphQuery = async (name = 'MediaBoard', query: string, variables?: {}, operationName?: string) =>
-  http.post(getGraphUri(name), { query, variables, operationName })
+  http.post(await getGraphUri(name), { query, variables, operationName })
 
 export const graphSubscribe = async (
   name = 'MediaBoard',
@@ -28,7 +29,7 @@ export const graphSubscribe = async (
   operationName?: string
 ) => {
   // event-stream
-  http.post(getGraphUri(name), { subscription, variables, operationName })
+  http.post(await getGraphUri(name), { subscription, variables, operationName })
 }
 
 export const genWhere = (params: Jsonish = {}): string => {

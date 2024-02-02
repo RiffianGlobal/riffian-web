@@ -5,4 +5,5 @@ declare type graphParams = {
   week?: tsIsh
   first?: 10 | number
   skip?: 0 | number
+  id?: string
 }
