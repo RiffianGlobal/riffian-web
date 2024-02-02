@@ -68,7 +68,7 @@ export class AppMain extends ThemeElement('') {
           </div>
         </div>
         ${when(
-          bridgeStore.bridge.account,
+          bridgeStore.bridge.account && !this.isMobi,
           () =>
             html`<div slot="balance">
               <account-balance class="ui-em"></account-balance>

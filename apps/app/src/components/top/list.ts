@@ -93,6 +93,29 @@ export class TopAlbum extends ThemeElement(style) {
     this.fetch()
   }
 
+  fullItemMobi = (item: any) => {
+    return html`<div class="w-full overflow-hidden flex gap-x-2" @click=${(e: CustomEvent) => this.go2(e, item)}>
+      <div class="w-[3.25rem] h-[3.25rem] mr-2 rounded-lg">
+        <img-loader src=${item.image} class="w-[3.25rem] rounded-lg"></img-loader>
+      </div>
+      <div class="subject-lines flex-auto overflow-hidden">
+        <div class="subject-line1">
+          <p class="subject-name ${classMap({ limit: this.brief })}">${item.name}</p>
+          <a href=${item.uri} class="flex-none ml-1.5" target="_blank">
+            <i class="subject-play mdi mdi-play-circle-outline"></i>
+          </a>
+        </div>
+        <div class="text-xs text-gray-400/80">
+          <span class="mr-1 text-gray-400/60">Price:</span>${item.cooked.price}
+        </div>
+      </div>
+      <div class="subject-lines num flex-initial !w-12 text-sm items-end">
+        <span class="subject-line1">${item.cooked.total}</span>
+        <span class="text-xs"><chg-stat .chg=${item.cooked.chg}></chg-stat></span>
+      </div>
+    </div>`
+  }
+
   go2 = (e: CustomEvent, item: any) => {
     e.preventDefault()
     e.stopPropagation()
@@ -117,10 +140,14 @@ export class TopAlbum extends ThemeElement(style) {
       : html`
           ${when(!this.isMobi, () => html`<div class="w-16">Index</div>`)}
           <div class="flex-auto">Name</div>
-          <div class="flex-none w-40">Created</div>
+          ${when(!this.isMobi, () => html`<div class="flex-none w-40">Created</div>`)}
           <div class="num flex-none w-24">Volume</div>
-          <div class="num flex-none w-24">Price</div>
-          <div class="num flex-none w-24">24H</div>
+          ${when(
+            !this.isMobi,
+            () =>
+              html`<div class="num flex-none w-24">Price</div>
+                <div class="num flex-none w-24">24H</div>`
+          )}
         `
   }
 
@@ -135,7 +162,7 @@ export class TopAlbum extends ThemeElement(style) {
           <div class="subject-img flex-shrink flex justify-center">
             <img-loader .src=${item.cooked.src} class="w-14 rounded-lg"></img-loader>
           </div>
-          <div class="subject-lines flex-auto">
+          <div class="subject-lines flex-auto overflow-hidden">
             <div class="subject-line1">
               <p class="subject-name ${classMap({ limit: this.brief })}">${item.name}</p>
               <a href=${item.uri} class="flex-none ml-1.5" target="_blank">
@@ -156,34 +183,35 @@ export class TopAlbum extends ThemeElement(style) {
           </div>
         </div>`
       : html`
-          <div class="item flex items-center hover_cursor-pointer" @click=${(e: CustomEvent) => this.go2(e, item)}>
-            ${when(
-              !this.isMobi,
-              () =>
-                html`<div class="flex-none w-16 pl-4 text-sm font-light opacity-75">
+          ${when(
+            !this.isMobi,
+            () => html`
+              <div class="item flex items-center hover_cursor-pointer" @click=${(e: CustomEvent) => this.go2(e, item)}>
+                <div class="flex-none w-16 pl-4 text-sm font-light opacity-75">
                   ${i + 1}
                   ${when(this.subjects.length > 3 && i < 3, () => html`<i class="mdi mdi-fire text-red-400"></i>`)}
-                </div>`
-            )}
-
-            <div class="flex-auto flex">
-              <div class="w-[3.25rem] h-[3.25rem] mr-4 rounded-lg">
-                <img-loader src=${item.cooked.src} class="rounded-lg"></img-loader>
+                </div>
+                <div class="flex-auto flex">
+                  <div class="w-[3.25rem] h-[3.25rem] mr-4 rounded-lg">
+                    <img-loader src=${item.cooked.src} class="rounded-lg"></img-loader>
+                  </div>
+                  <div>
+                    <p class="subject-name subject-line1 lg_text-base truncate">${item.name}</p>
+                    <i class="subject-play mdi mdi-play-circle"></i>
+                  </div>
+                </div>
+                <div class="flex-none w-40 text-xs text-gray-300/60">${format(item.createdAt)}</div>
+                <div class="flex-none w-24 text-right text-sm"><span>${item.cooked.total}</span></div>
+                <div class="flex-none w-24 text-right text-sm">
+                  <span>${item.cooked.price}</span>
+                </div>
+                <div class="flex-none w-24 text-right text-sm leading-none">
+                  <span><chg-stat .chg=${item.cooked.chg}></chg-stat></span>
+                </div>
               </div>
-              <div>
-                <p class="subject-name subject-line1 lg_text-base truncate">${item.name}</p>
-                <i class="subject-play mdi mdi-play-circle"></i>
-              </div>
-            </div>
-            <div class="flex-none w-40 text-xs text-gray-300/60">${format(item.createdAt)}</div>
-            <div class="flex-none w-24 text-right text-sm"><span>${item.cooked.total}</span></div>
-            <div class="flex-none w-24 text-right text-sm">
-              <span>${item.cooked.price}</span>
-            </div>
-            <div class="flex-none w-24 text-right text-sm leading-none">
-              <span><chg-stat .chg=${item.cooked.chg}></chg-stat></span>
-            </div>
-          </div>
+            `,
+            () => html`${this.fullItemMobi(item)}`
+          )}
         `
   }
 

@@ -134,7 +134,7 @@ export class WeeklyTop extends ThemeElement(style) {
                   <div class="subject-img flex-shrink flex justify-center">
                     <img-loader .src=${item.cooked.src} class="w-14 rounded-lg"></img-loader>
                   </div>
-                  <div class="subject-lines flex-auto">
+                  <div class="subject-lines flex-auto overflow-hidden">
                     <div class="subject-line1">
                       <p class="subject-name ${classMap({ limit: this.brief })}">${item.name}</p>
                       <a href=${item.uri} class="flex-none ml-1.5" target="_blank">
