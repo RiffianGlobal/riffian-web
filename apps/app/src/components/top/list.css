@@ -4,8 +4,9 @@
     @apply lg_max-w-40;
   }
 }
+
 .subject-img {
-  @apply w-12 h-12 md_w-14 md_h-14 rounded-lg cursor-pointer;
+  @apply w-14 h-14 rounded-lg cursor-pointer;
 }
 .subject-lines {
   @apply flex flex-col gap-1 leading-none;

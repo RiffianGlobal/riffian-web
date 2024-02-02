@@ -12,6 +12,7 @@ import style from './btn.css?inline'
 export class CreateAlbumBtn extends ThemeElement(style) {
   bindBridge: any = new StateController(this, bridgeStore)
   @property({ type: Boolean }) icon = false
+  @property({ type: String }) btnClass = ''
 
   @state() dialogCreate = false
   @state() dialogBind = false
@@ -49,13 +50,18 @@ export class CreateAlbumBtn extends ThemeElement(style) {
   }
 
   render() {
-    return html`<span ?disabled=${this.pending} ?icon=${this.icon} @click="${this.open}" title="Upload your track"
+    return html`<span
+        ?disabled=${this.pending}
+        ?icon=${this.icon}
+        @click="${this.open}"
+        class="${this.btnClass}"
+        title="Upload your track"
         >${when(
           this.pending,
           () => html`<i class="i mdi mdi-loading"></i>`,
           () =>
             this.icon
-              ? html`<i class="mdi mdi-tray-arrow-up ${this.icon ? 'text-3xl' : '!text-base'} text-white"></i>`
+              ? html`<i class="mdi mdi-tray-arrow-up ${this.icon ? 'text-2xl' : '!text-base'} text-white"></i>`
               : html`Upload`
         )}</span
       >

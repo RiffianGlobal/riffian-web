@@ -68,7 +68,7 @@ export class AppMain extends ThemeElement('') {
           </div>
         </div>
         ${when(
-          bridgeStore.bridge.account,
+          bridgeStore.bridge.account && !this.isMobi,
           () =>
             html`<div slot="balance">
               <account-balance class="ui-em"></account-balance>
@@ -90,7 +90,7 @@ export class AppMain extends ThemeElement('') {
               html` <ui-nav slot="right" class="text-lg">
                 <ui-link href="/" nav alias="/">Home</ui-link>
                 <ui-link href="/profile" nav>Profile</ui-link>
-                <create-album-btn class="!opacity-60"></create-album-btn>
+                <create-album-btn btnClass="opacity-60"></create-album-btn>
               </ui-nav>`
           )}
         </div>
@@ -104,14 +104,22 @@ export class AppMain extends ThemeElement('') {
               style="background-color: rgba(22, 24, 49, 1)"
             >
               <div class="w-full grid grid-cols-4 justify-center items-center">
-                <ui-link href="/" nav alias="/" class="text-center"
-                  ><i class="mdi mdi-home-outline text-3xl"></i
-                ></ui-link>
-                <create-album-btn icon class="text-center !text-white"></create-album-btn>
-                <i class="mdi mdi-gift-outline text-3xl text-center" @click=${this.openReward}></i>
-                <ui-link href="/profile" nav class="text-center !opacity-100"
-                  ><i class="mdi mdi-account-outline text-3xl"></i
-                ></ui-link>
+                <div class="flex flex-col justify-center items-center">
+                  <ui-link href="/" nav alias="/">
+                    <i class="mdi mdi-home-outline text-2xl"></i>
+                  </ui-link>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                  <create-album-btn icon btnClass="p-0 text-2xl"></create-album-btn>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                  <i class="mdi mdi-gift-outline text-2xl" @click=${this.openReward}></i>
+                </div>
+                <div class="flex flex-col justify-center items-center">
+                  <ui-link href="/profile" nav class="!opacity-100"
+                    ><i class="mdi mdi-account-outline text-2xl"></i
+                  ></ui-link>
+                </div>
               </div>
             </ui-nav>`
         )}
