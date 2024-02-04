@@ -135,7 +135,7 @@ export class Bridge extends State {
           if (wallet.state == WalletState.CONNECTED) return
           // TODO: only show signup dialog
           this.connectedAccounts = await wallet.getAddresses()
-          if (this.connectedAccounts[0]) await this.select(0, false)
+          if (this.connectedAccounts?.[0]) await this.select(0, false)
         }
 
         this.connecting = undefined
