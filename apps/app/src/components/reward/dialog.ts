@@ -1,7 +1,7 @@
 import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
 import { StateController, rewardStore } from '~/store/reward'
 // Components
-import { ThemeElement, html, customElement, state, when } from '@riffian-web/ui/shared/theme-element'
+import { ThemeElement, html, customElement, state, when, property } from '@riffian-web/ui/shared/theme-element'
 import './tasks'
 import '@riffian-web/ui/dialog'
 
@@ -11,7 +11,7 @@ export class RewardDialog extends ThemeElement('') {
   bindStore: any = new StateController(this, rewardStore)
 
   @state() err = ''
-  @state() scene = ''
+  @property() scene = ''
 
   close = () => {
     this.emit('close')

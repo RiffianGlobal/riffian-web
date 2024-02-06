@@ -3,7 +3,7 @@ import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 // Components
 import '@riffian-web/ui/button'
 import './dialog'
-import './social'
+import '~/components/reward/dialog'
 import emitter from '@lit-web3/base/emitter'
 import { getSocials } from './action'
 
@@ -81,7 +81,7 @@ export class CreateAlbumBtn extends ThemeElement(style) {
       )}
       ${when(
         this.dialogBind,
-        () => html`<create-social-dialog @close=${() => (this.dialogBind = false)}></create-social-dialog>`
+        () => html`<reward-dialog scene="social" @close=${() => (this.dialogBind = false)}></reward-dialog>`
       )}
       ${when(this.dialogCreate, () => html`<create-album-dialog @close=${this.close}></create-album-dialog>`)} `
   }
