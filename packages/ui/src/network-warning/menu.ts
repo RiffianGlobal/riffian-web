@@ -38,7 +38,10 @@ export class NetworkMenu extends ThemeElement(style) {
     this.menu = false
     this.pending = true
     try {
-      await this.bridge.switchNetwork(network.chainId)
+      // await this.bridge.switchNetwork(network.chainId)
+      // @todo graph is not reloaded, so simply reload page at the moment
+      this.network.setChainId(network.chainId)
+      globalThis.location.reload()
     } catch (err: any) {
       if (err.code !== 4001) {
         console.warn('switch network failed with error:', err)
@@ -61,10 +64,16 @@ export class NetworkMenu extends ThemeElement(style) {
         btnClass="text"
       >
         <div slot="button" class="inline-flex justify-center items-center">
-          <i
-            acronym=${this.cut(this.current.title)}
-            class="ui-network-icon ${classMap(this.$c([this.native?.symbol, { testnet: !this.current.mainnet }]))}"
-          ></i>
+          ${when(
+            this.pending,
+            () => html`<i class="mdi mdi-loading"></i>`,
+            () => html`
+              <i
+                acronym=${this.cut(this.current.title)}
+                class="ui-network-icon ${classMap(this.$c([this.native?.symbol, { testnet: !this.current.mainnet }]))}"
+              ></i>
+            `
+          )}
         </div>
         <ul class="ui-option">
           ${repeat(

@@ -61,7 +61,7 @@ export class Bridge extends State {
     this.selected = undefined
     this.promise = undefined
     this.store = walletStore
-    reflectProperty(walletStore, 'wallet', this)
+    // reflectProperty(walletStore, 'wallet', this)
     this.account = this.wallet?.account
     reflectSubProperty(walletStore, 'wallet', 'account', this)
     this.doid = this.wallet?.doid
@@ -71,14 +71,16 @@ export class Bridge extends State {
   get wallet() {
     return walletStore.wallet
   }
-  set wallet(val) {
-    walletStore.wallet = val
-  }
+  // set wallet(val) {
+  //   walletStore.wallet = val
+  // }
 
   async switchNetwork(chainId: ChainId) {
-    if (this.wallet) this.wallet.switchChain(chainId)
-    this.network.chainId = chainId
-    this.Provider.update({ chainId })
+    if (this.wallet) await this.wallet.switchChain(chainId)
+    // only update chain id when switchChain succeeded
+    this.network.setChainId(chainId)
+    emitWalletChange()
+    // this.Provider.update({ chainId })
   }
   async regToken(token: Tokenish, { alt = false, ext = 'svg' } = {}) {
     const { ethereum } = window
@@ -162,20 +164,23 @@ export class Bridge extends State {
     const selected = (this.selected = walletStore.wallets[i])
     if (!this.promise)
       this.promise = (async () => {
-        const wallet = selected.app ?? (await selected.import())
+        const wallet = (selected.app ??= await selected.import())
         try {
           if (connect) await wallet.connect({ force })
         } catch (err) {
-          throw err
-        } finally {
-          this.promise = undefined
+          console.warn(err)
+          //   throw err
+          // } finally {
+          //   this.promise = undefined
         }
         // if (wallet.state === WalletState.CONNECTED) this.wallet = walletStore.wallet = wallet
         const curWallet = walletStore.wallet
         walletStore.wallet = wallet
         if (!curWallet || force) emitWalletChange({ chainId: wallet.chainId })
         return this.wallet
-      })()
+      })().finally(() => {
+        this.promise = undefined
+      })
     return this.promise
   }
 }

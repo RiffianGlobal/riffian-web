@@ -129,7 +129,8 @@ class RewardStore extends State {
     emitter.on('block-world', this.listener)
     emitter.on('block-balance', this.listener)
   }
-  listener = async (acc: string) => {
+  listener = async (evt: CustomEvent) => {
+    const acc = evt.detail
     if (acc === (await getAccount())) this.update()
   }
 

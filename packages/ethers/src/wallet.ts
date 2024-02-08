@@ -21,11 +21,11 @@ export interface Wallet extends State {
   state: WalletState
   account: string
   doid: string
-  chainId: string
+  readonly chainId: string
   getAddresses: () => Promise<string[]>
   getProvider: () => Promise<Provider>
   getSigner: (account: string) => Promise<Signer>
-  switchChain: (chainId: string) => any
+  switchChain: (chainId: string) => Promise<void>
   updateProvider: (chainId: string) => any
   connect: (config?: { force: boolean }) => any
   disconnect: () => any

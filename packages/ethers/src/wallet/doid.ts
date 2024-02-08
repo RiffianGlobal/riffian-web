@@ -2,7 +2,7 @@ import { Wallet, WalletState, emitWalletChange } from '../wallet'
 import { State, property } from '../state'
 import { JsonRpcApiProvider, JsonRpcSigner } from 'ethers'
 import getProvider from '../provider'
-import { chainIdStr } from '../constants/networks'
+import Network from '../networks'
 
 const injectedKey = 'doid-connect.injected'
 
@@ -14,23 +14,26 @@ export class DoidWallet extends State implements Wallet {
   }
   private connector: any
   resolved = false
+  private chains?: any[]
   private init = async () => {
     let { doid, doidTestnet, DOIDConnectorEthers } = await import('@doid/connect-ethers')
+    this.chains = [doid, doidTestnet]
     this.connector = new DOIDConnectorEthers()
-    this.connector.updateChains([doid, doidTestnet])
     const connectorOptions = {
       appName: 'Riffian',
       themeMode: 'dark',
+      chains: this.chains,
+      doidNetwork: Number(Network.chainId) == doidTestnet.id ? doidTestnet : doid,
       walletConnectEnabled: true,
       walletConnectId: 'b9850e108fc2d1e587dd41ce1fea0a16'
     }
-    if (import.meta.env.MODE === 'development') Object.assign(connectorOptions, { doidNetwork: doidTestnet })
+    // if (import.meta.env.MODE === 'development') Object.assign(connectorOptions, { doidNetwork: doidTestnet })
     this.connector.updateOptions(connectorOptions)
-    this.account = this.connector.account
+    // this.account = this.connector.account
     this.connector.subscribe((_: any, value: any) => {
       this.account = value
     }, 'account')
-    this.doid = this.connector.doid
+    // this.doid = this.connector.doid
     this.connector.subscribe((_: any, value: any) => {
       this.doid = value
       if (this.doid && !value) {
@@ -38,36 +41,63 @@ export class DoidWallet extends State implements Wallet {
         this.disconnect()
       }
     }, 'doid')
-    if (this.connector.chainId) this.chainId = chainIdStr(this.connector.chainId)
-    this.connector.subscribe((_: any, value: number | undefined) => {
-      if (!value) return
-      this.chainId = value ? chainIdStr(value) : ''
-      this.doid = this.connector.doid ?? ''
-      this.updateProvider(this.chainId)
-    }, 'chainId')
+    // No need to expose chainId, Network.chainId is used when getting provider or contract instance
+    // if (this.connector.chainId) this.chainId = chainIdStr(this.connector.chainId)
+    // this.connector.subscribe((_: any, value: number | undefined) => {
+    //   if (!value) return
+    //   this.chainId = value ? chainIdStr(value) : ''
+    //   this.doid = this.connector.doid ?? ''
+    //   this.updateProvider(this.chainId)
+    // }, 'chainId')
+
+    // switch to Network.chainId
+    await this.connector.switchChain(Number(Network.chainId)).catch(console.warn)
     this.resolved = true
   }
 
   //-- Wallet interface implementation --
   @property() public state: WalletState = WalletState.DISCONNECTED
   @property() public account = ''
-  @property() public chainId: string = ''
+  get chainId() {
+    return Network.chainId
+  }
   @property() public doid: string = ''
 
   getAddresses(): Promise<string[]> {
-    return this.connector?.getAddresses()
+    return this.connector?.getAddresses().catch((e: any) => {
+      console.warn(e)
+      return []
+    })
   }
 
   getProvider(): Promise<JsonRpcApiProvider> {
-    return this.connector?.getProvider()
+    return this.connector?.getProvider(Number(Network.chainId))
   }
 
   getSigner(account: string): Promise<JsonRpcSigner> {
-    return this.connector?.getSigner(this.chainId, account)
+    return this.connector?.getSigner(Number(Network.chainId), account)
   }
 
-  switchChain = (chainId: string) => this.connector?.switchChain(Number(chainId))
+  switchChain = (chainId: string) => {
+    console.debug(`Switch to chain id ${chainId}`)
+    this.chains?.find((x) => {
+      if (x.id == chainId) {
+        this.connector.updateOptions({ doidNetwork: x })
+        return true
+      }
+      return false
+    })
+    // this.connector?.updateChainId(chainId)
+    return this.connector
+      .connect({ noModal: true })
+      .then(() => this.connector?.switchChain(Number(chainId)))
+      .then(() => console.log('switched'))
+      .catch((e) => console.warn(e))
+    //.finally(() => this.updateProvider(chainId))
+    // this.connector?.connect({ noModal: true })
+  }
   updateProvider(chainId: string) {
+    console.debug(`Update provider with chain id ${chainId}`)
     this.connector?.updateChainId(chainId)
     getProvider().update({ chainId })
     emitWalletChange({ chainId })
@@ -77,6 +107,9 @@ export class DoidWallet extends State implements Wallet {
     this.state = WalletState.CONNECTING
     try {
       const wallet = await this.connector?.connect({ noModal: !force })
+      console.debug('Connect wallet returns', wallet)
+      this.account = wallet?.account
+      this.doid = wallet?.doid
       localStorage.setItem(injectedKey, '1')
     } catch (err: any) {
       this.state = WalletState.DISCONNECTED
@@ -97,16 +130,17 @@ export class DoidWallet extends State implements Wallet {
     return new Promise((resolve) => {
       if (this.resolved) resolve(this)
       const resolver = () => {
-        this.resolved = true
+        // this.resolved = true
         resolve(this)
       }
       let retryTimes = 0
-      const detectChainId = async () => {
-        if (this.chainId) resolver()
-        else if (retryTimes++ < 30) setTimeout(detectChainId, 10)
+      // chainId can not be detected if no connection yet, so check resolved.
+      const detectResolved = async () => {
+        if (this.resolved) resolver()
+        else if (retryTimes++ < 30) setTimeout(detectResolved, 10)
         else resolver()
       }
-      detectChainId()
+      detectResolved()
     })
   }
   injected = () => !!localStorage.getItem(injectedKey)

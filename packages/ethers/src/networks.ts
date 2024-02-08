@@ -23,13 +23,25 @@ export const getNetwork = (req?: string, exactly: boolean = false): NetworkInfo 
 export class Network extends State {
   public static readonly mainnetChainId: ChainId = mainnetChainId
   public static readonly defaultChainId: ChainId = defaultChainId
-  public static chainId: ChainId
+  private static _chainId: ChainId = defaultChainId
+  public static get chainId(): ChainId {
+    return Network._chainId
+  }
+  // make set chainId private to Network only
+  private static set chainId(value: ChainId) {
+    Network._chainId = value
+  }
   public opts: Record<string, unknown> = {}
-  @property() chainId?: ChainId
+  @property() private chainId: ChainId
   constructor(chainId?: ChainId, opts = {}) {
     super()
-    this.chainId = Network.chainId = chainId ?? walletStore.walletChainId ?? Network.defaultChainId
+    if (chainId) Network.chainId = chainId
+    this.chainId = Network.chainId
     Object.assign(this.opts, opts)
+  }
+  /** SHOULD only be called in bridge::switchNetwork when succeeded */
+  public setChainId(chainId: ChainId) {
+    this.chainId = Network.chainId = chainId
   }
   get Networks() {
     return Networks
