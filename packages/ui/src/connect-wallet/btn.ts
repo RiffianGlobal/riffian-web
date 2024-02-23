@@ -82,6 +82,6 @@ export class ConnectWalletBtn extends ThemeElement(style) {
         <slot name="submenu"></slot>
       </ui-drop>`
     // Dialog Button
-    else return html` <ui-button class="outlined" sm @click=${() => this.show()}>Connect Wallet</ui-button> `
+    else return html` <ui-button class="outlined" sm @click=${() => this.show()}>Sign In</ui-button> `
   }
 }

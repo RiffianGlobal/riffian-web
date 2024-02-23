@@ -43,7 +43,7 @@ export class NewAlbum extends ThemeElement('') {
       return
     }
     if (!bridgeStore.bridge.account) {
-      this.result = 'Connect wallet first!'
+      this.result = 'Sign In first!'
       this.err = true
       return
     }

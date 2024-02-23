@@ -107,7 +107,7 @@ export class DoidWallet extends State implements Wallet {
     this.state = WalletState.CONNECTING
     try {
       const wallet = await this.connector?.connect({ noModal: !force })
-      console.debug('Connect wallet returns', wallet)
+      console.debug('Sign In returns', wallet)
       this.account = wallet?.account
       this.doid = wallet?.doid
       localStorage.setItem(injectedKey, '1')

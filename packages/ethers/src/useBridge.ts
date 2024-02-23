@@ -201,6 +201,7 @@ export const estimateGasLimit = async (
 export const assignOverrides = async (overrides: any, ...args: any[]) => {
   let [contract, method, parameters, { gasLimitPer, nonce } = <any>{}] = args
   const provider = await getBridgeProvider()
+  if (!provider) throw new Error('No Provider')
   if (nonce || provider.nonce) overrides.nonce = nonce || provider.nonce
   let gasLimit
   try {

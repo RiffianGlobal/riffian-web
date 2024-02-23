@@ -22,6 +22,7 @@ export const rewardMap = [
     requireSig: true,
     check: 'isSocialVerifyClaimed',
     once: true,
+    order: 1,
     closed: false
   },
   {
@@ -31,6 +32,7 @@ export const rewardMap = [
     write: 'claimVote',
     check: 'isVotingClaimed',
     once: true,
+    order: 2,
     closed: false
   },
   {
@@ -40,6 +42,7 @@ export const rewardMap = [
     write: 'claimFollow',
     requireSig: true,
     check: 'followClaimed',
+    order: 3,
     closed: true
   },
   {
@@ -49,6 +52,7 @@ export const rewardMap = [
     write: 'claimShare',
     requireSig: true,
     check: 'shareClaimed',
+    order: 4,
     closed: true
   }
 ]
@@ -92,7 +96,7 @@ class RewardStore extends State {
         amnt: +formatUnits(v),
         claimed: this.rewardsClaimed[i]
       }))
-      .sort((r) => (r.claimed ? 1 : -1))
+      .sort((r) => r.order)
   }
   get weeklyPoolHumanized() {
     if (this.weeklyPool === null) return ''

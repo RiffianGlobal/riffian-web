@@ -113,12 +113,11 @@ export class TrackDetail extends ThemeElement(style) {
 
   share = async (e: CustomEvent, item: any) => {
     e.stopPropagation()
-    const { id = '' } = item
-    const subjectUrl = id ? `(https://app.riffian.global/${id ? 'track/' + id : ''})` : ``
-    const url = await genTweetURI(
-      `Stay tuned with me. I\'m at Riffian.global! #riffian @RiffianClub \{${subjectUrl}}\}`
-    )
-    window.open(url, '_blank')
+    const { id = '', name = '' } = item
+    let [title, url] = ['', '']
+    if (id) url = `(https://app.riffian.global/${'track/' + id})`
+    const target = await genTweetURI(`Stay tuned with me. I\'m at Riffian.global! #riffian @RiffianClub ${name}${url}`)
+    window.open(target, '_blank')
   }
 
   listener = throttle(this.fetch)
