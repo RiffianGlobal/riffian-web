@@ -93,7 +93,8 @@ export class TrackInfo extends ThemeElement(style) {
           ${when(!this.isMobi, () => html`<div class="w-11 text-center">Rank</div>`)}
           <div class="address flex-auto">Address</div>
           <div class="num flex-none w-20 md_w-28">Comsumption</div>
-          <div class="num flex-none w-20 md_w-28">Earning</div>
+          <!-- Close #10 -->
+          <!-- <div class="num flex-none w-20 md_w-28">Earning</div> -->
         </div>
         ${when(
           this.loading,
@@ -118,11 +119,12 @@ export class TrackInfo extends ThemeElement(style) {
                   <div class="num flex-none">
                     <p class="num truncate md_mt-2">${parseFloat((+formatUnits(item.volumeVote)).toFixed(2))}</p>
                   </div>
-                  <div class="num flex-none w-16 md_w-28">
+                  <!-- Close #10 -->
+                  <!-- <div class="num flex-none w-16 md_w-28">
                     <p class="num truncate md_mt-2">
                       ${parseFloat((+formatUnits(item.user.rewardClaimed)).toFixed(2))}
                     </p>
-                  </div>
+                  </div> -->
                 </div>
               `
             )}`
