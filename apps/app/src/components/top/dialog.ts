@@ -4,7 +4,8 @@ import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
 import { vote, votePriceWithFee, myVotes, retreatPrice, retreat } from './action'
 import { formatUnits } from 'ethers'
 import { tweetStore, type Social } from '~/store/tweet'
-
+import { balanceStore } from '~/store/balance'
+// Components
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/input/text'
 import '@riffian-web/ui/loading/skeleton'
@@ -16,6 +17,7 @@ const defErr = () => ({ tx: '' })
 export class VoteAlbumDialog extends ThemeElement('') {
   bindBridge: any = new StateController(this, bridgeStore)
   bindTweets: any = new StateController(this, tweetStore)
+  bindBalance: any = new StateController(this, balanceStore)
   @property({ type: String }) action = ''
   @property({ type: String }) album = ''
   @property({ type: String }) url = ''
@@ -38,11 +40,18 @@ export class VoteAlbumDialog extends ThemeElement('') {
     super.connectedCallback()
     await this.getPrice()
     await this.readFromTwitter()
-    this.ts++
   }
 
   get hasVoted() {
     return this.ts && +formatUnits(this.myVotes, 1) > 0
+  }
+  get insufficientBalance() {
+    if (balanceStore.inited && +balanceStore.balance == 0) return true
+    if (this.ts && +balanceStore.balance < +this.votePrice) return true
+    return false
+  }
+  get btnDisabled() {
+    return this.pending || this.insufficientBalance
   }
 
   async readFromTwitter() {
@@ -57,7 +66,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
         myVotes(this.album)
       ])
 
-      this.votePrice = formatUnits(voteSum).toString()
+      this.votePrice = formatUnits(voteSum)
       this.voteFee = formatUnits(voteSum - votePri).toString()
       this.retreatPrice = formatUnits(retreatPri)
       this.myVotes = votes
@@ -65,6 +74,7 @@ export class VoteAlbumDialog extends ThemeElement('') {
       let msg = err.message || err.code
       this.updateErr({ tx: msg })
     }
+    this.ts++
   }
 
   async vote() {
@@ -190,17 +200,17 @@ export class VoteAlbumDialog extends ThemeElement('') {
                       ${when(
                         this.votePrice > 0,
                         () =>
-                          html`<span class="text-3xl ml-4 text-yellow-500">${this.votePrice}</span>
+                          html`<span class="text-3xl text-yellow-500">${this.votePrice}</span>
                             <span class="opacity-80 ml-2">(${this.voteFee} fee included)</span>`,
                         () => html`<i class="text-sm mdi mdi-loading"></i>`
                       )}
                     </div>
                     <ui-button
-                      class="mt-3 w-full md_w-36"
-                      ?disabled=${this.pending}
+                      class="mt-3 min-w-36 w-full md_w-40"
+                      ?disabled=${this.btnDisabled}
                       ?pending=${this.pending}
                       @click=${this.vote}
-                      >Vote</ui-button
+                      >${this.insufficientBalance ? 'Insufficient Balance' : 'Vote'}</ui-button
                     >
                   </div>
                 `
@@ -215,10 +225,10 @@ export class VoteAlbumDialog extends ThemeElement('') {
 
                     <ui-button
                       class="mt-3 w-full md_w-36"
-                      ?disabled=${this.pending}
+                      ?disabled=${this.btnDisabled}
                       ?pending=${this.pending}
                       @click=${this.retreat}
-                      >Retreat</ui-button
+                      >${this.insufficientBalance ? 'Insufficient Balance' : 'Retreat'}</ui-button
                     >
                   </div>
                 `

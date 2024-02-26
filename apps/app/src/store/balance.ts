@@ -6,6 +6,7 @@ import { getAccount, getNativeBalance, getBridgeProvider } from '@riffian-web/et
 // !This store only cache first page data of subjects
 class BalanceStore extends State {
   @property({ value: '' }) balance!: string
+  @property({ value: false }) inited!: boolean
 
   constructor() {
     super()
@@ -20,6 +21,7 @@ class BalanceStore extends State {
       if (acc) newBalance = await getNativeBalance(acc)
       if (newBalance != this.balance) emitter.emit('block-balance', acc)
     } catch {}
+    this.inited = true
     this.balance = newBalance
   }
 
