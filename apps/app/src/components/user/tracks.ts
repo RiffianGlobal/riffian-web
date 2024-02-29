@@ -9,6 +9,7 @@ import {
   when
 } from '@riffian-web/ui/shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { throttle } from '@riffian-web/ethers/src/utils'
 import { screenStore } from '@lit-web3/base/screen'
 import { format } from '~/lib/dayjs'
 import { asyncReplace } from 'lit/directives/async-replace.js'
@@ -101,12 +102,17 @@ export class TrackInfo extends ThemeElement(style) {
       this.ts++
     }
   }
+  listen = throttle(this.init)
 
   connectedCallback() {
     super.connectedCallback()
     this.init()
+    emitter.on('manual-change', this.listen)
   }
-
+  disconnectedCallback() {
+    super.disconnectedCallback()
+    emitter.off('manual-change', this.listen)
+  }
   render() {
     return html`<div
       role="list"
