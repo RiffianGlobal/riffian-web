@@ -191,12 +191,12 @@ export class TopAlbum extends ThemeElement(style) {
                   ${i + 1}
                   ${when(this.subjects.length > 3 && i < 3, () => html`<i class="mdi mdi-fire text-red-400"></i>`)}
                 </div>
-                <div class="flex-auto flex">
+                <div class="flex-auto flex overflow-hidden">
                   <div class="w-[3.25rem] h-[3.25rem] mr-4 rounded-lg">
-                    <img-loader src=${item.cooked.src} class="rounded-lg"></img-loader>
+                    <img-loader src=${item.cooked.src} class="w-[3.25rem] h-[3.25rem] rounded-lg"></img-loader>
                   </div>
-                  <div>
-                    <p class="subject-name subject-line1 lg_text-base truncate">${item.name}</p>
+                  <div class="truncate ">
+                    <p class="subject-name subject-line1 lg_text-base truncate w-full">${item.name}</p>
                     <i class="subject-play mdi mdi-play-circle"></i>
                   </div>
                 </div>

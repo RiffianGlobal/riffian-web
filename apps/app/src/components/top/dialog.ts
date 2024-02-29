@@ -147,9 +147,9 @@ export class VoteAlbumDialog extends ThemeElement('') {
       <div slot="center" class="flex mx-4 my-6">
         <div class="flex grow justify-between p-4 border border-white/15 rounded-xl">
           <!-- meta info -->
-          <div class="flex gap-6">
-            <div class="w-24 h-24 rounded-lg bg-white/10">
-              <img-loader class="w-24 h-24 rounded-lg" src=${this.url}></img-loader>
+          <div class="flex gap-3 md_gap-6">
+            <div class="w-20 h-20 md_w-24 md_h-24 rounded-lg bg-white/10">
+              <img-loader class="w-20 h-20  md_w-24 md_h-24 rounded-lg" src=${this.url}></img-loader>
             </div>
             <div>
               <div class="text-lg mb-1.5">${this.name}</div>
