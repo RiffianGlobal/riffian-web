@@ -1,12 +1,14 @@
 import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { createAlbum } from './action'
-import emitter from '@lit-web3/base/emitter'
+import { goto } from '@lit-web3/router'
+
 // Components
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/input/text'
 import '@riffian-web/ui/tx-state'
 import '@riffian-web/ui/img/loader'
+import '@riffian-web/ui/link'
 
 type formKeys = 'album' | 'image' | 'url'
 
@@ -15,7 +17,8 @@ const defErr = () => ({ album: '', image: '', tx: '' })
 
 @customElement('create-album-dialog')
 export class CreateAlbumDialog extends ThemeElement('') {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
+
   @state() album = ''
   @state() image = ''
   @state() form = defForm()
@@ -23,6 +26,10 @@ export class CreateAlbumDialog extends ThemeElement('') {
   @state() pending = false
   @state() success = false
   @state() tx: any = null
+
+  get account() {
+    return walletStore.account
+  }
 
   get invalid() {
     return !this.form.album || !this.form.image || !this.form.url || ['album', 'image'].some((k) => !!this.err[k])
@@ -83,7 +90,17 @@ export class CreateAlbumDialog extends ThemeElement('') {
           this.txPending,
           () =>
             html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your track has been created.' } }}
-              ><ui-button slot="view" @click=${this.close}>Close</ui-button></tx-state
+              ><div slot="view" class="flex flex-col items-center">
+                <ui-link
+                  class="mb-2"
+                  @click=${() => {
+                    this.close()
+                    goto(`/user/${this.account}`)
+                  }}
+                  >view all uploads</ui-link
+                >
+                <ui-button @click=${this.close}>Close</ui-button>
+              </div></tx-state
             >`
         )}
         <!-- Form -->

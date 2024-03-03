@@ -52,7 +52,10 @@ export class UserVotesList extends ThemeElement(style) {
     this.pending = true
     try {
       const userSubjectVotes = await userVotes(this.acc, { orderBy: this.by })
-      this.uVotes = userSubjectVotes
+      this.uVotes = userSubjectVotes.map((item: any) => ({
+        ...item,
+        price: (+item.subject.supply + 1) / 10
+      }))
     } catch {
     } finally {
       this.pending = false
@@ -113,7 +116,7 @@ export class UserVotesList extends ThemeElement(style) {
         () => html`
           <div class="flex header">
             <div class="flex-auto">Collection</div>
-            <div class="author flex-none w-32 text-right">Author</div>
+            <div class="author flex-none w-32 text-right">Price</div>
             <div class="num flex-none">Tickets</div>
             <div class="num flex-none">Holding</div>
           </div>
@@ -156,9 +159,7 @@ export class UserVotesList extends ThemeElement(style) {
                         )}
                       </div>
                     </div>
-                    <div class="author flex-none text-right">
-                      <ui-address .address="${item.subject.creator.address}" short avatar></ui-address>
-                    </div>
+                    <div class="author flex-none text-right">${item.price}</div>
                     <div class="num flex-none font-light">${item.subject.supply}</div>
                     <div class="num flex-none font-light">${item.holding}</div>
                   `,

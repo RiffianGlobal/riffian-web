@@ -152,8 +152,8 @@ export class TrackDetail extends ThemeElement(style) {
             html`<!-- meta info -->
               <div class="lg_col-span-6 flex gap-4 md_gap-8">
                 <!-- Cover -->
-                <div class="relative w-32 md_w-44 h-full rounded-xl bg-white/10">
-                  <img-loader src=${this.subject.image} class="w-32 md_w-44 h-full rounded-xl"></img-loader>
+                <div class="relative w-28 h-28 md_w-44 md_h-44 rounded-xl bg-white/10">
+                  <img-loader src=${this.subject.image} class="w-28 h-28 md_w-44 md_h-44 rounded-xl"></img-loader>
                   ${when(
                     this.subject.uri,
                     () => html`
@@ -166,9 +166,9 @@ export class TrackDetail extends ThemeElement(style) {
                   )}
                 </div>
                 <!-- Details -->
-                <div class="flex flex-col h-full justify-between gap-2 md_gap-4">
+                <div class="flex flex-col h-full justify-between md_gap-4">
                   <div>
-                    <div class="text-lg md_text-xl mb-1.5 md_mb-2.5">${this.subject.name ?? '-'}</div>
+                    <div class="text-lg md_text-xl md_mb-2.5">${this.subject.name ?? '-'}</div>
                     <!-- Author DOID -->
                     <div class="text-sm md_text-base min-h-6 leading-6">
                       <ui-address .address=${this.creatorAddr} short doid avatar></ui-address>
@@ -189,12 +189,12 @@ export class TrackDetail extends ThemeElement(style) {
                       )}
                     </div>
                   </div>
-                  <div class="flex gap-3 md_gap-4 items-center mt-2">
+                  <div class="flex gap-2.5 md_gap-4 items-center mt-2">
                     ${when(
                       this.voteEnable,
                       () => html`
                         <ui-button
-                          class="w-20 md_w-24"
+                          class="w-16 md_w-24"
                           ?disabled="${this.dialog || !this.voteEnable}"
                           @click=${() => this.popAction('vote')}
                           >Vote</ui-button
@@ -205,7 +205,7 @@ export class TrackDetail extends ThemeElement(style) {
                       this.retreatEnable,
                       () =>
                         html`<ui-button
-                          class="w-20 md_w-24"
+                          class="w-16 md_w-24"
                           ?disabled="${this.dialog || !this.retreatEnable}"
                           @click=${() => this.popAction('retreat')}
                           >Retreat</ui-button
