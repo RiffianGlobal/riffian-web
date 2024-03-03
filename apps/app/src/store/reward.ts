@@ -199,7 +199,7 @@ class RewardStore extends State {
     //
     const res = userWeeklyVotes.map((weekly, i) => {
       const { votes, cooked } = weekly
-      weekly.reward = (weeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
+      weekly.reward = weeklyVotes[i] && (weeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
       cooked.reward = (+formatUnits(weekly.reward)).toFixed(4)
       return weekly
     })
@@ -291,7 +291,7 @@ export const getUserWeeklyRewards = async (account?: string): Promise<UserWeekly
   //
   const res = userWeeklyVotes.map((weekly, i) => {
     const { votes, cooked } = weekly
-    weekly.reward = (weeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
+    weekly.reward = weeklyVotes[i] && (weeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
     cooked.reward = (+formatUnits(weekly.reward)).toFixed(4)
     return weekly
   })
