@@ -1,48 +1,41 @@
 import { JsonRpcProvider, BrowserProvider, WebSocketProvider } from 'ethers'
-import Network from './networks'
-import { walletStore } from './bridge'
-import { State, property } from './state'
-import emitter from '@lit-web3/base/emitter'
+import { walletStore } from './wallet'
+import { networkStore } from './networks'
+import { DOIDWallet } from './wallet/doid'
+import { State, property } from '@lit-web3/base/state'
 
 export class Provider extends State {
   @property() public provider?: BrowserProvider | JsonRpcProvider | WebSocketProvider | any
-  @property() public readonly network: Network
-  private storage: any
+
   constructor(options: useBridgeOptions = {}) {
     super()
-    const { chainId, persistent } = options
-    if (!persistent) this.storage = sessionStorage.getItem('chainId')
-    this.network = new Network(chainId ?? walletStore.walletChainId ?? this.storage)
-    if (walletStore.curWallet) this.update(options)
+    const { persistent } = options
+
+    this.update(options)
     walletStore.subscribe(() => this.update(options), 'wallet')
-    this.network.subscribe(() => this.update(options), 'chainId')
   }
   update = async (options: useBridgeOptions = {}) => {
-    let { chainId } = Network
     const { persistent, provider, rpc } = options
-    // if (!persistent && walletStore.walletChainId) chainId = walletStore.walletChainId
     // TODO: Allow update when options.rpc changed
     if (this.provider) {
       this.provider.removeAllListeners()
     }
-    // if (!chainId) chainId = Network.defaultChainId
-    // this.network.chainId = chainId
-    if (!persistent) this.storage = sessionStorage.setItem('chainId', chainId)
-    let wallet = walletStore.curWallet
-    if (!persistent && wallet?.injected()) {
-      this.provider = await wallet.getProvider()
+    // Option 1. Use signedIn provider
+    if (!persistent && walletStore.signedIn && walletStore.wallet) {
+      this.provider = await walletStore.wallet.getProvider(+networkStore.chainId)
     } else {
-      this.provider = provider || (await wallet?.getProvider())
+      // Option 2. Use client provider (readonly) (No DOID-Resolver yet)
       // const _provider = provider || JsonRpcProvider
       // const _rpc = rpc || this.network.provider
       // this.provider = new _provider(_rpc)
+      // Option 3. Use wallet provider (readonly) (with DOID-Resolver)
+      this.provider = provider || (await DOIDWallet.getProvider())
     }
-    emitter.emit('network-change', '')
   }
 }
 
-let provider: any
+let _provider: any
 
 export default function (options?: useBridgeOptions) {
-  return provider ?? (provider = new Provider(options))
+  return _provider ?? (_provider = new Provider(options))
 }

@@ -1,5 +1,5 @@
 import { customElement, ThemeElement, html, when, property, state, classMap } from '../shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { screenStore } from '@lit-web3/base/screen'
 import { shortAddress } from '@riffian-web/ethers/src/utils'
 import { DOIDStore } from '@riffian-web/ethers/src/doid-resolver'
@@ -13,13 +13,14 @@ import style from './address.css?inline'
 
 @customElement('ui-address')
 export class UIAddress extends ThemeElement(style) {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
   bindScreen: any = new StateController(this, screenStore)
   bindDOID: any = new StateController(this, DOIDStore)
 
-  @property({ type: String }) address = undefined // !!! if not defined, use current wallet address
+  @property({ type: String }) address = undefined
   @property({ type: Boolean }) avatar = false
   @property({ type: Boolean }) hideAddr = false
+  @property({ type: Boolean }) self = false
   @property({ type: Boolean }) copy = false
   @property({ type: Boolean }) short = false // if false, auto short address
   @property() href?: string
@@ -27,7 +28,7 @@ export class UIAddress extends ThemeElement(style) {
   @state() doid?: string
 
   get addr() {
-    return (typeof this.address === 'string' ? this.address : bridgeStore.bridge.account) ?? ''
+    return (typeof this.address === 'string' ? this.address : '') ?? ''
   }
   get isLink() {
     return typeof this.href === 'string'
@@ -50,7 +51,7 @@ export class UIAddress extends ThemeElement(style) {
   wrapLink = (_html: unknown) => (this.isLink ? html`<ui-link href=${this.href}>${_html}</ui-link>` : _html)
 
   solveDOID = async () => {
-    if (this.doid || !this.addr) return
+    if (!this.addr) return
     this.doid = (await DOIDStore.getDOID(this.addr)) ?? ''
   }
 
@@ -61,6 +62,9 @@ export class UIAddress extends ThemeElement(style) {
   connectedCallback() {
     super.connectedCallback()
     this.solveDOID()
+  }
+  disconnectedCallback() {
+    super.disconnectedCallback()
   }
 
   override render() {

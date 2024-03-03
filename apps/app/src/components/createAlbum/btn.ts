@@ -1,5 +1,5 @@
 import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 // Components
 import '@riffian-web/ui/button'
 import './dialog'
@@ -10,7 +10,7 @@ import { getSocials } from './action'
 import style from './btn.css?inline'
 @customElement('create-album-btn')
 export class CreateAlbumBtn extends ThemeElement(style) {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
   @property({ type: Boolean }) icon = false
   @property({ type: String }) btnClass = ''
 
@@ -20,7 +20,7 @@ export class CreateAlbumBtn extends ThemeElement(style) {
   @state() pending = false
 
   get disabled() {
-    return !bridgeStore.bridge.account
+    return !walletStore.account
   }
 
   open = async () => {
@@ -29,7 +29,7 @@ export class CreateAlbumBtn extends ThemeElement(style) {
     } else {
       this.pending = true
       try {
-        let socials = await getSocials(bridgeStore.bridge.account)
+        let socials = await getSocials(walletStore.account)
         if (socials.length == 0) this.prompt = true
         else this.dialogCreate = true
       } catch (e) {

@@ -13,7 +13,7 @@
   &.DOID {
     background-image: url('../i/symbol/DOID.svg');
   }
-  &.testnet {
+  &.testnet:not(.unknown) {
     &::after {
       content: attr(acronym);
       @apply inline-flex w-full h-full rounded-full bg-gray-400 justify-center items-center not-italic text-gray-900 text-xs;

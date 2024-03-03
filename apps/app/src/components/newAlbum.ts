@@ -8,7 +8,7 @@ import {
   queryAll
 } from '@riffian-web/ui/shared/theme-element'
 import { getContract } from '@riffian-web/ethers/src/useBridge'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { parseRevertReason } from '@riffian-web/ethers/src/parseErr'
 import '@riffian-web/ui/button'
 import '@riffian-web/ui/dialog'
@@ -16,6 +16,8 @@ import '@riffian-web/ui/input/text'
 
 @customElement('new-album')
 export class NewAlbum extends ThemeElement('') {
+  bindWallet: any = new StateController(this, walletStore)
+
   @property({ type: Boolean }) submit = false
   @property({ type: String }) result = ''
   @property({ type: Boolean }) err = true
@@ -23,8 +25,6 @@ export class NewAlbum extends ThemeElement('') {
   @state() dialog = false
   @queryAll('ui-input-text')
   _inputs!: HTMLInputElement
-
-  bindBridge: any = new StateController(this, bridgeStore)
 
   async createAlbum() {
     var name, symbol
@@ -42,7 +42,7 @@ export class NewAlbum extends ThemeElement('') {
       this.err = true
       return
     }
-    if (!bridgeStore.bridge.account) {
+    if (!walletStore.account) {
       this.result = 'Sign In first!'
       this.err = true
       return

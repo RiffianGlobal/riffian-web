@@ -1,53 +1,58 @@
-import { walletStore } from './bridge'
-import { AllNetworks, unknownNetwork, SupportNetworks } from './constants/networks'
-import { State, property } from './state'
+import {
+  defaultChainId,
+  mainnetOffline,
+  mainnetChainId,
+  SupportNetworks,
+  unknownNetwork,
+  SupportNetworkIDs,
+  chainIdStr
+} from './constants/networks'
+import { State, property } from '@lit-web3/base/state'
+import { walletStore, emitWalletChange } from './wallet/store'
+export { StateController } from '@lit-web3/base/state'
 
-const isProd = import.meta.env.MODE === 'production'
-const mainnetOffline = !!import.meta.env.VITE_DISABLE_MAINNET
-export const Networks: Networks = AllNetworks
-
-export const [mainnetChainId, testnet] = SupportNetworks
-export const defaultChainId = isProd && !mainnetOffline ? mainnetChainId : import.meta.env.VITE_DEF_TESTNET ?? testnet
+export const Networks: Networks = SupportNetworks
+export { defaultChainId, mainnetChainId }
 
 // This may return wrong network value if no req provided
 // If you want to get current network, please use `userBridge/getNetwork` instead
 export const getNetwork = (req?: string, exactly: boolean = false): NetworkInfo => {
   const def = exactly
     ? unknownNetwork
-    : Networks[Network.chainId] ?? Networks[Network.defaultChainId] ?? Networks[mainnetChainId]
+    : Networks[networkStore.chainId] ?? Networks[defaultChainId] ?? Networks[mainnetChainId]
   if (req === undefined) return def
   let res = Networks[req] ?? Object.values(Networks).find((r) => r.name === req)
   return res ?? def
 }
 
+const assignChainId = () => {
+  const chainId = walletStore.signedIn ? walletStore.chainId : defaultChainId
+  return chainId ? chainIdStr(chainId) : ''
+}
+
 export class Network extends State {
   public static readonly mainnetChainId: ChainId = mainnetChainId
   public static readonly defaultChainId: ChainId = defaultChainId
-  private static _chainId: ChainId = defaultChainId
-  public static get chainId(): ChainId {
-    return Network._chainId
-  }
-  // make set chainId private to Network only
-  private static set chainId(value: ChainId) {
-    Network._chainId = value
-  }
   public opts: Record<string, unknown> = {}
-  @property() private chainId: ChainId
-  constructor(chainId?: ChainId, opts = {}) {
+
+  @property({ value: assignChainId() }) chainId!: ChainId
+
+  constructor() {
     super()
-    if (chainId) Network.chainId = chainId
-    this.chainId = Network.chainId
-    Object.assign(this.opts, opts)
+    walletStore.subscribe(() => {
+      const newChainId = assignChainId()
+      const changed = this.chainId != newChainId
+      if (changed) location.reload()
+      // this.chainId = newChainId
+      // emitWalletChange()
+    }, 'chainId')
   }
-  /** SHOULD only be called in bridge::switchNetwork when succeeded */
-  public setChainId(chainId: ChainId) {
-    this.chainId = Network.chainId = chainId
-  }
+
   get Networks() {
     return Networks
   }
   get isMainnet() {
-    return this.chainId ? [Network.mainnetChainId].includes(this.chainId) : false
+    return this.chainId ? [mainnetChainId].includes(this.chainId) : false
   }
   get current(): NetworkInfo {
     return this.chainId ? this.Networks[this.chainId] ?? unknownNetwork : unknownNetwork
@@ -83,4 +88,5 @@ export class Network extends State {
     return this.current.name
   }
 }
-export default Network
+export const networkStore = new Network()
+export default networkStore

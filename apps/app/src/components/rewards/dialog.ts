@@ -1,5 +1,5 @@
 import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { claimRewards, userWeeklyReward } from './action'
 import { formatUnits } from 'ethers'
 
@@ -12,7 +12,7 @@ import '@riffian-web/ui/tx-state'
 const defErr = () => ({ load: '', tx: '' })
 @customElement('claim-reward-dialog')
 export class ClaimRewardDialog extends ThemeElement('') {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
   @state() userWeeklyReward = -1
   @state() tx: any = null
   @state() success = false
@@ -22,9 +22,6 @@ export class ClaimRewardDialog extends ThemeElement('') {
   @state() err = defErr()
   @state() ts = 0
 
-  get bridge() {
-    return bridgeStore.bridge
-  }
   get emptyRewards() {
     return this.ts && !(this.userWeeklyReward > 0)
   }
@@ -35,10 +32,9 @@ export class ClaimRewardDialog extends ThemeElement('') {
   }
 
   async getPrice() {
-    // if (bridgeStore.notReady) return
     this.pending = true
     try {
-      this.userWeeklyReward = await userWeeklyReward(bridgeStore.bridge.account as string)
+      this.userWeeklyReward = await userWeeklyReward(walletStore.account)
     } catch (err: any) {
       let msg = err.message || err.code
       this.updateErr({ load: msg })

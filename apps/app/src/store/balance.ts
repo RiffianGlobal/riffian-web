@@ -33,12 +33,6 @@ class BalanceStore extends State {
   }
   init = async () => {
     this.fetch()
-    let unlisten = await this.listen()
-    emitter.on('wallet-changed', async () => {
-      unlisten()
-      this.fetch()
-      unlisten = await this.listen()
-    })
   }
 }
 export const balanceStore = new BalanceStore()

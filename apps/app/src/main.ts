@@ -4,7 +4,7 @@ import { StateController, screenStore } from '@lit-web3/base/screen'
 import { rewardStore } from '~/store/reward'
 import { routes } from '~/router'
 import { ThemeElement, html, customElement, state, when } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore } from '@riffian-web/ethers/src/useBridge'
+import { walletStore } from '@riffian-web/ethers/src/wallet'
 import { init } from '~/lib/events-keeper'
 // Components
 import AppRoot from '@riffian-web/ui/shared/app-root.ethers'
@@ -24,8 +24,8 @@ import '~/global.css'
 @customElement('app-main')
 export class AppMain extends ThemeElement('') {
   bindScreen: any = new StateController(this, screenStore)
-  bindBridge: any = new StateController(this, bridgeStore)
   bindStore: any = new StateController(this, rewardStore)
+  bindWallet: any = new StateController(this, walletStore)
 
   constructor() {
     super()
@@ -63,12 +63,12 @@ export class AppMain extends ThemeElement('') {
 
         <div slot="right">
           <div class="inline-flex items-center gap-4">
-            ${when(bridgeStore.bridge.account, () => html`<reward-btn></reward-btn>`)}
+            ${when(walletStore.account, () => html`<reward-btn></reward-btn>`)}
             <network-menu></network-menu>
           </div>
         </div>
         ${when(
-          bridgeStore.bridge.account && !this.isMobi,
+          walletStore.account && !this.isMobi,
           () =>
             html`<div slot="balance">
               <account-balance class="ui-em"></account-balance>

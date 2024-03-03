@@ -5,9 +5,7 @@ import fetchJsonP from 'fetch-jsonp'
 import { ttlStorage } from '@riffian-web/ethers/src/utils'
 import { toGid } from '@riffian-web/ethers/src/uuid'
 import { getAlbumContract } from '~/lib/riffutils'
-import { getAddress } from 'ethers'
-
-import { getAccount, bridgeStore } from '@riffian-web/ethers/src/useBridge'
+import { walletStore } from '@riffian-web/ethers/src/wallet'
 import { weekSeconds, Official, Domain } from '~/constants'
 
 export const readTweet = async (uri: string): Promise<Tweet | undefined> => {
@@ -85,7 +83,7 @@ class Tweets extends State {
   }
 
   fetchSelf = async () => {
-    const { account } = bridgeStore.bridge ?? {}
+    const { account } = walletStore
     if (!account) return
     this.selfTweetURI = await this.addressToUri(account)
     if (this.selfTweetURI) await this.fromUri(this.selfTweetURI, account)
@@ -95,7 +93,7 @@ class Tweets extends State {
     return this.tweets[this.selfTweetURI]
   }
   get selfValid() {
-    return this.selfTwitter?.address == bridgeStore.bridge.account
+    return this.selfTwitter?.address == walletStore.account
   }
 
   addressToUri = async (address: string) => {
@@ -118,7 +116,7 @@ class Tweets extends State {
     contract.on('EventBind', this.listener)
   }
   listener = async (acc: string) => {
-    if (acc !== (await getAccount())) this.fetchSelf()
+    if (acc !== walletStore.account) this.fetchSelf()
   }
 }
 export const tweetStore = new Tweets()

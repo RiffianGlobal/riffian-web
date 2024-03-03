@@ -1,28 +1,22 @@
-import Network, { Networks } from './networks'
+import { Networks, mainnetChainId } from './networks'
 import Contracts from './constants/contracts'
-import { Bridge, walletStore } from './bridge'
+import { Bridge } from './bridge'
+import { walletStore } from './wallet'
+import { networkStore } from './networks'
 import emitter from '@lit-web3/base/emitter'
 import { gasLimit, nowTs } from './utils'
 import { normalizeTxErr } from './parseErr'
 import { Contract, formatUnits } from 'ethers'
-import { State, property, reflectProperty } from './state'
-export { StateController } from '@lit-web3/base/state'
+import { State, property } from '@lit-web3/base/state'
+export { State, property, StateController } from '@lit-web3/base/state'
+export { walletStore }
 
 /** Singleton Data, to keep bridge object and trigger updates as a {@link State} */
 class BridgeStore extends State {
   @property({ skipReset: true }) blockNumber!: number
   @property({ skipReset: true }) bridge!: Bridge
-  @property({ skipReset: true }) _account: string = ''
   constructor() {
     super()
-    emitter.on('wallet-changed', async () => {
-      await walletStore.wallet?.ensure()
-      this.reset() //  Trick for bridge.network cantnot update immediately probs
-      this._account = walletStore.account
-    })
-  }
-  init() {
-    reflectProperty(walletStore, 'account', this, '_account')
   }
   get stateTitle(): string {
     return this.bridge.state || ''
@@ -30,23 +24,20 @@ class BridgeStore extends State {
   get wallet(): any {
     return walletStore.wallet
   }
-  get account(): any {
-    return walletStore.account || this._account || ''
-  }
   get envKey(): string {
-    return `${this.bridge.network.chainId}.${this.bridge.account}`
+    return `${networkStore.chainId}.${walletStore.account}`
   }
   get noAccount() {
-    return (this.wallet?.inited === true || this.bridge.alreadyTried) && !this.account
+    return (this.wallet?.inited === true || this.bridge.alreadyTried) && !walletStore.account
   }
   get noNetwork() {
-    return this.bridge.network.disabled
+    return networkStore.disabled
   }
   get notReady() {
     return this.noAccount || this.noNetwork
   }
   get key() {
-    return this.account + this.bridge.network.chainId
+    return walletStore.account + networkStore.chainId
   }
 }
 export const bridgeStore = new BridgeStore()
@@ -63,10 +54,6 @@ class BlockPolling {
     this.getBlockNumber()
     // Events
     emitter.on('tx-success', () => this.broadcast())
-    emitter.on('network-change', () => {
-      this.reset()
-      this.listenProvider()
-    })
     bridgeStore.bridge.subscribe(() => {
       this.reset()
       this.getBlockNumber()
@@ -122,7 +109,6 @@ class BlockPolling {
 const initBridge = (options?: useBridgeOptions) => {
   if (!bridgeStore.bridge) {
     bridgeStore.bridge = new Bridge(options)
-    bridgeStore.init()
     new BlockPolling()
   }
   return bridgeStore.bridge
@@ -145,17 +131,25 @@ export default (options?: useBridgeOptions) => {
 
 export const useBridgeAsync = async (options?: useBridgeOptions) => {
   await initBridge(options).tryConnect(options)
+  await walletStore.wallet?.ensure()
   return wrapBridge()
 }
 
 export const getABI = async (name: string) => (await import(`./abi/${name}.json`)).default
 export const getBridge = async () => (await useBridgeAsync()).bridge
-export const getBridgeProvider = async () => (await getBridge()).provider!
+export const getBridgeProvider = async () => (await getBridge()).provider
 export const getWalletAccount = async () =>
   ((await (await getBridgeProvider()).send('eth_requestAccounts')) ?? [])[0] ?? ''
-export const getAccount = async (force = false) => (force ? await getWalletAccount() : (await getBridge()).account)
-export const getNetwork = async () => (await getBridge()).network.current
-export const getNetworkSync = () => Networks[Network.chainId]
+export const getAccount = async (force = false) => {
+  if (force) return await getWalletAccount()
+  await getBridge()
+  return walletStore.account
+}
+export const getNetwork = async () => {
+  await getBridge()
+  return Networks[networkStore.chainId]
+}
+export const getNetworkSync = () => Networks[networkStore.chainId]
 export const getChainId = async () => (await getNetwork()).chainId
 export const getEnvKey = async (key = '', withoutAddr = false) =>
   (withoutAddr ? await getChainId() : (await useBridgeAsync()).envKey) + (key ? `.${key}` : '')
@@ -217,7 +211,7 @@ export const assignOverrides = async (overrides: any, ...args: any[]) => {
 }
 
 export const getContracts = (name: string, forceMainnet = false): string => {
-  const chainId = forceMainnet ? Network.mainnetChainId : Network.chainId
+  const chainId = forceMainnet ? mainnetChainId : networkStore.chainId
   return Contracts[name][chainId]
 }
 

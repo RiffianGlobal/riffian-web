@@ -4,6 +4,11 @@ import type { RouteConfig } from '@lit-web3/router'
 import { blocked } from '~/lib/ip'
 import { getAccount } from '@riffian-web/ethers/src/useBridge'
 
+const goHome = () => {
+  emitter.emit('router-replace', `/`)
+  return false
+}
+
 const beforeEach = async () => {
   const isBlocked = await blocked()
   if (isBlocked) emitter.emit('router-replace', `/denied`)
@@ -89,8 +94,7 @@ export const routes: RouteConfig[] = [
       const req = [import('~/views/profile')]
       if (!acc) req.push(getAccount())
       const [, self] = await Promise.all(req)
-      if (self) emitter.emit('router-replace', `/profile/${self}`)
-      if (!acc && !self) return false
+      if (!acc && !self) return goHome()
       return true
     }
   }

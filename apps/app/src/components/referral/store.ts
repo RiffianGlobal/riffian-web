@@ -1,4 +1,5 @@
-import { getAccount, bridgeStore, getContract, getContracts, assignOverrides } from '@riffian-web/ethers/src/useBridge'
+import { getContracts, assignOverrides } from '@riffian-web/ethers/src/useBridge'
+import { walletStore } from '@riffian-web/ethers/src/wallet'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { solidityPackedKeccak256 } from 'ethers'
@@ -12,14 +13,14 @@ class ReferralStore extends State {
   @property({ value: false }) inited!: boolean
 
   get bound() {
-    return this.inited && !!bridgeStore.bridge.account && !!this.address
+    return this.inited && !!walletStore.account && !!this.address
   }
 
   get = async () => {
     if (!this.address) {
       const contract = await getAlbumContract()
       try {
-        const res = await contract.agentAddress(await getAccount())
+        const res = await contract.agentAddress(walletStore.account)
         if (res && +res !== 0) this.address = res
       } catch {}
     }

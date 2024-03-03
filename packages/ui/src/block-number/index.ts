@@ -1,6 +1,7 @@
 import { PropertyValues } from 'lit'
-import { customElement, ThemeElement, html, classMap, state, when, keyed } from '../shared/theme-element'
+import { customElement, ThemeElement, html, classMap, state, when } from '../shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { networkStore } from '@riffian-web/ethers/src/networks'
 import { sleep } from '@riffian-web/ethers/src/utils'
 
 import style from './blockNumber.css?inline'
@@ -8,6 +9,8 @@ import style from './blockNumber.css?inline'
 @customElement('block-number')
 export class BlockNumber extends ThemeElement(style) {
   bindBridge = new StateController(this, bridgeStore)
+  bindNetwork: any = new StateController(this, networkStore)
+
   @state() pending = false
 
   get provider() {
@@ -40,7 +43,7 @@ export class BlockNumber extends ThemeElement(style) {
           bridgeStore.blockNumber,
           () =>
             html`<a
-              href=${`${bridgeStore.bridge.network.current.scan}/block/${bridgeStore.blockNumber}`}
+              href=${`${networkStore.current.scan}/block/${bridgeStore.blockNumber}`}
               target="_blank"
               rel="noopener"
               >${bridgeStore.blockNumber}</a

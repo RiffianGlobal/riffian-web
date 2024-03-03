@@ -1,5 +1,5 @@
 import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { screenStore } from '@lit-web3/base/screen'
 import { formatUnits } from 'ethers'
 import '~/components/top/dialog'
@@ -15,7 +15,7 @@ const defErr = () => ({ loading: '', tx: '' })
 
 @customElement('user-detail')
 export class TrackDetail extends ThemeElement(style) {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
   bindTweets: any = new StateController(this, tweetStore)
   bindScreen: any = new StateController(this, screenStore)
   @property({ type: Boolean }) weekly = false
@@ -38,7 +38,7 @@ export class TrackDetail extends ThemeElement(style) {
   }
 
   get disabled() {
-    return !bridgeStore.bridge.account
+    return !walletStore.account
   }
 
   connectedCallback() {

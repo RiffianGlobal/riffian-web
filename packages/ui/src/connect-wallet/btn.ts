@@ -1,5 +1,7 @@
 import { customElement, ThemeElement, html, state, when, property, classMap } from '../shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore } from '@riffian-web/ethers/src/wallet'
+import { networkStore } from '@riffian-web/ethers/src/networks'
 import emitter from '@lit-web3/base/emitter'
 // Components
 import '../address'
@@ -10,28 +12,26 @@ import '../button'
 import style from './btn.css?inline'
 @customElement('connect-wallet-btn')
 export class ConnectWalletBtn extends ThemeElement(style) {
-  bindNetwork: any = new StateController(this, bridgeStore.bridge.network)
-  bindBridge: any = new StateController(this, bridgeStore.bridge)
+  bindNetwork: any = new StateController(this, networkStore)
+  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
   @property({ type: Boolean }) dropable = false
   @property({ type: Boolean }) hideAddr = false
 
   @state() menu = false
 
   get account() {
-    return bridgeStore.bridge.account
+    return walletStore.account
   }
   get addr() {
-    return bridgeStore.bridge?.shortAccount
-  }
-  get doid() {
-    return bridgeStore.bridge.doid
+    return walletStore.shortAccount
   }
   get scan() {
-    return `${bridgeStore.bridge?.network.current.scan}/address/${bridgeStore.bridge?.account}`
+    return `${networkStore.current.scan}/address/${this.account}`
   }
 
   show = () => {
-    if (this.dropable && this.doid) {
+    if (this.dropable && walletStore.doid) {
       this.menu = !this.menu
     } else {
       bridgeStore.bridge.select(0)
@@ -61,12 +61,14 @@ export class ConnectWalletBtn extends ThemeElement(style) {
         dropClass=""
         btnClass="text"
       >
-        <ui-button icon slot="toggle"><ui-address avatar ?hideAddr=${this.hideAddr} short></ui-address></ui-button>
+        <ui-button icon slot="toggle"
+          ><ui-address .address=${this.account} avatar ?hideAddr=${this.hideAddr} short></ui-address
+        ></ui-button>
         <!-- Content -->
         <div class="flex w-full justify-between items-center gap-4 py-3 px-3">
           <div class="flex items-center">
             <span class="inline-flex items-center gap-2">
-              <ui-address short doid avatar></ui-address>
+              <ui-address .address=${this.account} short doid avatar></ui-address>
             </span>
             <span class="inline-flex items-center">
               <ui-copy-icon title="Copy" .value=${this.account}></ui-copy-icon>

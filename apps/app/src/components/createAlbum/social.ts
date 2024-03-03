@@ -1,5 +1,5 @@
 import { ThemeElement, customElement, html, repeat, state, when } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { bindSocial, getSocials } from './action'
 // Components
 import '@riffian-web/ui/button'
@@ -16,7 +16,7 @@ enum SOCIAL_TYPE {
 }
 @customElement('create-social-dialog')
 export class CreateSocailDialog extends ThemeElement('') {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
   @state() url = ''
   @state() platform = SOCIAL_TYPE.TWI
   @state() id = ''
@@ -36,7 +36,7 @@ export class CreateSocailDialog extends ThemeElement('') {
 
   async getSocialUrl() {
     try {
-      this.socials = await getSocials(bridgeStore.bridge.account as string)
+      this.socials = await getSocials(walletStore.account as string)
     } catch (err: any) {
       const msg = err.message || err.code
       this.updateErr({ load: msg })
@@ -132,8 +132,7 @@ export class CreateSocailDialog extends ThemeElement('') {
           () => html`
             <ui-link
               class="text-sm"
-              href="https://twitter.com/intent/tweet?text=My%20account%20on%20riffian%20is%20${bridgeStore.bridge
-                .account}"
+              href="https://twitter.com/intent/tweet?text=My%20account%20on%20riffian%20is%20${walletStore.account}"
               >Click here to post a tweet with your address and enter your tweet url bellow.</ui-link
             >
             <ui-input-text

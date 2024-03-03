@@ -1,5 +1,5 @@
 import { ThemeElement, customElement, html, when, state, classMap } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, getAccount } from '@riffian-web/ethers/src/useBridge'
+import { walletStore } from '@riffian-web/ethers/src/wallet'
 import { bindSocial } from '~/components/createAlbum/action'
 import { rewardStore } from '~/store/reward'
 import { StateController, tweetStore, type Social, genGid, genTweetURI } from '~/store/tweet'
@@ -18,12 +18,12 @@ import { toast } from '@riffian-web/ui/toast'
 export const genTweet = async () => `Get ${
   rewardStore.taskHumanized.tweet ?? 100
 } $DOID at ${Domain} ${Official} ${Subject}
-Gid: ${genGid(await getAccount())}`
+Gid: ${genGid(walletStore.account)}`
 
 @customElement('bind-social')
 export class BindSocial extends ThemeElement('') {
   bindTweets: any = new StateController(this, tweetStore)
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
   bindStore: any = new StateController(this, rewardStore)
 
   @state() url = ''
@@ -53,7 +53,7 @@ export class BindSocial extends ThemeElement('') {
   }
 
   get account() {
-    return bridgeStore.bridge.account
+    return walletStore.account
   }
   get bound() {
     return this.ts && tweetStore.selfValid

@@ -1,6 +1,6 @@
 import { customElement, ThemeElement, html, state, classMap, repeat, when } from '../shared/theme-element'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
-import { Networks } from '@riffian-web/ethers/src/networks'
+import { Networks, networkStore } from '@riffian-web/ethers/src/networks'
 // Components
 import '../menu/drop'
 import '../link'
@@ -10,20 +10,16 @@ import style from './menu.css?inline'
 
 @customElement('network-menu')
 export class NetworkMenu extends ThemeElement(style) {
-  bindBridge = new StateController(this, bridgeStore)
+  bindBridge: any = new StateController(this, bridgeStore)
+  bindNetwork: any = new StateController(this, networkStore)
+
   @state() pending = false
   @state() menu = false
   @state() promptMsg = ''
   @state() promptTitle = ''
 
-  get bridge() {
-    return bridgeStore.bridge
-  }
-  get network() {
-    return this.bridge.network
-  }
   get current() {
-    return this.network.current
+    return networkStore.current
   }
   get native() {
     return this.current?.native
@@ -38,10 +34,7 @@ export class NetworkMenu extends ThemeElement(style) {
     this.menu = false
     this.pending = true
     try {
-      // await this.bridge.switchNetwork(network.chainId)
-      // @todo graph is not reloaded, so simply reload page at the moment
-      this.network.setChainId(network.chainId)
-      globalThis.location.reload()
+      await bridgeStore.bridge.switchNetwork(network.chainId)
     } catch (err: any) {
       if (err.code !== 4001) {
         console.warn('switch network failed with error:', err)
@@ -70,7 +63,12 @@ export class NetworkMenu extends ThemeElement(style) {
             () => html`
               <i
                 acronym=${this.cut(this.current.title)}
-                class="ui-network-icon ${classMap(this.$c([this.native?.symbol, { testnet: !this.current.mainnet }]))}"
+                class="ui-network-icon ${classMap(
+                  this.$c([
+                    this.current.native?.symbol,
+                    { testnet: !this.current.mainnet, unknown: networkStore.unSupported }
+                  ])
+                )}"
               ></i>
             `
           )}

@@ -59,7 +59,6 @@ export class CreateAlbumDialog extends ThemeElement('') {
     try {
       this.tx = await createAlbum(this.form.album, this.form.image, this.form.url)
       this.success = await this.tx.wait()
-      emitter.emit('manual-change')
     } catch (err: any) {
       let msg = err.message || err.code
       if (err.code === 4001) {

@@ -1,5 +1,5 @@
 import { ThemeElement, customElement, html, state, when } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { weekStatistic, weeklyReward } from './action'
 import { formatUnits } from 'ethers'
 import { weeklyStore } from '~/store/weekly'
@@ -10,7 +10,7 @@ import './dialog'
 import style from './claim.css?inline'
 @customElement('claim-rewards')
 export class ClaimRewards extends ThemeElement(style) {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
   bindWeekly: any = new StateController(this, weeklyStore)
 
   @state() rewards = 0n
@@ -18,7 +18,7 @@ export class ClaimRewards extends ThemeElement(style) {
   @state() dialog = false
 
   get disabled() {
-    return !bridgeStore.bridge.account
+    return !walletStore.account
   }
 
   connectedCallback(): void {

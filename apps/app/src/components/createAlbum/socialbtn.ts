@@ -1,5 +1,5 @@
 import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 // Components
 import '@riffian-web/ui/button'
 import '~/components/reward/dialog'
@@ -7,12 +7,12 @@ import emitter from '@lit-web3/base/emitter'
 
 @customElement('bind-social-btn')
 export class BindSocialBtn extends ThemeElement('') {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
 
   @state() dialog = false
 
   get disabled() {
-    return !bridgeStore.bridge.account
+    return !walletStore.account
   }
 
   open = () => {

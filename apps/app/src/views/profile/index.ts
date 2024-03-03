@@ -1,6 +1,6 @@
 import { ThemeElement, html, customElement, state, until, when, property } from '@riffian-web/ui/shared/theme-element'
 import emitter from '@lit-web3/base/emitter'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { rewardStore } from '~/store/reward'
 import { tweetStore, type Social } from '~/store/tweet'
 import { formatUnits } from 'ethers'
@@ -13,8 +13,8 @@ import style from './index.css?inline'
 const defStat = (): Record<string, any> => ({ own: null, holding: null, rewards: null, claimed: null })
 @customElement('profile-page')
 export class ProfilePage extends ThemeElement(style) {
-  bindBridge: any = new StateController(this, bridgeStore)
-  bindStore: any = new StateController(this, rewardStore)
+  bindWallet: any = new StateController(this, walletStore)
+  bindReward: any = new StateController(this, rewardStore)
 
   @property() acc = ''
 
@@ -26,7 +26,7 @@ export class ProfilePage extends ThemeElement(style) {
   @state() inited = false
 
   get account() {
-    return bridgeStore.bridge.account
+    return this.acc || walletStore.account
   }
 
   get itsMe() {
@@ -39,7 +39,7 @@ export class ProfilePage extends ThemeElement(style) {
   fetch = async () => {
     this.pending = true
     try {
-      const { user: uInfo } = await user(this.acc)
+      const { user: uInfo } = await user(this.account)
       this.user = uInfo
       // social
       const { address, socials = [], holding, rewardClaimed: claimed, subjectsCreated: created } = uInfo
@@ -153,7 +153,7 @@ export class ProfilePage extends ThemeElement(style) {
         <div class="w-full inline-flex pb-2 border-b border-slate-50/10">
           <div class="py-1.5 px-3 text-base font-normal text-white/70 rounded-md">Voted</div>
         </div>
-        ${when(this.acc, () => html`<user-votes-list by="id" .acc=${this.acc}></user-votes-list>`)}
+        ${when(this.account, () => html`<user-votes-list by="id" .acc=${this.account}></user-votes-list>`)}
       </div>
     </div>`
   }

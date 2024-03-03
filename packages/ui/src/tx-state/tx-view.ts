@@ -1,5 +1,5 @@
 import { customElement, ThemeElement, html, property } from '../shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { networkStore, StateController } from '@riffian-web/ethers/src/networks'
 import { shortAddress } from '@riffian-web/ethers/src/utils'
 // Components
 import '../link'
@@ -7,17 +7,13 @@ import '../link'
 import style from './tx-view.css?inline'
 @customElement('tx-view')
 export class TxView extends ThemeElement(style) {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindNetwork: any = new StateController(this, networkStore)
   @property({ type: Object }) tx: any
-
-  get bridge() {
-    return bridgeStore.bridge
-  }
 
   get txScanUri() {
     const { hash } = this.tx
     if (!hash) return ''
-    return `${this.bridge.network.current.scan}/tx/${hash}`
+    return `${networkStore.current.scan}/tx/${hash}`
   }
 
   override render() {

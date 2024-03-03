@@ -1,5 +1,5 @@
 import { customElement, ThemeElement, html, property, when, unsafeHTML, classMap } from '../shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { networkStore, StateController } from '@riffian-web/ethers/src/networks'
 
 // Components
 import './tx-view'
@@ -8,16 +8,14 @@ import style from './tx-state.css?inline'
 import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 @customElement('tx-state')
 export class TxState extends ThemeElement(style) {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindNetwork: any = new StateController(this, networkStore)
+
   @property({ type: Object }) tx: txReceipt | undefined
   @property({ type: Boolean }) txType = false
   @property({ type: Boolean, attribute: true }) inline = false
   @property({ type: Boolean }) onlyAwaitHash = false
   @property({ type: Object }) opts: any = {}
 
-  get bridge() {
-    return bridgeStore.bridge
-  }
   get icons() {
     const [
       success = '<i class="mdi mdi-check-all"></i>',
@@ -63,7 +61,7 @@ export class TxState extends ThemeElement(style) {
   }
 
   get txScanUri() {
-    return this.tx?.hash ? `${this.bridge.network.current.scan}/tx/${this.tx.hash}` : ''
+    return this.tx?.hash ? `${networkStore.current.scan}/tx/${this.tx.hash}` : ''
   }
 
   override render() {

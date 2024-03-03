@@ -1,5 +1,7 @@
 import { State, property } from '@lit-web3/base/state'
-import useBridge, { bridgeStore, getNonce } from './useBridge'
+import useBridge, { getNonce } from './useBridge'
+import { walletStore } from './wallet/store'
+import { Networks } from './networks'
 
 class TxQueueStore extends State {
   key = ''
@@ -43,8 +45,8 @@ export class TxQueue {
 
   constructor(address?: string) {
     this.provider = useBridge().bridgeStore.bridge.provider
-    // this.queue = useLocalStorage(`evm.txs.${this.provider.account}`, [], { listenToStorageChanges: false })
-    this.store = new TxQueueStore(`evm.txs.${address || this.provider.account}`)
+    // this.queue = useLocalStorage(`evm.txs.${walletStore.account}`, [], { listenToStorageChanges: false })
+    this.store = new TxQueueStore(`evm.txs.${address || walletStore.account}`)
     this.checking = new Set()
     this.check(true)
   }
@@ -53,9 +55,8 @@ export class TxQueue {
   }
   async add(tx: txSeq) {
     if (!tx.chainId) {
-      const { _network } = this.provider
-      tx.chainId = _network.chainId.toString()
-      tx.scan = _network.scan
+      tx.chainId = walletStore.chainId
+      tx.scan = Networks[tx.chainId].scan
     }
     tx.pending = true
     this.queue.unshift(tx)
@@ -79,7 +80,7 @@ export class TxQueue {
   async check(force: boolean) {
     this.queue.forEach(async (seq: any, i: number) => {
       if (force && i === 0) {
-        const nonce = await getNonce(this.provider.account)
+        const nonce = await getNonce(walletStore.account)
         const seqNonce = +seq.nonce
         this.provider.nonce = seqNonce > nonce ? seqNonce + 1 : nonce
       }
@@ -106,7 +107,6 @@ export class TxQueue {
   }
 }
 const cached: Record<string, TxQueue> = {}
-export const getTxQueue = (account = bridgeStore.bridge.account) =>
-  cached[account] || (cached[account] = new TxQueue(account))
+export const getTxQueue = (account = walletStore.account) => cached[account] || (cached[account] = new TxQueue(account))
 
 export default getTxQueue

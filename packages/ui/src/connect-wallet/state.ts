@@ -57,7 +57,7 @@ export class ConnectWalletState extends ThemeElement(style) {
             class="mt-4"
             @click=${() => this.bridge.install()}
             class="install uri connect-wallet-state-text"
-            >${this.bridge.wallet.installText}</ui-button
+            >${this.bridge.wallet?.installText}</ui-button
           >`,
         () => html`
           <span class="connect-wallet-icon mr-2 text-xl">${unsafeHTML(this.state.icon)}</span>

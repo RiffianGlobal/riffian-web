@@ -127,7 +127,6 @@ export class VoteAlbumDialog extends ThemeElement('') {
   }
   emitChange = () => {
     this.emit('change')
-    emitter.emit('manual-change')
   }
   close = async () => {
     this.tx = null

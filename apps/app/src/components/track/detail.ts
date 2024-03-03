@@ -1,5 +1,5 @@
 import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { subjectInfo } from './action'
 import { formatUnits } from 'ethers'
 import { throttle } from '@riffian-web/ethers/src/utils'
@@ -19,7 +19,7 @@ const defErr = () => ({ tx: '' })
 
 @customElement('track-detail')
 export class TrackDetail extends ThemeElement(style) {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
   bindTweets: any = new StateController(this, tweetStore)
 
   @property({ type: Boolean }) weekly = false
@@ -40,7 +40,7 @@ export class TrackDetail extends ThemeElement(style) {
   @state() inited = false
 
   get disabled() {
-    return !bridgeStore.bridge.account
+    return !walletStore.account
   }
 
   get voteEnable() {

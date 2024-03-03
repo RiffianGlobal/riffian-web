@@ -1,5 +1,6 @@
 // SubGraph API
 import Network from '../networks'
+import { defaultChainId } from '../constants/networks'
 import http, { Jsonish } from '@lit-web3/base/http'
 
 export const SubGraph: ChainConf = {
@@ -11,12 +12,7 @@ export const SubGraph: ChainConf = {
 
 export const getGraphUri = async (name: string) => {
   await new Promise<void>((resolve) => setTimeout(resolve))
-  let uri = SubGraph[name][Network.chainId]
-  if (!uri) {
-    console.error(`Not available for selected network(chain id ${Network.chainId}). Fallback to default chainid`)
-    uri = SubGraph[name][Network.defaultChainId]
-  }
-  return uri
+  return SubGraph[name][Network.chainId] ?? SubGraph[name][defaultChainId]
 }
 
 export const graphQuery = async (name = 'MediaBoard', query: string, variables?: {}, operationName?: string) =>

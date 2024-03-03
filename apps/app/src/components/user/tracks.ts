@@ -8,7 +8,7 @@ import {
   state,
   when
 } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { screenStore } from '@lit-web3/base/screen'
 import { format } from '~/lib/dayjs'
 import { asyncReplace } from 'lit/directives/async-replace.js'
@@ -29,7 +29,7 @@ import { toast } from '@riffian-web/ui/toast'
 import style from './tracks.css?inline'
 @customElement('track-list')
 export class TrackInfo extends ThemeElement(style) {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
   bindScreen: any = new StateController(this, screenStore)
   @property({ type: Boolean }) weekly = false
   @property({ type: String }) address = ''
@@ -43,7 +43,7 @@ export class TrackInfo extends ThemeElement(style) {
   }
 
   get disabled() {
-    return !bridgeStore.bridge.account
+    return !walletStore.account
   }
 
   go2 = (item: any) => {

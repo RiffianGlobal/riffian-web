@@ -3,8 +3,8 @@ export { StateController } from '@lit-web3/base/state'
 import { ttlStorage } from './utils'
 import { isAddress } from 'ethers'
 
-import { bridgeStore } from './useBridge'
-import { Network } from './networks'
+import { getBridgeProvider } from './useBridge'
+import { networkStore } from './networks'
 
 type DOID = string
 type Address = string
@@ -24,12 +24,15 @@ class DOIDNameStore extends State {
   @property({ value: {} }) DOIDs!: DOIDCache
   @property({ value: {} }) addresses!: AddressCache
 
-  key = (key: string) => `doid.${Network.chainId}.${key}`
+  key = (key: string) => `doid.${networkStore.chainId}.${key}`
 
   set = (address: string, name: string, save = false) => {
     this.DOIDs = { ...this.DOIDs, [address]: name }
     this.addresses = { ...this.addresses, [name]: address }
     if (save) {
+      if (!networkStore.chainId) {
+        console.warn('no networkStore.chainId', networkStore.chainId)
+      }
       ttlStorage.setItem(this.key(address), name, ttl)
       ttlStorage.setItem(this.key(name), address, ttl)
     }
@@ -60,7 +63,8 @@ class DOIDNameStore extends State {
       this.promises[req] = new Promise(async (resolve) => {
         let res
         try {
-          res = await bridgeStore.bridge.provider?.[isAddr ? 'lookupAddress' : 'resolveName'](req)
+          const provider = await getBridgeProvider()
+          res = await provider?.[isAddr ? 'lookupAddress' : 'resolveName'](req)
         } catch {}
         if (res) {
           assign(res)

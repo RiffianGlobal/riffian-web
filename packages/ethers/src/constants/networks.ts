@@ -1,11 +1,9 @@
 // All Networks
-export function chainIdStr(chainId: number): string {
-  return '0x' + chainId.toString(16)
+export function chainIdStr(chainId: number | string): string {
+  return '0x' + (+chainId).toString(16)
 }
-// @todo seems native is unused
-// export const native = { name: 'Ethereum', symbol: 'ETH', decimals: 18 }
 
-export const AllNetworks = {
+const AllNetworks: Networks = {
   '0xd01d': {
     chainId: '0xd01d',
     title: 'DOID',
@@ -37,7 +35,16 @@ export const AllNetworks = {
   }
 }
 
-export const SupportNetworks = import.meta.env.MODE === 'production' ? ['0xd01d'] : ['0xd01d', '0xdddd']
+export const SupportNetworkIDs = import.meta.env.MODE === 'production' ? ['0xd01d'] : ['0xd01d', '0xdddd']
+
+const isProd = import.meta.env.MODE === 'production'
+export const mainnetOffline = !!import.meta.env.VITE_DISABLE_MAINNET
+
+export const [mainnetChainId, testnetChainId] = SupportNetworkIDs
+export const defaultChainId =
+  isProd && !mainnetOffline ? mainnetChainId : import.meta.env.VITE_DEF_TESTNET ?? testnetChainId
+
+export const SupportNetworks = Object.fromEntries(SupportNetworkIDs.map((id) => [id, AllNetworks[id]]))
 
 export const unknownNetwork = {
   title: 'Unsupported Network',
@@ -48,4 +55,4 @@ export const unknownNetwork = {
   icon: ''
 }
 
-export default AllNetworks
+export default SupportNetworks

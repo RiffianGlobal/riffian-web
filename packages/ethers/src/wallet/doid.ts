@@ -1,12 +1,15 @@
-import { Wallet, WalletState, emitWalletChange } from '../wallet'
-import { State, property } from '../state'
+import { WalletState } from './'
+import { State, property } from '@lit-web3/base/state'
 import { JsonRpcApiProvider, JsonRpcSigner } from 'ethers'
-import getProvider from '../provider'
-import Network from '../networks'
+import { SupportNetworkIDs } from '../constants/networks'
+import { networkStore } from '../networks'
+import { walletStore } from './store'
+// sync import
+import { doid as mainnet, doidTestnet as testnet, DOIDConnectorEthers } from '@doid/connect-ethers'
 
-const injectedKey = 'doid-connect.injected'
+const networkIDs = SupportNetworkIDs.map((r) => +r)
 
-export class DoidWallet extends State implements Wallet {
+export class DOIDConnect extends State implements Wallet {
   public inited = false
   constructor() {
     super()
@@ -14,142 +17,127 @@ export class DoidWallet extends State implements Wallet {
   }
   private connector: any
   resolved = false
-  private chains?: any[]
+
   private init = async () => {
-    let { doid, doidTestnet, DOIDConnectorEthers } = await import('@doid/connect-ethers')
-    this.chains = [doid, doidTestnet]
+    const chains = [mainnet, testnet].filter((r) => networkIDs.includes(r.id))
     this.connector = new DOIDConnectorEthers()
     const connectorOptions = {
       appName: 'Riffian',
       themeMode: 'dark',
-      chains: this.chains,
-      doidNetwork: Number(Network.chainId) == doidTestnet.id ? doidTestnet : doid,
+      chains,
+      doidNetwork: chains.find((r) => +r.id == +networkStore.chainId),
       walletConnectEnabled: true,
       walletConnectId: 'b9850e108fc2d1e587dd41ce1fea0a16'
     }
-    // if (import.meta.env.MODE === 'development') Object.assign(connectorOptions, { doidNetwork: doidTestnet })
-    this.connector.updateOptions(connectorOptions)
-    // this.account = this.connector.account
-    this.connector.subscribe((_: any, value: any) => {
-      this.account = value
-    }, 'account')
-    // this.doid = this.connector.doid
-    this.connector.subscribe((_: any, value: any) => {
-      this.doid = value
-      if (this.doid && !value) {
-        this.account = ''
-        this.disconnect()
-      }
-    }, 'doid')
-    // No need to expose chainId, Network.chainId is used when getting provider or contract instance
-    // if (this.connector.chainId) this.chainId = chainIdStr(this.connector.chainId)
-    // this.connector.subscribe((_: any, value: number | undefined) => {
-    //   if (!value) return
-    //   this.chainId = value ? chainIdStr(value) : ''
-    //   this.doid = this.connector.doid ?? ''
-    //   this.updateProvider(this.chainId)
-    // }, 'chainId')
-
-    // switch to Network.chainId
-    await this.connector.switchChain(Number(Network.chainId)).catch(console.warn)
-    this.resolved = true
+    // S TODO (bug): doid-connect needs to use options chainId on init phase
+    if (!networkStore.unSupported) this.connector.updateOptions(connectorOptions)
+    try {
+      // if (!walletStore.signedIn) await this.connector.switchChain(+networkStore.chainId)
+    } catch {}
+    // E
+    this.syncWallet(true)
   }
 
   //-- Wallet interface implementation --
   @property() public state: WalletState = WalletState.DISCONNECTED
-  @property() public account = ''
+
   get chainId() {
-    return Network.chainId
+    return walletStore.chainId
   }
-  @property() public doid: string = ''
-
-  getAddresses(): Promise<string[]> {
-    return this.connector?.getAddresses().catch((e: any) => {
-      console.warn(e)
-      return []
-    })
+  get account() {
+    return walletStore.account
+  }
+  get doid() {
+    return walletStore.doid
   }
 
-  getProvider(): Promise<JsonRpcApiProvider> {
-    return this.connector?.getProvider(Number(Network.chainId))
+  // Sync data to walletStore
+  syncWallet = (listen = false) => {
+    const { subscribe, chainId, account, doid } = this.connector
+    // Sync chainId
+    if (chainId !== undefined) walletStore.setChainId(chainId)
+    if (listen)
+      subscribe((_: any, val: number) => {
+        if (walletStore.signedIn && val) walletStore.setChainId(val)
+      }, 'chainId')
+    // Sync account
+    if (account !== undefined) walletStore.setAccount(account)
+    if (listen)
+      subscribe((_: any, val = '') => {
+        walletStore.setAccount(val)
+      }, 'account')
+    // Sync DOID
+    if (doid !== undefined) walletStore.setDoid(doid)
+    if (listen)
+      subscribe((_: any, val: any) => {
+        if (walletStore.doid && !val) this.disconnect()
+        else walletStore.setDoid(val)
+      }, 'doid')
   }
 
-  getSigner(account: string): Promise<JsonRpcSigner> {
-    return this.connector?.getSigner(Number(Network.chainId), account)
+  getAddresses = (): Promise<string[]> => {
+    return this.connector?.getAddresses()
   }
 
-  switchChain = (chainId: string) => {
-    console.debug(`Switch to chain id ${chainId}`)
-    this.chains?.find((x) => {
-      if (x.id == chainId) {
-        this.connector.updateOptions({ doidNetwork: x })
-        return true
-      }
-      return false
-    })
-    // this.connector?.updateChainId(chainId)
-    return this.connector
-      .connect({ noModal: true })
-      .then(() => this.connector?.switchChain(Number(chainId)))
-      .then(() => console.log('switched'))
-      .catch((e) => console.warn(e))
-    //.finally(() => this.updateProvider(chainId))
-    // this.connector?.connect({ noModal: true })
+  getProvider = async (chainId?: number): Promise<JsonRpcApiProvider> => {
+    await this.ensure()
+    return this.connector?.getProvider(chainId)
   }
-  updateProvider(chainId: string) {
-    console.debug(`Update provider with chain id ${chainId}`)
-    this.connector?.updateChainId(chainId)
-    getProvider().update({ chainId })
-    emitWalletChange({ chainId })
+
+  getSigner = (account: string): Promise<JsonRpcSigner> => {
+    return this.connector?.getSigner(this.connector.chainId, account)
+  }
+
+  switchChain = async (chainId: string) => {
+    try {
+      await this.connector?.switchChain(+chainId)
+      walletStore.setChainId(chainId)
+      this.connector?.setWalletChainId(chainId)
+    } catch {}
   }
   async connect({ force = false } = {}) {
     this.inited = true
     this.state = WalletState.CONNECTING
     try {
-      const wallet = await this.connector?.connect({ noModal: !force })
-      console.debug('Sign In returns', wallet)
-      this.account = wallet?.account
-      this.doid = wallet?.doid
-      localStorage.setItem(injectedKey, '1')
+      await this.connector?.connect({ noModal: !force })
+      // this.syncWallet()
     } catch (err: any) {
       this.state = WalletState.DISCONNECTED
-      console.info('Connect failed')
-      console.info(err)
-    } finally {
+      throw err
     }
   }
   disconnect = async () => {
-    await this.connector?.disconnect()
-    localStorage.removeItem(injectedKey)
+    // Just clear user's `signIn` action, not really disconnect
+    // await this.connector?.disconnect()
+    walletStore.clear()
     this.state = WalletState.DISCONNECTED
-    emitWalletChange()
   }
   install() {}
 
-  ensure = () => {
+  ensure = (): Promise<Wallet> => {
     return new Promise((resolve) => {
       if (this.resolved) resolve(this)
       const resolver = () => {
-        // this.resolved = true
+        this.resolved = true
         resolve(this)
       }
       let retryTimes = 0
-      // chainId can not be detected if no connection yet, so check resolved.
-      const detectResolved = async () => {
-        if (this.resolved) resolver()
-        else if (retryTimes++ < 30) setTimeout(detectResolved, 10)
+      const detectChainId = async () => {
+        if (this.connector) resolver()
+        else if (retryTimes++ < 30) setTimeout(detectChainId, 10)
         else resolver()
       }
-      detectResolved()
+      detectChainId()
     })
   }
-  injected = () => !!localStorage.getItem(injectedKey)
 }
 
-export const importer = {
+export const DOIDWallet = new DOIDConnect()
+
+export const importer: WalletApp = {
   name: 'DOID',
   title: 'DOID',
   icon: '',
   app: undefined,
-  import: async () => new DoidWallet().ensure()
+  import: async () => DOIDWallet.ensure()
 }

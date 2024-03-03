@@ -1,6 +1,7 @@
 import { customElement, ThemeElement, html, when, state, classMap, unsafeHTML } from '../shared/theme-element'
 import { animate } from '@lit-labs/motion'
 import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { networkStore } from '@riffian-web/ethers/src/networks'
 import { screenStore } from '@lit-web3/base/screen'
 // Components
 import '../link'
@@ -10,28 +11,23 @@ import style from './network-warning.css?inline'
 export class NetworkWarning extends ThemeElement(style) {
   bindBridge = new StateController(this, bridgeStore)
   bindScreen = new StateController(this, screenStore)
+  bindNetwork: any = new StateController(this, networkStore)
+
   @state() pending = false
 
-  get bridge() {
-    return bridgeStore.bridge
-  }
-  get network() {
-    return this.bridge.network
-  }
   get txt() {
-    if (this.network.unSupported) `Please connect to the Mainnet.`
-    if (this.network.mainnetOffline) return `Mainnet is not supported yet`
-    if (!this.network.isMainnet)
-      return unsafeHTML(`You are currently connected to the <b>${this.bridge.network.title}</b>`)
+    if (networkStore.unSupported) `Please connect to the Mainnet.`
+    if (networkStore.mainnetOffline) return `Mainnet is not supported yet`
+    if (!networkStore.isMainnet) return unsafeHTML(`You are currently connected to the <b>${networkStore.title}</b>`)
     return ''
   }
   get shown() {
-    return this.network.disabled || !this.network.isMainnet
+    return networkStore.disabled || !networkStore.isMainnet
   }
 
   async switch() {
     this.pending = true
-    await this.bridge.switchNetwork(this.network.default.chainId)
+    await bridgeStore.bridge.switchNetwork(networkStore.default.chainId)
     this.pending = false
   }
   toggle(del = false) {
@@ -67,10 +63,10 @@ export class NetworkWarning extends ThemeElement(style) {
         ><i class="i mdi mdi-alert-outline font-bold"></i>${this.txt}</span
       >
       ${when(
-        !this.network.isDefaultNet,
+        !networkStore.isDefaultNet,
         () =>
           html`<ui-link ?disabled=${this.pending} text class="ml-1" @click=${this.switch}
-            >Switch to ${this.network.default.title}</ui-link
+            >Switch to ${networkStore.default.title}</ui-link
           >`
       )}
     </span>`

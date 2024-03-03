@@ -8,7 +8,7 @@ import {
   state,
   when
 } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { subjectsReq } from '~/query'
 import { screenStore } from '@lit-web3/base/screen'
 import { weeklyStore } from '~/store/weekly'
@@ -28,7 +28,7 @@ import style from './list.css?inline'
 @customElement('top-album')
 export class TopAlbum extends ThemeElement(style) {
   bindScreen: any = new StateController(this, screenStore)
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
   bindWeekly: any = new StateController(this, weeklyStore)
   bindCharts: any = new StateController(this, chartsStore)
 
@@ -44,7 +44,7 @@ export class TopAlbum extends ThemeElement(style) {
   @state() hasMore = true
 
   get disabled() {
-    return !bridgeStore.bridge.account
+    return !walletStore.account
   }
   get isMobi() {
     return screenStore.isMobi

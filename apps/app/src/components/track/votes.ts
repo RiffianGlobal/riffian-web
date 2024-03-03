@@ -8,7 +8,7 @@ import {
   state,
   when
 } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { screenStore } from '@lit-web3/base/screen'
 import { trackVotes } from './action'
 import { goto } from '@lit-web3/router'
@@ -19,14 +19,14 @@ import { throttle } from '@riffian-web/ethers/src/utils'
 import '~/components/top/dialog'
 import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
-import '@riffian-web/ui/img/loader'
+import '@riffian-web/ui/address'
 import '@riffian-web/ui/dialog/prompt'
 
 import style from './list.css?inline'
 @customElement('track-votes')
 export class TrackInfo extends ThemeElement(style) {
   bindScreen: any = new StateController(this, screenStore)
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
 
   @property({ type: Boolean }) weekly = false
   @property({ type: String }) trackAddress = ''
@@ -42,7 +42,7 @@ export class TrackInfo extends ThemeElement(style) {
     return screenStore.isMobi
   }
   get disabled() {
-    return !bridgeStore.bridge.account
+    return !walletStore.account
   }
   get loading() {
     return !this.inited && this.pending
@@ -55,9 +55,9 @@ export class TrackInfo extends ThemeElement(style) {
   fetch = async () => {
     this.pending = true
     try {
-      let result = await trackVotes(this.trackAddress)
-      this.votes = result.subject.userVotes
-      this.subjectData = result.subject
+      const { subject } = await trackVotes(this.trackAddress)
+      this.votes = subject.userVotes
+      this.subjectData = subject
     } catch (e: any) {
       console.error(e)
       this.promptMessage = e

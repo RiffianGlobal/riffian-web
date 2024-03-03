@@ -8,7 +8,7 @@ import {
   classMap,
   property
 } from '@riffian-web/ui/shared/theme-element'
-import { bridgeStore, StateController } from '@riffian-web/ethers/src/useBridge'
+import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { screenStore } from '@lit-web3/base/screen'
 import { goto } from '@lit-web3/router'
 // Components
@@ -22,7 +22,7 @@ import emitter from '@lit-web3/base/emitter'
 import style from './list.css?inline'
 @customElement('user-votes-list')
 export class UserVotesList extends ThemeElement(style) {
-  bindBridge: any = new StateController(this, bridgeStore)
+  bindWallet: any = new StateController(this, walletStore)
   bindScreen: any = new StateController(this, screenStore)
 
   @property() acc!: string
@@ -40,7 +40,7 @@ export class UserVotesList extends ThemeElement(style) {
   }
 
   get disabled() {
-    return !bridgeStore.bridge.account
+    return !walletStore.account
   }
 
   getRandomInt(max: number) {
@@ -96,12 +96,11 @@ export class UserVotesList extends ThemeElement(style) {
   connectedCallback() {
     super.connectedCallback()
     this.fetch()
-    bridgeStore.bridge.subscribe(this.fetch)
-    emitter.on('manual-change', this.fetch)
+    emitter.on('block-world', this.fetch)
   }
   disconnectedCallback() {
     super.disconnectedCallback()
-    emitter.off('manual-change', this.fetch)
+    emitter.off('block-world', this.fetch)
   }
 
   render() {
