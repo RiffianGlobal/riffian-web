@@ -33,6 +33,7 @@ class BalanceStore extends State {
   }
   init = async () => {
     this.fetch()
+    this.listen()
   }
 }
 export const balanceStore = new BalanceStore()
