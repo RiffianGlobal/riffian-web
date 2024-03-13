@@ -4,6 +4,7 @@ import { screenStore } from '@lit-web3/base/screen'
 import { shortAddress } from '@riffian-web/ethers/src/utils'
 import { DOIDStore } from '@riffian-web/ethers/src/doid-resolver'
 import { type PropertyValues } from 'lit'
+import emitter from '@lit-web3/base/emitter'
 // Components
 import './avatar'
 import '../link'
@@ -52,7 +53,8 @@ export class UIAddress extends ThemeElement(style) {
 
   solveDOID = async () => {
     if (!this.addr) return
-    this.doid = (await DOIDStore.getDOID(this.addr)) ?? ''
+    this.doid = (await DOIDStore.getDOID(this.addr)) ?? (this.self ? undefined : '')
+    if (this.self && !this.doid) emitter.once('wallet-changed', this.solveDOID)
   }
 
   willUpdate(props: PropertyValues<this>) {

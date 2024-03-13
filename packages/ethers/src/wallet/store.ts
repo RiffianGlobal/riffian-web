@@ -34,7 +34,10 @@ class WalletStore extends State {
     }
     this.account = newAccount
   }
-  setDoid = (val = '') => (this.doid = this.signedIn ? val : '')
+  setDoid = (val = '') => {
+    this.doid = this.signedIn ? val : ''
+    emitWalletChange()
+  }
   clear = () => {
     this.setAccount('')
     this.setDoid('')

@@ -102,8 +102,8 @@ export class DOIDConnect extends State implements Wallet {
       await this.connector?.connect({ noModal: !force })
       // this.syncWallet()
     } catch (err: any) {
-      this.state = WalletState.DISCONNECTED
-      throw err
+      console.warn('Connect failed', err)
+      this.disconnect()
     }
   }
   disconnect = async () => {

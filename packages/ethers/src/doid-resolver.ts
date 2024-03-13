@@ -27,6 +27,7 @@ class DOIDNameStore extends State {
   key = (key: string) => `doid.${networkStore.chainId}.${key}`
 
   set = (address: string, name: string, save = false) => {
+    if (!address || !name) return
     this.DOIDs = { ...this.DOIDs, [address]: name }
     this.addresses = { ...this.addresses, [name]: address }
     if (save) {
