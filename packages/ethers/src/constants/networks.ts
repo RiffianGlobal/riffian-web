@@ -36,13 +36,24 @@ const AllNetworks: Networks = {
 }
 
 export const SupportNetworkIDs = import.meta.env.MODE === 'production' ? ['0xd01d'] : ['0xd01d', '0xdddd']
+export const validChainId = (chainId: ChainId) => SupportNetworkIDs.includes(chainId)
 
 const isProd = import.meta.env.MODE === 'production'
 export const mainnetOffline = !!import.meta.env.VITE_DISABLE_MAINNET
 
 export const [mainnetChainId, testnetChainId] = SupportNetworkIDs
+
+const lsKey = 'chainId.def'
+const preferredDef = localStorage.getItem(lsKey)
+if (preferredDef && !validChainId(preferredDef)) localStorage.removeItem(lsKey)
+
 export const defaultChainId =
-  isProd && !mainnetOffline ? mainnetChainId : import.meta.env.VITE_DEF_TESTNET ?? testnetChainId
+  preferredDef ?? (isProd && !mainnetOffline ? mainnetChainId : import.meta.env.VITE_DEF_TESTNET ?? testnetChainId)
+export const setDefaultChainId = (chainId: ChainId, reload = false) => {
+  if (chainId == defaultChainId || !validChainId(chainId)) return
+  localStorage.setItem(lsKey, chainId)
+  if (reload) location.reload()
+}
 
 export const SupportNetworks = Object.fromEntries(SupportNetworkIDs.map((id) => [id, AllNetworks[id]]))
 

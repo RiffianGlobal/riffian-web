@@ -4,7 +4,6 @@ import {
   mainnetChainId,
   SupportNetworks,
   unknownNetwork,
-  SupportNetworkIDs,
   chainIdStr
 } from './constants/networks'
 import { State, property } from '@lit-web3/base/state'

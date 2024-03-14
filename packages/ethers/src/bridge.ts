@@ -5,6 +5,7 @@ import { walletStore, Wallets } from './wallet'
 import { WalletState, signInKey } from './wallet/constants'
 import { State, property } from '@lit-web3/base/state'
 import networkStore from './networks'
+import { setDefaultChainId } from './constants/networks'
 
 export class Bridge extends State {
   private selected: WalletApp | undefined
@@ -30,7 +31,8 @@ export class Bridge extends State {
   }
 
   switchNetwork = async (chainId: ChainId) => {
-    await this.wallet?.switchChain(chainId)
+    if (this.wallet) await this.wallet?.switchChain(chainId)
+    setDefaultChainId(chainId, !this.wallet)
   }
   async regToken(token: Tokenish, { alt = false, ext = 'svg' } = {}) {
     const { ethereum } = window

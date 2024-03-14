@@ -1,6 +1,6 @@
 import { signInKey } from './constants'
 import { State, property, storage } from '@lit-web3/base/state'
-import { chainIdStr } from '../constants/networks'
+import { chainIdStr, defaultChainId } from '../constants/networks'
 import { shortAddress } from '../utils'
 export { StateController } from '@lit-web3/base/state'
 import emitter from '@lit-web3/base/emitter'
@@ -41,6 +41,7 @@ class WalletStore extends State {
   clear = () => {
     this.setAccount('')
     this.setDoid('')
+    this.setChainId(defaultChainId)
   }
 
   get signedIn() {

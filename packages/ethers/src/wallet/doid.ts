@@ -108,8 +108,8 @@ export class DOIDConnect extends State implements Wallet {
   }
   disconnect = async () => {
     // Just clear user's `signIn` action, not really disconnect
-    // await this.connector?.disconnect()
     walletStore.clear()
+    await this.connector?.disconnect()
     this.state = WalletState.DISCONNECTED
   }
   install() {}
