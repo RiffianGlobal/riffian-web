@@ -58,7 +58,7 @@ export class UIHeader extends ThemeElement(style) {
           <div class="flex justify-center items-center">
             ${when(!this.asMenu, () => html`<slot name="center"></slot>`)}
           </div>
-          <div class="flex justify-end items-center gap-2 lg_w-60">
+          <div class="flex justify-end items-center gap-0.5 lg_gap-2 lg_w-60">
             <slot name="right"></slot>
             <slot name="wallet"
               ><connect-wallet-btn hideAddr dropable>

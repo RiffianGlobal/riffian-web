@@ -55,7 +55,7 @@ export class NetworkMenu extends ThemeElement(style) {
         btnSm
         btnText
         dropClass="w-12"
-        btnClass="text"
+        btnClass="text -ml-1.5 lg_ml-auto"
       >
         <div slot="button" class="inline-flex justify-center items-center">
           ${when(

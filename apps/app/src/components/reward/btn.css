@@ -3,7 +3,20 @@
 }
 
 .twTip {
-  animation: shaking 0.8s 3s linear infinite;
+  @apply absolute top-1.5 whitespace-nowrap right-full cursor-pointer;
+  &:not(.mobi) {
+    animation: shaking 0.8s 3s linear infinite;
+  }
+  & .twTip-cnt {
+    @apply border text-gray-200 bg-gray-700 rounded-md border-gray-800 p-1 px-2;
+    background: rgba(255, 229, 0, 0.3);
+    color: rgba(254, 233, 50, 1);
+  }
+  &.mobi {
+    @apply flex justify-center w-0 right-auto top-auto bottom-full;
+    left: 50%;
+    animation: shakingY 0.8s 3s linear infinite;
+  }
 }
 @keyframes shaking {
   0% {
@@ -20,5 +33,23 @@
   }
   100% {
     transform: translateX(0);
+  }
+}
+
+@keyframes shakingY {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(3px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+  75% {
+    transform: translateY(3px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }

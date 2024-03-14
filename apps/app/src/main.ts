@@ -14,6 +14,7 @@ import '@riffian-web/ui/nav/footer'
 import '@riffian-web/ui/nav/nav'
 import '@riffian-web/ui/block-number'
 import '@riffian-web/ui/ui-ver'
+import '@riffian-web/ui/address/doid'
 import '~/lib/sentry'
 import '~/components/createAlbum/btn'
 import '~/components/reward/btn'
@@ -37,12 +38,12 @@ export class AppMain extends ThemeElement('') {
   get isMobi() {
     return screenStore.isMobi
   }
+  get acc() {
+    return walletStore.account
+  }
 
   chkView = () => {
     this.inRoot = routerPathroot() === '/'
-  }
-  openReward = () => {
-    emitter.emit('reward-show')
   }
 
   connectedCallback() {
@@ -56,25 +57,37 @@ export class AppMain extends ThemeElement('') {
   }
 
   render() {
-    return html`<ui-header full>
+    return html` <!-- Header -->
+      <ui-header full>
+        <!-- Left -->
         <div slot="logo" class="inline-flex justify-center items-center mr-4">
           <a class="inline-flex justify-center items-center font-bold" href="/"><i class="ui-logo beta"></i></a>
         </div>
-
-        <div slot="right">
-          <div class="inline-flex items-center gap-4">
-            ${when(walletStore.account, () => html`<reward-btn></reward-btn>`)}
-            <network-menu></network-menu>
-          </div>
-        </div>
+        ${when(this.isMobi, () => html`<network-menu slot="left"></network-menu>`)}
         ${when(
-          walletStore.account && !this.isMobi,
+          this.isMobi,
           () =>
-            html`<div slot="balance">
-              <account-balance class="ui-em"></account-balance>
-            </div>`
+            html`<div slot="right" class="flex flex-col text-xs leading-none justify-center items-end w-full">
+              <ui-doid .doid=${walletStore.doid}></ui-doid>
+              <account-balance class="ui-em text-[10px]"></account-balance>
+            </div>`,
+          () =>
+            html`<div slot="right">
+                <div class="inline-flex items-center gap-4">
+                  ${when(this.acc, () => html`<reward-btn></reward-btn>`)}
+                  <network-menu></network-menu>
+                </div>
+              </div>
+              ${when(
+                this.acc,
+                () =>
+                  html`<div slot="balance">
+                    <account-balance class="ui-em"></account-balance>
+                  </div>`
+              )}`
         )}
 
+        <!-- Dropdown -->
         <div slot="submenu">
           <div class="mx-4 pt-3 border-t border-white/15">
             <div class="flex justify-between">
@@ -95,7 +108,8 @@ export class AppMain extends ThemeElement('') {
           )}
         </div>
       </ui-header>
-      <main class="ui-app-main">
+      <!-- Main -->
+      <main class="ui-app-main mt-3 lg_mt-0">
         ${when(
           screenStore.isMobi,
           () =>
@@ -113,7 +127,7 @@ export class AppMain extends ThemeElement('') {
                   <create-album-btn icon btnClass="p-0 text-2xl"></create-album-btn>
                 </div>
                 <div class="flex flex-col justify-center items-center">
-                  <i class="mdi mdi-gift-outline text-2xl" @click=${this.openReward}></i>
+                  <reward-btn><i class="mdi mdi-gift-outline text-2xl"></i></reward-btn>
                 </div>
                 <div class="flex flex-col justify-center items-center">
                   <ui-link href="/profile" nav class="!opacity-100"
@@ -125,6 +139,7 @@ export class AppMain extends ThemeElement('') {
         )}
         <slot> </slot>
       </main>
+      <!-- Footer -->
       <ui-footer full>
         <div slot="block"></div>
         <div slot="center"><ui-ver></ui-ver></div>

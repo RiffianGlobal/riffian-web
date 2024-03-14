@@ -49,7 +49,7 @@
 @media (max-width: 768px) {
   :root {
     --headerH: var(--header-height, 56px);
-    --uiLogoW: var(--ui-logo-w, 110px);
+    --uiLogoW: var(--ui-logo-w, 80px);
     --uiLogoH: var(--ui-logo-h, 24px);
   }
 }
