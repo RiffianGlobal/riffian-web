@@ -124,7 +124,7 @@ export class TrackInfo extends ThemeElement(style) {
           <div class="flex header">
             <div class="flex-none w-16">Index</div>
             <div class="flex-auto">Name</div>
-            <div class="flex-none w-40">Created</div>
+            <div class="flex-none w-40">Uploaded</div>
             <div class="num flex-none">Voters</div>
             <div class="num flex-none">Tickets</div>
             <div class="num flex-none">Vote Value</div>

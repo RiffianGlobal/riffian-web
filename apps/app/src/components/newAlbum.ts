@@ -52,7 +52,7 @@ export class NewAlbum extends ThemeElement('') {
       const contract = await getContract('MediaBoard', { abiName: 'MediaBoard' })
       const txn = await contract.newAlbum(name, symbol)
       await txn.wait()
-      this.result = 'Create Success, please visit scan for details. txn hash: ' + txn.hash
+      this.result = 'Upload Success, please visit scan for details. txn hash: ' + txn.hash
       this.err = false
     } catch (e) {
       this.result = await parseRevertReason(e)

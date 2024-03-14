@@ -15,8 +15,8 @@ export const createAlbum = async (name: string, image: string, url: string) => {
     errorCodes: 'MediaBoard',
     allowAlmostSuccess: true,
     seq: {
-      type: 'CreateSubject',
-      title: `Create Subject`,
+      type: 'UploadSubject',
+      title: `Upload Subject`,
       ts: nowTs(),
       overrides
     }

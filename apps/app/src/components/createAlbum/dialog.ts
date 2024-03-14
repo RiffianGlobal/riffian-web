@@ -89,7 +89,7 @@ export class CreateAlbumDialog extends ThemeElement('') {
         ${when(
           this.txPending,
           () =>
-            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your track has been created.' } }}
+            html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your track has been uploaded.' } }}
               ><div slot="view" class="flex flex-col items-center">
                 <ui-link
                   class="mb-2"

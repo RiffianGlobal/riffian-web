@@ -140,7 +140,7 @@ export class TopAlbum extends ThemeElement(style) {
       : html`
           ${when(!this.isMobi, () => html`<div class="w-16">Index</div>`)}
           <div class="flex-auto">Name</div>
-          ${when(!this.isMobi, () => html`<div class="flex-none w-40">Created</div>`)}
+          ${when(!this.isMobi, () => html`<div class="flex-none w-40">Uploaded</div>`)}
           <div class="num flex-none w-24">Volume</div>
           ${when(
             !this.isMobi,
