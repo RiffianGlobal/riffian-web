@@ -124,13 +124,13 @@ export class ProfilePage extends ThemeElement(style) {
             class="h-full lg_h-24 flex flex-col justify-center items-center lg_rounded-xl gapy-y-1 lg_gap-y-1.5 lg_bg-white/5"
           >
             <span class="text-xs md_text-base text-gray-500">Upload</span>
-            <div class="text-xl lg_text-2xl font-light">${!this.ts ? '-' : this.stat.own ?? 0}</div>
+            <div class="text-xl lg_text-2xl font-light">${!this.inited ? '-' : this.stat.own ?? 0}</div>
           </div>
           <div
             class="h-full lg_h-24 flex flex-col justify-center items-center lg_rounded-xl gapy-y-1 lg_gap-y-1.5 lg_bg-white/5"
           >
             <span class="text-xs md_text-base text-gray-500">Holding</span>
-            <div class="text-xl lg_text-2xl font-light">${!this.ts ? '-' : this.stat.holding ?? '0'}</div>
+            <div class="text-xl lg_text-2xl font-light">${!this.inited ? '-' : this.stat.holding ?? '0'}</div>
           </div>
           <div
             class="h-full lg_h-24 flex flex-col justify-center items-center lg_rounded-xl gapy-y-1 lg_gap-y-1.5 lg_bg-white/5"
