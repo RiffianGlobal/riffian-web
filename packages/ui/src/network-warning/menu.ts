@@ -46,6 +46,7 @@ export class NetworkMenu extends ThemeElement(style) {
   }
 
   override render() {
+    if (!networkStore.unSupported && this.networks.length == 1) return ''
     return html`
       <ui-drop
         .show=${this.menu}
