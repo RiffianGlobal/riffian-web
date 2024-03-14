@@ -46,7 +46,7 @@ export class RewardTasks extends ThemeElement(style) {
     if (!rewardStore.inited) return
     return {
       ...rewardTasks[0],
-      amnt: (+formatUnits(rewardStore.votesTotal)).toFixed(4)
+      amnt: (+formatUnits(rewardStore.votesTotal)).toFixed(2)
     }
   }
 

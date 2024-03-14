@@ -9,7 +9,7 @@ export class AccountBalance extends ThemeElement('') {
 
   get showBalance() {
     if (!balanceStore.balance) return '-'
-    return (+balanceStore.balance).toFixed(4)
+    return (+balanceStore.balance).toFixed(2)
   }
 
   render() {

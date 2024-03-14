@@ -51,7 +51,7 @@ export class ProfilePage extends ThemeElement(style) {
         own: created.length,
         holding,
         rewards: '',
-        claimed: parseFloat((+formatUnits(claimed)).toFixed(4))
+        claimed: parseFloat((+formatUnits(claimed)).toFixed(2))
       }
     } catch (e: any) {
       console.error(e)

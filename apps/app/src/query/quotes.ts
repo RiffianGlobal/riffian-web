@@ -27,7 +27,7 @@ export const cookQuote = (quotes = []): Quote[] => {
     let { date, high, low, open, close, volume } = quote
     open = toNumber(open)
     close = toNumber(close)
-    const chg = +(close - open).toFixed(4)
+    const chg = +(close - open).toFixed(2)
     const res = {
       time: date * 3600,
       open,

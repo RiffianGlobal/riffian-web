@@ -123,7 +123,7 @@ export class TrackDetail extends ThemeElement(style) {
                     ><span class="text-xs md_text-base">Reward Claimed</span>
                     <span class="ml-1 text-xl md_text-base text-blue-300"
                       >${this.user.rewardClaimed
-                        ? parseFloat((+formatUnits(this.user.rewardClaimed)).toFixed(4))
+                        ? parseFloat((+formatUnits(this.user.rewardClaimed)).toFixed(2))
                         : '-'}</span
                     ></span
                   >

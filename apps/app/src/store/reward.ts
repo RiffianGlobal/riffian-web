@@ -110,7 +110,7 @@ class RewardStore extends State {
   }
   get totalHumanized(): string | undefined {
     if (!this.inited) return
-    return (+formatUnits(this.total)).toFixed(4)
+    return (+formatUnits(this.total)).toFixed(2)
   }
   get socialNotClaimed() {
     return this.inited && this.rewardsClaimed[0] === false
@@ -200,7 +200,7 @@ class RewardStore extends State {
     const res = userWeeklyVotes.map((weekly, i) => {
       const { votes, cooked } = weekly
       weekly.reward = weeklyVotes[i] && (weeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
-      cooked.reward = (+formatUnits(weekly.reward)).toFixed(4)
+      cooked.reward = (+formatUnits(weekly.reward)).toFixed(2)
       return weekly
     })
     this.userWeeklyRewards = res
@@ -292,7 +292,7 @@ export const getUserWeeklyRewards = async (account?: string): Promise<UserWeekly
   const res = userWeeklyVotes.map((weekly, i) => {
     const { votes, cooked } = weekly
     weekly.reward = weeklyVotes[i] && (weeklyPools[i] * BigInt(votes)) / weeklyVotes[i]
-    cooked.reward = (+formatUnits(weekly.reward)).toFixed(4)
+    cooked.reward = (+formatUnits(weekly.reward)).toFixed(2)
     return weekly
   })
   return res
