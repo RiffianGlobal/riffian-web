@@ -1,6 +1,7 @@
 :host {
   @apply inline-flex items-center leading-none;
-  & ui-address-avatar + .name {
+  & ui-address-avatar + .name,
+  & ui-address-avatar + ui-link > .name {
     @apply ml-1;
   }
 }

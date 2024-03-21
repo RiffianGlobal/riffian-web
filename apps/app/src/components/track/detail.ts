@@ -173,7 +173,7 @@ export class TrackDetail extends ThemeElement(style) {
                     <div class="text-lg md_text-xl md_mb-2.5">${this.subject.name ?? '-'}</div>
                     <!-- Author DOID -->
                     <div class="text-sm md_text-base min-h-6 leading-6">
-                      <ui-address .address=${this.creatorAddr} short doid avatar></ui-address>
+                      <ui-address .address=${this.creatorAddr} short doid avatar to="user"></ui-address>
                     </div>
                     <!-- Author social name -->
                     <div class="text-sm md_text-base md_min-h-6 md_leading-6">

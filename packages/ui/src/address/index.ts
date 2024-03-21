@@ -25,6 +25,7 @@ export class UIAddress extends ThemeElement(style) {
   @property({ type: Boolean }) copy = false
   @property({ type: Boolean }) short = false // if false, auto short address
   @property() href?: string
+  @property() to?: string
 
   @state() doid?: string
 
@@ -32,7 +33,11 @@ export class UIAddress extends ThemeElement(style) {
     return (typeof this.address === 'string' ? this.address : '') ?? ''
   }
   get isLink() {
-    return typeof this.href === 'string'
+    return typeof this.href === 'string' || typeof this.to === 'string'
+  }
+  get hrefDest() {
+    if (this.to === 'user' && this.doid) return `/user/${this.doid}`
+    return this.href
   }
   get showAddr() {
     return this.short || screenStore.screen.isMobi ? shortAddress(this.addr) : this.addr
@@ -49,7 +54,7 @@ export class UIAddress extends ThemeElement(style) {
         () => this.wrapLink(html`<span class="name">${this.doid}</span>`)
       )}<q class="q">${this.showAddr}</q>`
   }
-  wrapLink = (_html: unknown) => (this.isLink ? html`<ui-link href=${this.href}>${_html}</ui-link>` : _html)
+  wrapLink = (_html: unknown) => (this.isLink ? html`<ui-link href=${this.hrefDest}>${_html}</ui-link>` : _html)
 
   solveDOID = async () => {
     if (!this.addr) return
