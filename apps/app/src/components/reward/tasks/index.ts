@@ -41,6 +41,14 @@ export class RewardTasks extends ThemeElement(style) {
     toast.add({ summary: 'Claim failed', detail: e.detail })
   }
 
+  get tasks() {
+    return rewardStore.rewardsHumanized.filter((task) => {
+      if (task.closed) return false
+      if (task.claimed && task.once && task.key != 'social') return false
+      return true
+    })
+  }
+
   // TODO: merge to rewardStore
   get voteReward() {
     if (!rewardStore.inited) return
@@ -66,7 +74,7 @@ export class RewardTasks extends ThemeElement(style) {
                   () => html`<reward-task @scene=${this.chgScene} .reward=${this.voteReward}></reward-task>`
                 )}
                 ${repeat(
-                  rewardStore.rewardsHumanized,
+                  this.tasks,
                   (reward) => html`
                     <li>
                       <reward-claim
