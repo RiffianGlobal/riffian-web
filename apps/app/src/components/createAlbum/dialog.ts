@@ -44,8 +44,16 @@ export class CreateAlbumDialog extends ThemeElement('') {
   async onInput(e: CustomEvent, key: formKeys) {
     this.updateForm({ [key]: e.detail })
     this.updateErr({ [key]: '', tx: '' })
-    if (this.form[key].length < 4) {
-      this.updateErr({ [key]: 'Invalid input' })
+    if (key === 'album' && this.form[key].length < 1) {
+      this.updateErr({ [key]: 'Required' })
+      return
+    }
+    if (['image', 'url'].includes(key)) {
+      try {
+        new URL(this.form[key])
+      } catch {
+        this.updateErr({ [key]: 'Invalid url' })
+      }
     }
   }
 
