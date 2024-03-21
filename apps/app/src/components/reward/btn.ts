@@ -10,7 +10,7 @@ import '@riffian-web/ui/button'
 import './dialog'
 
 // Style
-import { coinSvg } from './icon'
+import { coinSvg } from './icon2'
 import style from './btn.css?inline'
 
 const tipKey = 'tip.x'
@@ -32,6 +32,11 @@ export class RewardBtn extends ThemeElement(style) {
     }
   }
 
+  get tipReaded() {
+    if (screenStore.isMobi) return this.twitterTipReaded
+    return false
+  }
+
   close = () => (this.dialog = false)
 
   connectedCallback() {
@@ -48,7 +53,7 @@ export class RewardBtn extends ThemeElement(style) {
     return html`
       <!-- Unboound tip -->
       ${when(
-        !this.twitterTipReaded && rewardStore.socialNotClaimed,
+        !this.tipReaded && rewardStore.socialNotClaimed,
         () =>
           html`<span
             @click=${this.open}
