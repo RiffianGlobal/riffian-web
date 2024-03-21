@@ -157,9 +157,11 @@ export class TrackDetail extends ThemeElement(style) {
                   ${when(
                     this.subject.uri,
                     () => html`
-                      <div class="absolute right-1 bottom-1">
+                      <div class="flex justify-center items-center absolute left-0 top-0 right-0 bottom-0">
                         <ui-button icon lg href=${this.subject.uri}
-                          ><i class="mdi mdi-play-circle-outline text-white"></i
+                          ><i
+                            class="mdi mdi-play-circle text-[rgba(255,255,255,.4)] hover_text-white text-5xl lg_text-6xl drop-shadow-2xl transition-all"
+                          ></i
                         ></ui-button>
                       </div>
                     `

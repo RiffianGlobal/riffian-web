@@ -22,7 +22,7 @@ export class TrackPage extends ThemeElement(style) {
       <chart-tv-lite class="my-4" .pair=${this.addr}></chart-tv-lite>
       <div class="my-4">
         <div class="w-full inline-flex pb-2 border-b border-slate-50/10">
-          <div class="py-1.5 px-3 text-base font-normal text-white/70 rounded-md">History</div>
+          <div class="py-1.5 px-2 lg_px-3 text-base font-normal text-white/70 rounded-md">Voting Chart</div>
         </div>
         <track-votes trackAddress=${this.addr}></track-votes>
       </div>

@@ -55,7 +55,7 @@ export class TrackInfo extends ThemeElement(style) {
   fetch = async () => {
     this.pending = true
     try {
-      const { subject } = await trackVotes(this.trackAddress)
+      const { subject } = await trackVotes(this.trackAddress, 'votes')
       this.votes = subject.userVotes
       this.subjectData = subject
     } catch (e: any) {
@@ -92,7 +92,7 @@ export class TrackInfo extends ThemeElement(style) {
         <div class="flex header">
           ${when(!this.isMobi, () => html`<div class="w-11 text-center">Rank</div>`)}
           <div class="address flex-auto">Address</div>
-          <div class="num flex-none w-20 md_w-28">Comsumption</div>
+          <div class="num flex-none w-20 md_w-28">Tickets</div>
           <!-- Close #10 -->
           <!-- <div class="num flex-none w-20 md_w-28">Earning</div> -->
         </div>
@@ -117,8 +117,11 @@ export class TrackInfo extends ThemeElement(style) {
                     <ui-address .address="${item.user.address}" short avatar class="text-sm md_text-base"></ui-address>
                   </div>
                   <div class="num flex-none">
-                    <p class="num truncate md_mt-2">${parseFloat((+formatUnits(item.volumeVote)).toFixed(2))}</p>
+                    <p class="num truncate md_mt-2">${item.votes}</p>
                   </div>
+                  <!-- <div class="num flex-none">
+                    <p class="num truncate md_mt-2">${parseFloat((+formatUnits(item.volumeVote)).toFixed(2))}</p>
+                  </div> -->
                   <!-- Close #10 -->
                   <!-- <div class="num flex-none w-16 md_w-28">
                     <p class="num truncate md_mt-2">

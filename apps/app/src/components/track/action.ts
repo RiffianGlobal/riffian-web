@@ -16,7 +16,7 @@ export const subjectInfo = async (addr: string) => {
   return result
 }
 
-export const trackVotes = async (addr: string) => {
+export const trackVotes = async (addr: string, orderBy = 'volumeTotal') => {
   let queryJSON = `{
     subject ( id: "${addr.toLowerCase()}" ) {
       address createdAt volumeTotal volumeVote
@@ -24,7 +24,7 @@ export const trackVotes = async (addr: string) => {
       creator {
         address id rewardClaimed socials { uri pid id platform }
       }
-      userVotes (orderBy: "volumeTotal" orderDirection: "desc" ) {
+      userVotes (orderBy: "${orderBy}" orderDirection: "desc" ) {
         volumeRetreat volumeTotal volumeVote votes
         user { address rewardClaimed }
       }
