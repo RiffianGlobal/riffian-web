@@ -82,8 +82,8 @@ export class txReceipt {
           // !!!TODO: This does not work with ethers@6
           // Parse event error
           const eventMap = await getEventCodes(this.errorCodes)
-          logs.some(({ event, args, topics }: any = {}) => {
-            if (event === 'Failure') {
+          logs.some(({ event, eventName, args, topics }: any = {}) => {
+            if ([event, eventName].includes('Failure')) {
               let { info, detail, error } = args
               const code = error.toString() // Error Code
               const message = eventMap[error]
@@ -103,6 +103,12 @@ export class txReceipt {
               })
               if (this.allowAlmostSuccess) this.status = 4
               throw newErr
+            }
+          })
+          logs.some(({ eventName, args }: any = {}) => {
+            if (eventName.toLowerCase() === this.seq.method.toLowerCase()) {
+              awaitRes = args
+              return true
             }
           })
           this.status = 1
@@ -130,7 +136,7 @@ export class txReceipt {
         emitter.emit('tx-status', this.hash)
         if (success) emitter.emit('tx-success', this.hash)
         // return this.status === 1
-        awaitRes = success
+        if (typeof awaitRes === 'boolean') awaitRes = success
       }
       return awaitRes
     })()

@@ -24,7 +24,7 @@ export class CreateAlbumDialog extends ThemeElement('') {
   @state() form = defForm()
   @state() err = defErr()
   @state() pending = false
-  @state() success = false
+  @state() objectId = ''
   @state() tx: any = null
 
   get account() {
@@ -61,19 +61,20 @@ export class CreateAlbumDialog extends ThemeElement('') {
     this.form = defForm()
     this.err = defErr()
     this.pending = false
-    this.success = false
+    this.objectId = ''
   }
-  close = async () => {
+  close = async (opts?: any) => {
     this.tx = null
     this.resetState()
-    this.emit('close')
+    this.emit('close', opts)
   }
 
   async create() {
     this.pending = true
     try {
       this.tx = await createAlbum(this.form.album, this.form.image, this.form.url)
-      this.success = await this.tx.wait()
+      const [, objectId = ''] = (await this.tx.wait()) ?? []
+      this.objectId = objectId
     } catch (err: any) {
       let msg = err.message || err.code
       if (err.code === 4001) {
@@ -98,16 +99,20 @@ export class CreateAlbumDialog extends ThemeElement('') {
           this.txPending,
           () =>
             html`<tx-state .tx=${this.tx} .opts=${{ state: { success: 'Success. Your track has been uploaded.' } }}
-              ><div slot="view" class="flex flex-col items-center">
-                <ui-link
-                  class="mb-2"
+              ><div slot="view" class="mt-4 flex flex-wrap gap-6 justify-between items-center">
+                <ui-button
                   @click=${() => {
+                    goto(`/track/${this.objectId}`)
                     this.close()
-                    goto(`/user/${this.account}`)
                   }}
-                  >view all uploads</ui-link
+                  >Go to detail</ui-button
                 >
-                <ui-button @click=${this.close}>Close</ui-button>
+                <ui-button
+                  @click=${() => {
+                    this.close({ reopen: true })
+                  }}
+                  >Upload another</ui-button
+                >
               </div></tx-state
             >`
         )}

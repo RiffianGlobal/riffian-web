@@ -78,7 +78,7 @@ export class TxState extends ThemeElement(style) {
           () => html`<span>${unsafeHTML(this.state.icon)}</span>`
         )}
       </div>
-      <div class="tx-state-msg grow ${classMap(this.$c([this.inline ? '' : 'my-4']))}">
+      <div class="tx-state-msg text-base grow ${classMap(this.$c([this.inline ? '' : 'my-4']))}">
         <slot>${this.state.txt}</slot>
       </div>
       <div class="flex gap-4">

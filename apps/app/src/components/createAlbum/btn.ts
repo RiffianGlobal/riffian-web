@@ -39,7 +39,10 @@ export class CreateAlbumBtn extends ThemeElement(style) {
     }
   }
 
-  close = () => (this.dialogCreate = false)
+  close = (e: CustomEvent) => {
+    this.dialogCreate = false
+    if (e.detail?.reopen) setTimeout(() => this.open())
+  }
 
   connectedCallback(): void {
     super.connectedCallback()
