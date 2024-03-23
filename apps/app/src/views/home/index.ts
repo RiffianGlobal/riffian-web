@@ -8,6 +8,7 @@ import '~/components/top/list'
 import '~/components/createAlbum/btn'
 import '~/components/createAlbum/socialbtn'
 import '~/components/latest/votes'
+import '~/components/top/charts-cate'
 import '@riffian-web/ui/link'
 
 // Style
@@ -63,13 +64,10 @@ export class ViewHome extends ThemeElement(style) {
           <div class="ui-board">
             <div class="ui-board-header">
               <div class="ui-board-lead">
-                <div class="text-xl">
-                  All Chart
-                  <ui-link text class="ml-1 text-xs text-blue-300" href=${'/top'}>View all</ui-link>
-                </div>
+                <h5><charts-cate></charts-cate></h5>
               </div>
             </div>
-            <top-album></top-album>
+            <top-charts></top-charts>
           </div>
           <!-- Votes -->
           <div class="ui-board">

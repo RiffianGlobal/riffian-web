@@ -14,6 +14,7 @@ export class UILink extends ThemeElement(style) {
   @property({ type: Boolean }) open = false
   @property({ type: Boolean }) link = false
   @property({ type: Boolean }) back = false
+  @property({ type: Boolean }) dense = false // no marginY
   @property() click: any
   @property({ type: Boolean }) nav = false // as navigator
   @property({ type: Boolean }) text = false // as text with underline
@@ -78,7 +79,12 @@ export class UILink extends ThemeElement(style) {
       target="${ifDefined(this._target)}"
       rel="${ifDefined(this.rel)}"
       href="${ifDefined(this.href)}"
-      class="ui-link ${classMap(this.$c([{ 'router-active': this.active }, this.class]))}"
+      class="ui-link ${classMap(
+        this.$c([
+          { 'router-active': this.active, 'exact-active': this.exacted && this.active, dense: this.dense },
+          this.class
+        ])
+      )}"
       @click=${this.onClick}
       ?disabled=${this.disabled}
       ><slot></slot>${when(this.open, () => html`<i class="ml-1 mdi mdi-open-in-new"></i>`)}</a

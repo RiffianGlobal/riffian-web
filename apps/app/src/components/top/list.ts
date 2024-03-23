@@ -25,8 +25,9 @@ import '@riffian-web/ui/pagination'
 import '~/components/chg-stat'
 
 import style from './list.css?inline'
-@customElement('top-album')
-export class TopAlbum extends ThemeElement(style) {
+
+@customElement('top-charts')
+export class TopCharts extends ThemeElement(style) {
   bindScreen: any = new StateController(this, screenStore)
   bindWallet: any = new StateController(this, walletStore)
   bindWeekly: any = new StateController(this, weeklyStore)
@@ -59,6 +60,7 @@ export class TopAlbum extends ThemeElement(style) {
     return chartsStore.pending && !chartsStore.subjects.length
   }
   get subjects() {
+    if (this.empty) return []
     return chartsStore.subjects.concat(this.moreSubjects)
   }
 
@@ -68,7 +70,7 @@ export class TopAlbum extends ThemeElement(style) {
     this.err = ''
     this.morePending = true
     try {
-      const req: graphParams = {}
+      const req: graphParams = { cate: chartsStore.cate }
       if (this.pagination) {
         const { pageSize, pageNum } = this.pagination
         Object.assign(req, { first: pageSize, skip: (pageNum - 1) * pageSize })
@@ -233,8 +235,9 @@ export class TopAlbum extends ThemeElement(style) {
                 .pending=${this.morePending}
                 @loadmore=${this.loadmore}
               ></ui-pagination>
-            `
-          )} `
+            `,
+            () => html`<ui-link dense class="w-full justify-center" href="/charts">More</ui-link>`
+          )}`
       )}
     </div>`
   }

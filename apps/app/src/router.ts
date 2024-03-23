@@ -3,6 +3,7 @@ import emitter from '@lit-web3/base/emitter'
 import type { RouteConfig } from '@lit-web3/router'
 import { blocked } from '~/lib/ip'
 import { getAccount } from '@riffian-web/ethers/src/useBridge'
+import { topCharts, chartsStore } from '~/store/charts'
 
 const goHome = () => {
   emitter.emit('router-replace', `/`)
@@ -46,12 +47,18 @@ export const routes: RouteConfig[] = [
     }
   },
   {
-    name: 'top',
-    path: '/top',
-    render: () => html`<view-top></view-top>`,
-    enter: async () => {
+    name: 'charts',
+    path: '/charts/:cate?',
+    render: () => html`<view-charts></view-charts>`,
+    enter: async ({ cate } = <{ [cate: string]: string }>{}) => {
       if (await beforeEach()) return false
-      await import('~/views/top')
+      // @ts-expect-error
+      if (topCharts.includes(cate)) chartsStore.cate = cate
+      else {
+        emitter.emit('router-replace', `/charts/${chartsStore.cate}`)
+        return false
+      }
+      await import('~/views/charts')
       return true
     }
   },

@@ -3,6 +3,7 @@ import { cookSubject, cookVote } from './cook'
 import { subjectsFrag } from './subjects'
 import { weeklySubjectsFrag } from './subjects-weekly'
 import { votesFrag } from './votes'
+export { subjectsReq } from './subjects'
 
 export const chartsReq = async (req: graphParams) => {
   const { subjects, weeklySubjects, votes } = await graphQuery(
