@@ -133,6 +133,10 @@ export class VoteAlbumDialog extends ThemeElement('') {
     this.resetState()
     this.emit('close')
   }
+  go = (dest = '') => {
+    this.close()
+    if (dest === 'rewards') emitter.emit('reward-show')
+  }
 
   updateErr = (err = {}) => (this.err = Object.assign({}, this.err, err))
 
@@ -211,6 +215,10 @@ export class VoteAlbumDialog extends ThemeElement('') {
                       @click=${this.vote}
                       >${this.insufficientBalance ? 'Insufficient Balance' : 'Vote'}</ui-button
                     >
+                    <p class="mt-4">
+                      Please get <ui-link @click=${() => this.go('rewards')}>rewards first</ui-link> or
+                      <ui-link href="/profile">retreat tickets</ui-link> and try again.
+                    </p>
                   </div>
                 `
               )}
