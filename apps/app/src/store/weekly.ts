@@ -4,7 +4,6 @@ export { StateController } from '@lit-web3/base/state'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 import { weekSeconds } from '~/constants'
 import { getAlbumContract } from '~/lib/riffutils'
-import { nowTs } from '@riffian-web/ethers/src/utils'
 
 class WeeklyStore extends State {
   @property({ value: '' }) latest!: number
@@ -30,8 +29,9 @@ class WeeklyStore extends State {
           const tsNow = BigInt(dayjs().unix())
           week = Number(tsNow - ((tsNow - weekBigInt) % BigInt(weekSeconds)))
         }
-        const nextStart = week + weekSeconds
-        if (nowTs() > nextStart * 1000) week = nextStart // GraphData maybe not update if not new events
+        const [nextStart, now] = [week + weekSeconds, dayjs().unix()]
+        // GraphData maybe not update if no new events
+        if (now > nextStart) while (week + weekSeconds < now) week += weekSeconds
         this.latestEnd = week + weekSeconds
         const [start, end] = [dayjs.unix(week), dayjs.unix(this.latestEnd)]
         let [startMonth, endMonth] = [start.format('MMM'), end.format('MMM')]
