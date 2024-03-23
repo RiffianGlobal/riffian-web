@@ -13,7 +13,6 @@ const orderMap: Record<string, string> = {
   trending: 'volumeTotal' // 24h vol
 }
 export const subjectsFrag = ({ cate = 'top', time = onedayAgo(), first = 10, skip = 0 } = <graphParams>{}) => {
-  console.log(cate, orderMap[cate])
   return `
   subjects (
     where: { creator_starts_with: "0x" }${first ? ` first: ${first}` : ''}${skip ? ` skip: ${skip}` : ''}

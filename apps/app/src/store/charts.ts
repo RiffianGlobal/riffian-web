@@ -18,7 +18,8 @@ class ChartsStore extends State {
   @property({ value: [] }) subjects!: []
   @property({ value: [] }) votes!: []
   @property({ value: true }) pending!: boolean
-  @property({ value: false }) inited!: boolean
+  @property({ value: true }) inited!: boolean
+  @property({ value: true }) chartPending!: boolean
   @storage({ key: 'app.chart' })
   @property({ value: 'top' })
   cate!: string
@@ -51,15 +52,21 @@ class ChartsStore extends State {
     } catch (err) {
       console.error(err)
     }
-    this.pending = false
+    this.pending = this.chartPending = false
     this.inited = true
   }
 
   fetchSubjects = async (cate: string, useCache = true, filters = {}) => {
+    this.chartPending = true
+    let res = []
     this.subjects = useCache ? this.cachedSubjects[cate] ?? [] : []
-    const { subjects } = await subjectsReq({ cate, ...filters })
-    if (useCache) this.#updateSubjects(cate, subjects)
-    return subjects
+    try {
+      const { subjects } = await subjectsReq({ cate, ...filters })
+      res = subjects
+    } catch {}
+    this.chartPending = false
+    if (useCache) this.#updateSubjects(cate, res)
+    return res
   }
 
   listener = throttle(this.fetch)

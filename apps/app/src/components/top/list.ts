@@ -57,7 +57,7 @@ export class TopCharts extends ThemeElement(style) {
     return chartsStore.inited && !chartsStore.subjects.length
   }
   get loading() {
-    return chartsStore.pending && !chartsStore.subjects.length
+    return chartsStore.chartPending && !chartsStore.subjects.length
   }
   get subjects() {
     if (this.empty) return []
