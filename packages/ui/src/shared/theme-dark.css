@@ -71,7 +71,7 @@
       }
     }
   }
-  & .num {
+  .num {
     @apply shrink w-16 text-right flex-initial opacity-90 leading-normal;
     &.date {
       @apply w-24 lg_w-32 text-gray-300/60 text-xs;
