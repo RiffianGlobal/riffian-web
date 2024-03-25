@@ -1,5 +1,6 @@
 import { formatUnits, parseUnits } from 'ethers'
 import emptyCoverUri from '~/assets/empty.webp?inline'
+import { format } from '~/lib/dayjs'
 
 export const cookSubject = (res = []) => {
   ;[res].flat().forEach((subject: any) => {
@@ -7,7 +8,7 @@ export const cookSubject = (res = []) => {
       Object.assign(subject, subject.subject)
       delete subject.subject
     }
-    const { image, supply, voteLogs = [] } = subject
+    const { image, supply, voteLogs = [], creator = {}, createdAt } = subject
     // Normalize
     const totalBN = subject.totalVoteValue ?? subject.volumeTotal
     // Change daily
@@ -29,7 +30,9 @@ export const cookSubject = (res = []) => {
       src: image?.startsWith(`http`) ? image : emptyCoverUri,
       chg,
       newer,
-      price: (+supply + 1) / 10
+      address: creator.address,
+      price: (+supply + 1) / 10,
+      date: format(createdAt)
     }
   })
   return res

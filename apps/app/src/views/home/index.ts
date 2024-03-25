@@ -64,7 +64,7 @@ export class ViewHome extends ThemeElement(style) {
           <div class="ui-board">
             <div class="ui-board-header">
               <div class="ui-board-lead">
-                <h5><charts-cate></charts-cate></h5>
+                <div class="ui-board-title"><charts-cate></charts-cate></div>
               </div>
             </div>
             <top-charts></top-charts>

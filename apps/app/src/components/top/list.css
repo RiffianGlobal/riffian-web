@@ -1,19 +1,58 @@
 .subject-name {
-  @apply lg_text-base truncate cursor-pointer;
-  &.limit {
-    @apply lg_max-w-40;
+  @apply max-w-full lg_max-w-40 w-full lg_text-base truncate;
+}
+
+.subject-play {
+  @apply absolute p-2 text-3xl leading-none text-[rgba(255,255,255,.4)] hover_text-white drop-shadow-2xl transition-all;
+}
+
+.subject-intro {
+  @apply flex flex-auto grow;
+  & .subject-minor {
+    @apply text-xs pb-1 text-gray-400/80;
+  }
+}
+.subject-intro-cnt {
+  @apply flex flex-col justify-center gap-0.5 leading-none;
+}
+.subject-cover {
+  @apply w-14 h-14 mr-4 inline-flex justify-center items-center relative rounded-lg overflow-hidden;
+}
+
+.subject-brief {
+  @apply w-full flex items-center text-sm cursor-pointer;
+  @apply gap-2.5 lg_gap-4; /* According to .ui-list > * */
+  & .subject-name {
+    @apply max-w-40 md_max-w-xs lg_max-w-md xl_max-w-lg 2xl_max-w-xl;
+  }
+  &.dense {
+    & .subject-name {
+      @apply max-w-52 xl_max-w-72;
+    }
+  }
+  &.sm {
+    & .subject-intro-cnt {
+      @apply gap-0;
+    }
+    & .subject-name {
+      @apply text-xs md_max-w-24 lg_max-w-40;
+    }
+    & .subject-cover {
+      @apply w-8 h-8 mr-2;
+    }
+    & .subject-play {
+      @apply hidden;
+    }
+    & .subject-minor {
+      @apply pb-0;
+      font-size: 11px !important;
+    }
   }
 }
 
-.subject-img {
-  @apply w-14 h-14 rounded-lg cursor-pointer;
-}
-.subject-lines {
-  @apply flex flex-col gap-1 leading-none;
-  & .subject-line1 {
-    @apply flex h-6 leading-none items-center;
+.subject-rank {
+  @apply w-8 text-center text-sm font-light opacity-70;
+  &.hot {
+    @apply w-12 pl-1.5 text-left;
   }
-}
-.subject-play {
-  @apply text-xl leading-none opacity-85 hover_opacity-100;
 }

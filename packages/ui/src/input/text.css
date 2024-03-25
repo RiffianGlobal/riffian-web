@@ -36,6 +36,16 @@
       @apply leading-4 py-4;
     }
   }
+  &.filled {
+    & input[type],
+    & textarea {
+      @apply bg-white/5 !border-white/0;
+      &:focus {
+        box-shadow: none !important;
+        @apply bg-white/10;
+      }
+    }
+  }
   & .ui-input-msg,
   & .ui-input-tip,
   & label {

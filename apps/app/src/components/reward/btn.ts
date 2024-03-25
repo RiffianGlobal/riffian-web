@@ -24,9 +24,11 @@ export class RewardBtn extends ThemeElement(style) {
   @state() dialog = false
   @state() twitterTipReaded = localStorage.getItem(tipKey)
 
-  @state()
-  open = async () => {
+  open = () => {
     this.dialog = true
+  }
+  openByTip = () => {
+    this.open()
     if (!this.twitterTipReaded) {
       localStorage.setItem(tipKey, (this.twitterTipReaded = '1'))
     }
@@ -56,13 +58,19 @@ export class RewardBtn extends ThemeElement(style) {
         !this.tipReaded && rewardStore.socialNotClaimed,
         () =>
           html`<span
-            @click=${this.open}
+            @click=${this.openByTip}
             class="twTip ${classMap({
               mobi: screenStore.isMobi
             })}"
           >
-            <span class="twTip-cnt">Bind twitter to get <b class="ui-em">${rewardStore.taskHumanized.tweet}</b></span
-            >${when(!screenStore.isMobi, () => html`<i class="mdi mdi-arrow-right-thin"></i>`)}
+            <span class="twTip-cnt">Bind twitter to get <b class="ui-em">${rewardStore.taskHumanized.tweet}</b></span>
+            <i
+              class="mdi absolute ${classMap(
+                this.$c([
+                  screenStore.isMobi ? 'mdi-arrow-down-thin top-[90%]' : 'mdi-arrow-up-thin left-[50%] bottom-[110%]'
+                ])
+              )}"
+            ></i>
           </span>`
       )}
 

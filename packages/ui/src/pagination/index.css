@@ -1,6 +1,13 @@
 :host {
   @apply !bg-transparent;
   &::part(inner) {
-    @apply w-full flex justify-center items-center h-8 lg_h-10;
+    @apply w-full flex justify-center items-center;
+  }
+}
+.ui-pagination {
+  &.nomore {
+    @apply pointer-events-none;
+    @apply border-b mt-2;
+    border-color: #2e3349;
   }
 }

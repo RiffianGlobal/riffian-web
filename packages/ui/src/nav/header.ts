@@ -51,7 +51,7 @@ export class UIHeader extends ThemeElement(style) {
       ${when(this.fixed, () => html`<div class="ui-header-placeholder"></div>`)}
       <header class="ui-header ${classMap({ fixed: this.fixed })}">
         <div class="ui-container relative flex justify-between items-center ${classMap({ full: this.full })}">
-          <div class="flex items-center gap-3 lg_gap-4 lg_w-40">
+          <div class="flex items-center gap-3 lg_gap-4">
             <slot name="logo"><a class="ui-logo" href=${this.logoHref}></a><slot name="sublogo"></slot></slot>
             <slot name="left"></slot>
           </div>

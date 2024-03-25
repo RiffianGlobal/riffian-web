@@ -10,6 +10,7 @@ export class UIDrop extends ThemeElement(style) {
   @property({ type: Boolean, reflect: true }) show = false
   @property({ type: Boolean }) lg = false
   @property({ type: Boolean }) icon = false
+  @property({ type: String }) class = ''
   @property({ type: String }) dropClass = ''
   @property({ type: String }) align = ''
   // Button props
@@ -18,6 +19,7 @@ export class UIDrop extends ThemeElement(style) {
   @property({ type: Boolean }) btnText = false
   @property({ type: Boolean }) btnIcon = false
   @property({ type: Boolean }) btnDense = false
+  @property({ type: Boolean }) ignoreToggle = false
   @property({ type: String }) btnTheme?: string
   @property({ type: String }) btnClass = ''
 
@@ -50,10 +52,13 @@ export class UIDrop extends ThemeElement(style) {
     this.emit('open')
     this.emit('change', this.model)
   }
-  toggle = () => (this.model ? this.close() : this.open())
+  toggle = () => {
+    if (this.ignoreToggle) return
+    this.model ? this.close() : this.open()
+  }
 
   #clickOutside = (e: Event) => {
-    if (!e.composedPath?.().includes(this.$('.ui-drop'))) this.close()
+    if (!e.composedPath?.().includes(this.shadowRoot!)) this.close()
   }
   #onEsc = (e: KeyboardEvent) => {
     if (e.key !== 'Escape') return
@@ -91,9 +96,11 @@ export class UIDrop extends ThemeElement(style) {
 
   override render() {
     // Here has a problem with shadow DOM's relatvie zIndex, maybe its a bug...
-    return html`<div class="inline-block whitespace-nowrap ${classMap({ relative: this.delayedModel })}">
+    return html`<div
+      class="inline-block whitespace-nowrap ${classMap(this.$c([{ relative: this.delayedModel }, this.class]))}"
+    >
       <div
-        class="ui-drop-toggle z-20 inline-flex items-center select-none ${classMap({
+        class="ui-drop-toggle z-20 inline-flex w-full items-center select-none ${classMap({
           relative: this.delayedModel,
           inverse: this.btnText
         })}"

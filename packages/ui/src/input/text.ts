@@ -22,6 +22,7 @@ export class UIInputText extends ThemeElement(style) {
   @property({ type: Boolean }) required = false
   @property({ type: Boolean }) lower = false
   @property({ type: Boolean }) upper = false
+  @property({ type: Boolean }) filled = false
   @property({ type: Boolean }) err = false
   @property({ type: String, converter }) value = ''
   @property({ type: Number }) debounce = 300
@@ -79,10 +80,15 @@ export class UIInputText extends ThemeElement(style) {
       setTimeout(() => this.updateVal())
     }
   }
+  clear = () => {
+    this.value = ''
+    this.updateVal()
+    this.emit('input', '')
+  }
 
   render() {
     return html`<div
-      class="ui-input-text ${classMap(this.$c([this.class, { sm: this.sm, dense: this.dense }]))}"
+      class="ui-input-text ${classMap(this.$c([this.class, { sm: this.sm, dense: this.dense, filled: this.filled }]))}"
       ?required=${this.required}
       ?disabled="${this.disabled}"
       ?readonly="${this.readonly}"

@@ -8,27 +8,20 @@ import {
   when,
   classMap
 } from '@riffian-web/ui/shared/theme-element'
-import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 import { screenStore } from '@lit-web3/base/screen'
 import { weeklyStore } from '~/store/weekly'
-import { chartsStore } from '~/store/charts'
+import { chartsStore, StateController } from '~/store/charts'
 import { weeklySubjectsReq } from '~/query'
-import { goto } from '@lit-web3/router'
 import { paginationDef } from '~/utils'
-import emitter from '@lit-web3/base/emitter'
 // Components
-import '@riffian-web/ui/loading/icon'
 import '@riffian-web/ui/loading/skeleton'
-import '@riffian-web/ui/img/loader'
-import '@riffian-web/ui/button'
 import '@riffian-web/ui/pagination'
-import '~/components/chg-stat'
+import './subject-brief'
 
 import style from './list.css?inline'
 @customElement('weekly-top')
 export class WeeklyTop extends ThemeElement(style) {
   bindScreen: any = new StateController(this, screenStore)
-  bindWallet: any = new StateController(this, walletStore)
   bindWeekly: any = new StateController(this, weeklyStore)
   bindCharts: any = new StateController(this, chartsStore)
 
@@ -42,20 +35,20 @@ export class WeeklyTop extends ThemeElement(style) {
   @state() pagination = paginationDef({ pageNum: 2 })
   @state() hasMore = true
 
-  get disabled() {
-    return !walletStore.account
-  }
   get isMobi() {
     return screenStore.isMobi
   }
   get scrollMode() {
     return this.isMobi ? 'click' : 'scroll'
   }
+  get page1Len() {
+    return chartsStore.weeklySubjects.length
+  }
   get loading() {
-    return chartsStore.pending && !chartsStore.weeklySubjects.length
+    return chartsStore.pending && !this.page1Len
   }
   get empty() {
-    return chartsStore.inited && !chartsStore.weeklySubjects.length
+    return chartsStore.inited && !this.page1Len
   }
   get subjects() {
     return chartsStore.weeklySubjects.concat(this.moreSubjects)
@@ -96,29 +89,15 @@ export class WeeklyTop extends ThemeElement(style) {
     this.fetch()
   }
 
-  go2 = (e: CustomEvent, item: any) => {
-    e.preventDefault()
-    e.stopPropagation()
-    if (this.disabled) {
-      emitter.emit('connect-wallet')
-    } else {
-      const tag = e.target?.tagName
-      if (tag == 'I') {
-        window.open(item.uri, '_blank')
-      } else {
-        goto(`/track/${item.id}`)
-      }
-    }
-  }
-
   render() {
     return html`<div role="list" class="ui-list gap-2 ${classMap(this.$c([this.morePending ? 'loading' : 'hover']))}">
+        <!-- thead -->
         <div class="flex header border-bottom">
           ${when(!this.isMobi, () => html`<div class="w-8">Rank</div>`)}
-          <div class="flex-shrink">Collection</div>
-          <div class="flex-auto"></div>
-          <div class="num flex-auto w-32">Volume</div>
+          <div class="subject-intro">Collection</div>
+          <div class="num pl-2">Volume</div>
         </div>
+        <!-- tbody -->
         ${when(
           this.loading,
           () => html`<div name="loading" class="doc-intro"></div><loading-skeleton num="4"></loading-skeleton></div>`,
@@ -126,34 +105,9 @@ export class WeeklyTop extends ThemeElement(style) {
             html`${repeat(
               this.subjects,
               (item: any, i) => html`
-                <div class="item flex items-center" @click=${(e: CustomEvent) => this.go2(e, item)}>
-                  ${when(
-                    !this.isMobi,
-                    () => html` <div class="flex-none w-8 text-center text-sm font-light opacity-70">${i + 1}</div> `
-                  )}
-                  <div class="subject-img flex-shrink flex justify-center">
-                    <img-loader .src=${item.cooked.src} class="w-14 rounded-lg"></img-loader>
-                  </div>
-                  <div class="subject-lines flex-auto overflow-hidden">
-                    <div class="subject-line1">
-                      <p class="subject-name ${classMap({ limit: this.brief })}">${item.name}</p>
-                      <a href=${item.uri} class="flex-none ml-1.5" target="_blank">
-                        <i class="subject-play mdi mdi-play-circle-outline"></i>
-                      </a>
-                    </div>
-                    ${when(
-                      this.brief,
-                      () =>
-                        html`<div class="text-xs text-gray-400/80">
-                          <span class="mr-1 text-gray-400/60">Price:</span>${item.cooked.price}
-                        </div>`
-                    )}
-                  </div>
-                  <div class="subject-lines num flex-initial !w-18 text-sm items-end">
-                    <span class="subject-line1">${item.cooked.total}</span>
-                    <span class="text-xs"><chg-stat .chg=${item.cooked.chg}></chg-stat></span>
-                  </div>
-                </div>
+                <subject-brief .subject=${item} lite>
+                  ${when(!this.isMobi, () => html`<div slot="left" class="subject-rank">${i + 1}</div>`)}
+                </subject-brief>
               `
             )}`
         )}

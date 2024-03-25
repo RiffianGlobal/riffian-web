@@ -18,7 +18,7 @@ class ChartsStore extends State {
   @property({ value: [] }) subjects!: []
   @property({ value: [] }) votes!: []
   @property({ value: true }) pending!: boolean
-  @property({ value: true }) inited!: boolean
+  @property({ value: false }) inited!: boolean
   @property({ value: true }) chartPending!: boolean
   @storage({ key: 'app.chart' })
   @property({ value: 'top' })
@@ -70,5 +70,15 @@ class ChartsStore extends State {
   }
 
   listener = throttle(this.fetch)
+
+  private cachedSearchRes: Record<string, []> = {}
+  search = async (keyword = '', first: number = 6, skip: number = 0) => {
+    const cacheKey = `${keyword}.${first}.${skip}`
+    let cached = this.cachedSearchRes[cacheKey]
+    if (!skip && cached) return cached.length > first ? cached.slice(0, first) : cached
+    const { subjects } = await subjectsReq({ cate: 'top', first, skip, keyword })
+    this.cachedSearchRes[cacheKey] = subjects
+    return subjects
+  }
 }
 export const chartsStore = new ChartsStore()

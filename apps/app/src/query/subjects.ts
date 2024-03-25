@@ -12,10 +12,15 @@ const orderMap: Record<string, string> = {
   new: 'createdAt',
   trending: 'volumeTotal' // 24h vol
 }
-export const subjectsFrag = ({ cate = 'top', time = onedayAgo(), first = 10, skip = 0 } = <graphParams>{}) => {
+export const subjectsFrag = (
+  { cate = 'top', time = onedayAgo(), first = 10, skip = 0, keyword = '' } = <graphParams>{}
+) => {
   return `
   subjects (
-    where: { creator_starts_with: "0x" }${first ? ` first: ${first}` : ''}${skip ? ` skip: ${skip}` : ''}
+    where: {
+      creator_starts_with: "0x"
+      ${keyword ? ` name_contains_nocase: "${keyword}"` : ''}
+    } ${first ? ` first: ${first}` : ''}${skip ? ` skip: ${skip}` : ''} 
     orderBy: ${orderMap[cate]} orderDirection: desc
   ) {
     id image name uri supply createdAt totalVoteValue volumeTotal creator { address }

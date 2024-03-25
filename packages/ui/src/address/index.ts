@@ -9,6 +9,7 @@ import emitter from '@lit-web3/base/emitter'
 import './avatar'
 import '../link'
 import '../copy/icon'
+import './doid'
 
 import style from './address.css?inline'
 
@@ -51,8 +52,8 @@ export class UIAddress extends ThemeElement(style) {
     return html`${when(
         this.pending,
         () => html`<i class="mdi mdi-loading"></i>`,
-        () => this.wrapLink(html`<span class="name">${this.doid}</span>`)
-      )}<q class="q">${this.showAddr}</q>`
+        () => this.wrapLink(html`<ui-doid class="name" .doid=${this.doid}></ui-doid>`)
+      )}<q class="q ${classMap({ '!opacity-25': !!this.doid })}">${this.showAddr}</q>`
   }
   wrapLink = (_html: unknown) => (this.isLink ? html`<ui-link href=${this.hrefDest}>${_html}</ui-link>` : _html)
 

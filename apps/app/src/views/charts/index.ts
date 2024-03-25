@@ -19,9 +19,9 @@ export class ViewCharts extends ThemeElement(style) {
         <div class="ui-board">
           <div class="ui-board-header">
             <div class="ui-board-lead">
-              <h5>
+              <div class="ui-board-title">
                 <charts-cate route></charts-cate>
-              </h5>
+              </div>
             </div>
           </div>
           ${keyed(

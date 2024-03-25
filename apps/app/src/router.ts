@@ -63,6 +63,20 @@ export const routes: RouteConfig[] = [
     }
   },
   {
+    name: 'search',
+    path: '/search/:keyword?',
+    render: ({ keyword = '' }) => html`<view-search .keyword=${decodeURIComponent(keyword)}></view-search>`,
+    enter: async ({ keyword = '' }) => {
+      if (await beforeEach()) return false
+      if (!keyword) {
+        emitter.emit('router-replace', `/charts`)
+        return false
+      }
+      await import('~/views/search')
+      return true
+    }
+  },
+  {
     name: 'referral',
     path: '/referral/:referrer?',
     render: ({ referrer = '' }) => html`<view-referral .referrer=${referrer}></view-referral>`,
