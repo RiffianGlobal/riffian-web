@@ -106,7 +106,7 @@ export class txReceipt {
             }
           })
           logs.some(({ eventName, args }: any = {}) => {
-            if (eventName.toLowerCase() === this.seq.method?.toLowerCase()) {
+            if (eventName.toLowerCase() === this.seq.type?.toLowerCase()) {
               awaitRes = args
               return true
             }

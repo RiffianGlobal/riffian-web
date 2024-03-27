@@ -51,14 +51,14 @@ export class UIHeader extends ThemeElement(style) {
       ${when(this.fixed, () => html`<div class="ui-header-placeholder"></div>`)}
       <header class="ui-header ${classMap({ fixed: this.fixed })}">
         <div class="ui-container relative flex justify-between items-center ${classMap({ full: this.full })}">
-          <div class="flex items-center gap-3 lg_gap-4">
+          <div class="flex shrink items-center gap-3 lg_gap-4">
             <slot name="logo"><a class="ui-logo" href=${this.logoHref}></a><slot name="sublogo"></slot></slot>
             <slot name="left"></slot>
           </div>
           <div class="flex justify-center items-center">
             ${when(!this.asMenu, () => html`<slot name="center"></slot>`)}
           </div>
-          <div class="flex justify-end items-center gap-0.5 lg_gap-2 lg_w-60">
+          <div class="flex shrink justify-end items-center gap-0.5 lg_gap-2 lg_w-60">
             <slot name="right"></slot>
             <slot name="wallet"
               ><connect-wallet-btn hideAddr dropable>

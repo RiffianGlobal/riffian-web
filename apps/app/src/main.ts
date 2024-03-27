@@ -68,10 +68,15 @@ export class AppMain extends ThemeElement('') {
           this.isMobi,
           () =>
             html`<network-menu slot="left"></network-menu>
-              <div slot="right" class="flex flex-col text-xs leading-none justify-center items-end w-full">
-                <ui-doid .doid=${walletStore.doid}></ui-doid>
-                <account-balance class="ui-em text-[10px]"></account-balance>
-              </div>`,
+
+              ${when(
+                this.acc,
+                () =>
+                  html`<div slot="right" class="flex flex-col text-xs leading-none justify-center items-end w-full">
+                    <ui-doid .doid=${walletStore.doid}></ui-doid>
+                    <account-balance class="ui-em text-[10px]"></account-balance>
+                  </div>`
+              )} `,
           () =>
             html`<div slot="right">
                 <div class="inline-flex items-center gap-4">
@@ -97,17 +102,18 @@ export class AppMain extends ThemeElement('') {
             </div>
           </div>
         </div>
-        <div slot="left" class="w-full flex justify-start items-center gap-4 ml-4">
-          ${when(
-            !this.isMobi,
-            () =>
-              html` <ui-nav class="text-lg">
+
+        ${when(
+          !this.isMobi,
+          () =>
+            html`<div slot="left" class="w-full flex justify-start items-center gap-4 ml-4">
+              <ui-nav class="text-lg">
                 <ui-link href="/" nav alias="/">Home</ui-link>
                 <ui-link href="/profile" nav>Profile</ui-link>
                 <create-album-btn btnClass="opacity-60"></create-album-btn>
-              </ui-nav>`
-          )}
-        </div>
+              </ui-nav>
+            </div>`
+        )}
         ${when(
           !this.isMobi,
           () =>
