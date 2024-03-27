@@ -172,16 +172,16 @@ export class TrackDetail extends ThemeElement(style) {
                   <div>
                     <div class="text-lg md_text-xl md_mb-2.5">${this.subject.name ?? '-'}</div>
                     <!-- Author DOID -->
-                    <div class="text-sm md_text-base min-h-6 leading-6">
-                      <ui-address .address=${this.creatorAddr} short doid avatar to="user"></ui-address>
+                    <div class="text-base min-h-6 leading-6">
+                      <ui-address .address=${this.creatorAddr} short doid to="user"></ui-address>
                     </div>
                     <!-- Author social name -->
-                    <div class="text-sm md_text-base md_min-h-6 md_leading-6">
+                    <div class="text-sm md_min-h-6 md_leading-6">
                       ${when(
                         this.social,
                         () => html`
                           ${this.social?.name}<a
-                            class="text-xs leading-none text-blue-300/60"
+                            class="text-sm leading-none text-blue-300/60"
                             href="${this.social?.url}"
                             target="_blank"
                             >@${this.social?.id}</a

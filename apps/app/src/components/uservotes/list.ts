@@ -66,33 +66,9 @@ export class UserVotesList extends ThemeElement(style) {
     if (this.disabled) {
       emitter.emit('connect-wallet')
     } else {
-      goto(`/track/${subject.subject.id}`)
+      goto(`/track/${subject.id}`)
     }
   }
-
-  // itemMobi = (item: any) => {
-  //   return html`<div class="w-full overflow-hidden flex gap-x-2">
-  //     <div class="w-[3.25rem] h-[3.25rem] mr-2 rounded-lg">
-  //       <img-loader src=${subject.subject.image} class="w-[3.25rem] rounded-lg"></img-loader>
-  //     </div>
-  //     <div class="flex-auto flex flex-col">
-  //       <div class="flex truncate items-center">
-  //         <p class="truncate">${subject.subject.name}</p>
-  //         <a href=${subject.subject.uri} class="flex-none ml-1.5" target="_blank"
-  //           ><i class="text-lg mdi mdi-play-circle-outline"></i
-  //         ></a>
-  //       </div>
-  //       <!-- other info -->
-  //       <div class="mt-0.5 text-xs opacity-80">
-  //         <ui-address .address="${subject.subject.creator.address}" short avatar></ui-address>
-  //       </div>
-  //     </div>
-  //     <div class="num justify-center self-center">
-  //       <div class="text-sm">${subject.subject.supply}</div>
-  //       <span class="text-xs opacity-80 text-gray-300/60">tickets</span>
-  //     </div>
-  //   </div>`
-  // }
 
   connectedCallback() {
     super.connectedCallback()
