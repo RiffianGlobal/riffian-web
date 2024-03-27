@@ -93,9 +93,8 @@ export class TrackInfo extends ThemeElement(style) {
         !this.isMobi,
         () => html`
           <div class="flex header">
-            <div class="w-12">Index</div>
             <div class="subject-intro">Collection</div>
-            <div class="num date">Uploaded</div>
+            <div class="num date">Uploaded Time</div>
             <div class="num">Voters</div>
             <div class="num">Tickets</div>
             <div class="num num2">Vote Value</div>
@@ -118,15 +117,6 @@ export class TrackInfo extends ThemeElement(style) {
             this.subjects,
             (subject: any, i) =>
               html`<div class="subject-brief" @click=${() => this.go2(subject)}>
-                <!-- Rank -->
-                ${when(
-                  !this.isMobi,
-                  () =>
-                    html`<div class="w-12">
-                      ${i + 1}
-                      ${when(this.subjects.length > 3 && i < 3, () => html`<i class="mdi mdi-fire text-red-400"></i>`)}
-                    </div>`
-                )}
                 <!-- Brief -->
                 <div class="subject-intro">
                   <!-- Cover -->

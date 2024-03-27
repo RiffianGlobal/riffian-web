@@ -101,22 +101,16 @@ export class UserDashboard extends ThemeElement(style) {
                 <div class="flex flex-col items-center lg_items-start leading-none">
                   <!-- address -->
                   <div class="lg_min-h-6 text-lg">
-                    <ui-address class="text-lg" .address=${this.address} short avatar></ui-address>
+                    <ui-address class="text-lg" .address=${this.address} short></ui-address>
                   </div>
                   <!-- social -->
                   <div class="flex items-center lg_min-h-6 text-sm font-light">
                     ${when(
                       this.social?.id,
                       () => html`
-                        <i class="lg_mr-1.5 mdi mdi-twitter opacity-60"></i>
                         <span class="font-light">
-                          ${this.social?.name}<span class="ml-0.5">
-                            ${when(
-                              this.social?.verified,
-                              () => html`<i class="text-green-600 mdi mdi-check-decagram"></i>`
-                            )}</span
-                          >
-                          <ui-link href="${this.social?.url}">${this.social?.id ? '@' : ''}${this.social?.id}</ui-link>
+                          <span class="middle-dot-divider">${this.social?.name}</span
+                          ><ui-link href="${this.social?.url}">${this.social?.id ? '@' : ''}${this.social?.id}</ui-link>
                         </span>
                       `
                     )}

@@ -113,7 +113,6 @@ export class UserVotesList extends ThemeElement(style) {
         !this.isMobi,
         () => html`
           <div class="flex header">
-            <div class="w-12">Index</div>
             <div class="subject-intro">Collection</div>
             <div class="num">Price</div>
             <div class="num">Tickets</div>
@@ -137,9 +136,6 @@ export class UserVotesList extends ThemeElement(style) {
             this.subjects,
             (subject: any, i) => html`
               <div class="isubject-brief" @click=${() => this.go2(subject)}>
-                <!-- Rank -->
-                ${when(!this.isMobi, () => html`<div class="w-12">${i + 1}</div>`)}
-
                 <!-- Brief -->
                 <div class="subject-intro">
                   <!-- Cover -->
@@ -168,7 +164,7 @@ export class UserVotesList extends ThemeElement(style) {
                   () =>
                     html`<p class="num date">${subject.cooked.price}</p>
                       <p class="num">${subject.supply}</p>
-                      <p class="num num2">${subject.holding}</p>`
+                      <p class="num">${subject.holding}</p>`
                 )}
               </div>
             `
