@@ -1,4 +1,12 @@
-import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
+import {
+  ThemeElement,
+  classMap,
+  customElement,
+  html,
+  property,
+  state,
+  when
+} from '@riffian-web/ui/shared/theme-element'
 import { walletStore, StateController } from '@riffian-web/ethers/src/wallet'
 // Components
 import '@riffian-web/ui/button'
@@ -59,15 +67,18 @@ export class CreateAlbumBtn extends ThemeElement(style) {
         @click="${this.open}"
         class="${this.btnClass}"
         title="Upload your track"
-        >${when(
-          this.pending,
-          () => html`<i class="i mdi mdi-loading"></i>`,
-          () =>
-            this.icon
-              ? html`<i class="mdi mdi-tray-arrow-up ${this.icon ? 'text-2xl' : '!text-base'} text-white"></i>`
-              : html`Upload`
-        )}</span
       >
+        ${when(
+          this.icon,
+          () =>
+            html`<i
+              class="mdi text-2xl  text-white ${classMap(
+                this.$c([this.pending ? 'mdi-loading' : 'mdi-tray-arrow-up'])
+              )}"
+            ></i>`,
+          () => html`Upload`
+        )}
+      </span>
       <!-- Prompt -->
       ${when(
         this.prompt,

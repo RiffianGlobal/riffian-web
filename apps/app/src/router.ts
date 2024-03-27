@@ -98,24 +98,24 @@ export const routes: RouteConfig[] = [
   },
   {
     name: 'user',
-    path: '/user/:addr?',
-    render: ({ addr = '' }) => html`<user-page .addr="${addr}"></user-page>`,
-    enter: async () => {
+    path: '/user/:addr?/:cate?',
+    render: ({ addr = '', cate }) => html`<user-page .addr=${addr} .cate=${cate}></user-page>`,
+    enter: async ({ addr = '' }) => {
       if (await beforeEach()) return false
+      if (!addr) return goHome()
       await import('~/views/user')
       return true
     }
   },
   {
     name: 'profile',
-    path: '/profile/:acc?',
-    render: ({ acc = '' }) => html`<profile-page .acc="${acc}"></profile-page>`,
-    enter: async ({ acc = '' }) => {
+    path: '/profile/:cate?',
+    render: ({ cate = '' }) => html`<profile-page .cate=${cate}></profile-page>`,
+    enter: async () => {
       if (await beforeEach()) return false
-      const req = [import('~/views/profile')]
-      if (!acc) req.push(getAccount())
+      const req = [import('~/views/profile'), getAccount()]
       const [, self] = await Promise.all(req)
-      if (!acc && !self) return goHome()
+      if (!self) return goHome()
       return true
     }
   }

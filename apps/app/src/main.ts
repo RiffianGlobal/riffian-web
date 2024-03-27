@@ -160,10 +160,16 @@ export class AppMain extends ThemeElement('') {
       </main>
       <!-- Footer -->
       <ui-footer full>
-        <div slot="block"></div>
+        <div slot="left">
+          ${when(this.isMobi, () => html`<ui-link href="https://doc.riffian.global/riffian-global">Help</ui-link>`)}
+          ${when(
+            import.meta.env.MODE !== 'production' && !this.isMobi,
+            () => html`<ui-link href="/docs">Components</ui-link>`
+          )}
+        </div>
         <div slot="center"><ui-ver class="pb-20 lg_pb-0"></ui-ver></div>
         <div slot="right" class="flex gap-6 text-xs">
-          ${when(!(import.meta.env.MODE === 'production'), () => html`<ui-link href="/docs">Components</ui-link>`)}
+          ${when(!this.isMobi, () => html`<ui-link href="https://doc.riffian.global/riffian-global">Help</ui-link>`)}
           <block-number></block-number>
         </div>
       </ui-footer>`

@@ -10,13 +10,13 @@ export class UIFooter extends ThemeElement(style) {
     return html`
       <footer class="ui-footer">
         <div class="ui-container flex justify-between items-center gap-4${classMap({ full: this.full })}">
-          <div class="flex gap-3 items-center opacity-80 lg_w-40">
+          <div class="flex shrink gap-3 items-center opacity-80 w-1/3 lg_w-40">
             <slot name="left"></slot>
           </div>
-          <div class="flex justify-center items-center text-center">
+          <div class="flex grow justify-center items-center w-1/3 lg_w-auto text-center">
             <slot name="center"></slot>
           </div>
-          <div class="flex gap-3 justify-end items-center lg_w-40">
+          <div class="flex shrink gap-3 justify-end items-center w-1/3 lg_w-40">
             <slot name="right"></slot>
           </div>
         </div>

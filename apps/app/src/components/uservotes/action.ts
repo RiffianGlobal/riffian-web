@@ -3,6 +3,7 @@ import { txReceipt } from '@riffian-web/ethers/src/txReceipt'
 import { nowTs } from '@riffian-web/ethers/src/utils'
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
 import { getAlbumContract } from '~/lib/riffutils'
+import { cookSubject } from '~/query/cook'
 
 export const retreatPrice = async (album: string, amount: number) => {
   const contract = await getAlbumContract(true)
@@ -60,6 +61,7 @@ export const userVotes = async (addr?: string, { orderBy = '', dir = '' } = {}) 
       holding votes subject { id name image uri supply creator { address } }
     }
   }`
-  let result = await graphQuery('MediaBoard', queryJSON)
-  return result.userSubjectVotes ?? []
+  const { userSubjectVotes: subjects = [] } = await graphQuery('MediaBoard', queryJSON)
+  cookSubject(subjects)
+  return { subjects }
 }

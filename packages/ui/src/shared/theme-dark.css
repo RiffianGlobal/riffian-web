@@ -79,6 +79,9 @@
     &.per {
       @apply w-12 lg_w-12;
     }
+    &.num2 {
+      @apply w-24;
+    }
   }
   .ui-list {
     & .header {

@@ -30,13 +30,13 @@ export class UserVotesList extends ThemeElement(style) {
   @property() by = ''
   @property() dir = ''
 
-  @state() uVotes: any = []
+  @state() subjects: any = []
   @state() dialog = false
   @state() currentAlbum = { id: '', votes: 0, url: '' }
   @state() pending = false
 
   get isMobi() {
-    return screenStore.screen.isMobi
+    return screenStore.isMobi
   }
 
   get disabled() {
@@ -51,12 +51,10 @@ export class UserVotesList extends ThemeElement(style) {
     if (this.disabled) return
     this.pending = true
     try {
-      const userSubjectVotes = await userVotes(this.acc, { orderBy: this.by })
-      this.uVotes = userSubjectVotes.map((item: any) => ({
-        ...item,
-        price: (+item.subject.supply + 1) / 10
-      }))
-    } catch {
+      const { subjects } = await userVotes(this.acc, { orderBy: this.by })
+      this.subjects = subjects
+    } catch (e) {
+      console.log(e)
     } finally {
       this.pending = false
     }
@@ -64,37 +62,37 @@ export class UserVotesList extends ThemeElement(style) {
 
   close = () => (this.dialog = false)
 
-  go2 = (item: any) => {
+  go2 = (subject: any) => {
     if (this.disabled) {
       emitter.emit('connect-wallet')
     } else {
-      goto(`/track/${item.subject.id}`)
+      goto(`/track/${subject.subject.id}`)
     }
   }
 
-  itemMobi = (item: any) => {
-    return html`<div class="w-full overflow-hidden flex gap-x-2">
-      <div class="w-[3.25rem] h-[3.25rem] mr-2 rounded-lg">
-        <img-loader src=${item.subject.image} class="w-[3.25rem] rounded-lg"></img-loader>
-      </div>
-      <div class="flex-auto flex flex-col">
-        <div class="flex truncate items-center">
-          <p class="truncate">${item.subject.name}</p>
-          <a href=${item.subject.uri} class="flex-none ml-1.5" target="_blank"
-            ><i class="text-lg mdi mdi-play-circle-outline"></i
-          ></a>
-        </div>
-        <!-- other info -->
-        <div class="mt-0.5 text-xs opacity-80">
-          <ui-address .address="${item.subject.creator.address}" short avatar></ui-address>
-        </div>
-      </div>
-      <div class="num justify-center self-center">
-        <div class="text-sm">${item.subject.supply}</div>
-        <span class="text-xs opacity-80 text-gray-300/60">tickets</span>
-      </div>
-    </div>`
-  }
+  // itemMobi = (item: any) => {
+  //   return html`<div class="w-full overflow-hidden flex gap-x-2">
+  //     <div class="w-[3.25rem] h-[3.25rem] mr-2 rounded-lg">
+  //       <img-loader src=${subject.subject.image} class="w-[3.25rem] rounded-lg"></img-loader>
+  //     </div>
+  //     <div class="flex-auto flex flex-col">
+  //       <div class="flex truncate items-center">
+  //         <p class="truncate">${subject.subject.name}</p>
+  //         <a href=${subject.subject.uri} class="flex-none ml-1.5" target="_blank"
+  //           ><i class="text-lg mdi mdi-play-circle-outline"></i
+  //         ></a>
+  //       </div>
+  //       <!-- other info -->
+  //       <div class="mt-0.5 text-xs opacity-80">
+  //         <ui-address .address="${subject.subject.creator.address}" short avatar></ui-address>
+  //       </div>
+  //     </div>
+  //     <div class="num justify-center self-center">
+  //       <div class="text-sm">${subject.subject.supply}</div>
+  //       <span class="text-xs opacity-80 text-gray-300/60">tickets</span>
+  //     </div>
+  //   </div>`
+  // }
 
   connectedCallback() {
     super.connectedCallback()
@@ -115,10 +113,11 @@ export class UserVotesList extends ThemeElement(style) {
         !this.isMobi,
         () => html`
           <div class="flex header">
-            <div class="flex-auto">Collection</div>
-            <div class="author flex-none w-32 text-right">Price</div>
-            <div class="num flex-none">Tickets</div>
-            <div class="num flex-none">Holding</div>
+            <div class="w-12">Index</div>
+            <div class="subject-intro">Collection</div>
+            <div class="num">Price</div>
+            <div class="num">Tickets</div>
+            <div class="num">Holding</div>
           </div>
         `
       )}
@@ -135,35 +134,41 @@ export class UserVotesList extends ThemeElement(style) {
           </div>`,
         () => html`
           ${repeat(
-            this.uVotes,
-            (item: any) => html`
-              <div class="item flex items-center pr-0.5" @click=${() => this.go2(item)}>
+            this.subjects,
+            (subject: any, i) => html`
+              <div class="isubject-brief" @click=${() => this.go2(subject)}>
+                <!-- Rank -->
+                ${when(!this.isMobi, () => html`<div class="w-12">${i + 1}</div>`)}
+
+                <!-- Brief -->
+                <div class="subject-intro">
+                  <!-- Cover -->
+                  <div class="subject-cover">
+                    <img-loader src=${subject.cooked.src} class="rounded-lg"></img-loader>
+                    ${when(subject.cooked.src, () => html`<i class="subject-play mdi mdi-play-circle"></i>`)}
+                  </div>
+                  <!-- Content -->
+                  <div class="subject-intro-cnt">
+                    <p class="subject-name">${subject.name}</p>
+                    <p class="subject-minor">
+                      <ui-address .address=${subject.cooked.address} short doid></ui-address>
+                    </p>
+                  </div>
+                </div>
+                <!-- Metadata -->
                 ${when(
-                  !this.isMobi,
-                  () => html`
-                    <div class="flex-auto flex items-center">
-                      <img-loader
-                        .src=${item.subject.image}
-                        class="w-[3.25rem] h-[3.25rem] rounded-lg mr-4"
-                      ></img-loader>
-                      <div>
-                        <p class="name truncate mb-0.5">${item.subject.name}</p>
-                        ${when(
-                          item.subject.uri,
-                          () =>
-                            html`<a href=${item.subject.uri} target="_blank">
-                              <span class="icon mt-1"
-                                ><i class="mdi mdi-play-circle-outline text-lg opacity-80 hover_opacity-100"></i
-                              ></span>
-                            </a>`
-                        )}
-                      </div>
-                    </div>
-                    <div class="author flex-none text-right">${item.price}</div>
-                    <div class="num flex-none font-light">${item.subject.supply}</div>
-                    <div class="num flex-none font-light">${item.holding}</div>
-                  `,
-                  () => html`${this.itemMobi(item)}`
+                  this.isMobi,
+                  () =>
+                    html`<div class="subject-intro-cnt num num2 truncate">
+                      <span class="subject-line1">${subject.holding}</span>
+                      <span class="block pt-0.5 text-xs"
+                        >${subject.supply}<span class="text-gray-300/60 ml-1">tickets</span></span
+                      >
+                    </div>`,
+                  () =>
+                    html`<p class="num date">${subject.cooked.price}</p>
+                      <p class="num">${subject.supply}</p>
+                      <p class="num num2">${subject.holding}</p>`
                 )}
               </div>
             `

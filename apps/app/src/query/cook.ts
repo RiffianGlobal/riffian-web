@@ -26,13 +26,13 @@ export const cookSubject = (res = []) => {
 
     subject.cooked = {
       totalBN,
-      total: +formatUnits(totalBN).toString(),
+      total: totalBN ? +formatUnits(totalBN).toString() : '',
       src: image?.startsWith(`http`) ? image : emptyCoverUri,
       chg,
       newer,
       address: creator.address,
       price: (+supply + 1) / 10,
-      date: format(createdAt)
+      date: createdAt ? format(createdAt) : ''
     }
   })
   return res

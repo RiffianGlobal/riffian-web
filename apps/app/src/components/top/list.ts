@@ -55,7 +55,7 @@ export class TopCharts extends ThemeElement(style) {
     return chartsStore.subjects.concat(this.moreSubjects)
   }
   get showRank() {
-    return !this.isMobi && chartsStore.cate !== 'new'
+    return !this.isMobi && ['top', 'trending'].includes(chartsStore.cate)
   }
 
   fetch = async (force = false) => {
@@ -94,7 +94,7 @@ export class TopCharts extends ThemeElement(style) {
     return html`<div role="list" class="ui-list gap-2 ${classMap(this.$c([this.morePending ? 'loading' : 'hover']))}">
       <!-- thead -->
       <div class="flex header border-bottom">
-        ${when(this.showRank, () => html`<div class="${classMap(this.$c([this.brief ? 'w-8' : 'w-12']))}">Rank</div>`)}
+        <div class="${classMap(this.$c([this.brief ? 'w-8' : 'w-12']))}">${this.showRank ? 'Rank' : 'Index'}</div>
         <div class="subject-intro">Collection</div>
         ${when(showAll, () => html`<div class="num date">Uploaded</div>`)}
         ${when(showAll, () => html`<div class="num">Price</div>`)}
@@ -110,18 +110,14 @@ export class TopCharts extends ThemeElement(style) {
               this.subjects,
               (item: any, i) =>
                 html`<subject-brief .subject=${item} ?lite=${this.brief}>
-                  ${when(
-                    this.showRank,
-                    () =>
-                      html`<div slot="left" class="subject-rank ${classMap({ hot: !this.brief })}">
-                        ${i + 1}
-                        ${when(
-                          !this.brief && this.page1Len > 3 && i < 3,
-                          () => html`<i class="mdi mdi-fire text-red-400"></i>`
-                        )}
-                      </div>`
-                  )}</subject-brief
-                >`
+                  <div slot="left" class="subject-rank ${classMap({ hot: !this.brief })}">
+                    ${i + 1}
+                    ${when(
+                      this.showRank && !this.brief && this.page1Len > 3 && i < 3,
+                      () => html`<i class="mdi mdi-fire text-red-400"></i>`
+                    )}
+                  </div>
+                </subject-brief>`
             )}
             <!-- Pagination -->
             ${when(

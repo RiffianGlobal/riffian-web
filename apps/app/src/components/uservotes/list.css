@@ -1,11 +1,1 @@
-.ui-list {
-  & .item {
-    @apply items-center cursor-pointer;
-  }
-  & .name {
-    @apply md_text-base;
-  }
-  & .author {
-    @apply w-52 text-right;
-  }
-}
+@import '~/components/top/list.css';
