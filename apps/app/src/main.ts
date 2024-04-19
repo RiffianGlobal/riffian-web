@@ -111,6 +111,7 @@ export class AppMain extends ThemeElement('') {
                 <ui-link href="/" nav alias="/">Home</ui-link>
                 <ui-link href="/profile" nav>Profile</ui-link>
                 <create-album-btn btnClass="opacity-60"></create-album-btn>
+                <ui-link href="https://doc.riffian.global/riffian-global" nav>Help</ui-link>
               </ui-nav>
             </div>`
         )}
