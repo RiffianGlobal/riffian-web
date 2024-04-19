@@ -81,7 +81,8 @@ export class AppMain extends ThemeElement('') {
             html`<div slot="right">
                 <div class="inline-flex items-center gap-4">
                   ${when(this.acc, () => html`<reward-btn></reward-btn>`)}
-                  <network-menu></network-menu>
+                  <!-- <network-menu></network-menu> -->
+                  <ui-doid .doid=${walletStore.doid}></ui-doid>
                 </div>
               </div>
               ${when(
