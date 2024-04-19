@@ -215,10 +215,14 @@ export class VoteAlbumDialog extends ThemeElement('') {
                       @click=${this.vote}
                       >${this.insufficientBalance ? 'Insufficient Balance' : 'Vote'}</ui-button
                     >
-                    <p class="mt-4">
-                      Please get <ui-link @click=${() => this.go('rewards')}>rewards first</ui-link> or
-                      <ui-link href="/profile">retreat tickets</ui-link> and try again.
-                    </p>
+                    ${when(
+                      balanceStore.balance < this.votePrice,
+                      () =>
+                        html`<p class="mt-4">
+                          Please get <ui-link @click=${() => this.go('rewards')}>rewards first</ui-link> or
+                          <ui-link href="/profile">retreat tickets</ui-link> and try again.
+                        </p>`
+                    )}
                   </div>
                 `
               )}
