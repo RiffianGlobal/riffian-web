@@ -48,44 +48,46 @@ export class UIHeader extends ThemeElement(style) {
   }
   render() {
     return html`
-      ${when(this.fixed, () => html`<div class="ui-header-placeholder"></div>`)}
-      <header class="ui-header ${classMap({ fixed: this.fixed })}">
-        <div class="ui-container relative flex justify-between items-center ${classMap({ full: this.full })}">
-          <div class="flex shrink items-center gap-3 lg_gap-4">
-            <slot name="logo"><a class="ui-logo" href=${this.logoHref}></a><slot name="sublogo"></slot></slot>
-            <slot name="left"></slot>
+      <div class="ui-header-placeholder"></div>
+      <nav class="fixed top-0 left-0 right-0 z-50 border-t border-white/25" style="background-color: rgba(22, 24, 49, 1)">
+        <header class="ui-header ${classMap({ fixed: this.fixed })}">
+          <div class="ui-container relative flex justify-between items-center ${classMap({ full: this.full })}">
+            <div class="flex shrink items-center gap-3 lg_gap-4">
+              <slot name="logo"><a class="ui-logo" href=${this.logoHref}></a><slot name="sublogo"></slot></slot>
+              <slot name="left"></slot>
+            </div>
+            <div class="flex justify-center items-center">
+              ${when(!this.asMenu, () => html`<slot name="center"></slot>`)}
+            </div>
+            <div class="flex shrink justify-end items-center gap-0.5 lg_gap-2 lg_w-60">
+              <slot name="right"></slot>
+              <slot name="wallet"
+                ><connect-wallet-btn hideAddr dropable>
+                  <div slot="submenu"><slot name="submenu"></slot></div></connect-wallet-btn
+              ></slot>
+              <slot name="balance"></slot>
+              ${when(
+                this.asMenu,
+                () =>
+                  html`<div
+                      @click=${this.toggleMenu}
+                      class="mr-1 nav-menu-btn flex flex-col items-center content-center justify-center z-40 ${classMap(
+                        this.$c([this.menuActive ? 'active fixed' : 'absolute'])
+                      )}"
+                    >
+                      <div class="nav-menu-btn-1"></div>
+                    </div>
+                    <div
+                      @click=${this.closeMenu}
+                      class="nav-menu-body grid place-content-center ${classMap({ active: this.menuActive })}"
+                    >
+                      <slot name="center"></slot>
+                    </div>`
+              )}
+            </div>
           </div>
-          <div class="flex justify-center items-center">
-            ${when(!this.asMenu, () => html`<slot name="center"></slot>`)}
-          </div>
-          <div class="flex shrink justify-end items-center gap-0.5 lg_gap-2 lg_w-60">
-            <slot name="right"></slot>
-            <slot name="wallet"
-              ><connect-wallet-btn hideAddr dropable>
-                <div slot="submenu"><slot name="submenu"></slot></div></connect-wallet-btn
-            ></slot>
-            <slot name="balance"></slot>
-            ${when(
-              this.asMenu,
-              () =>
-                html`<div
-                    @click=${this.toggleMenu}
-                    class="mr-1 nav-menu-btn flex flex-col items-center content-center justify-center z-40 ${classMap(
-                      this.$c([this.menuActive ? 'active fixed' : 'absolute'])
-                    )}"
-                  >
-                    <div class="nav-menu-btn-1"></div>
-                  </div>
-                  <div
-                    @click=${this.closeMenu}
-                    class="nav-menu-body grid place-content-center ${classMap({ active: this.menuActive })}"
-                  >
-                    <slot name="center"></slot>
-                  </div>`
-            )}
-          </div>
-        </div>
-      </header>
+        </header>
+      <nav>
     `
   }
 }
