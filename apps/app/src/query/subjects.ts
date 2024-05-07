@@ -1,5 +1,5 @@
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
-import { onedayAgo , todayStartUnix, weekStartUnix} from '~/lib/riffutils'
+import { onedayAgo} from '~/lib/riffutils'
 import { cookSubject } from './cook'
 
 /*
@@ -33,7 +33,6 @@ export const subjectsFrag = (
 
 export const subjectsReq = async (req: graphParams) => {
   const query = `{ ${subjectsFrag(req)} }`
-  console.log('subjectsReq query = ', query)
   const { subjects } = await graphQuery('MediaBoard', query)
   cookSubject(subjects)
   return { subjects }

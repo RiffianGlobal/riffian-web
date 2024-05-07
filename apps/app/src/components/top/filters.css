@@ -1,82 +1,26 @@
 /* 在 @tailwind utilities 中定义自定义类 */
 @tailwind utilities;
 
-
-.flex {
-  display: flex;
+.checkbox{
+  @apply bg-transparent text-white w-32 h-10 rounded border border-slate-400 mb-2 outline-none;
 }
 
-.check-button {
-  cursor: pointer;
-  position: relative;
-  font-size: 15px;
-  user-select: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.checkbox:hover {
+  @apply bg-transparent;
 }
 
-.check-button input {
-  opacity: 0;
-  cursor: pointer;
-  position: absolute;
-  height: 0;
-  width: 0;
+.checkbox.checked {
+  @apply bg-[#3B6AF6] border-transparent;
 }
 
-.checkmark {
-  position: relative;
-  height: 2.5rem;
-  width: 8rem;
-  background-color: transparent;
-  border: 1px solid rgb(148 163 184);
-  border-radius: 0.25rem;
+.checkbox-mobile {
+  @apply bg-transparent text-white w-20 h-8 rounded border border-slate-400 mb-2 outline-none;
 }
 
-.check-button input:checked ~ .checkmark {
-  background-color: #3B6AF6;
-  border-color: transparent;
+.checkbox-mobile:hover {
+  @apply bg-transparent;
 }
 
-.check-button .text-center {
-  position: absolute;
-  z-index: 2; /* 确保文本位于复选框的上方 */
-}
-
-.check-button-mobile {
-  cursor: pointer;
-  position: relative;
-  font-size: 13px;
-  user-select: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.check-button-mobile input {
-  opacity: 0;
-  cursor: pointer;
-  position: absolute;
-  height: 0;
-  width: 0;
-}
-
-.checkmark-mobile {
-  position: relative;
-  height: 2rem;
-  width: 5rem;
-  background-color: transparent;
-  border: 1px solid rgb(148 163 184);
-  border-radius: 0.25rem;
-}
-
-/* 当复选框被选中时，更改 checkmark 的样式 */
-.check-button-mobile input:checked ~ .checkmark-mobile {
-  background-color: #3B6AF6;
-  border-color: transparent;
-}
-
-.check-button-mobile .text-center {
-  position: absolute;
-  z-index: 2; /* 确保文本位于复选框的上方 */
+.checkbox-mobile.checked {
+  @apply bg-[#3B6AF6] border-transparent;
 }

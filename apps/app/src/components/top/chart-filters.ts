@@ -1,4 +1,4 @@
-import { ThemeElement, customElement, html, state, when } from '@riffian-web/ui/shared/theme-element'
+import { ThemeElement, customElement, html, property, state, when } from '@riffian-web/ui/shared/theme-element'
 
 import style from './filters.css?inline'
 import { screenStore } from '@lit-web3/base'
@@ -31,16 +31,8 @@ export class ChartFilters extends ThemeElement(style) {
                 <br><span>Time</span>
               </span>
               <div class="flex">
-                <label class="check-button-mobile mr-4">
-                  <input type="checkbox" .checked=${this.todayChecked} id="${fromToday}" @change=${this.handleTimeChange}/>
-                  <span class="checkmark-mobile"></span>
-                  <span class="text-center">Today</span>
-                </label>
-                <label class="check-button-mobile">
-                  <input type="checkbox" .checked=${this.weekChecked} id="${fromWeek}" @change=${this.handleTimeChange}/>
-                  <span class="checkmark-mobile"></span>
-                  <span class="text-center">This week</span>
-                </label>
+                <button id="${fromToday}" class="checkbox-mobile mr-4 ${this.todayChecked ? 'checked' : ''}" @click=${this.handleTimeChange}>Today</button>
+                <button id="${fromWeek}" class="checkbox-mobile ${this.weekChecked ? 'checked' : ''}" @click=${this.handleTimeChange}>This week</button>
               </div>
             </div>
             <div class="flex space-x-4 items-start">
@@ -48,23 +40,9 @@ export class ChartFilters extends ThemeElement(style) {
                 <span>Content</span>
                 <br><span>Price</span>
               </span>
-                <div class="flex">
-                  <label class="check-button-mobile mr-4">
-                    <input type="checkbox" .checked=${this.lessChecked} id="${fromLessThan}" @change=${this.handlePriceChange}/>
-                    <span class="checkmark-mobile"></span>
-                    <span class="text-center">0.1</span>
-                  </label>
-                  <label class="check-button-mobile mr-4">
-                    <input type="checkbox" .checked=${this.intervalChecked} id="${fromInterval}" @change=${this.handlePriceChange}/>
-                    <span class="checkmark-mobile"></span>
-                    <span class="text-center">0.1 ~ 1</span>
-                  </label>
-                  <label class="check-button-mobile mr-4">
-                    <input type="checkbox" .checked=${this.greaterChecked} id="${fromGreaterThan}" @change=${this.handlePriceChange}/>
-                    <span class="checkmark-mobile"></span>
-                    <span class="text-center">> 1</span>
-                  </label>
-                </div>
+                <button id="${fromLessThan}" class="checkbox-mobile mr-4 ${this.lessChecked ? 'checked' : ''}" @click=${this.handlePriceChange}>0.1</button>
+                <button id="${fromInterval}" class="checkbox-mobile mr-4 ${this.intervalChecked ? 'checked' : ''}" @click=${this.handlePriceChange}>0.1 ~ 1</button>
+                <button id="${fromGreaterThan}" class="checkbox-mobile mr-4 ${this.greaterChecked ? 'checked' : ''}" @click=${this.handlePriceChange}>> 1</button>
               </div>
           </div>
         `,
@@ -74,36 +52,16 @@ export class ChartFilters extends ThemeElement(style) {
               <div class="flex flex-col items-start">
                 <span class="mb-2 text-base pb-4">Uploaded Time</span>
                 <div class="flex">
-                  <label class="check-button mr-4">
-                    <input type="checkbox" .checked=${this.todayChecked} id="${fromToday}" @change=${this.handleTimeChange}/>
-                    <span class="checkmark"></span>
-                    <span class="text-center">Today</span>
-                  </label>
-                  <label class="check-button">
-                    <input type="checkbox" .checked=${this.weekChecked} id="${fromWeek}" @change=${this.handleTimeChange}/>
-                    <span class="checkmark"></span>
-                    <span class="text-center">This week</span>
-                  </label>
+                  <button id="${fromToday}" class="checkbox mr-4 ${this.todayChecked ? 'checked' : ''}" @click=${this.handleTimeChange}>Today</button>
+                  <button id="${fromWeek}" class="checkbox ${this.weekChecked ? 'checked' : ''}" @click=${this.handleTimeChange}>This week</button>
                 </div>
               </div>
               <div class="flex flex-col items-start">
                 <span class="mb-2 mr-4 text-base pb-4">Content Price</span>
                 <div class="flex">
-                  <label class="check-button mr-4">
-                    <input type="checkbox" .checked=${this.lessChecked} id="${fromLessThan}" @change=${this.handlePriceChange}/>
-                    <span class="checkmark"></span>
-                    <span class="text-center">0.1</span>
-                  </label>
-                  <label class="check-button mr-4">
-                    <input type="checkbox" .checked=${this.intervalChecked} id="${fromInterval}" @change=${this.handlePriceChange}/>
-                    <span class="checkmark"></span>
-                    <span class="text-center">0.1 ~ 1</span>
-                  </label>
-                  <label class="check-button mr-4">
-                    <input type="checkbox" .checked=${this.greaterChecked} id="${fromGreaterThan}" @change=${this.handlePriceChange}/>
-                    <span class="checkmark"></span>
-                    <span class="text-center">> 1</span>
-                  </label>
+                  <button id="${fromLessThan}" class="checkbox mr-4 ${this.lessChecked ? 'checked' : ''}" @click=${this.handlePriceChange}>0.1</button>
+                  <button id="${fromInterval}" class="checkbox mr-4 ${this.intervalChecked ? 'checked' : ''}" @click=${this.handlePriceChange}>0.1 ~ 1</button>
+                  <button id="${fromGreaterThan}" class="checkbox mr-4 ${this.greaterChecked ? 'checked' : ''}" @click=${this.handlePriceChange}>> 1</button>
                 </div>
               </div>
             </div>
@@ -116,26 +74,24 @@ export class ChartFilters extends ThemeElement(style) {
   handlePriceChange(event: any) {
     const id = event.target.id.trim();
     if(id) {
-      const value = event.target.checked
-      console.log('handlePriceChange id = ', id, ' value = ', value)
       switch (id) {
         case fromLessThan:
-          this.lessChecked = value
-          if (value) {
+          this.lessChecked = !this.lessChecked
+          if (this.lessChecked) {
             this.intervalChecked = false
             this.greaterChecked = false
           }
           break;
         case fromInterval:
-          this.intervalChecked = value
-          if (value) {
+          this.intervalChecked = !this.intervalChecked
+          if (this.intervalChecked) {
             this.lessChecked = false
             this.greaterChecked = false
           }
           break;
         case fromGreaterThan:
-          this.greaterChecked = value
-          if (value) {
+          this.greaterChecked = !this.greaterChecked
+          if (this.greaterChecked) {
             this.lessChecked = false
             this.intervalChecked = false
           }
@@ -159,18 +115,16 @@ export class ChartFilters extends ThemeElement(style) {
   handleTimeChange(event: any) {
     const id = event.target.id.trim();
     if (id) {
-      const value = event.target.checked
-      console.log('handleTimeChange id = ', id, ' value = ', value)
       switch (id) {
         case fromToday:
-          this.todayChecked = value
-          if (value) {
+          this.todayChecked = !this.todayChecked
+          if (this.todayChecked) {
             this.weekChecked = false
           }
           break;
         case fromWeek:
-          this.weekChecked = value
-          if (value) {
+          this.weekChecked = !this.weekChecked
+          if (this.weekChecked) {
             this.todayChecked = false
           }
           break;
