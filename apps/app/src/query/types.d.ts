@@ -8,4 +8,6 @@ declare type graphParams = {
   first?: 10 | number
   skip?: 0 | number
   id?: string
+  filterTimeValue?: string
+  filterPriceValue?: string
 }

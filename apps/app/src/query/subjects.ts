@@ -1,5 +1,5 @@
 import { graphQuery } from '@riffian-web/ethers/src/constants/graph'
-import { onedayAgo } from '~/lib/riffutils'
+import { onedayAgo , todayStartUnix, weekStartUnix} from '~/lib/riffutils'
 import { cookSubject } from './cook'
 
 /*
@@ -13,13 +13,15 @@ const orderMap: Record<string, string> = {
   trending: 'volumeTotal' // 24h vol
 }
 export const subjectsFrag = (
-  { cate = 'top', time = onedayAgo(), first = 10, skip = 0, keyword = '' } = <graphParams>{}
+  { cate = 'top', time = onedayAgo(), first = 10, skip = 0, keyword = '' , filterTimeValue = '', filterPriceValue = '' } = <graphParams>{}
 ) => {
   return `
   subjects (
     where: {
       creator_starts_with: "0x"
       ${keyword ? ` name_contains_nocase: "${keyword}"` : ''}
+      ${filterTimeValue}
+      ${filterPriceValue}
     } ${first ? ` first: ${first}` : ''}${skip ? ` skip: ${skip}` : ''} 
     orderBy: ${orderMap[cate]} orderDirection: desc
   ) {
@@ -30,7 +32,9 @@ export const subjectsFrag = (
 }
 
 export const subjectsReq = async (req: graphParams) => {
-  const { subjects } = await graphQuery('MediaBoard', `{ ${subjectsFrag(req)} }`)
+  const query = `{ ${subjectsFrag(req)} }`
+  console.log('subjectsReq query = ', query)
+  const { subjects } = await graphQuery('MediaBoard', query)
   cookSubject(subjects)
   return { subjects }
 }

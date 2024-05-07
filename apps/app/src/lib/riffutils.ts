@@ -11,3 +11,18 @@ export const getRewardContract = async (account?: string) =>
   getContract('Reward', { account: account ?? (await getAccount()) })
 
 export const onedayAgo = () => dayjs().subtract(1, 'day').unix()
+
+export const todayStartUnix = () => {
+  const today = dayjs()
+  const year = today.year()
+  const month = today.month() + 1
+  const day = today.date()
+
+  const todayStart = dayjs(`${year}-${month}-${day} 00:00:00`, 'YYYY-MM-DD HH:mm:ss').unix()
+
+  return todayStart
+}
+
+export const weekStartUnix = () => {
+  return dayjs().subtract(1, 'week').unix()
+}

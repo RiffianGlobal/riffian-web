@@ -23,6 +23,10 @@ class ChartsStore extends State {
   @storage({ key: 'app.chart' })
   @property({ value: 'top' })
   cate!: string
+  @property({ value: '' })
+  filterTimeValue!: string
+  @property({ value: '' })
+  filterPriceValue!: string
 
   private cachedSubjects: Record<string, []> = {}
 
@@ -32,8 +36,16 @@ class ChartsStore extends State {
     emitter.on('block-world', this.listener)
 
     this.subscribe(async (_, cate) => {
-      this.fetchSubjects(cate)
+      this.fetchSubjects(cate, this.filterTimeValue, this.filterPriceValue)
     }, 'cate')
+
+    this.subscribe(async (_, timeValue) => {
+      this.fetchSubjects(this.cate, timeValue, this.filterPriceValue)
+    }, 'filterTimeValue')
+
+    this.subscribe(async(_, priceValue) => {
+      this.fetchSubjects(this.cate, this.filterTimeValue, priceValue)
+    }, 'filterPriceValue')
   }
 
   #updateSubjects = (cate: string, subjects: []) => {
@@ -56,12 +68,12 @@ class ChartsStore extends State {
     this.inited = true
   }
 
-  fetchSubjects = async (cate: string, useCache = true, filters = {}) => {
+  fetchSubjects = async (cate: string, filterTimeValue: string = '', filterPriceValue: string = '', useCache = true, filters = {}) => {
     this.chartPending = true
     let res = []
     this.subjects = useCache ? this.cachedSubjects[cate] ?? [] : []
     try {
-      const { subjects } = await subjectsReq({ cate, ...filters })
+      const { subjects } = await subjectsReq({ cate, filterTimeValue, filterPriceValue, ...filters })
       res = subjects
     } catch {}
     this.chartPending = false
