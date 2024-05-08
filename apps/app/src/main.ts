@@ -20,7 +20,7 @@ import '~/components/createAlbum/btn'
 import '~/components/reward/btn'
 import '~/components/user/balance'
 import '~/components/search'
-
+import '@riffian-web/ui/tip/rookie'
 import '~/global.css'
 
 @customElement('app-main')
@@ -126,39 +126,7 @@ export class AppMain extends ThemeElement('') {
       </ui-header>
       <!-- Main -->
       <main class="ui-app-main mt-0 lg_mt-0">
-        ${when(
-          this.isMobi,
-          () =>
-            html`<!-- Search in Mobi -->
-              <div class="ui-pageview ui-container place-content-center relative flex flex-col bottom-line pb-2">
-                <object-search></object-search>
-              </div>
-              <!-- Nav in Mobi -->
-              <ui-nav
-                class="fixed bottom-0 left-0 right-0 z-50 border-t border-white/25"
-                style="background-color: rgba(22, 24, 49, 1)"
-              >
-                <div class="w-full grid grid-cols-4 justify-center items-center">
-                  <div class="flex flex-col justify-center items-center">
-                    <ui-link href="/" nav alias="/">
-                      <i class="mdi mdi-home-outline text-2xl"></i>
-                    </ui-link>
-                  </div>
-                  <div class="flex flex-col justify-center items-center">
-                    <create-album-btn icon btnClass="p-0 text-2xl"></create-album-btn>
-                  </div>
-                  <div class="flex flex-col justify-center items-center">
-                    <reward-btn><i class="mdi mdi-gift-outline text-2xl"></i></reward-btn>
-                  </div>
-                  <div class="flex flex-col justify-center items-center">
-                    <ui-link href="/profile" nav class="!opacity-100"
-                      ><i class="mdi mdi-account-outline text-2xl"></i
-                    ></ui-link>
-                  </div>
-                </div>
-              </ui-nav>`
-        )}
-        <slot></slot>
+        <ui-tip-rookie></ui-tip-rookie>
       </main>
       <!-- Footer -->
       <ui-footer full>
