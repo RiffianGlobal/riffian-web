@@ -99,9 +99,9 @@ export class ChartFilters extends ThemeElement(style) {
         default:
           break;
       }
-    
+
       if (this.lessChecked) {
-        chartsStore.filterPriceValue = 'supply_lt: 0'
+        chartsStore.filterPriceValue = 'supply_lte: 0'
       } else if (this.intervalChecked) {
         chartsStore.filterPriceValue = 'supply_gte: 0, supply_lte: 9'
       } else if (this.greaterChecked) {

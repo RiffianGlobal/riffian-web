@@ -13,16 +13,16 @@ const orderMap: Record<string, string> = {
   trending: 'volumeTotal' // 24h vol
 }
 export const subjectsFrag = (
-  { cate = 'top', time = onedayAgo(), first = 10, skip = 0, keyword = '' , filterTimeValue = '', filterPriceValue = '' } = <graphParams>{}
+  { cate = 'top', time = onedayAgo(), first = 10, skip = 0, keyword = '' , filterTime = '', filterPrice = '' } = <graphParams>{}
 ) => {
   return `
   subjects (
     where: {
       creator_starts_with: "0x"
       ${keyword ? ` name_contains_nocase: "${keyword}"` : ''}
-      ${filterTimeValue}
-      ${filterPriceValue}
-    } ${first ? ` first: ${first}` : ''}${skip ? ` skip: ${skip}` : ''} 
+      ${filterTime}
+      ${filterPrice}
+    } ${first ? ` first: ${first}` : ''}${skip ? ` skip: ${skip}` : ''}
     orderBy: ${orderMap[cate]} orderDirection: desc
   ) {
     id image name uri supply createdAt totalVoteValue volumeTotal creator { address }

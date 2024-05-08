@@ -73,7 +73,7 @@ class ChartsStore extends State {
     let res = []
     this.subjects = useCache ? this.cachedSubjects[cate] ?? [] : []
     try {
-      const { subjects } = await subjectsReq({ cate, filterTimeValue, filterPriceValue, ...filters })
+      const { subjects } = await subjectsReq({ cate, filterTime: filterTimeValue, filterPrice: filterPriceValue, ...filters })
       res = subjects
     } catch {}
     this.chartPending = false

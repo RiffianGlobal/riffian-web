@@ -64,7 +64,7 @@ export class TopCharts extends ThemeElement(style) {
     this.err = ''
     this.morePending = true
     try {
-      const req: graphParams = { cate: chartsStore.cate }
+      const req: graphParams = { cate: chartsStore.cate, filterTime: chartsStore.filterTimeValue, filterPrice: chartsStore.filterPriceValue }
       if (this.pagination) {
         const { pageSize, pageNum } = this.pagination
         Object.assign(req, { first: pageSize, skip: (pageNum - 1) * pageSize })
