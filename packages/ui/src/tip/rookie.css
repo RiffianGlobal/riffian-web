@@ -1,16 +1,3 @@
-@tailwind utilities;
-
-
-.rookie-container {
-  @apply absolute rounded-md overflow-hidden bg-neutral-900 border border-transparent shadow-md shadow-neutral-900;
-  min-width: 11rem;
-  min-height: 9rem;
-
-  background-clip: padding-box, border-box;
-  background-origin: padding-box, border-box;
-  background-image: linear-gradient(to right, #212145, #212145), linear-gradient(90deg, #bd47ff, #2c73b1);
-  animation: bounceY 0.3s ease;
-}
 
 .backdrop {
   position: fixed;
@@ -26,7 +13,8 @@
 
 .modal {
   background-image: linear-gradient(to top left,#3D1D7F, #2E1677);
-  padding-top: 2rem;
+  padding-top: 3rem;
+  padding-bottom: 2rem;
   margin-left: 32%;
   margin-right: 32%;
   border-radius: 1rem;
@@ -35,7 +23,10 @@
 }
 
 .close {
-  @apply mt-8 mr-8 text-right font-extralight text-xl text-white;
+  @apply mt-4 mr-8 text-right font-extralight text-xl text-white;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .content-text {
@@ -43,13 +34,48 @@
 }
 
 .play-button {
-  @apply font-semibold text-lg mb-8 pl-8 pr-8 pt-2 pb-2 items-center;
+  @apply font-semibold text-lg mb-8 pl-8 pr-8 pt-2 pb-2;
   background-image: linear-gradient(180deg, #FD7CA5 0%, #FD3A77 100%);
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.5), inset 0px 2px 5px rgba(255, 255, 255, 0.5);
   max-width: 220px;
   max-height: 56px;
   border-radius: 8px;
   color: white;
+  display: block;
+  margin: 0 auto;
 }
 
+.top-left-logo {
+  @apply inline-block z-[1] absolute left-16 -top-16 rotate-[170deg];
+  width: 108px; /* 设置适当的宽度 */
+  height: 108px; /* 设置适当的高度 */
+  background: url(../i/ui-rookie-logo.svg) no-repeat center / cover;
+}
 
+.left-top-logo {
+  @apply inline-block z-[1] absolute -left-12 top-12 rotate-[245deg];
+  width: 88px; /* 设置适当的宽度 */
+  height: 88px; /* 设置适当的高度 */
+  background: url(../i/ui-rookie-logo.svg) no-repeat center / cover;
+}
 
+.left-bottom-logo {
+  @apply inline-block z-[1] absolute -left-12 -bottom-12 ;
+  width: 100px; /* 设置适当的宽度 */
+  height: 100px; /* 设置适当的高度 */
+  background: url(../i/ui-rookie-logo.svg) no-repeat center / cover;
+}
+
+.right-bottom-logo {
+  @apply inline-block z-[1] absolute -right-10 -bottom-10 rotate-[240deg];
+  width: 128px;
+  height: 128px;
+  background: url(../i/ui-rookie-logo.svg) no-repeat center / cover;
+}
+
+.right-bottom-free-logo {
+  @apply inline-block z-[1] absolute -right-24 -bottom-28 rotate-[245deg];
+  width: 88px;
+  height: 88px;
+  background: url(../i/ui-rookie-logo.svg) no-repeat center / cover;
+}
