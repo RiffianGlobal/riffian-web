@@ -19,14 +19,35 @@ export class UITipRookie extends ThemeElement(style) {
       ${when(
         screenStore.isMobi,
         () => html`
-          <div class="backdrop relative">
-            <p>mobile rookie tips</p>
+          <div class="backdrop-mobile relative">
+            <div class="rookie-bg-mobile">
+              <div class="modal-mobile">
+                <button class="close mr-4" @click="${this.close}">
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    class="w-6 h-6">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+                <p class="font-medium text-sm mt-6 mb-4 text-center">Come to RIFFIAN and earn $DOID!</p>
+                <p class="content-text-mobile">You can claim rewards and get $DOID; </p>
+                <p class="content-text-mobile">can vote for the content you like, and as long as it enters the weekly list, you can also get a share of the prize pool rewards; </p> 
+                <p class="content-text-mobile">You can vote for the content you like at a low price, then wait for others to vote and then sell it to get the price difference.</p>
+                <p class="content-text-mobile font-normal">Come and play together!</p>
+              </div>
+            </div>
           </div>
         `,
         () => html`
-          <div class="backdrop relative">
+          <div class="backdrop">
             <div class="modal">
-              <button class="close" @click="${this.close}">
+              <button class="close mr-8" @click="${this.close}">
                 <svg xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
