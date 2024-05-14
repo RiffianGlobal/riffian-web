@@ -63,14 +63,55 @@
 }
 
 .rookie-bg-mobile {
-  @apply w-full h-full;
-  background: url(../i/ui-rookie-mobile-bg.svg) no-repeat center / contain;
+  @apply mx-4 w-[421.63px] h-[335px] flex justify-center relative;
+  background-image: url(../i/ui-rookie-mobile-bg.svg); 
+  background-repeat: no-repeat; 
+  background-size: contain; 
 }
 
 .modal-mobile {
-  @apply inline-block p-6 m-12 relative transform -bottom-8  shadow-md rounded-md bg-gradient-to-tl from-[#3D1D7F] to-[#2E1677];
+  @apply inline-block p-4 mx-10 transform absolute bottom-[72px] rounded-md bg-gradient-to-tl from-[#3D1D7F] to-[#2E1677];
 }
 
 .content-text-mobile {
   @apply text-xs mt-2 ml-6 mr-4 text-left font-extralight;
+}
+
+.play-button-mobile {
+  @apply font-medium text-lg mt-6 mb-4 bg-gradient-to-t from-[#FD7CA5] to-[#FD3A77] shadow-inner w-[160px] h-[40px] rounded-lg text-white block mx-auto;
+}
+
+.top-left-mobile-logo {
+  @apply inline-block z-[1] absolute -left-2 -top-4 rotate-[170deg];
+  width: 51px; /* 设置适当的宽度 */
+  height: 51px; /* 设置适当的高度 */
+  background: url(../i/ui-rookie-logo.svg) no-repeat center / cover;
+}
+
+.left-center-mobile-logo {
+  @apply inline-block z-[1] absolute -left-[26px] top-24 rotate-[245deg];
+  width: 32px; /* 设置适当的宽度 */
+  height: 32px; /* 设置适当的高度 */
+  background: url(../i/ui-rookie-logo.svg) no-repeat center / cover;
+}
+
+.left-bottom-mobile-logo {
+  @apply inline-block z-[1] absolute -left-6 bottom-8;
+  width: 42px; /* 设置适当的宽度 */
+  height: 42px; /* 设置适当的高度 */
+  background: url(../i/ui-rookie-logo.svg) no-repeat center / cover;
+}
+
+.right-bottom-mobile-logo {
+  @apply inline-block z-[1] absolute -right-4 -bottom-4 rotate-[240deg];
+  width: 53px;
+  height: 53px;
+  background: url(../i/ui-rookie-logo.svg) no-repeat center / cover;
+}
+
+.right-bottom-free-mobile-logo {
+  @apply inline-block z-[1] absolute -right-4 bottom-16 rotate-[245deg];
+  width: 32px;
+  height: 32px;
+  background: url(../i/ui-rookie-logo.svg) no-repeat center / cover;
 }
