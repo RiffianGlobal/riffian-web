@@ -19,7 +19,7 @@ export class ConnectWalletBtn extends ThemeElement(style) {
   @property({ type: Boolean }) hideAddr = false
 
   @state() menu = false
-  @state() showRooike = true
+  @state() showRooike = false
 
   get account() {
     return walletStore.account
@@ -31,15 +31,24 @@ export class ConnectWalletBtn extends ThemeElement(style) {
     return `${networkStore.current.scan}/address/${this.account}`
   }
 
+  constructor () {
+    super()
+    this.showRooike = localStorage.getItem('rookieKey') === '1'
+    console.log('constructor showRooike = ', this.showRooike)
+  }
+
   show = () => {
+    console.log('show = ppppppppppp')
     if (this.dropable && walletStore.doid) {
       this.menu = !this.menu
     } else {
+      localStorage.setItem('rookieKey', '1')
       bridgeStore.bridge.select(0)
     }
   }
   close() {
     this.showRooike = false
+    localStorage.setItem('rookieKey', '0')
   }
 
   connectedCallback(): void {
@@ -89,6 +98,6 @@ export class ConnectWalletBtn extends ThemeElement(style) {
       ${when(this.account && this.showRooike, () => html`<ui-tip-rookie @close=${this.close}></ui-tip-rookie>`)}
       `
     // Dialog Button
-    else return html` <ui-button class="outlined" sm @click=${this.close()}>Sign In</ui-button> `
+    else return html` <ui-button class="outlined" sm @click=${() => this.show()}>Sign In</ui-button> `
   }
 }

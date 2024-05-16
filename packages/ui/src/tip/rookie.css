@@ -58,10 +58,6 @@
   background: url(../i/ui-rookie-logo.svg) no-repeat center / cover;
 }
 
-.backdrop-mobile {
-  @apply fixed w-full h-full flex items-center;
-}
-
 .rookie-bg-mobile {
   @apply mx-4 w-[421.63px] h-[335px] flex justify-center relative;
   background-image: url(../i/ui-rookie-mobile-bg.svg); 
@@ -70,7 +66,7 @@
 }
 
 .modal-mobile {
-  @apply inline-block p-4 mx-10 transform absolute bottom-[72px] rounded-md bg-gradient-to-tl from-[#3D1D7F] to-[#2E1677];
+  @apply inline-block p-4 mx-16 transform absolute bottom-16 rounded-md bg-gradient-to-tl from-[#3D1D7F] to-[#2E1677];
 }
 
 .content-text-mobile {

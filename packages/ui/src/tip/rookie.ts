@@ -19,7 +19,7 @@ export class UITipRookie extends ThemeElement(style) {
       ${when(
         screenStore.isMobi,
         () => html`
-          <div class="backdrop-mobile relative">
+          <div class="backdrop">
             <div class="rookie-bg-mobile">
               <div class="modal-mobile">
                 <button class="close mr-4" @click="${this.close}">
