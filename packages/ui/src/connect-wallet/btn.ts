@@ -19,6 +19,7 @@ export class ConnectWalletBtn extends ThemeElement(style) {
   @property({ type: Boolean }) hideAddr = false
 
   @state() menu = false
+  @state() showRooike = true
 
   get account() {
     return walletStore.account
@@ -37,7 +38,9 @@ export class ConnectWalletBtn extends ThemeElement(style) {
       bridgeStore.bridge.select(0)
     }
   }
-  close() {}
+  close() {
+    this.showRooike = false
+  }
 
   connectedCallback(): void {
     super.connectedCallback()
@@ -82,8 +85,10 @@ export class ConnectWalletBtn extends ThemeElement(style) {
           </div>
         </div>
         <slot name="submenu"></slot>
-      </ui-drop>`
+      </ui-drop>
+      ${when(this.account && this.showRooike, () => html`<ui-tip-rookie @close=${this.close}></ui-tip-rookie>`)}
+      `
     // Dialog Button
-    else return html` <ui-button class="outlined" sm @click=${() => this.show()}>Sign In</ui-button> `
+    else return html` <ui-button class="outlined" sm @click=${this.close()}>Sign In</ui-button> `
   }
 }

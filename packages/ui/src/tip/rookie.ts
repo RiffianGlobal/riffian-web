@@ -10,8 +10,8 @@ export class UITipRookie extends ThemeElement(style) {
   @property({type: Boolean})
   show = false;
 
-  close() {
-    this.show = false;
+  close = async (opts?: any) => {
+    this.emit('close', opts)
   }
 
   render() {
@@ -37,7 +37,7 @@ export class UITipRookie extends ThemeElement(style) {
                 </button>
                 <p class="font-medium text-sm mt-8 mb-4 text-center">Come to RIFFIAN and earn $DOID!</p>
                 <p class="content-text-mobile">You can claim rewards and get $DOID; </p>
-                <p class="content-text-mobile">can vote for the content you like, and as long as it enters the weekly list, you can also get a share of the prize pool rewards; </p> 
+                <p class="content-text-mobile">can vote for the content you like, and as long as it enters the weekly list, you can also get a share of the prize pool rewards; </p>
                 <p class="content-text-mobile">You can vote for the content you like at a low price, then wait for others to vote and then sell it to get the price difference.</p>
                 <p class="font-bold text-xs mt-4 ml-6 mr-4 text-left  ">Come and play together!</p>
                 <button class="play-button-mobile" @click="${this.close}">Let's Play</button>
@@ -68,7 +68,7 @@ export class UITipRookie extends ThemeElement(style) {
               </button>
               <p class="font-semibold text-xl mb-4 text-center">Come to RIFFIAN and earn $DOID!</p>
               <p class="content-text">You can claim rewards and get $DOID; </p>
-              <p class="content-text">can vote for the content you like, and as long as it enters the weekly list, you can also get a share of the prize pool rewards; </p> 
+              <p class="content-text">can vote for the content you like, and as long as it enters the weekly list, you can also get a share of the prize pool rewards; </p>
               <p class="content-text">You can vote for the content you like at a low price, then wait for others to vote and then sell it to get the price difference.</p>
               <p class="content-text font-light">Come and play together!</p>
               <button class="play-button" @click="${this.close}">Let's Play</button>
