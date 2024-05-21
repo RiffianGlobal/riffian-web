@@ -35,24 +35,20 @@ export class RewardTask extends ThemeElement(style) {
       class="flex w-full justify-between items-center ${classMap({ 'text-gray-600': this.reward?.closed })}"
     >
       <!-- Reward Name -->
-      <p>${this.reward.title}<slot name="subtitle"></slot></p>
+      <span>${this.reward.title}
+        <!-- Reward Action -->
+        <ui-link @click=${this.chgScene} class="ml-1">
+          Details>
+        </ui-link>
+      </span>
 
       <div class="flex gap-2 items-center text-right">
         <!-- Reward Amnt -->
         <span class="${classMap({ 'text-green-600': +this.reward.amnt > 0, 'font-bold': +this.reward.amnt > 0 })}"
           >${this.reward.closed || this.reward?.claimed ? '' : this.reward.amnt}</span
         >
-        <!-- Reward Action -->
-        <div class="flex justify-end items-center w-[6em] h-[2em]">
-          <slot name="action">
-            ${when(
-              this.reward?.closed,
-              () => html`<ui-button disabled text xs>-</ui-button>`,
-              () =>
-                html`<ui-link @click=${this.chgScene}>Details<i class="mdi mdi-chevron-right text-xl"></i></ui-link>`
-            )}
-          </slot>
-        </div>
+
+        <div class="w-[6em] h-[2em]"></div>
       </div>
     </div>`
   }
