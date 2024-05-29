@@ -34,11 +34,9 @@ export class ConnectWalletBtn extends ThemeElement(style) {
   constructor () {
     super()
     this.showRooike = localStorage.getItem('rookieKey') === '1'
-    console.log('constructor showRooike = ', this.showRooike)
   }
 
   show = () => {
-    console.log('show = ppppppppppp')
     if (this.dropable && walletStore.doid) {
       this.menu = !this.menu
     } else {
